@@ -1,4 +1,4 @@
-from typing import List, TYPE_CHECKING
+from typing import List, TYPE_CHECKING, Dict
 
 from Connection import Connection
 
@@ -8,11 +8,35 @@ class Node:
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = [] # type: List[Connection]
 
+        self._resources_required_per_tick = {}  # type: Dict[str, float]
+
     def updateReservations(self):
         pass
 
     def preUpdate(self):
-        pass
+        for resource_type in self._resources_required_per_tick:
+            connections = self.getAllIncomingConnectionsByType(resource_type)
+            resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
+            for connection in connections:
+                connection.reserveResource(resource_to_reserve)
+
+    def replanReservations(self):
+        for resource_type in self._resources_required_per_tick:
+            connections = self.getAllIncomingConnectionsByType(resource_type)
+            total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
+            num_statisfied_reservations = len([connection for connection in connections if connection.isReservationStatisfied()])
+            if not num_statisfied_reservations:
+                return
+            extra_resource_to_ask_per_connection = total_resource_deficiency / num_statisfied_reservations
+            print("Extra resource to get per connection", extra_resource_to_ask_per_connection)
+            for connection in connections:
+                if not connection.isReservationStatisfied():
+                    # So the connection that could not meet demand needs to be locked (since we can't get more!)
+                    connection.lock()
+                else:
+                    # So the connections that did give us that we want might have a bit more!
+                    print("New amount reserved:", connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
+                    connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
     def update(self):
         pass
