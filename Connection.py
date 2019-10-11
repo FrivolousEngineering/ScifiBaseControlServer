@@ -26,6 +26,9 @@ class Connection:
         self.reserved_requested_amount = amount
         self.reserved_available_amount = 0
 
+    def getReservedResource(self):
+        return self.getResource(self.reserved_requested_amount)
+
     def isReservationStatisfied(self):
         # If a reservation is locked it can't be used to get more.
         return self.reserved_requested_amount <= self.reserved_available_amount or self.locked

@@ -47,4 +47,5 @@ while light_1.requiresReplanning() or light_2.requiresReplanning() or light_3.re
     updateReservations()
     print("")
 
+
 print("Run completed")

@@ -6,9 +6,10 @@ from Connection import Connection
 class Node:
     def __init__(self):
         self._incoming_connections = []  # type: List[Connection]
-        self._outgoing_connections = [] # type: List[Connection]
+        self._outgoing_connections = []  # type: List[Connection]
 
         self._resources_required_per_tick = {}  # type: Dict[str, float]
+        self._resources_received_this_tick = {} # type: Dict[str, float]
 
     def updateReservations(self):
         pass
@@ -19,6 +20,16 @@ class Node:
             resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
+
+    def _getReservedResourceByType(self, resource_type) -> float:
+        result = 0
+        for connection in self.getAllIncomingConnectionsByType(resource_type):
+            result += connection.getReservedResource()
+        return result
+
+    def _getAllReservedResources(self):
+        for resource_type in self._resources_required_per_tick:
+            self._resources_received_this_tick[resource_type] = self._getReservedResourceByType(resource_type)
 
     def replanReservations(self):
         for resource_type in self._resources_required_per_tick:
