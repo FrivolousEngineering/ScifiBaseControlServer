@@ -20,6 +20,7 @@ class Connection:
     def reset(self):
         self.reserved_requested_amount = 0
         self.reserved_available_amount = 0
+        self.locked = False
 
     def reserveResource(self, amount):
         self.reserved_requested_amount = amount
