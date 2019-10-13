@@ -50,11 +50,12 @@ class Node:
                     connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
     def update(self):
-        pass
+        self._getAllReservedResources()
 
     def postUpdate(self):
         for connection in self._outgoing_connections:
             connection.reset()
+        self._resources_received_this_tick = {}
 
     def requiresReplanning(self):
         num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])

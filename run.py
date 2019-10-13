@@ -48,4 +48,11 @@ while light_1.requiresReplanning() or light_2.requiresReplanning() or light_3.re
     print("")
 
 
+light_1.update()
+light_2.update()
+light_3.update()
+
+print("Light 1:", light_1.isOn)
+print("Light 2:", light_2.isOn)
+print("Light 3:", light_3.isOn)
 print("Run completed")
