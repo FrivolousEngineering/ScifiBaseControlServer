@@ -4,17 +4,17 @@ from Connection import Connection
 
 
 class Node:
-    def __init__(self):
+    def __init__(self) -> None:
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
 
         self._resources_required_per_tick = {}  # type: Dict[str, float]
-        self._resources_received_this_tick = {} # type: Dict[str, float]
+        self._resources_received_this_tick = {}  # type: Dict[str, float]
 
-    def updateReservations(self):
+    def updateReservations(self) -> None:
         pass
 
-    def preUpdate(self):
+    def preUpdate(self) -> None:
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
@@ -49,22 +49,22 @@ class Node:
                     print("New amount reserved:", connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
                     connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
-    def update(self):
+    def update(self) -> None:
         self._getAllReservedResources()
 
-    def postUpdate(self):
+    def postUpdate(self) -> None:
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
 
-    def requiresReplanning(self):
+    def requiresReplanning(self) -> bool:
         num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
         if not num_statisfied_reservations:
             return False
         else:
             return len(self._incoming_connections) != num_statisfied_reservations
 
-    def connectWith(self, type, target):
+    def connectWith(self, type: str, target: "Node") -> None:
         new_connection = Connection(origin=self, target=target, resource_type = type)
         self._outgoing_connections.append(new_connection)
         target.addConnection(new_connection)
@@ -72,35 +72,11 @@ class Node:
     def addConnection(self, connection: Connection) -> None:
         self._incoming_connections.append(connection)
 
-    def getAllIncomingConnectionsByType(self, resource_type):
+    def getAllIncomingConnectionsByType(self, resource_type: str) -> List[Connection]:
         return [connection for connection in self._incoming_connections if connection.resource_type == resource_type]
 
-    def getAllOutgoingConnectionsByType(self, resource_type):
+    def getAllOutgoingConnectionsByType(self, resource_type: str) -> List[Connection]:
         return [connection for connection in self._outgoing_connections if connection.resource_type == resource_type]
-
-    def _getResourceFromAllConnections(self, resource_type, amount):
-        # Note; Depending on the strategy we might do something different (eg; Equal request from all, or empty
-        # the first one we find)
-        # Amount is the total amount that we want from all connections
-        connections = self.getAllIncomingConnectionsByType(resource_type)
-
-        # Sort to lowest amount first first
-        connections = sorted(connections, key=lambda x: x.preGetResource(amount), reverse=True)
-        collected_amount = 0
-
-        # As long as we still have connections, keep doing this.
-        while len(connections):
-            # Check how much we should ask for (so equally from everyone)
-            amount_to_request = (amount - collected_amount) / len(connections)
-            # Last item of the list is the lowest one, so the one least likely to give us what we want.
-            active_connection = connections.pop()
-            # Check what we got.
-            collected_amount += active_connection.getResource(amount_to_request)
-
-        return collected_amount
-
-    def reserveGetResource(self, resource_type, amount):
-        pass
 
     def preGetResource(self, resource_type, amount) -> int:
         '''
