@@ -4,24 +4,18 @@ from Node import Node
 class Generator(Node):
     def __init__(self):
         super().__init__()
+        self._resources_required_per_tick["fuel"] = 10
 
     def update(self):
-        # So a generator will attempt to get sum resources!
-        # Hardcoded to require 10 fuel and produce 10 Energy
+        super().update()
 
-        # Attempt to gather resources!
-        amount_fuel_available = 0
-        for connection in self.getAllIncomingConnectionsByType("fuel"):
-            # We found the right one, yay!
-            fuel_still_required = 20 - amount_fuel_available
+        energy_produced = self._resources_received_this_tick["fuel"]
+        outgoing_connections = self.getAllOutgoingConnectionsByType("energy")
+        outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("energy"), key=lambda x: x.preGiveResource(energy_produced / len(outgoing_connections)), reverse=True)
+        while len(outgoing_connections):
+            active_connection = outgoing_connections.pop()
 
-            fuel_from_connection = connection.getResource(fuel_still_required)
+            energy_stored = active_connection.giveResource(energy_produced / (len(outgoing_connections) + 1))
+            energy_produced -= energy_stored
 
-            amount_fuel_available += fuel_from_connection
-            if amount_fuel_available == 20:
-                break
-
-        print("Managed to get %s fuel" % amount_fuel_available)
-
-        for connection in self.getAllOutgoingConnectionsByType("energy"):
-            connection.giveResource(amount_fuel_available)
+        # TODO: What to do with leftovers?
