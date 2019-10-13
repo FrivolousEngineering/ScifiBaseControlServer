@@ -1,5 +1,5 @@
-from Generator import Generator
 from Light import Light
+from NodeEngine import NodeEngine
 from ResourceStorage import ResourceStorage
 
 
@@ -22,37 +22,20 @@ battery_3.connectWith("energy", light_3)
 
 battery_4.connectWith("energy", light_3)
 
-light_1.preUpdate()
-light_2.preUpdate()
-light_3.preUpdate()
+
+engine = NodeEngine()
+engine.registerNode(light_1)
+engine.registerNode(light_2)
+engine.registerNode(light_3)
+
+engine.registerNode(battery_1)
+engine.registerNode(battery_2)
+engine.registerNode(battery_3)
+engine.registerNode(battery_4)
 
 
-def updateReservations():
-    battery_1.updateReservations()
-    battery_2.updateReservations()
-    battery_3.updateReservations()
-    battery_4.updateReservations()
-
-
-updateReservations()
-timer = 0
-while light_1.requiresReplanning() or light_2.requiresReplanning() or light_3.requiresReplanning():
-    print("Replanningg!", light_1.requiresReplanning(), light_2.requiresReplanning(), light_3.requiresReplanning())
-    if light_1.requiresReplanning():
-        light_1.replanReservations()
-    if light_2.requiresReplanning():
-        light_2.replanReservations()
-    if light_3.requiresReplanning():
-        light_3.replanReservations()
-    updateReservations()
-    print("")
-
-
-light_1.update()
-light_2.update()
-light_3.update()
+engine.doTick()
 
 print("Light 1:", light_1.isOn)
 print("Light 2:", light_2.isOn)
 print("Light 3:", light_3.isOn)
-print("Run completed")
