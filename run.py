@@ -1,12 +1,13 @@
 from Generator import Generator
 from Light import Light
 from NodeEngine import NodeEngine
+from NodeGraph import NodeGraph
 from ResourceStorage import ResourceStorage
 from Signal import Signal
 
 engine = NodeEngine()
 
-fuel_tank = ResourceStorage("fuel_tank", "fuel", 20)
+fuel_tank = ResourceStorage("fuel_tank", "fuel", 21)
 generator = Generator("generator")
 fuel_tank.connectWith("fuel", generator)
 
@@ -48,11 +49,12 @@ engine.registerNode(battery_1)
 engine.registerNode(battery_2)
 engine.registerNode(battery_3)
 engine.registerNode(battery_4)'''
+graph = NodeGraph(generator)
 
+for _ in range(0,3):
+    engine.doTick()
 
-
-
-engine.doTick()
+graph.showGraph()
 print(battery._incoming_connections)
 print(battery._amount)
 print(battery_2._amount)

@@ -26,6 +26,15 @@ class Node:
     def updateReservations(self) -> None:
         pass
 
+    def getId(self):
+        return self._node_id
+
+    def getResourcesRequiredPerTick(self):
+        return self._resources_required_per_tick
+
+    def getResourcesReceivedThisTick(self):
+        return self._resources_received_this_tick
+
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
