@@ -2,8 +2,8 @@ from Node import Node
 
 
 class Generator(Node):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, node_id: str) -> None:
+        super().__init__(node_id)
         self._resources_required_per_tick["fuel"] = 10
 
     def update(self):

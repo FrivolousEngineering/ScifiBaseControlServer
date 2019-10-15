@@ -2,9 +2,8 @@ from Node import Node
 
 
 class Light(Node):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
+    def __init__(self, node_id: str) -> None:
+        super().__init__(node_id)
         self.isOn = False
         self._resources_required_per_tick["energy"] = 8
 

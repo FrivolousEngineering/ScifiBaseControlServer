@@ -5,12 +5,12 @@ from ResourceStorage import ResourceStorage
 
 engine = NodeEngine()
 
-fuel_tank = ResourceStorage("fuel", 20)
-generator = Generator()
+fuel_tank = ResourceStorage("fuel_tank", "fuel", 20)
+generator = Generator("generator")
 fuel_tank.connectWith("fuel", generator)
 
-battery = ResourceStorage("energy", 10, 11)
-battery_2 = ResourceStorage("energy", 0, 15)
+battery = ResourceStorage("battery", "energy", 10, 11)
+battery_2 = ResourceStorage("battery_2", "energy", 0, 15)
 generator.connectWith("energy", battery)
 generator.connectWith("energy", battery_2)
 
@@ -50,4 +50,9 @@ engine.registerNode(battery_4)'''
 
 
 engine.doTick()
+print(battery._incoming_connections)
+print(battery._amount)
+print(battery_2._amount)
+
+print("done")
 

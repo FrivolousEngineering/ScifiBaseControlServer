@@ -4,12 +4,19 @@ from Connection import Connection
 
 
 class Node:
-    def __init__(self) -> None:
+    def __init__(self, node_id: str) -> None:
+        '''
+        :param node_id: Unique identifier of the node.
+        '''
+        self._node_id = node_id
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
 
         self._resources_required_per_tick = {}  # type: Dict[str, float]
         self._resources_received_this_tick = {}  # type: Dict[str, float]
+
+    def __repr__(self):
+        return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
 
     def updateReservations(self) -> None:
         pass
