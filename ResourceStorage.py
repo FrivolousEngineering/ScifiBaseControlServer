@@ -1,16 +1,16 @@
+from typing import Optional
+
 from Node import Node
-import math
 
 
 class ResourceStorage(Node):
-    def __init__(self, resource_type, amount, max_storage = None):
-        super().__init__()
+    def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None):
+        super().__init__(node_id)
         self._resource_type = resource_type
         self._amount = amount
         self._max_storage = max_storage
-        pass
 
-    def preGetResource(self, resource_type, amount) -> int:
+    def preGetResource(self, resource_type, amount) -> float:
         if resource_type != self._resource_type:
             return 0
 
@@ -29,19 +29,19 @@ class ResourceStorage(Node):
             active_reservation.reserved_available_amount = min(max_resources_to_give, active_reservation.reserved_requested_amount)
             reserved_amount += active_reservation.reserved_available_amount
 
-    def getResource(self, resource_type, amount) -> int:
+    def getResource(self, resource_type: str, amount: float) -> float:
         resources_requestable = self.preGetResource(resource_type, amount)
         self._amount -= resources_requestable
         return resources_requestable
 
-    def preGiveResource(self, resource_type, amount) -> int:
+    def preGiveResource(self, resource_type: str, amount: float) -> float:
         if resource_type != self._resource_type:
             return 0
         if self._max_storage is not None and self._max_storage <= self._amount + amount:
             return self._max_storage - self._amount
         return amount
 
-    def giveResource(self, resource_type, amount) -> int:
+    def giveResource(self, resource_type: str, amount: float) -> float:
         resources_providable = self.preGiveResource(resource_type, amount)
         self._amount += resources_providable
         return resources_providable
