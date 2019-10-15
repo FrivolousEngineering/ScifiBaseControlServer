@@ -1,9 +1,14 @@
 from typing import List, TYPE_CHECKING, Dict
 
 from Connection import Connection
+from Signal import signalemitter, Signal
 
-
+@signalemitter
 class Node:
+    preUpdateCalled = Signal()
+    updateCalled = Signal()
+    postUpdateCalled = Signal()
+
     def __init__(self, node_id: str) -> None:
         '''
         :param node_id: Unique identifier of the node.
@@ -22,6 +27,7 @@ class Node:
         pass
 
     def preUpdate(self) -> None:
+        self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
@@ -57,9 +63,11 @@ class Node:
                     connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
     def update(self) -> None:
+        self.updateCalled.emit(self)
         self._getAllReservedResources()
 
     def postUpdate(self) -> None:
+        self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}

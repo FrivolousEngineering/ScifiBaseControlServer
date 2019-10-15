@@ -2,6 +2,7 @@ from Generator import Generator
 from Light import Light
 from NodeEngine import NodeEngine
 from ResourceStorage import ResourceStorage
+from Signal import Signal
 
 engine = NodeEngine()
 
@@ -47,6 +48,8 @@ engine.registerNode(battery_1)
 engine.registerNode(battery_2)
 engine.registerNode(battery_3)
 engine.registerNode(battery_4)'''
+
+
 
 
 engine.doTick()
