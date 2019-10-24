@@ -12,10 +12,12 @@ generator = Generator("generator")
 fuel_tank.connectWith("fuel", generator)
 
 
-water_tank = ResourceStorage("water_tank", "water", 1000)
+water_tank = ResourceStorage("water_tank", "water", 50)
+
+water_tank_2 = ResourceStorage("water_tank", "water", 0)
 water_tank.connectWith("water", generator)
 
-generator.connectWith("water", water_tank)
+generator.connectWith("water", water_tank_2)
 
 battery = ResourceStorage("battery", "energy", 10, 11)
 battery_2 = ResourceStorage("battery_2", "energy", 0, 15)
