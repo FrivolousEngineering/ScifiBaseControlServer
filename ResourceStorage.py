@@ -10,6 +10,10 @@ class ResourceStorage(Node):
         self._amount = amount
         self._max_storage = max_storage
 
+    @property
+    def weight(self):
+        return self._weight + self._amount
+
     def preGetResource(self, resource_type, amount) -> float:
         if resource_type != self._resource_type:
             return 0

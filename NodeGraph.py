@@ -11,12 +11,14 @@ class NodeGraph:
         self._resources_produced_history = {}
         self._resources_gained_history = {}
         self._num_ticks_stored = 0
+        self._temperature_history = []
         for resource_type in self._node.getResourcesRequiredPerTick():
             self._resources_gained_history[resource_type] = []
             #self._resources_requested_history[resource_type] = []
 
     def _update(self, _):
         self._num_ticks_stored += 1
+        self._temperature_history.append(self._node.temperature)
         resources_received = self._node.getResourcesReceivedThisTick()
         resources_produced = self._node.getResourcesProducedThisTick()
         for resource_type in self._node.getResourcesRequiredPerTick():
@@ -28,6 +30,8 @@ class NodeGraph:
 
     def showGraph(self):
         labels = [str(num) for num in range(0, self._num_ticks_stored)]
+
+        plt.bar(labels, self._temperature_history, label = "Temperature")
         for resource_type, data in self._resources_gained_history.items():
             plt.bar(labels, data, label = resource_type + " used")
 

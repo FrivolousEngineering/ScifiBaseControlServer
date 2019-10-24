@@ -22,6 +22,24 @@ class Node:
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
 
+        self.temperature = 20
+        self._weight = 300
+
+    @property
+    def weight(self):
+        return self._weight
+
+    def addHeat(self, heat_to_add):
+        print("ADDING heat!", heat_to_add, self._node_id)
+
+        self.temperature += heat_to_add / self.weight
+        print("NEW TEMP", self._node_id, self.temperature)
+
+    def subtractHeat(self, heat_to_subtract):
+        print("REMOVING HEAT", heat_to_subtract)
+        self.temperature -= heat_to_subtract / self.weight
+        print("NEW TEMP", self._node_id, self.temperature)
+
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
 
@@ -44,6 +62,9 @@ class Node:
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
+            if len(connections) == 0:
+                # Can't get the resource at all!
+                return
             resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
@@ -63,10 +84,9 @@ class Node:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
             num_statisfied_reservations = len([connection for connection in connections if connection.isReservationStatisfied()])
-            if not num_statisfied_reservations:
-                return
+            if not num_statisfied_reservations or total_resource_deficiency == 0:
+                continue
             extra_resource_to_ask_per_connection = total_resource_deficiency / num_statisfied_reservations
-            print("Extra resource to get per connection", extra_resource_to_ask_per_connection)
             for connection in connections:
                 if not connection.isReservationStatisfied():
                     # So the connection that could not meet demand needs to be locked (since we can't get more!)

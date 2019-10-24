@@ -7,9 +7,15 @@ from Signal import Signal
 
 engine = NodeEngine()
 
-fuel_tank = ResourceStorage("fuel_tank", "fuel", 21)
+fuel_tank = ResourceStorage("fuel_tank", "fuel", 1000)
 generator = Generator("generator")
 fuel_tank.connectWith("fuel", generator)
+
+
+water_tank = ResourceStorage("water_tank", "water", 1000)
+water_tank.connectWith("water", generator)
+
+generator.connectWith("water", water_tank)
 
 battery = ResourceStorage("battery", "energy", 10, 11)
 battery_2 = ResourceStorage("battery_2", "energy", 0, 15)
@@ -19,6 +25,7 @@ generator.connectWith("energy", battery_2)
 engine.registerNode(fuel_tank)
 engine.registerNode(generator)
 engine.registerNode(battery)
+engine.registerNode(water_tank)
 
 '''battery_1 = ResourceStorage("energy", 4)
 battery_2 = ResourceStorage("energy", 8)
@@ -50,11 +57,13 @@ engine.registerNode(battery_2)
 engine.registerNode(battery_3)
 engine.registerNode(battery_4)'''
 graph = NodeGraph(generator)
+graph_2 = NodeGraph(water_tank)
 
-for _ in range(0,3):
+for _ in range(0, 100):
     engine.doTick()
 
 graph.showGraph()
+graph_2.showGraph()
 
 print("done")
 

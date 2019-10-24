@@ -67,8 +67,11 @@ class NodeEngine:
         '''
         Handle a single tick.
         '''
+        print("TICK STARTED")
         self._preUpdate()
         self._updateReservations()
         self._replanReservations()
         self._update()
         self._postUpdate()
+        print("TICK ENDED!")
+        print(" ")

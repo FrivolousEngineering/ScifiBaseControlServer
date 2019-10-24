@@ -69,13 +69,19 @@ class Connection:
         return self.reserved_requested_amount - self.reserved_available_amount
 
     def getResource(self, amount: float) -> float:
-        return self.origin.getResource(self.resource_type, amount)
+        result = self.origin.getResource(self.resource_type, amount)
+        if self.resource_type != "energy":
+            self.target.addHeat(amount * (self.origin.temperature - self.target.temperature))
+        return result
 
     def preGetResource(self, amount: float) -> float:
         return self.origin.preGetResource(self.resource_type, amount)
 
     def giveResource(self, amount: float) -> float:
-        return self.target.giveResource(self.resource_type, amount)
+        result = self.target.giveResource(self.resource_type, amount)
+        if self.resource_type != "energy":
+            self.target.addHeat(amount * (self.origin.temperature - self.target.temperature))
+        return result
 
     def preGiveResource(self, amount: float) -> float:
         return self.target.preGiveResource(self.resource_type, amount)
