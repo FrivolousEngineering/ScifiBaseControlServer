@@ -26,13 +26,15 @@ class Generator(Node):
         outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("water"),
                                       key=lambda x: x.preGiveResource(water_produced / len(outgoing_connections)),
                                       reverse=True)
+        print("YAY", water_produced)
         while len(outgoing_connections):
             active_connection = outgoing_connections.pop()
 
             water_stored = active_connection.giveResource(water_produced / (len(outgoing_connections) + 1))
             water_produced -= water_stored
 
-
+        #TODO: When the water could not be dumped, don't request new water until we got rid of it.
+        print(water_produced)
         heat_produced = self._resources_received_this_tick["fuel"] * 120
         self.addHeat(heat_produced)
 

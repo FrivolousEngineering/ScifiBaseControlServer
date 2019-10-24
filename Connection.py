@@ -71,7 +71,7 @@ class Connection:
     def getResource(self, amount: float) -> float:
         result = self.origin.getResource(self.resource_type, amount)
         if self.resource_type != "energy":
-            self.target.addHeat(amount * (self.origin.temperature - self.target.temperature))
+            self.target.addHeat(result * (self.origin.temperature - self.target.temperature))
         return result
 
     def preGetResource(self, amount: float) -> float:
@@ -80,7 +80,7 @@ class Connection:
     def giveResource(self, amount: float) -> float:
         result = self.target.giveResource(self.resource_type, amount)
         if self.resource_type != "energy":
-            self.target.addHeat(amount * (self.origin.temperature - self.target.temperature))
+            self.target.addHeat(result * (self.origin.temperature - self.target.temperature))
         return result
 
     def preGiveResource(self, amount: float) -> float:
