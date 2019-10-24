@@ -3,6 +3,7 @@ from typing import List, TYPE_CHECKING, Dict
 from Connection import Connection
 from Signal import signalemitter, Signal
 
+
 @signalemitter
 class Node:
     preUpdateCalled = Signal()
@@ -93,8 +94,8 @@ class Node:
         else:
             return len(self._incoming_connections) != num_statisfied_reservations
 
-    def connectWith(self, type: str, target: "Node") -> None:
-        new_connection = Connection(origin=self, target=target, resource_type = type)
+    def connectWith(self, resource_type: str, target: "Node") -> None:
+        new_connection = Connection(origin=self, target=target, resource_type = resource_type)
         self._outgoing_connections.append(new_connection)
         target.addConnection(new_connection)
 
@@ -107,7 +108,7 @@ class Node:
     def getAllOutgoingConnectionsByType(self, resource_type: str) -> List[Connection]:
         return [connection for connection in self._outgoing_connections if connection.resource_type == resource_type]
 
-    def preGetResource(self, resource_type, amount) -> int:
+    def preGetResource(self, resource_type: str, amount: float) -> float:
         '''
         How much resources would this node be to give if we were to actually do it.
         :param resource_type:
@@ -116,7 +117,7 @@ class Node:
         '''
         return 0
 
-    def preGiveResource(self, resource_type, amount)-> int:
+    def preGiveResource(self, resource_type: str, amount: float) -> float:
         '''
         How much resources would this node be able to accept if provideResource is called
         :param resource_type:
@@ -125,8 +126,8 @@ class Node:
         '''
         return 0
 
-    def getResource(self, resource_type, amount) -> int:
+    def getResource(self, resource_type: str, amount: float) -> float:
         return 0  # By default, we don't have the resource. Go home.
 
-    def giveResource(self, resource_type, amount) -> int:
+    def giveResource(self, resource_type: str, amount: float) -> float:
         return 0
