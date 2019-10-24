@@ -55,9 +55,6 @@ for _ in range(0,3):
     engine.doTick()
 
 graph.showGraph()
-print(battery._incoming_connections)
-print(battery._amount)
-print(battery_2._amount)
 
 print("done")
 

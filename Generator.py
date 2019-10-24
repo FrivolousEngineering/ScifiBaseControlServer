@@ -17,5 +17,6 @@ class Generator(Node):
 
             energy_stored = active_connection.giveResource(energy_produced / (len(outgoing_connections) + 1))
             energy_produced -= energy_stored
+        self._resources_produced_this_tick["energy"] = self._resources_received_this_tick["fuel"] - energy_produced
 
         # TODO: What to do with leftovers?

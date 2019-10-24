@@ -19,6 +19,7 @@ class Node:
 
         self._resources_required_per_tick = {}  # type: Dict[str, float]
         self._resources_received_this_tick = {}  # type: Dict[str, float]
+        self._resources_produced_this_tick = {}  # type: Dict[str, float]
 
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
@@ -34,6 +35,9 @@ class Node:
 
     def getResourcesReceivedThisTick(self):
         return self._resources_received_this_tick
+
+    def getResourcesProducedThisTick(self):
+        return self._resources_produced_this_tick
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
@@ -80,6 +84,7 @@ class Node:
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
+        self._resources_produced_this_tick = {}
 
     def requiresReplanning(self) -> bool:
         num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
