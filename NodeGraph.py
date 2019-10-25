@@ -33,10 +33,10 @@ class NodeGraph:
 
         plt.bar(labels, self._temperature_history, label = "Temperature")
         for resource_type, data in self._resources_gained_history.items():
-            plt.bar(labels, data, label = resource_type + " used")
+            plt.bar(labels, data, label = resource_type.title() + " used")
 
         for resource_type, data in self._resources_produced_history.items():
-            plt.bar(labels, data, label=resource_type + " produced")
+            plt.bar(labels, data, label=resource_type.title() + " produced")
         plt.xlabel("Ticks")
         plt.ylabel("Amount")
         plt.title("Resources flow of %s" % self._node.getId())
