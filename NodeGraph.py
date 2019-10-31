@@ -22,7 +22,14 @@ class NodeGraph:
         resources_received = self._node.getResourcesReceivedThisTick()
         resources_produced = self._node.getResourcesProducedThisTick()
         for resource_type in self._node.getResourcesRequiredPerTick():
+            if resource_type not in resources_received:
+                self._resources_gained_history[resource_type].append(0)
+
+        for resource_type in resources_received:
+            if resource_type not in self._resources_gained_history:
+                self._resources_gained_history[resource_type] = []
             self._resources_gained_history[resource_type].append(resources_received[resource_type])
+
         for resource_type in self._node.getResourcesProducedThisTick():
             if resource_type not in self._resources_produced_history:
                 self._resources_produced_history[resource_type] = []

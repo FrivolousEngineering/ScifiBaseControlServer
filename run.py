@@ -31,20 +31,21 @@ engine.registerNode(fuel_tank)
 engine.registerNode(generator)
 engine.registerNode(battery)
 engine.registerNode(water_tank)
+engine.registerNode(water_tank_2)
 engine.registerNode(fluid_cooler)
 engine.registerNode(fluid_cooler_2)
 
 graph = NodeGraph(generator)
 graph_2 = NodeGraph(fluid_cooler)
 graph_3 = NodeGraph(fluid_cooler_2)
-graph_4 = NodeGraph(water_tank)
+graph_4 = NodeGraph(water_tank_2)
 
 for _ in range(0, 80):
     engine.doTick()
 
-graph.showGraph()
-graph_2.showGraph()
-graph_3.showGraph()
+#graph.showGraph()
+#graph_2.showGraph()
+#graph_3.showGraph()
 graph_4.showGraph()
 
 print("done")
