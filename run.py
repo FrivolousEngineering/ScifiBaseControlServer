@@ -40,10 +40,10 @@ graph_2 = NodeGraph(fluid_cooler)
 graph_3 = NodeGraph(fluid_cooler_2)
 graph_4 = NodeGraph(water_tank_2)
 
-for _ in range(0, 80):
+for _ in range(0, 20):
     engine.doTick()
 
-#graph.showGraph()
+graph.showGraph()
 #graph_2.showGraph()
 #graph_3.showGraph()
 graph_4.showGraph()

@@ -13,3 +13,7 @@ weight_per_unit = {"water": 1,
 combustion_heat = {"water": 0,
                    "fuel": 7500,
                    "energy": 0 }
+
+bar_color = {"water": "b",
+             "fuel": "r",
+             "energy": "y"}
