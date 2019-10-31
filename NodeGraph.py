@@ -30,15 +30,24 @@ class NodeGraph:
 
     def showGraph(self):
         labels = [str(num) for num in range(0, self._num_ticks_stored)]
-
+        plt.subplot(3, 1, 1)
         plt.bar(labels, self._temperature_history, label = "Temperature")
-        for resource_type, data in self._resources_gained_history.items():
-            plt.bar(labels, data, label = resource_type.title() + " used")
+        plt.ylabel("Degrees Kelvin")
+        plt.legend()
 
+        plt.subplot(3, 1, 2)
+        for resource_type, data in self._resources_gained_history.items():
+            plt.bar(labels, data, label = resource_type.title())
+        plt.legend()
+
+        plt.ylabel("Used")
+
+        plt.subplot(3, 1, 3)
         for resource_type, data in self._resources_produced_history.items():
-            plt.bar(labels, data, label=resource_type.title() + " produced")
+            plt.bar(labels, data, label=resource_type.title())
+
         plt.xlabel("Ticks")
-        plt.ylabel("Amount")
+        plt.ylabel("Produced")
         plt.title("Resources flow of %s" % self._node.getId())
         plt.legend()
         plt.show()
