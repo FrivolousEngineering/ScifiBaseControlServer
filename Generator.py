@@ -10,34 +10,37 @@ class Generator(Node):
     def update(self):
         super().update()
 
-        energy_produced = self.getResourceAvailableThisTick("fuel")
+        # A generator creates 1 energy per fuel that it gets. Yay!
+        energy_left = self.getResourceAvailableThisTick("fuel")
 
+        # Attempt to "get rid" of the energy by offering it to connected sources.
         outgoing_connections = self.getAllOutgoingConnectionsByType("energy")
-        outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("energy"), key=lambda x: x.preGiveResource(energy_produced / len(outgoing_connections)), reverse=True)
+        outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("energy"), key=lambda x: x.preGiveResource(energy_left / len(outgoing_connections)), reverse=True)
         while len(outgoing_connections):
             active_connection = outgoing_connections.pop()
-            energy_stored = active_connection.giveResource(energy_produced / (len(outgoing_connections) + 1))
-            energy_produced -= energy_stored
-        self._resources_produced_this_tick["energy"] = self._resources_received_this_tick["fuel"] - energy_produced
+            energy_stored = active_connection.giveResource(energy_left / (len(outgoing_connections) + 1))
+            energy_left -= energy_stored
 
-        water_collected = self.getResourceAvailableThisTick("water")
-        outgoing_connections = self.getAllOutgoingConnectionsByType("water")
-        outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("water"),
-                                      key=lambda x: x.preGiveResource(water_collected / len(outgoing_connections)),
-                                      reverse=True)
-        print("Water collected", water_collected)
-        while len(outgoing_connections):
-            active_connection = outgoing_connections.pop()
-            water_stored = active_connection.giveResource(water_collected / (len(outgoing_connections) + 1))
-            water_collected -= water_stored
+        # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
+        # That's why we put whatever is left back into the fuel "resevoir"
+        self._resources_left_over["fuel"] = energy_left
+        self._resources_produced_this_tick["energy"] = max(self._resources_received_this_tick["fuel"] - energy_left, 0)
 
-        #TODO: When the water could not be dumped, don't request new water until we got rid of it.
-        print("WATER LEFT", water_collected)
-
-        self._resources_left_over["water"] = water_collected
-
-        heat_produced = self._resources_received_this_tick["fuel"] * 120
+        # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
+        heat_produced = self._resources_produced_this_tick["energy"] * 120
         self.addHeat(heat_produced)
 
-        self._resources_produced_this_tick["water"] = max(self._resources_received_this_tick["water"] - water_collected, 0)
-        # TODO: What to do with leftovers?
+        # Same thing for the water. Check how much water we have.
+        water_left = self.getResourceAvailableThisTick("water")
+        outgoing_connections = self.getAllOutgoingConnectionsByType("water")
+        outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("water"),
+                                      key=lambda x: x.preGiveResource(water_left / len(outgoing_connections)),
+                                      reverse=True)
+        while len(outgoing_connections):
+            active_connection = outgoing_connections.pop()
+            water_stored = active_connection.giveResource(water_left / (len(outgoing_connections) + 1))
+            water_left -= water_stored
+
+        # Some amount could not be dumped, so this means we will just request less next tick.
+        self._resources_left_over["water"] = water_left
+        self._resources_produced_this_tick["water"] = max(self._resources_received_this_tick["water"] - water_left, 0)

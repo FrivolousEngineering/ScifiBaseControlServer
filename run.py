@@ -62,7 +62,7 @@ engine.registerNode(battery_4)'''
 graph = NodeGraph(generator)
 graph_2 = NodeGraph(water_tank)
 
-for _ in range(0, 120):
+for _ in range(0, 100):
     engine.doTick()
 
 graph.showGraph()
