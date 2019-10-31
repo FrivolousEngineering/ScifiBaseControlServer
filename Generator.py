@@ -27,7 +27,7 @@ class Generator(Node):
         self._resources_produced_this_tick["energy"] = max(self._resources_received_this_tick["fuel"] - energy_left, 0)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
-        heat_produced = self._resources_produced_this_tick["energy"] * 120
+        heat_produced = self._resources_produced_this_tick["energy"] * 1200
         self.addHeat(heat_produced)
 
         # Same thing for the water. Check how much water we have.

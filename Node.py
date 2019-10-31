@@ -25,8 +25,22 @@ class Node:
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
 
-        self.temperature = 20.
+        # Temperature is in kelvin (so default is 20 deg c)
+        self.temperature = 293.15
         self._weight = 300.
+
+        # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
+        self._heat_emissivity = 0.5
+
+        # A few examples of heat_convection_coefficient all in W/m K:
+        # Plastic: 0.1-0.22
+        # Stainless steel: 16-24
+        # Aluminum: 205 - 250
+        self._heat_convection_coefficient = 10
+        # How large is the surface of this object (in M2)
+        self._surface_area = 1
+        # A constant for heat.
+        self.__stefan_boltzmann_constant = 5.67e-8
 
     @property
     def weight(self):
@@ -127,6 +141,26 @@ class Node:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
+        self._emitHeat()
+        self._convectiveHeatTransfer()
+
+    def _emitHeat(self) -> None:
+        '''
+        Heat also leaves objects by grace of radiation. This is calculated by the The Stefan-Boltzmann Law
+        :return:
+        '''
+        # TODO: Right now outside temp is hardcoded to 20 deg celcius
+        outside_temp = 293.15
+        temp_diff = pow(outside_temp, 4) - pow(self.temperature, 4)
+        heat_radiation = self.__stefan_boltzmann_constant * self._heat_emissivity * self._surface_area * temp_diff
+
+        self.addHeat(heat_radiation)
+
+    def _convectiveHeatTransfer(self) -> None:
+        # TODO: Right now outside temp is hardcoded to 20 deg celcius
+        outside_temp = 293.15
+        heat_convection = self._heat_convection_coefficient * self._surface_area * (outside_temp - self.temperature)
+        self.addHeat(heat_convection)
 
     def requiresReplanning(self) -> bool:
         '''

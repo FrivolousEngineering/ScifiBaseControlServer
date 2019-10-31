@@ -19,7 +19,7 @@ water_tank.connectWith("water", generator)
 
 generator.connectWith("water", water_tank_2)
 
-battery = ResourceStorage("battery", "energy", 10, 11)
+battery = ResourceStorage("battery", "energy", 10)
 battery_2 = ResourceStorage("battery_2", "energy", 0, 15)
 generator.connectWith("energy", battery)
 generator.connectWith("energy", battery_2)
@@ -62,7 +62,7 @@ engine.registerNode(battery_4)'''
 graph = NodeGraph(generator)
 graph_2 = NodeGraph(water_tank)
 
-for _ in range(0, 100):
+for _ in range(0, 150):
     engine.doTick()
 
 graph.showGraph()
