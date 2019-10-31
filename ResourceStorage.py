@@ -11,6 +11,7 @@ class ResourceStorage(Node):
         self._amount = amount
         self._max_storage = max_storage
         self._resource_weight_per_unit = weight_per_unit[resource_type]
+        self._resources_received_this_tick[self._resource_type] = 0
 
     @property
     def weight(self):
@@ -50,4 +51,7 @@ class ResourceStorage(Node):
     def giveResource(self, resource_type: str, amount: float) -> float:
         resources_providable = self.preGiveResource(resource_type, amount)
         self._amount += resources_providable
+        if self._resource_type not in self._resources_received_this_tick:
+            self._resources_received_this_tick[self._resource_type] = 0
+        self._resources_received_this_tick[self._resource_type] += resources_providable
         return resources_providable
