@@ -10,33 +10,34 @@ class Generator(Node):
     def update(self):
         super().update()
 
-        energy_produced = self._resources_received_this_tick["fuel"]
+        energy_produced = self.getResourceAvailableThisTick("fuel")
 
         outgoing_connections = self.getAllOutgoingConnectionsByType("energy")
         outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("energy"), key=lambda x: x.preGiveResource(energy_produced / len(outgoing_connections)), reverse=True)
         while len(outgoing_connections):
             active_connection = outgoing_connections.pop()
-
             energy_stored = active_connection.giveResource(energy_produced / (len(outgoing_connections) + 1))
             energy_produced -= energy_stored
         self._resources_produced_this_tick["energy"] = self._resources_received_this_tick["fuel"] - energy_produced
 
-        water_produced = self._resources_received_this_tick["water"]
+        water_collected = self.getResourceAvailableThisTick("water")
         outgoing_connections = self.getAllOutgoingConnectionsByType("water")
         outgoing_connections = sorted(self.getAllOutgoingConnectionsByType("water"),
-                                      key=lambda x: x.preGiveResource(water_produced / len(outgoing_connections)),
+                                      key=lambda x: x.preGiveResource(water_collected / len(outgoing_connections)),
                                       reverse=True)
-        print("YAY", water_produced)
+        print("Water collected", water_collected)
         while len(outgoing_connections):
             active_connection = outgoing_connections.pop()
-
-            water_stored = active_connection.giveResource(water_produced / (len(outgoing_connections) + 1))
-            water_produced -= water_stored
+            water_stored = active_connection.giveResource(water_collected / (len(outgoing_connections) + 1))
+            water_collected -= water_stored
 
         #TODO: When the water could not be dumped, don't request new water until we got rid of it.
-        print(water_produced)
+        print("WATER LEFT", water_collected)
+
+        self._resources_left_over["water"] = water_collected
+
         heat_produced = self._resources_received_this_tick["fuel"] * 120
         self.addHeat(heat_produced)
 
-        self._resources_produced_this_tick["water"] =self._resources_received_this_tick["water"] - water_produced
+        self._resources_produced_this_tick["water"] = max(self._resources_received_this_tick["water"] - water_collected, 0)
         # TODO: What to do with leftovers?

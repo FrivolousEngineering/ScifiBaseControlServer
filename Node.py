@@ -22,6 +22,9 @@ class Node:
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
 
+        # Any resources that were left from previous (ticks) that could not be left anywhere.
+        self._resources_left_over = {}  # type: Dict[str, float]
+
         self.temperature = 20
         self._weight = 300
 
@@ -58,6 +61,9 @@ class Node:
     def getResourcesProducedThisTick(self):
         return self._resources_produced_this_tick
 
+    def getResourceAvailableThisTick(self, resource_type):
+        return self._resources_received_this_tick.get(resource_type, 0) + self._resources_left_over.get(resource_type, 0)
+
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
@@ -65,7 +71,8 @@ class Node:
             if len(connections) == 0:
                 # Can't get the resource at all!
                 return
-            resource_to_reserve = self._resources_required_per_tick[resource_type] / len(connections)
+            total_resource_to_reserve = self._resources_required_per_tick[resource_type] - self._resources_left_over.get(resource_type, 0)
+            resource_to_reserve = total_resource_to_reserve / len(connections)
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
 
