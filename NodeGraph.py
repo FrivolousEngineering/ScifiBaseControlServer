@@ -1,6 +1,6 @@
 from Node import Node
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 class NodeGraph:
     def __init__(self, node: Node):
@@ -29,22 +29,29 @@ class NodeGraph:
             self._resources_produced_history[resource_type].append(resources_produced[resource_type])
 
     def showGraph(self):
-        labels = [str(num) for num in range(0, self._num_ticks_stored)]
+        bar_width = 0.5
+
         plt.subplot(3, 1, 1)
+        current_bar_width = 0
+        labels = [num + current_bar_width for num in range(0, self._num_ticks_stored)]
         plt.bar(labels, self._temperature_history, label = "Temperature")
         plt.ylabel("Degrees Kelvin")
         plt.legend()
 
         plt.subplot(3, 1, 2)
         for resource_type, data in self._resources_gained_history.items():
-            plt.bar(labels, data, label = resource_type.title())
+            labels = [num + current_bar_width for num in range(0, self._num_ticks_stored)]
+            plt.bar(labels, data, label = resource_type.title(), width= 1 / (len(self._resources_gained_history.items()) + 1))
+            current_bar_width += 1 / len(self._resources_gained_history.items())
         plt.legend()
-
         plt.ylabel("Used")
 
         plt.subplot(3, 1, 3)
+        current_bar_width = 0
         for resource_type, data in self._resources_produced_history.items():
-            plt.bar(labels, data, label=resource_type.title())
+            labels = [num + current_bar_width for num in range(0, self._num_ticks_stored)]
+            plt.bar(labels, data, label = resource_type.title(), width= 1 / (len(self._resources_produced_history.items()) + 1))
+            current_bar_width += 1 / len(self._resources_produced_history.items())
 
         plt.xlabel("Ticks")
         plt.ylabel("Produced")

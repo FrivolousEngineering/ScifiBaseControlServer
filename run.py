@@ -14,11 +14,11 @@ fluid_cooler = FluidCooler("fluid_cooler", "water", 10)
 fluid_cooler_2 = FluidCooler("fluid_cooler", "water", 10)
 
 water_tank = ResourceStorage("water_tank", "water", 750)
-
+water_tank_2 = ResourceStorage("water_tank_2", "water", 0, 100)
 
 water_tank.connectWith("water", generator)
 
-generator.connectWith("water", fluid_cooler)
+generator.connectWith("water", water_tank_2)
 fluid_cooler.connectWith("water", fluid_cooler_2)
 fluid_cooler_2.connectWith("water", water_tank)
 
