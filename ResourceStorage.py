@@ -1,6 +1,7 @@
 from typing import Optional
 
 from Node import Node
+from Constants import weight_per_unit
 
 
 class ResourceStorage(Node):
@@ -9,10 +10,11 @@ class ResourceStorage(Node):
         self._resource_type = resource_type
         self._amount = amount
         self._max_storage = max_storage
+        self._resource_weight_per_unit = weight_per_unit[resource_type]
 
     @property
     def weight(self):
-        return self._weight + self._amount
+        return self._weight + self._resource_weight_per_unit * self._amount
 
     def preGetResource(self, resource_type, amount) -> float:
         if resource_type != self._resource_type:

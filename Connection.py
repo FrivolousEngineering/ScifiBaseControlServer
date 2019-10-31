@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-
+from Constants import specific_heat
 if TYPE_CHECKING:
     from Node import Node
 
@@ -18,6 +18,7 @@ class Connection:
         self.reserved_requested_amount = 0
         self.reserved_available_amount = 0
         self.locked = False
+        self._specific_heat = specific_heat[resource_type]
 
     def lock(self) -> None:
         '''
@@ -70,8 +71,7 @@ class Connection:
 
     def getResource(self, amount: float) -> float:
         result = self.origin.getResource(self.resource_type, amount)
-        if self.resource_type != "energy":
-            self.target.addHeat(result * (self.origin.temperature - self.target.temperature))
+        self.target.addHeat(result * (self.origin.temperature - self.target.temperature) * self._specific_heat)
         return result
 
     def preGetResource(self, amount: float) -> float:
@@ -79,8 +79,7 @@ class Connection:
 
     def giveResource(self, amount: float) -> float:
         result = self.target.giveResource(self.resource_type, amount)
-        if self.resource_type != "energy":
-            self.target.addHeat(result * (self.origin.temperature - self.target.temperature))
+        self.target.addHeat(result * (self.origin.temperature - self.target.temperature) * self._specific_heat)
         return result
 
     def preGiveResource(self, amount: float) -> float:

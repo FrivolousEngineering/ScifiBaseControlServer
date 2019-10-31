@@ -1,5 +1,5 @@
 from Node import Node
-
+from Constants import specific_heat
 
 class Generator(Node):
     def __init__(self, node_id: str) -> None:
