@@ -25,23 +25,15 @@ class Node:
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
 
-        self.temperature = 20
-        self._weight = 300
+        self.temperature = 20.
+        self._weight = 300.
 
     @property
     def weight(self):
         return self._weight
 
-    def addHeat(self, heat_to_add):
-        print("ADDING heat!", heat_to_add, self._node_id)
-
+    def addHeat(self, heat_to_add: float) -> None:
         self.temperature += heat_to_add / self.weight
-        print("NEW TEMP", self._node_id, self.temperature)
-
-    def subtractHeat(self, heat_to_subtract):
-        print("REMOVING HEAT", heat_to_subtract)
-        self.temperature -= heat_to_subtract / self.weight
-        print("NEW TEMP", self._node_id, self.temperature)
 
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
@@ -49,7 +41,7 @@ class Node:
     def updateReservations(self) -> None:
         pass
 
-    def getId(self):
+    def getId(self) -> str:
         return self._node_id
 
     def getResourcesRequiredPerTick(self):
@@ -61,8 +53,16 @@ class Node:
     def getResourcesProducedThisTick(self):
         return self._resources_produced_this_tick
 
-    def getResourceAvailableThisTick(self, resource_type):
-        return self._resources_received_this_tick.get(resource_type, 0) + self._resources_left_over.get(resource_type, 0)
+    def getResourceAvailableThisTick(self, resource_type: str) -> float:
+        '''
+        Convenience function that combines the resources that this node got this tick and whatever was left over.
+        It can happen that resources were requested in a previous tick, that could not be used (because of various reasons).
+        Since it's super annoying to give those back, the node will just keep them in storage (and try to re-use them
+        in the next tick.
+        :param resource_type:
+        :return: Amount of resources of the given type that can be used this tick.
+        '''
+        return self._resources_received_this_tick.get(resource_type, 0.) + self._resources_left_over.get(resource_type, 0.)
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
@@ -82,13 +82,22 @@ class Node:
             result += connection.getReservedResource()
         return result
 
-    def _getAllReservedResources(self):
+    def _getAllReservedResources(self) -> None:
+        '''
+        Once the planning is done, this function ensures that all reservations actually get executed.
+        The results are places in the _resources_received_this_tick dict.
+        :return:
+        '''
         for resource_type in self._resources_required_per_tick:
             self._resources_received_this_tick[resource_type] = self._getReservedResourceByType(resource_type)
 
-    def replanReservations(self):
+    def replanReservations(self) -> None:
+        '''
+        If for whatever reason the initial reservations can not be met, this function will attempt to ask more of the
+        connections that did fulfill what was asked for (hoping that those can provide more resources)
+        :return:
+        '''
         for resource_type in self._resources_required_per_tick:
-
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
             num_statisfied_reservations = len([connection for connection in connections if connection.isReservationStatisfied()])
@@ -103,11 +112,9 @@ class Node:
                     connection.lock()
                 else:
                     if extra_resource_to_ask_per_connection == 0:
-
                         connection.lock()
                         continue
                     # So the connections that did give us that we want might have a bit more!
-                    print("New amount reserved:", connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
                     connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
     def update(self) -> None:
@@ -122,6 +129,13 @@ class Node:
         self._resources_produced_this_tick = {}
 
     def requiresReplanning(self) -> bool:
+        '''
+        Does this node need another replan step in order to get more resources.
+        Do keep in mind that even if this returns false, it does not mean that it got everything that it asked for (just
+        that nothing more can be done to ensure that it happens). If a node did get everything it asked, no replanning
+        is needed.
+        :return:
+        '''
         num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
         if not num_statisfied_reservations:
             return False
