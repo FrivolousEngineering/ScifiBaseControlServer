@@ -3,21 +3,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 from Constants import bar_color
 
+
 class NodeGraph:
-    def __init__(self, node: Node):
+    def __init__(self, node: Node) -> None:
         self._node = node
         self._node.postUpdateCalled.connect(self._update)
 
-        #self._resources_requested_history = {}
         self._resources_produced_history = {}
         self._resources_gained_history = {}
         self._num_ticks_stored = 0
         self._temperature_history = []
         for resource_type in self._node.getResourcesRequiredPerTick():
             self._resources_gained_history[resource_type] = []
-            #self._resources_requested_history[resource_type] = []
 
-    def _update(self, _):
+    def _update(self, _) -> None:
         self._num_ticks_stored += 1
         self._temperature_history.append(self._node.temperature)
         resources_received = self._node.getResourcesReceivedThisTick()
