@@ -22,7 +22,11 @@ class Connection:
         self.reserved_requested_amount = 0
         self.reserved_available_amount = 0
         self.locked = False
-        self._specific_heat = specific_heat[self.resource_type]
+        try:
+            self._specific_heat = specific_heat[self.resource_type]
+        except KeyError:
+            raise ValueError("Resource type %s was not recognised. Did you forget to add it to the constants file?" %
+                             self.resource_type)
 
     def lock(self) -> None:
         """
@@ -93,7 +97,7 @@ class Connection:
     def preGiveResource(self, amount: float) -> float:
         return self.target.preGiveResource(self.resource_type, amount)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{resource_type} connection between {origin} and {target}".format(origin = self.origin,
                                                                                  target = self.target,
                                                                                  resource_type = self.resource_type)
