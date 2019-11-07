@@ -7,10 +7,10 @@ from Constants import weight_per_unit
 class ResourceStorage(Node):
     def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None):
         super().__init__(node_id)
-        self._resource_type = resource_type
+        self._resource_type = resource_type.lower()
         self._amount = amount
         self._max_storage = max_storage
-        self._resource_weight_per_unit = weight_per_unit[resource_type]
+        self._resource_weight_per_unit = weight_per_unit[self._resource_type]
         self._resources_received_this_tick[self._resource_type] = 0
 
     @property

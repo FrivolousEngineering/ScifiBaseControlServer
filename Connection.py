@@ -14,11 +14,11 @@ class Connection:
         '''
         self.origin = origin
         self.target = target
-        self.resource_type = resource_type
+        self.resource_type = resource_type.lower()
         self.reserved_requested_amount = 0
         self.reserved_available_amount = 0
         self.locked = False
-        self._specific_heat = specific_heat[resource_type]
+        self._specific_heat = specific_heat[self.resource_type]
 
     def lock(self) -> None:
         '''
