@@ -6,6 +6,8 @@ from Signal import signalemitter, Signal
 
 @signalemitter
 class Node:
+    # TODO: Right now outside temp is hardcoded to 20 deg celcius
+    outside_temp = 293.15
     """
     This is an abstract class. Most objects in the system should inherit from this base class.
 
@@ -159,17 +161,13 @@ class Node:
         """
         Heat also leaves objects by grace of radiation. This is calculated by the The Stefan-Boltzmann Law
         """
-        # TODO: Right now outside temp is hardcoded to 20 deg celcius
-        outside_temp = 293.15
-        temp_diff = pow(outside_temp, 4) - pow(self.temperature, 4)
+        temp_diff = pow(self.outside_temp, 4) - pow(self.temperature, 4)
         heat_radiation = self.__stefan_boltzmann_constant * self._heat_emissivity * self._surface_area * temp_diff
 
         self.addHeat(heat_radiation)
 
     def _convectiveHeatTransfer(self) -> None:
-        # TODO: Right now outside temp is hardcoded to 20 deg celcius
-        outside_temp = 293.15
-        heat_convection = self._heat_convection_coefficient * self._surface_area * (outside_temp - self.temperature)
+        heat_convection = self._heat_convection_coefficient * self._surface_area * (self.outside_temp - self.temperature)
         self.addHeat(heat_convection)
 
     def requiresReplanning(self) -> bool:
