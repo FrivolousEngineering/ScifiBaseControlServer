@@ -26,7 +26,7 @@ class Node:
         self._resources_left_over = {}  # type: Dict[str, float]
 
         # Temperature is in kelvin (so default is 20 deg c)
-        self.temperature = 293.15
+        self._temperature = 293.15
         self._weight = 300.
 
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
@@ -46,8 +46,12 @@ class Node:
     def weight(self):
         return self._weight
 
+    @property
+    def temperature(self):
+        return self._temperature
+
     def addHeat(self, heat_to_add: float) -> None:
-        self.temperature += heat_to_add / self.weight
+        self._temperature += heat_to_add / self.weight
 
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
