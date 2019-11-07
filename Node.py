@@ -6,14 +6,22 @@ from Signal import signalemitter, Signal
 
 @signalemitter
 class Node:
+    """
+    This is an abstract class. Most objects in the system should inherit from this base class.
+
+    Nodes itself can be connected by Connections to move resources arround.
+
+    Nodes can produce and require a certain amount of resources per tick.
+    """
+    
     preUpdateCalled = Signal()
     updateCalled = Signal()
     postUpdateCalled = Signal()
 
     def __init__(self, node_id: str) -> None:
-        '''
+        """
         :param node_id: Unique identifier of the node.
-        '''
+        """
         self._node_id = node_id
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
@@ -72,15 +80,16 @@ class Node:
         return self._resources_produced_this_tick
 
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
-        '''
+        """
         Convenience function that combines the resources that this node got this tick and whatever was left over.
         It can happen that resources were requested in a previous tick, that could not be used (because of various reasons).
         Since it's super annoying to give those back, the node will just keep them in storage (and try to re-use them
         in the next tick.
-        :param resource_type:
+
+        :param resource_type: Type of the resource to check for
         :return: Amount of resources of the given type that can be used this tick.
-        '''
-        return self._resources_received_this_tick.get(resource_type, 0.) + self._resources_left_over.get(resource_type, 0.)
+        """
+        return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
@@ -94,27 +103,25 @@ class Node:
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
 
-    def _getReservedResourceByType(self, resource_type) -> float:
+    def _getReservedResourceByType(self, resource_type: str) -> float:
         result = 0
         for connection in self.getAllIncomingConnectionsByType(resource_type):
             result += connection.getReservedResource()
         return result
 
     def _getAllReservedResources(self) -> None:
-        '''
+        """
         Once the planning is done, this function ensures that all reservations actually get executed.
         The results are places in the _resources_received_this_tick dict.
-        :return:
-        '''
+        """
         for resource_type in self._resources_required_per_tick:
             self._resources_received_this_tick[resource_type] = self._getReservedResourceByType(resource_type)
 
     def replanReservations(self) -> None:
-        '''
+        """
         If for whatever reason the initial reservations can not be met, this function will attempt to ask more of the
         connections that did fulfill what was asked for (hoping that those can provide more resources)
-        :return:
-        '''
+        """
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
@@ -149,10 +156,9 @@ class Node:
         self._convectiveHeatTransfer()
 
     def _emitHeat(self) -> None:
-        '''
+        """
         Heat also leaves objects by grace of radiation. This is calculated by the The Stefan-Boltzmann Law
-        :return:
-        '''
+        """
         # TODO: Right now outside temp is hardcoded to 20 deg celcius
         outside_temp = 293.15
         temp_diff = pow(outside_temp, 4) - pow(self.temperature, 4)
@@ -167,13 +173,14 @@ class Node:
         self.addHeat(heat_convection)
 
     def requiresReplanning(self) -> bool:
-        '''
+        """
         Does this node need another replan step in order to get more resources.
         Do keep in mind that even if this returns false, it does not mean that it got everything that it asked for (just
         that nothing more can be done to ensure that it happens). If a node did get everything it asked, no replanning
         is needed.
-        :return:
-        '''
+
+        :return: If a replan is needed or not
+        """
         num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
         if not num_statisfied_reservations:
             return False
@@ -195,21 +202,23 @@ class Node:
         return [connection for connection in self._outgoing_connections if connection.resource_type == resource_type]
 
     def preGetResource(self, resource_type: str, amount: float) -> float:
-        '''
+        """
         How much resources would this node be to give if we were to actually do it.
-        :param resource_type:
-        :param amount:
-        :return:
-        '''
+
+        :param resource_type: Type of resource that is requested
+        :param amount: Amount of resources needed
+        :return: Amount of resources available
+        """
         return 0
 
     def preGiveResource(self, resource_type: str, amount: float) -> float:
-        '''
-        How much resources would this node be able to accept if provideResource is called
-        :param resource_type:
-        :param amount:
-        :return:
-        '''
+        """
+        How much resources would this node be able to accept if provideResource is called.
+
+        :param resource_type: Type of resource that is provided
+        :param amount: Amount of resources that are provided
+        :return: Amount of resources that could be accepted
+        """
         return 0
 
     def getResource(self, resource_type: str, amount: float) -> float:
