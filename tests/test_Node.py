@@ -120,5 +120,9 @@ def test__getAllReservedResources():
 
 def test__getReservedResourceByType():
     node = Node.Node("")
-    node.getResourcesRequiredPerTick()["water"] = 10
     connection = MagicMock()
+    connection.getReservedResource = MagicMock(return_value = 209)
+    node.getAllIncomingConnectionsByType = MagicMock(return_value = [connection])
+
+    assert node._getReservedResourceByType("zomg") == 209
+
