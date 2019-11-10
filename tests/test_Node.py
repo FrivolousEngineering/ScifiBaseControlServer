@@ -10,6 +10,15 @@ def node_energy_left():
     node._resources_left_over["energy"] = 10
     return node
 
+
+def createConnection(is_statisfied, reservation_deficiency):
+    connection = MagicMock()
+    connection.isReservationStatisfied = MagicMock(return_value=is_statisfied)
+    connection.getReservationDeficiency = MagicMock(return_value=reservation_deficiency)
+    connection.reserved_requested_amount = 0
+    return connection
+
+
 def test_getId():
     node = Node.Node("zomg")
     assert node.getId() == "zomg"
@@ -126,3 +135,58 @@ def test__getReservedResourceByType():
 
     assert node._getReservedResourceByType("zomg") == 209
 
+
+def test_replanReservations():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["water"] = 10
+    connection_1 = createConnection(False, 20)
+    connection_2 = createConnection(True, 0)
+
+    node.getAllIncomingConnectionsByType = MagicMock(return_value=[connection_1, connection_2])
+
+    node.replanReservations()
+
+    connection_1.lock.assert_called_once()
+    connection_2.reserveResource.assert_called_once_with(20)
+
+
+def test_replanReservationsNoDefficiency():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["water"] = 10
+    connection_1 = createConnection(False, 0)
+    connection_2 = createConnection(True, 0)
+
+    node.getAllIncomingConnectionsByType = MagicMock(return_value=[connection_1, connection_2])
+
+    node.replanReservations()
+
+    connection_1.lock.assert_called_once()
+    connection_2.lock.assert_called_once()
+
+
+def test_replanReservationsNoStatisfied():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["water"] = 10
+    connection_1 = createConnection(False, 0)
+    connection_2 = createConnection(False, 0)
+
+    node.getAllIncomingConnectionsByType = MagicMock(return_value=[connection_1, connection_2])
+
+    node.replanReservations()
+
+    connection_1.lock.assert_called_once()
+    connection_2.lock.assert_called_once()
+
+
+def test_preUpdate():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["energy"] = 10
+    connection_1 = createConnection(False, 0)
+    connection_2 = createConnection(False, 0)
+
+    node.getAllIncomingConnectionsByType = MagicMock(return_value=[connection_1, connection_2])
+    node.preUpdate()
+    
+    # Each of the connections should be asked for half of what we requested
+    connection_1.reserveResource.assert_called_once_with(5)
+    connection_2.reserveResource.assert_called_once_with(5)

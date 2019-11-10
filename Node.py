@@ -131,7 +131,6 @@ class Node:
             if num_statisfied_reservations == 0:
                 extra_resource_to_ask_per_connection = 0
             else:
-
                 extra_resource_to_ask_per_connection = total_resource_deficiency / num_statisfied_reservations
             for connection in connections:
                 if not connection.isReservationStatisfied():
