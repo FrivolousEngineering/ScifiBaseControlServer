@@ -29,7 +29,8 @@ def test_connect():
 @pytest.mark.parametrize("starting_temperature, outside_temperature, heat_emitted", [(0, 0, 0),
                                                                                      (200, 200, 0),
                                                                                      (201, 200, -0.91402670835),
-                                                                                     (200, 201, 0.91402670835)])
+                                                                                     (200, 201, 0.91402670835),
+                                                                                     (200, 202, 1.8417978936)])
 def test__emitHeat(starting_temperature, outside_temperature, heat_emitted):
     node = Node.Node("")
     node.addHeat = MagicMock()
@@ -46,7 +47,8 @@ def test__emitHeat(starting_temperature, outside_temperature, heat_emitted):
 @pytest.mark.parametrize("starting_temperature, outside_temperature, heat_emitted", [(0, 0, 0),
                                                                                      (200, 200, 0),
                                                                                      (201, 200, -10),
-                                                                                     (200, 201, 10)])
+                                                                                     (200, 201, 10),
+                                                                                     (200, 202, 20)])
 def test__convectiveHeatTransfer(starting_temperature, outside_temperature, heat_emitted):
     node = Node.Node("")
     node.addHeat = MagicMock()
