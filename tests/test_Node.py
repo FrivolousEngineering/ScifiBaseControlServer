@@ -3,6 +3,13 @@ from unittest.mock import MagicMock
 import Node
 import pytest
 
+
+@pytest.fixture
+def node_energy_left():
+    node = Node.Node("zomg")
+    node._resources_left_over["energy"] = 10
+    return node
+
 def test_getId():
     node = Node.Node("zomg")
     assert node.getId() == "zomg"
@@ -60,6 +67,58 @@ def test__convectiveHeatTransfer(starting_temperature, outside_temperature, heat
     node.addHeat.assert_called_with(heat_emitted)
 
 
-def test__requiresReplanningNoConnections():
+def test_requiresReplanningNoConnections():
     node = Node.Node("")
     assert not node.requiresReplanning()
+
+
+def test_requiresReplanningAllConnectionsStatisfied():
+    node = Node.Node("")
+    node.addConnection(MagicMock(isReservationStatisfied = MagicMock(return_value = True)))
+    assert not node.requiresReplanning()
+
+
+def test_requiresReplanningOneConnectionStatisified():
+    node = Node.Node("")
+    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=True)))
+    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=False)))
+
+    assert node.requiresReplanning()
+
+
+def test_getResourceAvailableThisTick(node_energy_left):
+    # The node had 10 resources left over. So even though nothing was requested, it should report 10.
+    assert node_energy_left.getResourceAvailableThisTick("energy") == 10
+
+    node_energy_left.getResourcesReceivedThisTick()["energy"] = 50
+
+    assert node_energy_left.getResourceAvailableThisTick("energy") == 60
+
+
+def test_postUpdate(node_energy_left):
+    mocked_node = MagicMock()
+    node_energy_left.getResourcesProducedThisTick()["fuel"] = 20
+    node_energy_left.connectWith("water", mocked_node)
+
+    connection = node_energy_left.getAllOutgoingConnectionsByType("water")[0]
+    connection.reset = MagicMock()
+    node_energy_left.postUpdate()
+
+    connection.reset.assert_called_once()
+    # After the post update, things get resetted again, so it should report 0!
+    assert node_energy_left.getResourcesReceivedThisTick() == {}
+    assert node_energy_left.getResourcesProducedThisTick() == {}
+
+
+def test__getAllReservedResources():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["water"] = 10
+    node._getReservedResourceByType = MagicMock()
+    node._getAllReservedResources()
+    node._getReservedResourceByType.assert_called_once_with("water")
+
+
+def test__getReservedResourceByType():
+    node = Node.Node("")
+    node.getResourcesRequiredPerTick()["water"] = 10
+    connection = MagicMock()
