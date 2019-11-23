@@ -3,6 +3,7 @@ from typing import Optional, cast, Any, List, Dict
 from flask import Flask, Response
 from functools import partial
 import flask
+from flask import render_template
 
 from Nodes.Node import Node
 from Nodes.NodeEngine import NodeEngine
@@ -27,6 +28,7 @@ class Server(Flask):
     def __init__(self, *args, **kwargs) -> None:
         if "import_name" not in kwargs:
             kwargs.setdefault('import_name', __name__)
+
         super().__init__(*args, **kwargs)
 
         # Register the routes from the decorator
@@ -36,12 +38,16 @@ class Server(Flask):
             cast(Any, partial_fn).__name__ = config_options["func"].__name__
             self.add_url_rule(route, view_func = partial_fn, methods = config_options["methods"])
 
-        self._node_engine = None # type: Optional[NodeEngine]
+        self._node_engine = None  # type: Optional[NodeEngine]
 
     def setEngine(self, node_engine: NodeEngine) -> None:
         self._node_engine = node_engine
 
     @register_route("/")
+    def renderStartPage(self):
+        return render_template("index.html")
+
+    @register_route("/nodes")
     def listAllNodes(self):
         if self._node_engine is None:
             return ""
@@ -56,6 +62,4 @@ if __name__ == "__main__":
     engine.registerNode(Node("ZOMG"))
     server.setEngine(engine)
     server.run(debug=True)
-
-    # TEST CODE;
 
