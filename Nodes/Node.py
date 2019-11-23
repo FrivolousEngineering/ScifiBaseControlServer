@@ -46,9 +46,9 @@ class Node:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
         # Aluminum: 205 - 250
-        self._heat_convection_coefficient = 10
+        self._heat_convection_coefficient = 10.
         # How large is the surface of this object (in M2)
-        self._surface_area = 1
+        self._surface_area = 1.
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8
 
@@ -106,7 +106,7 @@ class Node:
                 connection.reserveResource(resource_to_reserve)
 
     def _getReservedResourceByType(self, resource_type: str) -> float:
-        result = 0
+        result = 0.
         for connection in self.getAllIncomingConnectionsByType(resource_type):
             result += connection.getReservedResource()
         return result
@@ -148,7 +148,7 @@ class Node:
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
             num_statisfied_reservations = len([connection for connection in connections if connection.isReservationStatisfied()])
             if num_statisfied_reservations == 0:
-                extra_resource_to_ask_per_connection = 0
+                extra_resource_to_ask_per_connection = 0.
             else:
                 extra_resource_to_ask_per_connection = total_resource_deficiency / num_statisfied_reservations
             for connection in connections:

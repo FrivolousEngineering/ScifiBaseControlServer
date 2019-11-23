@@ -1,6 +1,7 @@
 from Nodes.Node import Node
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 from Nodes.Constants import bar_color
+from typing import Dict, List
 
 
 class NodeGraph:
@@ -8,10 +9,10 @@ class NodeGraph:
         self._node = node
         self._node.postUpdateCalled.connect(self._update)
 
-        self._resources_produced_history = {}
-        self._resources_gained_history = {}
+        self._resources_produced_history = {}  # type: Dict[str, List[float]]
+        self._resources_gained_history = {}  # type: Dict[str, List[float]]
         self._num_ticks_stored = 0
-        self._temperature_history = []
+        self._temperature_history = []  # type: List[float]
         for resource_type in self._node.getResourcesRequiredPerTick():
             self._resources_gained_history[resource_type] = []
 
