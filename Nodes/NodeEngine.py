@@ -61,7 +61,6 @@ class NodeEngine:
                 break
             self._updateReservations()
 
-
     def _update(self) -> None:
         for node in self._nodes.values():
             node.update()

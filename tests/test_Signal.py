@@ -1,5 +1,6 @@
 import Signal
 import copy
+import pytest
 
 class SignalReceiver:
     def __init__(self) -> None:
@@ -87,5 +88,37 @@ def test_connectSelf():
     signal.connect(signal)
     # Act & Assert
     signal.emit()  # If they are connected, this crashes with a max recursion depth error
+
+
+def test_signalemitter():
+    def declare_signalemitter():
+        @Signal.signalemitter
+        class Test:
+            testSignal = Signal.Signal()
+
+        return Test
+
+    cls = declare_signalemitter()
+    assert cls is not None
+
+    inst = cls()
+    assert cls is not None
+
+    assert hasattr(inst, "testSignal")
+    assert inst.testSignal != cls.testSignal
+
+
+def test_bad_signalemitter():
+    def declare_bad_signalemitter():
+        @Signal.signalemitter
+        class Test:
+            pass
+
+        return Test
+
+    with pytest.raises(TypeError):
+        declare_bad_signalemitter()
+
+
 
 
