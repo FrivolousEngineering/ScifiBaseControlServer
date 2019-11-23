@@ -126,8 +126,8 @@ class Node:
                                       reverse=True)
         while len(outgoing_connections):
             active_connection = outgoing_connections.pop()
-            energy_stored = active_connection.giveResource(amount / (len(outgoing_connections) + 1))
-            amount -= energy_stored
+            resources_stored = active_connection.giveResource(amount / (len(outgoing_connections) + 1))
+            amount -= resources_stored
         return amount
 
     def _getAllReservedResources(self) -> None:

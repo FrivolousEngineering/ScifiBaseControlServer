@@ -3,6 +3,8 @@ from unittest.mock import MagicMock
 from Nodes import Node
 import pytest
 
+from Nodes.Constants import weight_per_unit
+
 
 @pytest.fixture
 def node_energy_left():
@@ -11,10 +13,12 @@ def node_energy_left():
     return node
 
 
-def createConnection(is_statisfied, reservation_deficiency):
+def createConnection(is_statisfied, reservation_deficiency, pre_give_result = 0):
     connection = MagicMock()
     connection.isReservationStatisfied = MagicMock(return_value=is_statisfied)
     connection.getReservationDeficiency = MagicMock(return_value=reservation_deficiency)
+    connection.preGiveResource = MagicMock(return_value = pre_give_result)
+    connection.giveResource = MagicMock(return_value=pre_give_result)
     connection.reserved_requested_amount = 0
     return connection
 
@@ -190,3 +194,36 @@ def test_preUpdate():
     # Each of the connections should be asked for half of what we requested
     connection_1.reserveResource.assert_called_once_with(5)
     connection_2.reserveResource.assert_called_once_with(5)
+
+@pytest.mark.parametrize("connections, amount_to_provide, resources_left", [([createConnection(True, 0), createConnection(True, 0)], 20, 20),
+                                                                    ([createConnection(True, 0, 12), createConnection(True, 0, 3)], 15, 0),
+                                                                    ([createConnection(True, 0, 12), createConnection(True, 0, 0)], 18, 6),
+                                                                    ([createConnection(True, 0, 12), createConnection(True, 0, 0), createConnection(True, 0, 3)], 18, 3),
+                                                                    ])
+def test_provideResourceToOutogingConnections(connections, amount_to_provide, resources_left):
+    node = Node.Node("")
+
+    node.getAllOutgoingConnectionsByType = MagicMock(return_value = connections)
+
+    assert node._provideResourceToOutogingConnections("fuel", amount_to_provide) == resources_left
+
+
+@pytest.mark.parametrize("resource_type", weight_per_unit.keys())
+def test_simpleGetters(resource_type):
+    # It's not really a test, but the results should remain the same, as other child nodes depend on this
+    # implementation. Call them with all resources types known to us.
+    node = Node.Node("")
+    assert node.preGetResource(resource_type, 200) == 0
+    assert node.preGiveResource(resource_type, 200) == 0
+    assert node.getResource(resource_type, 200) == 0
+    assert node.giveResource(resource_type, 200) == 0
+
+
+def test_update():
+    node = Node.Node("")
+    node.updateCalled.emit = MagicMock()
+
+    node.update()
+
+    node.updateCalled.emit.assert_called_once_with(node)
+
