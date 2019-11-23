@@ -32,7 +32,8 @@ class Server(Flask):
         # Register the routes from the decorator
         for route, config_options in _registered_routes.items():
             partial_fn = partial(config_options["func"], self)
-            endpoint = cast(Any, partial_fn).__name__ = config_options["func"].__name__
+            # We must set a name to for this partial function.
+            cast(Any, partial_fn).__name__ = config_options["func"].__name__
             self.add_url_rule(route, view_func = partial_fn, methods = config_options["methods"])
 
         self._node_engine = None # type: Optional[NodeEngine]
@@ -46,7 +47,6 @@ class Server(Flask):
             return ""
 
         return Response(flask.json.dumps(self._node_engine.getAllNodeIds()), status=200, mimetype='application/json')
-
 
 
 if __name__ == "__main__":
