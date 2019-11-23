@@ -9,7 +9,7 @@ fuel_tank = ResourceStorage("fuel_tank", "fuel", 1000)
 generator = Generator("generator")
 fuel_tank.connectWith("fuel", generator)
 fluid_cooler = FluidCooler("fluid_cooler", "water", 10)
-fluid_cooler_2 = FluidCooler("fluid_cooler", "water", 10)
+fluid_cooler_2 = FluidCooler("fluid_cooler_2", "water", 10)
 
 water_tank = ResourceStorage("water_tank", "water", 750)
 water_tank_2 = ResourceStorage("water_tank_2", "water", 0, 100)

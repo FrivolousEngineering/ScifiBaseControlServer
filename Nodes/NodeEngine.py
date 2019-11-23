@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from Nodes.Node import Node
 
@@ -10,17 +10,20 @@ class NodeEngine:
     nodes got what they wanted, which didn't, etc).
     """
     def __init__(self) -> None:
-        self._nodes = []  # type: List[Node]
+        self._nodes = {}  # type: Dict[str, Node]
         pass
 
     def registerNode(self, node: Node) -> None:
-        self._nodes.append(node)
+        if node.getId() not in self._nodes:
+            self._nodes[node.getId()] = node
+        else:
+            raise KeyError("Node must have an unique ID!")
 
     def getAllNodeIds(self) -> List[str]:
-        return [node.getId() for node in self._nodes]
+        return [node.getId() for node in self._nodes.values()]
 
     def _preUpdate(self) -> None:
-        for node in self._nodes:
+        for node in self._nodes.values():
             node.preUpdate()
 
     def _updateReservations(self) -> None:
@@ -31,7 +34,7 @@ class NodeEngine:
 
         Potential relaxation of these reservations will be done in _replanReservations.
         """
-        for node in self._nodes:
+        for node in self._nodes.values():
             node.updateReservations()
 
     def _replanReservations(self) -> None:
@@ -50,7 +53,7 @@ class NodeEngine:
         """
         while True:
             run_again = False
-            for node in self._nodes:
+            for node in self._nodes.values():
                 if node.requiresReplanning():
                     run_again = True
                     node.replanReservations()
@@ -59,11 +62,11 @@ class NodeEngine:
                 break
 
     def _update(self) -> None:
-        for node in self._nodes:
+        for node in self._nodes.values():
             node.update()
 
     def _postUpdate(self) -> None:
-        for node in self._nodes:
+        for node in self._nodes.values():
             node.postUpdate()
 
     def doTick(self) -> None:
