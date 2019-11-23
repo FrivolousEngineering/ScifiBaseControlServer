@@ -29,11 +29,11 @@ class Signal:
     from being destroyed. In addition, all slots will be implicitly disconnected when
     the signal is destroyed.
 
-    \warning It is imperative that the signals are created as instance variables, otherwise
+    :warning It is imperative that the signals are created as instance variables, otherwise
     emitting signals will get confused. To help with this, see the SignalEmitter class.
 
     Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
-    \sa SignalEmitter
+    :see_also SignalEmitter
     """
     def __init__(self, **kwargs) -> None:
         """
@@ -79,11 +79,11 @@ class Signal:
             signal.emit(*args, **kwargs)
 
     def connect(self, connector: Union["Signal", Callable[[], None]]) -> None:
-        '''
+        """
         Connect something (anything, including another Signal) to this signal
         :param connector: The other thing to connect to.
         :return:
-        '''
+        """
         with self.__lock:
             if isinstance(connector, Signal):
                 if connector == self:
@@ -96,11 +96,11 @@ class Signal:
                 self.__functions = self.__functions.append(connector)
 
     def disconnect(self, connector: Union["Signal", Callable[[], None]]) -> None:
-        '''
+        """
         Disconnect something from this signal
         :param connector: The signal or slot (function) to disconnect.
         :return:
-        '''
+        """
         with self.__lock:
             if isinstance(connector, Signal):
                 self.__signals = self.__signals.remove(connector)
@@ -110,29 +110,21 @@ class Signal:
                 self.__functions = self.__functions.remove(connector)
 
     def disconnectAll(self) -> None:
-        '''
+        """
         Disconnect all connected slots (aka; reset)
         :return:
-        '''
+        """
         with self.__lock:
             self.__functions = WeakImmutableList()
             self.__methods = WeakImmutablePairList()
             self.__signals = WeakImmutableList()
-
-    # This __str__() is useful for debugging.
-    # def __str__(self):
-    #     function_str = ", ".join([repr(f) for f in self.__functions])
-    #     method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
-    #     signal_str = ", ".join([str(signal) for signal in self.__signals])
-    #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
-
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
 
 
 def signalemitter(cls):
-    '''
+    """
     Class decorator that ensures a class has unique instances of signals.
 
     Since signals need to be instance variables, normally you would need to create all
@@ -142,7 +134,7 @@ def signalemitter(cls):
     adjusts the class' __new__ method to create new signal instances for all class signals.
     :param cls:
     :return:
-    '''
+    """
     # First, check if the base class has any signals defined
     signals = inspect.getmembers(cls, lambda i: isinstance(i, Signal))
     if not signals:
@@ -182,23 +174,22 @@ class WeakImmutableList(Generic[T], Iterable):
         self.__list = []    # type: List[ReferenceType[Optional[T]]]
 
     def append(self, item: T) -> "WeakImmutableList[T]":
-        '''
+        """
         Append an item and return a new list
         :param item:
         :return:
-        '''
+        """
         new_instance = WeakImmutableList()  # type: WeakImmutableList[T]
         new_instance.__list = self.__cleanList()
         new_instance.__list.append(weakref.ref(item))
         return new_instance
 
-    ## Remove an item and return a list
-    #
-    #  Note that unlike the normal Python list.remove() method, this ones
-    #  doesn't throw a ValueError if the item isn't in the list.
-    #  \param item item to remove
-    #  \return a list which does not have the item.
     def remove(self, item: T) -> "WeakImmutableList[T]":
+        """
+
+        :param item: The item to remove
+        :return: a (new) list which does not have the item.
+        """
         for item_ref in self.__list:
             if item_ref() is item:
                 new_instance = WeakImmutableList()  # type: WeakImmutableList[T]
@@ -208,19 +199,23 @@ class WeakImmutableList(Generic[T], Iterable):
         else:
             return self  # No changes needed
 
-    # Create a new list with the missing values removed.
     def __cleanList(self) -> "List[ReferenceType[Optional[T]]]":
+        """
+        Create a new list with the missing values removed.
+        :return:
+        """
         return [item_ref for item_ref in self.__list if item_ref() is not None]
 
     def __iter__(self):
         return WeakImmutableListIterator(self.__list)
 
 
-## Iterator wrapper which filters out missing values.
-#
-# It dereferences each weak reference object and filters out the objects
-# which have already disappeared via GC.
 class WeakImmutableListIterator(Generic[T], Iterable):
+    """
+    Iterator wrapper which filters out missing values.
+
+    It dereferences each weak reference object and filters out the objects which have already disappeared via GC.
+    """
     def __init__(self, list_):
         self.__it = list_.__iter__()
 
@@ -237,28 +232,36 @@ class WeakImmutableListIterator(Generic[T], Iterable):
 U = TypeVar('U')
 
 
-##  A variation of WeakImmutableList which holds a pair of values using weak refernces.
 class WeakImmutablePairList(Generic[T, U], Iterable):
+    """
+    A variation of WeakImmutableList which holds a pair of values using weak refernces.
+    """
     def __init__(self) -> None:
         self.__list = []  # type: List[Tuple[ReferenceType[T],ReferenceType[U]]]
 
-    ## Append an item and return a new list
-    #
-    #  \param item the item to append
-    #  \return a new list
     def append(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T, U]":
+        """
+        Append an item and return a new list
+        :param left_item:
+        :param right_item:
+        :return:
+        """
         new_instance = WeakImmutablePairList()  # type: WeakImmutablePairList[T, U]
         new_instance.__list = self.__cleanList()
         new_instance.__list.append((weakref.ref(left_item), weakref.ref(right_item)))
         return new_instance
 
-    ## Remove an item and return a list
-    #
-    #  Note that unlike the normal Python list.remove() method, this ones
-    #  doesn't throw a ValueError if the item isn't in the list.
-    #  \param item item to remove
-    #  \return a list which does not have the item.
     def remove(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T, U]":
+        """
+        Remove an item and return a list
+
+        Note that unlike the normal Python list.remove() method, this ones doesn't throw a ValueError if the item isn't
+        in the list.
+
+        :param left_item:
+        :param right_item:
+        :return:
+        """
         for pair in self.__list:
             left = pair[0]()
             right = pair[1]()
@@ -271,17 +274,22 @@ class WeakImmutablePairList(Generic[T, U], Iterable):
         else:
             return self  # No changes needed
 
-    # Create a new list with the missing values removed.
     def __cleanList(self) -> List[Tuple[ReferenceType, ReferenceType]]:
+        """
+        Create a new list with the missing values removed.
+        :return:
+        """
         return [pair for pair in self.__list if pair[0]() is not None and pair[1]() is not None]
 
     def __iter__(self):
         return WeakImmutablePairListIterator(self.__list)
 
 
-# A small iterator wrapper which dereferences the weak ref objects and filters
-# out the objects which have already disappeared via GC.
 class WeakImmutablePairListIterator:
+    """
+    A small iterator wrapper which dereferences the weak ref objects and filters out the objects which have already
+    disappeared via GC.
+    """
     def __init__(self, list_):
         self.__it = list_.__iter__()
 
@@ -297,4 +305,4 @@ class WeakImmutablePairListIterator:
             left = pair[0]()
             right = pair[1]()
 
-        return (left, right)
+        return left, right
