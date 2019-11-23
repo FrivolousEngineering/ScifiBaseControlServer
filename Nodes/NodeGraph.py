@@ -16,7 +16,7 @@ class NodeGraph:
         for resource_type in self._node.getResourcesRequiredPerTick():
             self._resources_gained_history[resource_type] = []
 
-    def _update(self, _) -> None:
+    def _update(self, *args) -> None:
         self._num_ticks_stored += 1
         self._temperature_history.append(self._node.temperature)
         resources_received = self._node.getResourcesReceivedThisTick()

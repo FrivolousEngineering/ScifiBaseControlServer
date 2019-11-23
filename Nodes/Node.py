@@ -72,13 +72,13 @@ class Node:
     def getId(self) -> str:
         return self._node_id
 
-    def getResourcesRequiredPerTick(self):
+    def getResourcesRequiredPerTick(self) -> Dict[str, float]:
         return self._resources_required_per_tick
 
-    def getResourcesReceivedThisTick(self):
+    def getResourcesReceivedThisTick(self) -> Dict[str, float]:
         return self._resources_received_this_tick
 
-    def getResourcesProducedThisTick(self):
+    def getResourcesProducedThisTick(self) -> Dict[str, float]:
         return self._resources_produced_this_tick
 
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
