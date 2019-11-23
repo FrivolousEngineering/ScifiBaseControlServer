@@ -1,4 +1,4 @@
-name: Unit tests & type checking
+name: UnitTest
 
 on: [push]
 
