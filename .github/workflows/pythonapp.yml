@@ -19,7 +19,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run mypy
       run: |
-        python -m mypy Nodes
+        python -m mypy Nodes --disallow-untyped-calls
     - name: Test with pytest
       run: |
         pip install pytest
