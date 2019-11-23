@@ -204,6 +204,12 @@ class Node:
             return len(self._incoming_connections) != num_statisfied_reservations
 
     def connectWith(self, resource_type: str, target: "Node") -> None:
+        """
+        Create a connection that transports the provided resource_type from this node to the provided node.
+        :param resource_type: The resource that this node needs to connect.
+        :param target: The node that is the target of the connection
+        :return:
+        """
         new_connection = Connection(origin=self, target=target, resource_type = resource_type)
         self._outgoing_connections.append(new_connection)
         target.addConnection(new_connection)
