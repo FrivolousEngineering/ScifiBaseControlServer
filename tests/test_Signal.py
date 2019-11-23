@@ -114,8 +114,6 @@ def test_bad_signalemitter():
         class Test:
             pass
 
-        return Test
-
     with pytest.raises(TypeError):
         declare_bad_signalemitter()
 
