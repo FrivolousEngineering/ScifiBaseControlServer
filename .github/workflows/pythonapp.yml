@@ -1,4 +1,4 @@
-name: Python application
+name: Unit tests & type checking
 
 on: [push]
 
@@ -20,7 +20,7 @@ jobs:
     - name: Run mypy
       run: |
         python -m mypy Nodes --disallow-untyped-calls
-    - name: Test with pytest
+    - name: Run pytest
       run: |
         pip install pytest
         PYTHONPATH=. python3 -m pytest
