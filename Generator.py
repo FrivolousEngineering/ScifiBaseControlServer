@@ -3,12 +3,17 @@ from Constants import combustion_heat
 
 
 class Generator(Node):
+    """
+    A generator is a node that can accept fuel, which it will convert into energy.
+    Since it burns the fuel, a fair amount of heat is produced in this process. In order to cool it, it can also accept
+    water, which it will use to transfer heat into.
+    """
     def __init__(self, node_id: str) -> None:
         super().__init__(node_id)
         self._resources_required_per_tick["fuel"] = 10
         self._resources_required_per_tick["water"] = 10
 
-    def update(self):
+    def update(self) -> None:
         super().update()
 
         # A generator creates 1 energy per fuel that it gets. Yay!
@@ -17,7 +22,7 @@ class Generator(Node):
         energy_left = self._provideResourceToOutogingConnections("energy", energy_produced)
 
         # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
-        # That's why we put whatever is left back into the fuel "resevoir"
+        # That's why we put whatever is left back into the fuel "reservoir"
         self._resources_left_over["fuel"] = energy_left
         self._resources_produced_this_tick["energy"] = max(self._resources_received_this_tick["fuel"] - energy_left, 0)
 

@@ -2,6 +2,10 @@ from ResourceStorage import ResourceStorage
 
 
 class FluidCooler(ResourceStorage):
+    """
+    A fairly simple node that has a high surface area and heat emissivity.
+    It can accept a certain resource, which it cools down (because of it's large surface and heat emissivity)
+    """
     def __init__(self, node_id: str, resource_type: str, fluid_per_tick: float) -> None:
         super().__init__(node_id, resource_type, 0, fluid_per_tick)
         self._surface_area = 8
