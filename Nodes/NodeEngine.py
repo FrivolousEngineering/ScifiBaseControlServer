@@ -9,12 +9,15 @@ class NodeEngine:
     list get updated. Once this tick is completed, the state is left in such a way that data can be read (eg; What
     nodes got what they wanted, which didn't, etc).
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self._nodes = []  # type: List[Node]
         pass
 
     def registerNode(self, node: Node) -> None:
         self._nodes.append(node)
+
+    def getAllNodeIds(self) -> List[str]:
+        return [node.getId() for node in self._nodes]
 
     def _preUpdate(self) -> None:
         for node in self._nodes:
