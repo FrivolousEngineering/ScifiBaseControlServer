@@ -195,6 +195,7 @@ def test_preUpdate():
     connection_1.reserveResource.assert_called_once_with(5)
     connection_2.reserveResource.assert_called_once_with(5)
 
+
 @pytest.mark.parametrize("connections, amount_to_provide, resources_left", [([createConnection(True, 0), createConnection(True, 0)], 20, 20),
                                                                     ([createConnection(True, 0, 12), createConnection(True, 0, 3)], 15, 0),
                                                                     ([createConnection(True, 0, 12), createConnection(True, 0, 0)], 18, 6),
