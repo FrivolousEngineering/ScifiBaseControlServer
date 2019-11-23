@@ -1,7 +1,7 @@
 from typing import Optional
 
-from Node import Node
-from Constants import weight_per_unit
+from Nodes.Node import Node
+from Nodes.Constants import weight_per_unit
 
 
 class ResourceStorage(Node):

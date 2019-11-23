@@ -1,4 +1,4 @@
-from ResourceStorage import ResourceStorage
+from Nodes.ResourceStorage import ResourceStorage
 
 
 class FluidCooler(ResourceStorage):

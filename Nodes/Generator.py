@@ -1,5 +1,5 @@
-from Node import Node
-from Constants import combustion_heat
+from Nodes.Node import Node
+from Nodes.Constants import combustion_heat
 
 
 class Generator(Node):

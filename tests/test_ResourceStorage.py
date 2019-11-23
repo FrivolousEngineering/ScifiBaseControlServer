@@ -1,6 +1,5 @@
 import pytest
-import ResourceStorage
-
+from Nodes import ResourceStorage
 
 get_list = [(20,    0,      "energy"),  # Wrong resource type
             (20,    20,     "water"),

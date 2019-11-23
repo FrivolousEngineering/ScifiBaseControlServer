@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
-from Constants import specific_heat
+from Nodes.Constants import specific_heat
 if TYPE_CHECKING:
-    from Node import Node
+    from Nodes.Node import Node
 
 
 class Connection:

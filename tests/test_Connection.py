@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 import pytest
-import Node
-import Connection
+from Nodes import Connection, Node
+
 
 @pytest.fixture
 def origin_node():

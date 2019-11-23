@@ -1,4 +1,4 @@
-from Node import Node
+from Nodes.Node import Node
 
 
 class Light(Node):

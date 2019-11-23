@@ -1,7 +1,6 @@
-from Node import Node
+from Nodes.Node import Node
 import matplotlib.pyplot as plt
-import numpy as np
-from Constants import bar_color
+from Nodes.Constants import bar_color
 
 
 class NodeGraph:

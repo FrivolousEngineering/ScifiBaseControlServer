@@ -1,6 +1,6 @@
-from typing import List, TYPE_CHECKING, Dict
+from typing import List, Dict
 
-from Connection import Connection
+from Nodes.Connection import Connection
 from Signal import signalemitter, Signal
 
 

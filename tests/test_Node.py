@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-import Node
+from Nodes import Node
 import pytest
 
 

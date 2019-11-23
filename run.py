@@ -1,10 +1,8 @@
-from Generator import Generator
-from Light import Light
-from NodeEngine import NodeEngine
-from NodeGraph import NodeGraph
-from ResourceStorage import ResourceStorage
-from Signal import Signal
-from FluidCooler import FluidCooler
+from Nodes.Generator import Generator
+from Nodes.NodeEngine import NodeEngine
+from Nodes.NodeGraph import NodeGraph
+from Nodes.ResourceStorage import ResourceStorage
+from Nodes.FluidCooler import FluidCooler
 engine = NodeEngine()
 
 fuel_tank = ResourceStorage("fuel_tank", "fuel", 1000)
