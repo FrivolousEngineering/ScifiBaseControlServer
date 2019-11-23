@@ -57,9 +57,10 @@ class NodeEngine:
                 if node.requiresReplanning():
                     run_again = True
                     node.replanReservations()
-            self._updateReservations()
             if not run_again:
                 break
+            self._updateReservations()
+
 
     def _update(self) -> None:
         for node in self._nodes.values():
