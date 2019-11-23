@@ -112,14 +112,14 @@ class Node:
         return result
 
     def _provideResourceToOutogingConnections(self, resource_type: str, amount: float) -> float:
-        '''
+        """
         Provide resources of a given type to all outgoing connections. It's possible that not all resources could be
         moved. In this case the return value is > 0 (indicating how much could not be moved to another node).
 
         :param resource_type: Type of resource to move to connected nodes
         :param amount: How much of the resource needs to be moved?
         :return: How much resource was left after attempting to move it.
-        '''
+        """
         outgoing_connections = self.getAllOutgoingConnectionsByType(resource_type)
         outgoing_connections = sorted(outgoing_connections,
                                       key=lambda x: x.preGiveResource(amount / len(outgoing_connections)),
