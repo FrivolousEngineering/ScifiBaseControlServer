@@ -119,9 +119,6 @@ class Signal:
             self.__methods = WeakImmutablePairList()
             self.__signals = WeakImmutableList()
 
-def strMethodSet(method_set):
-    return "{" + ", ".join([str(m) for m in method_set]) + "}"
-
 
 def signalemitter(cls):
     """
