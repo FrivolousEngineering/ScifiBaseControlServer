@@ -8,8 +8,8 @@ class Generator(Node):
     Since it burns the fuel, a fair amount of heat is produced in this process. In order to cool it, it can also accept
     water, which it will use to transfer heat into.
     """
-    def __init__(self, node_id: str) -> None:
-        super().__init__(node_id)
+    def __init__(self, node_id: str, **kwargs) -> None:
+        super().__init__(node_id, **kwargs)
         self._resources_required_per_tick["fuel"] = 10
         self._resources_required_per_tick["water"] = 10
 

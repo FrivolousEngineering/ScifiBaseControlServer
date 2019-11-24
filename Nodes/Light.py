@@ -2,7 +2,7 @@ from Nodes.Node import Node
 
 
 class Light(Node):
-    def __init__(self, node_id: str) -> None:
+    def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id)
         self.isOn = False
         self._resources_required_per_tick["energy"] = 8

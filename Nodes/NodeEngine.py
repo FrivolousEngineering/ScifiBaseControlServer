@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from Nodes.Node import Node
+from Nodes.NodeFactory import NodeFactory
 
 
 class NodeEngine:
@@ -18,6 +19,15 @@ class NodeEngine:
             self._nodes[node.getId()] = node
         else:
             raise KeyError("Node must have an unique ID!")
+
+    def registerNodesFromSerialized(self, serialized: Dict) -> None:
+        for key, data in serialized.items():
+            self.registerNode(NodeFactory.deserializeNode(key, data))
+
+    def registerConnectionsFromSerialized(self, serialized: List) -> None:
+        for connection_dict in serialized:
+            self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
+                                                             self._nodes[connection_dict["to"]])
 
     def getAllNodeIds(self) -> List[str]:
         return [node.getId() for node in self._nodes.values()]
@@ -80,4 +90,3 @@ class NodeEngine:
         self._update()
         self._postUpdate()
         print("TICK ENDED!")
-        print(" ")

@@ -5,8 +5,8 @@ from Nodes.Constants import weight_per_unit
 
 
 class ResourceStorage(Node):
-    def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None):
-        super().__init__(node_id)
+    def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None, **kwargs):
+        super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount
         self._max_storage = max_storage

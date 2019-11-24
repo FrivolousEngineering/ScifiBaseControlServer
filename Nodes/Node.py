@@ -20,7 +20,7 @@ class Node:
     updateCalled = Signal()
     postUpdateCalled = Signal()
 
-    def __init__(self, node_id: str) -> None:
+    def __init__(self, node_id: str, **kwargs) -> None:
         """
         :param node_id: Unique identifier of the node.
         """
