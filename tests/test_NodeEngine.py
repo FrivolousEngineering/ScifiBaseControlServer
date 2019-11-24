@@ -2,6 +2,8 @@ from unittest.mock import MagicMock
 
 from Nodes import NodeEngine
 from Nodes.Node import Node
+from Nodes.Generator import Generator  # Your IDE lies. It needs this.
+from Nodes.FluidCooler import FluidCooler
 import pytest
 
 
@@ -48,3 +50,15 @@ def test_doTick():
     node.updateReservations.assert_called_once()
     node.update.assert_called_once()
     node.postUpdate.assert_called_once()
+
+
+# This is a tad more than just a unit test, but it's good to have it since it checks if nodes can be loaded at all
+@pytest.mark.parametrize("serialized, all_ids", [({"blarg": {"type": "Node"}}, ["blarg"]),
+                                                 ({"omg": {"type": "Generator"}, "zomg": {"type": "Node"}}, ["omg", "zomg"]),
+                                                 ({"yay": {"type": "FluidCooler", "resource_type": "water", "fluid_per_tick": 10}}, ["yay"])])
+def test_serializeNode(serialized, all_ids):
+    engine = NodeEngine.NodeEngine()
+
+    engine.registerNodesFromSerialized(serialized)
+
+    assert engine.getAllNodeIds() == all_ids

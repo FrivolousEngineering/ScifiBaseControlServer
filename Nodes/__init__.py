@@ -1,7 +1,6 @@
 import sys
 from typing import Any
 
-
 def strToClass(class_name: str) -> Any:
     """
     Get a a class in the Nodes module by providing a string that identifies it
