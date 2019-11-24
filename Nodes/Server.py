@@ -25,6 +25,8 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
 
 
 class Server(Flask):
+    STATIC_LOCATION = ""
+    
     def __init__(self, *args, **kwargs) -> None:
         if "import_name" not in kwargs:
             kwargs.setdefault('import_name', __name__)
@@ -37,11 +39,20 @@ class Server(Flask):
             # We must set a name to for this partial function.
             cast(Any, partial_fn).__name__ = config_options["func"].__name__
             self.add_url_rule(route, view_func = partial_fn, methods = config_options["methods"])
+        self.add_url_rule(rule="/<path:path>", view_func=self.staticHost)
 
         self._node_engine = None  # type: Optional[NodeEngine]
 
     def setEngine(self, node_engine: NodeEngine) -> None:
         self._node_engine = node_engine
+
+    def staticHost(self, path):
+        """
+        Used for providing files that are hosted in maintenance / admin pages
+        :param path:
+        :return:
+        """
+        return flask.send_from_directory(self.STATIC_LOCATION, path)
 
     @register_route("/")
     def renderStartPage(self):
