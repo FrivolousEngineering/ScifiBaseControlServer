@@ -62,3 +62,24 @@ def test_serializeNode(serialized, all_ids):
     engine.registerNodesFromSerialized(serialized)
 
     assert engine.getAllNodeIds() == all_ids
+
+
+def test_serializeConnection():
+    engine = NodeEngine.NodeEngine()
+    node_a = Node("a")
+    node_b = Node("b")
+    engine.registerNode(node_a)
+    engine.registerNode(node_b)
+
+    engine.registerConnectionsFromSerialized([{"from": "a", "to": "b", "resource_type": "energy"}])
+
+    node_a_connections = node_a.getAllOutgoingConnectionsByType("energy")
+    node_b_connections = node_b.getAllIncomingConnectionsByType("energy")
+    assert len(node_a_connections) == 1
+    assert len(node_b_connections) == 1
+
+    assert len(node_a.getAllIncomingConnectionsByType("energy")) == 0
+    assert len(node_b.getAllOutgoingConnectionsByType("energy")) == 0
+
+    assert node_a_connections[0].target == node_b
+    assert node_b_connections[0].origin == node_a
