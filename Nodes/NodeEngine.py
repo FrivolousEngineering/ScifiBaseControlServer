@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
@@ -20,11 +20,11 @@ class NodeEngine:
         else:
             raise KeyError("Node must have an unique ID!")
 
-    def registerNodesFromSerialized(self, serialized: Dict) -> None:
+    def registerNodesFromSerialized(self, serialized: Dict[str, Any]) -> None:
         for key, data in serialized.items():
             self.registerNode(NodeFactory.deserializeNode(key, data))
 
-    def registerConnectionsFromSerialized(self, serialized: List) -> None:
+    def registerConnectionsFromSerialized(self, serialized: List[Dict[str, str]]) -> None:
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
