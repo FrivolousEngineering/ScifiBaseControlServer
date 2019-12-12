@@ -17,13 +17,17 @@ class Generator(Node):
         super().update()
 
         # A generator creates 1 energy per fuel that it gets. Yay!
-        energy_produced = self.getResourceAvailableThisTick("fuel")
+        energy_available = self.getResourceAvailableThisTick("fuel")
+
         # Attempt to "get rid" of the energy by offering it to connected sources.
-        energy_left = self._provideResourceToOutogingConnections("energy", energy_produced)
+        energy_left = self._provideResourceToOutogingConnections("energy", energy_available)
 
         # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
         # That's why we put whatever is left back into the fuel "reservoir"
         self._resources_left_over["fuel"] = energy_left
+
+        # We specifically use what is in the received dict (instead of the energy_available), because we want to
+        # know how much was generated (and the resources available also takes leftovers into account)
         self._resources_produced_this_tick["energy"] = max(self._resources_received_this_tick["fuel"] - energy_left, 0)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
