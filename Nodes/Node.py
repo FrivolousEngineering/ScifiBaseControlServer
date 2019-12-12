@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
 from Signal import signalemitter, Signal
@@ -51,6 +51,22 @@ class Node:
         self._surface_area = 1.
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8
+
+    def serialize(self) -> Dict[str, Any]:
+        result = dict()
+        result["node_id"] = self._node_id
+        result["resources_received_this_tick"] = self._resources_received_this_tick
+        result["resources_produced_this_tick"] = self._resources_produced_this_tick
+        result["resources_left_over"] = self._resources_left_over
+        result["temperature"] = self._temperature
+        return result
+
+    def deserialize(self, data: Dict[str, Any]) -> None:
+        self._node_id = data["node_id"]
+        self._resources_received_this_tick = data["resources_received_this_tick"]
+        self._resources_produced_this_tick = data["resources_produced_this_tick"]
+        self._resources_left_over = data["resources_left_over"]
+        self._temperature = data["temperature"]
 
     @property
     def weight(self):

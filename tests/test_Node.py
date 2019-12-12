@@ -228,3 +228,20 @@ def test_update():
 
     node.updateCalled.emit.assert_called_once_with(node)
 
+
+def test_serialize():
+    node = Node.Node("zomg")
+
+    serialized = node.serialize()
+
+    assert serialized["node_id"] == node.getId()
+    assert serialized["temperature"] == node.temperature
+
+
+def test_deserialize():
+    node = Node.Node("BLOOORPP")
+
+    node.deserialize({"node_id": "omgzomg", "temperature": 200, "resources_received_this_tick": {}, "resources_produced_this_tick": {}, "resources_left_over": {}})
+
+    assert node.getId() == "omgzomg"
+    assert node.temperature == 200

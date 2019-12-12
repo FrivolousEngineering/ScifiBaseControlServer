@@ -9,4 +9,3 @@ with open("configuration.json") as f:
     engine.registerConnectionsFromSerialized(loaded_data["connections"])
 
 print("done")
-
