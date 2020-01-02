@@ -2,16 +2,21 @@ from typing import List, Dict, Any, Optional
 
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
+from Signal import signalemitter, Signal
 
 
-
-
+@signalemitter
 class NodeEngine:
     """
     The node engine is responsible for handling ticks (a single update) and subsequently ensuring that all nodes in it's
     list get updated. Once this tick is completed, the state is left in such a way that data can be read (eg; What
     nodes got what they wanted, which didn't, etc).
     """
+
+    preUpdateCalled = Signal()
+    updateCalled = Signal()
+    postUpdateCalled = Signal()
+
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
 
@@ -40,6 +45,7 @@ class NodeEngine:
         return [node.getId() for node in self._nodes.values()]
 
     def _preUpdate(self) -> None:
+        self.preUpdateCalled.emit()
         for node in self._nodes.values():
             node.preUpdate()
 
@@ -79,10 +85,12 @@ class NodeEngine:
             self._updateReservations()
 
     def _update(self) -> None:
+        self.updateCalled.emit()
         for node in self._nodes.values():
             node.update()
 
     def _postUpdate(self) -> None:
+        self.postUpdateCalled.emit()
         for node in self._nodes.values():
             node.postUpdate()
 
