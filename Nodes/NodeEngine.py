@@ -3,6 +3,10 @@ from typing import List, Dict, Any
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
 
+from atomicwrites import atomic_write
+
+import json
+
 
 class NodeEngine:
     """
@@ -28,6 +32,14 @@ class NodeEngine:
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
+
+    def storeNodeStateToFile(self):
+        data_to_write = []
+        for node in self._nodes.values():
+            data_to_write.append(node.serialize())
+
+        with atomic_write("node_state.json", overwrite = True) as f:
+            f.write(json.dumps(data_to_write, separators = (", ", ": "), indent = 4))
 
     def getAllNodeIds(self) -> List[str]:
         return [node.getId() for node in self._nodes.values()]
