@@ -53,7 +53,7 @@ class Node:
         self.__stefan_boltzmann_constant = 5.67e-8
 
     def serialize(self) -> Dict[str, Any]:
-        result = dict()
+        result = dict()  # type: Dict[str, Any]
         result["node_id"] = self._node_id
         result["resources_received_this_tick"] = self._resources_received_this_tick
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
