@@ -1,11 +1,9 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
 
-from atomicwrites import atomic_write
 
-import json
 
 
 class NodeEngine:
@@ -16,13 +14,18 @@ class NodeEngine:
     """
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
-        pass
 
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
             self._nodes[node.getId()] = node
         else:
             raise KeyError("Node must have an unique ID!")
+
+    def getAllNodes(self) -> Dict[str, Node]:
+        return self._nodes
+
+    def getNodeById(self, node_id: str) -> Optional[Node]:
+        return self._nodes.get(node_id)
 
     def registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
         for key, data in serialized.items():
@@ -32,26 +35,6 @@ class NodeEngine:
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
-
-    def storeNodeStateToFile(self):
-        data_to_write = []
-        for node in self._nodes.values():
-            data_to_write.append(node.serialize())
-
-        with atomic_write("node_state.json", overwrite = True) as f:
-            # TODO: This always overrides, which isn't that safe. Might want to think about a somewhat smarter solution
-            # that keeps a number of previous states (so if one fails it can still recover an older one)
-            f.write(json.dumps(data_to_write, separators = (", ", ": "), indent = 4))
-
-    def restoreNodeStateFromFile(self):
-        with open("node_state.json") as f:
-            data = f.read()
-
-        parsed_json = json.loads(data)
-        for entry in parsed_json:
-            #TODO: This has no fault handling what so ever, which should be added at some point.
-            node = self._nodes[entry["node_id"]]
-            node.deserialize(entry)
 
     def getAllNodeIds(self) -> List[str]:
         return [node.getId() for node in self._nodes.values()]
