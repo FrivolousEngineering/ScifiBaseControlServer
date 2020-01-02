@@ -8,6 +8,4 @@ with open("configuration.json") as f:
     engine.registerNodesFromConfigurationData(loaded_data["nodes"])
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
-engine.doTick()
-
 print("done")

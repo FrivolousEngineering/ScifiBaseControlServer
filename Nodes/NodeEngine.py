@@ -39,7 +39,19 @@ class NodeEngine:
             data_to_write.append(node.serialize())
 
         with atomic_write("node_state.json", overwrite = True) as f:
+            # TODO: This always overrides, which isn't that safe. Might want to think about a somewhat smarter solution
+            # that keeps a number of previous states (so if one fails it can still recover an older one)
             f.write(json.dumps(data_to_write, separators = (", ", ": "), indent = 4))
+
+    def restoreNodeStateFromFile(self):
+        with open("node_state.json") as f:
+            data = f.read()
+
+        parsed_json = json.loads(data)
+        for entry in parsed_json:
+            #TODO: This has no fault handling what so ever, which should be added at some point.
+            node = self._nodes[entry["node_id"]]
+            node.deserialize(entry)
 
     def getAllNodeIds(self) -> List[str]:
         return [node.getId() for node in self._nodes.values()]
