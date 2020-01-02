@@ -5,7 +5,7 @@ engine = NodeEngine()
 
 with open("configuration.json") as f:
     loaded_data = json.loads(f.read())
-    engine.registerNodesFromSerialized(loaded_data["nodes"])
-    engine.registerConnectionsFromSerialized(loaded_data["connections"])
+    engine.registerNodesFromConfigurationData(loaded_data["nodes"])
+    engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
 print("done")

@@ -59,7 +59,7 @@ def test_doTick():
 def test_serializeNode(serialized, all_ids):
     engine = NodeEngine.NodeEngine()
 
-    engine.registerNodesFromSerialized(serialized)
+    engine.registerNodesFromConfigurationData(serialized)
 
     assert engine.getAllNodeIds() == all_ids
 
@@ -71,7 +71,7 @@ def test_serializeConnection():
     engine.registerNode(node_a)
     engine.registerNode(node_b)
 
-    engine.registerConnectionsFromSerialized([{"from": "a", "to": "b", "resource_type": "energy"}])
+    engine.registerConnectionsFromConfigurationData([{"from": "a", "to": "b", "resource_type": "energy"}])
 
     node_a_connections = node_a.getAllOutgoingConnectionsByType("energy")
     node_b_connections = node_b.getAllIncomingConnectionsByType("energy")

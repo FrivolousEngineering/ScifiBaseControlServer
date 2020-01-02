@@ -20,11 +20,11 @@ class NodeEngine:
         else:
             raise KeyError("Node must have an unique ID!")
 
-    def registerNodesFromSerialized(self, serialized: Dict[str, Any]) -> None:
+    def registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
         for key, data in serialized.items():
-            self.registerNode(NodeFactory.deserializeNode(key, data))
+            self.registerNode(NodeFactory.createNode(key, data))
 
-    def registerConnectionsFromSerialized(self, serialized: List[Dict[str, str]]) -> None:
+    def registerConnectionsFromConfigurationData(self, serialized: List[Dict[str, str]]) -> None:
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
