@@ -5,10 +5,13 @@ from functools import partial
 import flask
 from flask import render_template
 
-from Nodes.Node import Node
-from Nodes.NodeEngine import NodeEngine
 
 _registered_routes = {}  # type: Dict[str, Dict[str, Any]]
+
+import dbus
+import dbus.exceptions
+
+
 
 
 def register_route(route: Optional[str] = None, accepted_methods: Optional[List[str]] = None):
@@ -40,13 +43,28 @@ class Server(Flask):
             cast(Any, partial_fn).__name__ = config_options["func"].__name__
             self.add_url_rule(route, view_func = partial_fn, methods = config_options["methods"])
         self.add_url_rule(rule="/<path:path>", view_func=self.staticHost)
+        self._bus = dbus.SessionBus()
 
-        self._node_engine = None  # type: Optional[NodeEngine]
+        self._nodes = None
 
-    def setEngine(self, node_engine: NodeEngine) -> None:
-        self._node_engine = node_engine
+    def _setupDBUS(self) -> bool:
+        """
+        This ensures that the dbus connection is setup and alive.
+        :return: True if the connection is up & running, false otherwise.
+        """
+        if self._nodes is None:
+            try:
+                self._nodes = self._bus.get_object('com.frivengi.nodes', '/com/frivengi/nodes')
+            except dbus.exceptions.DBusException:
+                return False
+        try:
+            self._nodes.checkAlive()
+            return True
+        except dbus.exceptions.DBusException:
+            self._nodes = None
+            return False
 
-    def staticHost(self, path):
+    def staticHost(self, path: str) -> Any:
         """
         Used for providing files that are hosted in maintenance / admin pages
         :param path:
@@ -60,17 +78,12 @@ class Server(Flask):
 
     @register_route("/nodes")
     def listAllNodes(self):
-        if self._node_engine is None:
-            return ""
-
-        return Response(flask.json.dumps(self._node_engine.getAllNodeIds()), status=200, mimetype='application/json')
+        if not self._setupDBUS():
+            return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}), status=500, mimetype="application/json")
+        return Response(flask.json.dumps(self._nodes.getAllNodeIds()), status=200, mimetype='application/json')
 
 
 if __name__ == "__main__":
     server = Server()
-    engine = NodeEngine()
-
-    engine.registerNode(Node("ZOMG"))
-    server.setEngine(engine)
     server.run(debug=True)
 

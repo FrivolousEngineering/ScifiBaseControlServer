@@ -33,6 +33,19 @@ class DBusService(dbus.service.Object):
             return history.getTemperatureHistory()
         return []
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="as")
+    def getAllNodeIds(self) -> List[str]:
+        return self._node_engine.getAllNodeIds()
+
     @dbus.service.method("com.frivengi.nodes")
     def doTick(self) -> None:
         self._node_engine.doTick()
+
+    @dbus.service.method("com.frivengi.nodes")
+    def checkAlive(self):
+        """
+        Yes, this serves a purpose. As the name implies, this is used to check if this service is still alive.
+        It doesn't actually need to return an answer, since if the service isn't there, we get an exception.
+        :return:
+        """
+        pass
