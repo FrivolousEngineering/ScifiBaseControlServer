@@ -1,3 +1,4 @@
+from threading import Lock
 from typing import List, Dict, Any, Optional
 
 from Nodes.Node import Node
@@ -21,6 +22,8 @@ class NodeEngine:
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
         self._node_histories = {} # type: Dict[str, NodeHistory]
+
+        self._update_lock = Lock()
 
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
@@ -105,9 +108,10 @@ class NodeEngine:
         Handle a single tick.
         """
         print("TICK STARTED")
-        self._preUpdate()
-        self._updateReservations()
-        self._replanReservations()
-        self._update()
-        self._postUpdate()
+        with self._update_lock:
+            self._preUpdate()
+            self._updateReservations()
+            self._replanReservations()
+            self._update()
+            self._postUpdate()
         print("TICK ENDED!")

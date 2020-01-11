@@ -79,7 +79,8 @@ class Server(Flask):
     @register_route("/nodes")
     def listAllNodeIds(self) -> Response:
         self._setupDBUS()
-        return Response(flask.json.dumps(self._nodes.getAllNodeIds()), status=200, mimetype='application/json')
+        result = self._nodes.getAllNodeIds()  # type: ignore
+        return Response(flask.json.dumps(result), status=200, mimetype='application/json')
 
 
 if __name__ == "__main__":
