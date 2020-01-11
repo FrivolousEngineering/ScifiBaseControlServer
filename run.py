@@ -17,7 +17,6 @@ with open("configuration.json") as f:
 
 storage = NodeStorage(engine)
 
-
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
 loop = GLib.MainLoop()

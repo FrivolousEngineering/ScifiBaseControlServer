@@ -7,11 +7,9 @@ from Signal import signalemitter, Signal
 @signalemitter
 class Node:
     """
-        This is an abstract class. Most objects in the system should inherit from this base class.
-
-        Nodes itself can be connected by Connections to move resources arround.
-
-        Nodes can produce and require a certain amount of resources per tick.
+    This is an abstract class. Most objects in the system should inherit from this base class.
+    Nodes itself can be connected by Connections to move resources around.
+    Nodes can produce and require a certain amount of resources per tick.
     """
 
     # TODO: Right now outside temp is hardcoded to 20 deg celcius
@@ -54,6 +52,10 @@ class Node:
         self.__stefan_boltzmann_constant = 5.67e-8
 
     def serialize(self) -> Dict[str, Any]:
+        """
+        Serialize this node so that it can be stored somewhere (eg; save to file)
+        :return: A dict with keys for the attribute.
+        """
         result = dict()  # type: Dict[str, Any]
         result["node_id"] = self._node_id
         result["resources_received_this_tick"] = self._resources_received_this_tick
@@ -63,6 +65,10 @@ class Node:
         return result
 
     def deserialize(self, data: Dict[str, Any]) -> None:
+        """
+        Restore the data of a node from serialized information. (eg: load from file)
+        :param data:
+        """
         self._node_id = data["node_id"]
         self._resources_received_this_tick = data["resources_received_this_tick"]
         self._resources_produced_this_tick = data["resources_produced_this_tick"]
@@ -75,6 +81,9 @@ class Node:
 
     @property
     def temperature(self):
+        """
+        The temperature of this node in Kelvin
+        """
         return self._temperature
 
     def addHeat(self, heat_to_add: float) -> None:
