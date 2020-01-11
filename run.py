@@ -2,6 +2,10 @@ from Nodes.NodeEngine import NodeEngine
 import json
 
 from Nodes.NodeStorage import NodeStorage
+from Nodes.DBusService import DBusService
+
+import dbus.mainloop.glib
+from gi.repository import GLib
 
 engine = NodeEngine()
 
@@ -16,5 +20,14 @@ storage = NodeStorage(engine)
 engine.doTick()
 engine.doTick()
 engine.doTick()
+
+
+
+dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+
+loop = GLib.MainLoop()
+object = DBusService(engine)
+loop.run()
+
 
 print("done")

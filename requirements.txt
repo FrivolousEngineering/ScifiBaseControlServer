@@ -1,3 +1,4 @@
 mypy>=0.720
 flask>=1.0.2
 atomicwrites
+dbus-python
