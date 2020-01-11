@@ -41,8 +41,8 @@ class Signal:
         :param kwargs:
         """
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakImmutableList()  # type: WeakImmutableList[Callable[[], None]]
-        self.__methods = WeakImmutablePairList()  # type: WeakImmutablePairList[Any, Callable[[], None]]
+        self.__functions = WeakImmutableList()  # type: WeakImmutableList[Callable[..., None]]
+        self.__methods = WeakImmutablePairList()  # type: WeakImmutablePairList[Any, Callable[..., None]]
         self.__signals = WeakImmutableList()  # type: WeakImmutableList[Signal]
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
@@ -78,7 +78,7 @@ class Signal:
         for signal in signals:
             signal.emit(*args, **kwargs)
 
-    def connect(self, connector: Union["Signal", Callable[[], None]]) -> None:
+    def connect(self, connector: Union["Signal", Callable[..., None]]) -> None:
         """
         Connect something (anything, including another Signal) to this signal
         :param connector: The other thing to connect to.

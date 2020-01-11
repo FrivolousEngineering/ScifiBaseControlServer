@@ -58,7 +58,7 @@ class Server(Flask):
             except dbus.exceptions.DBusException:
                 return False
         try:
-            self._nodes.checkAlive()
+            self._nodes.checkAlive()  # type: ignore # The _nodes object can never be None at this point
             return True
         except dbus.exceptions.DBusException:
             self._nodes = None

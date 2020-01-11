@@ -20,7 +20,7 @@ class NodeEngine:
 
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
-        self._node_histories = {} # type: Dict[str, Node]
+        self._node_histories = {} # type: Dict[str, NodeHistory]
 
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
