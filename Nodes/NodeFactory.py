@@ -10,6 +10,6 @@ class NodeFactory:
         node_class = strToClass(data["type"])
         try:
             return node_class(key, **data)
-        except TypeError as e:
+        except TypeError as exception:
             # Re-raise it, since the original is a bit unhelpful (since it doesn't say *what* class failed)
-            raise TypeError("Unable to create %s" % node_class) from e
+            raise TypeError("Unable to create %s" % node_class) from exception

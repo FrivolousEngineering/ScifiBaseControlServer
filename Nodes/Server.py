@@ -6,24 +6,22 @@ import flask
 from flask import render_template
 
 
-_registered_routes = {}  # type: Dict[str, Dict[str, Any]]
+_REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
 import dbus
 import dbus.exceptions
 
 
-
-
 def register_route(route: Optional[str] = None, accepted_methods: Optional[List[str]] = None):
     # simple decorator for class based views
-    def inner(fn):
-        result_dict = {"func": fn}
+    def inner(function):
+        result_dict = {"func": function}
         if accepted_methods is None:
             result_dict["methods"] = ["GET"]
         else:
             result_dict["methods"] = accepted_methods
-        _registered_routes[route] = result_dict
-        return fn
+        _REGISTERED_ROUTES[route] = result_dict
+        return function
     return inner
 
 
@@ -37,7 +35,7 @@ class Server(Flask):
         super().__init__(*args, **kwargs)
 
         # Register the routes from the decorator
-        for route, config_options in _registered_routes.items():
+        for route, config_options in _REGISTERED_ROUTES.items():
             partial_fn = partial(config_options["func"], self)
             # We must set a name to for this partial function.
             cast(Any, partial_fn).__name__ = config_options["func"].__name__
@@ -51,7 +49,9 @@ class Server(Flask):
 
     def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
         self._nodes = None
-        return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}), status=500, mimetype="application/json")
+        return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}),
+                        status=500,
+                        mimetype="application/json")
 
     def _setupDBUS(self) -> None:
         """
@@ -60,9 +60,9 @@ class Server(Flask):
         if self._nodes is None:
             try:
                 self._nodes = self._bus.get_object('com.frivengi.nodes', '/com/frivengi/nodes')
-            except dbus.exceptions.DBusException as e:
+            except dbus.exceptions.DBusException as exception:
                 self._nodes = None
-                raise e
+                raise exception
 
     def staticHost(self, path: str) -> Any:
         """
@@ -84,6 +84,4 @@ class Server(Flask):
 
 
 if __name__ == "__main__":
-    server = Server()
-    server.run(debug=True)
-
+    Server().run(debug=True)

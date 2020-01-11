@@ -58,11 +58,11 @@ class NodeStorage:
         name = self._getVersionedName(self._getCurrentRevision() + 1)
 
         data_to_store = json.dumps(data_to_write, separators=(", ", ": "), indent=4)
-        with atomic_write(name) as f:
-            f.write(data_to_store)
+        with atomic_write(name) as file:
+            file.write(data_to_store)
 
-        with atomic_write(self._base_storage_path, overwrite = True) as f:
-            f.write(data_to_store)
+        with atomic_write(self._base_storage_path, overwrite = True) as file:
+            file.write(data_to_store)
 
         self._deleteOldRevisions()
 
@@ -80,8 +80,8 @@ class NodeStorage:
                 os.remove(pathname)
 
     def restoreNodeState(self) -> None:
-        with open("node_state.json") as f:
-            data = f.read()
+        with open("node_state.json") as file:
+            data = file.read()
 
         parsed_json = json.loads(data)
         for entry in parsed_json:

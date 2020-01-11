@@ -48,4 +48,4 @@ class DBusService(dbus.service.Object):
         It doesn't actually need to return an answer, since if the service isn't there, we get an exception.
         :return:
         """
-        pass
+        return

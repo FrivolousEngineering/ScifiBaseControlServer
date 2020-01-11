@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 from Nodes import Node
 import pytest
 
-from Nodes.Constants import weight_per_unit
+from Nodes.Constants import WEIGHT_PER_UNIT
 
 
 @pytest.fixture
@@ -209,7 +209,7 @@ def test_provideResourceToOutogingConnections(connections, amount_to_provide, re
     assert node._provideResourceToOutogingConnections("fuel", amount_to_provide) == resources_left
 
 
-@pytest.mark.parametrize("resource_type", weight_per_unit.keys())
+@pytest.mark.parametrize("resource_type", WEIGHT_PER_UNIT.keys())
 def test_simpleGetters(resource_type):
     # It's not really a test, but the results should remain the same, as other child nodes depend on this
     # implementation. Call them with all resources types known to us.

@@ -1,13 +1,11 @@
-from Nodes.Node import Node
 import matplotlib.pyplot as plt  # type: ignore
-from Nodes.Constants import bar_color
+from Nodes.Constants import BAR_COLOR
 
 from Nodes.NodeHistory import NodeHistory
 
 
 class NodeGraph(NodeHistory):
     def showGraph(self):
-        bar_width = 0.5
         plt.style.use('ggplot')
         ax1= plt.subplot(3, 1, 1)
         current_bar_width = 0
@@ -19,7 +17,8 @@ class NodeGraph(NodeHistory):
         plt.subplot(3, 1, 2, sharex = ax1)
         for resource_type, data in self._resources_gained_history.items():
             labels = [num + current_bar_width for num in range(0, self._num_ticks_stored)]
-            plt.bar(labels, data, label = resource_type.title(), width= 1 / (len(self._resources_gained_history.items()) + 1), color = bar_color[resource_type])
+            plt.bar(labels, data, label = resource_type.title(),
+                    width= 1 / (len(self._resources_gained_history.items()) + 1), color = BAR_COLOR[resource_type])
             current_bar_width += 1 / len(self._resources_gained_history.items())
         plt.legend()
         plt.ylabel("Used")
@@ -28,7 +27,8 @@ class NodeGraph(NodeHistory):
         current_bar_width = 0
         for resource_type, data in self._resources_produced_history.items():
             labels = [num + current_bar_width for num in range(0, self._num_ticks_stored)]
-            plt.bar(labels, data, label = resource_type.title(), width= 1 / (len(self._resources_produced_history.items()) + 1), color = bar_color[resource_type])
+            plt.bar(labels, data, label=resource_type.title(),
+                    width=1 / (len(self._resources_produced_history.items()) + 1), color=BAR_COLOR[resource_type])
             current_bar_width += 1 / len(self._resources_produced_history.items())
 
         plt.xlabel("Ticks")

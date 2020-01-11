@@ -6,16 +6,17 @@ from Signal import signalemitter, Signal
 
 @signalemitter
 class Node:
+    """
+        This is an abstract class. Most objects in the system should inherit from this base class.
+
+        Nodes itself can be connected by Connections to move resources arround.
+
+        Nodes can produce and require a certain amount of resources per tick.
+    """
+
     # TODO: Right now outside temp is hardcoded to 20 deg celcius
     outside_temp = 293.15
-    """
-    This is an abstract class. Most objects in the system should inherit from this base class.
 
-    Nodes itself can be connected by Connections to move resources arround.
-
-    Nodes can produce and require a certain amount of resources per tick.
-    """
-    
     preUpdateCalled = Signal()
     updateCalled = Signal()
     postUpdateCalled = Signal()
@@ -100,24 +101,28 @@ class Node:
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
         """
         Convenience function that combines the resources that this node got this tick and whatever was left over.
-        It can happen that resources were requested in a previous tick, that could not be used (because of various reasons).
+        It can happen that resources were requested in a previous tick, that could not be used (because of various
+        reasons).
         Since it's super annoying to give those back, the node will just keep them in storage (and try to re-use them
         in the next tick.
 
         :param resource_type: Type of the resource to check for
         :return: Amount of resources of the given type that can be used this tick.
         """
-        return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(resource_type.lower(), 0.)
+        return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
+            resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
-            if len(connections) == 0:
+            if not connections:
                 # Can't get the resource at all!
                 return
-            total_resource_to_reserve = self._resources_required_per_tick[resource_type] - self._resources_left_over.get(resource_type, 0)
+            total_resource_to_reserve = self._resources_required_per_tick[resource_type] \
+                                        - self._resources_left_over.get(resource_type, 0)
             resource_to_reserve = total_resource_to_reserve / len(connections)
+
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
 
@@ -140,7 +145,7 @@ class Node:
         outgoing_connections = sorted(outgoing_connections,
                                       key=lambda x: x.preGiveResource(amount / len(outgoing_connections)),
                                       reverse=True)
-        while len(outgoing_connections):
+        while outgoing_connections:
             active_connection = outgoing_connections.pop()
             resources_stored = active_connection.giveResource(amount / (len(outgoing_connections) + 1))
             amount -= resources_stored
@@ -162,7 +167,9 @@ class Node:
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
-            num_statisfied_reservations = len([connection for connection in connections if connection.isReservationStatisfied()])
+            num_statisfied_reservations = len(
+                [connection for connection in connections if connection.isReservationStatisfied()])
+
             if num_statisfied_reservations == 0:
                 extra_resource_to_ask_per_connection = 0.
             else:
@@ -176,7 +183,8 @@ class Node:
                         connection.lock()
                         continue
                     # So the connections that did give us that we want might have a bit more!
-                    connection.reserveResource(connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
+                    connection.reserveResource(
+                        connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
     def update(self) -> None:
         self.updateCalled.emit(self)
@@ -201,7 +209,8 @@ class Node:
         self.addHeat(heat_radiation)
 
     def _convectiveHeatTransfer(self) -> None:
-        heat_convection = self._heat_convection_coefficient * self._surface_area * (self.outside_temp - self.temperature)
+        delta_temp = self.outside_temp - self.temperature
+        heat_convection = self._heat_convection_coefficient * self._surface_area * delta_temp
         self.addHeat(heat_convection)
 
     def requiresReplanning(self) -> bool:
@@ -213,11 +222,12 @@ class Node:
 
         :return: If a replan is needed or not
         """
-        num_statisfied_reservations = len([connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
+        num_statisfied_reservations = len(
+            [connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
+
         if not num_statisfied_reservations:
             return False
-        else:
-            return len(self._incoming_connections) != num_statisfied_reservations
+        return len(self._incoming_connections) != num_statisfied_reservations
 
     def connectWith(self, resource_type: str, target: "Node") -> None:
         """

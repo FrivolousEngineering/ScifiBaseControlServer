@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Nodes.Node import Node
-from Nodes.Constants import weight_per_unit
+from Nodes.Constants import WEIGHT_PER_UNIT
 
 
 class ResourceStorage(Node):
@@ -10,7 +10,7 @@ class ResourceStorage(Node):
         self._resource_type = resource_type.lower()
         self._amount = amount
         self._max_storage = max_storage
-        self._resource_weight_per_unit = weight_per_unit[self._resource_type]
+        self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
 
     @property
     def weight(self):
@@ -26,14 +26,17 @@ class ResourceStorage(Node):
 
         return self._amount
 
-    def updateReservations(self):
-        sorted_reservations = sorted(self._outgoing_connections, key=lambda x: x.reserved_requested_amount, reverse=True)
+    def updateReservations(self) -> None:
+        sorted_reservations = sorted(self._outgoing_connections,
+                                     key=lambda x: x.reserved_requested_amount,
+                                     reverse=True)
 
-        reserved_amount = 0
-        while len(sorted_reservations):
+        reserved_amount = 0.
+        while sorted_reservations:
             max_resources_to_give = (self._amount - reserved_amount) / len(sorted_reservations)
             active_reservation = sorted_reservations.pop()
-            active_reservation.reserved_available_amount = min(max_resources_to_give, active_reservation.reserved_requested_amount)
+            active_reservation.reserved_available_amount = min(max_resources_to_give,
+                                                               active_reservation.reserved_requested_amount)
             reserved_amount += active_reservation.reserved_available_amount
 
     def getResource(self, resource_type: str, amount: float) -> float:

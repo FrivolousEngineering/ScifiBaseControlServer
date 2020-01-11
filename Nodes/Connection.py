@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from Nodes.Constants import specific_heat
+from Nodes.Constants import SPECIFIC_HEAT
 if TYPE_CHECKING:
     from Nodes.Node import Node
 
@@ -23,7 +23,7 @@ class Connection:
         self.reserved_available_amount = 0.
         self.locked = False
         try:
-            self._specific_heat = specific_heat[self.resource_type]
+            self._specific_heat = SPECIFIC_HEAT[self.resource_type]
         except KeyError:
             raise ValueError("Resource type %s was not recognised. Did you forget to add it to the constants file?" %
                              self.resource_type)
