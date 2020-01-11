@@ -45,24 +45,24 @@ class Server(Flask):
         self.add_url_rule(rule="/<path:path>", view_func=self.staticHost)
         self._bus = dbus.SessionBus()
 
+        self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
+
         self._nodes = None
 
-    def _setupDBUS(self) -> bool:
+    def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
+        self._nodes = None
+        return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}), status=500, mimetype="application/json")
+
+    def _setupDBUS(self) -> None:
         """
-        This ensures that the dbus connection is setup and alive.
-        :return: True if the connection is up & running, false otherwise.
+        Create DBUS object.
         """
         if self._nodes is None:
             try:
                 self._nodes = self._bus.get_object('com.frivengi.nodes', '/com/frivengi/nodes')
-            except dbus.exceptions.DBusException:
-                return False
-        try:
-            self._nodes.checkAlive()  # type: ignore # The _nodes object can never be None at this point
-            return True
-        except dbus.exceptions.DBusException:
-            self._nodes = None
-            return False
+            except dbus.exceptions.DBusException as e:
+                self._nodes = None
+                raise e
 
     def staticHost(self, path: str) -> Any:
         """
@@ -77,9 +77,8 @@ class Server(Flask):
         return render_template("index.html")
 
     @register_route("/nodes")
-    def listAllNodes(self):
-        if not self._setupDBUS():
-            return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}), status=500, mimetype="application/json")
+    def listAllNodeIds(self) -> Response:
+        self._setupDBUS()
         return Response(flask.json.dumps(self._nodes.getAllNodeIds()), status=200, mimetype='application/json')
 
 
