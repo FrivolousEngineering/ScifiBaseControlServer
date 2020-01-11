@@ -50,7 +50,7 @@ class NodeHistory:
                     self._resources_gained_history[resource_type] = []
                 self._resources_gained_history[resource_type].append(resources_received[resource_type])
 
-            for resource_type in self._node.getResourcesProducedThisTick():
+            for resource_type in resources_produced:
                 if resource_type not in self._resources_produced_history:
                     self._resources_produced_history[resource_type] = []
                 self._resources_produced_history[resource_type].append(resources_produced[resource_type])
