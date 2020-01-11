@@ -1,40 +1,11 @@
 from Nodes.Node import Node
 import matplotlib.pyplot as plt  # type: ignore
 from Nodes.Constants import bar_color
-from typing import Dict, List
+
+from Nodes.NodeHistory import NodeHistory
 
 
-class NodeGraph:
-    def __init__(self, node: Node) -> None:
-        self._node = node
-        self._node.postUpdateCalled.connect(self._update)
-
-        self._resources_produced_history = {}  # type: Dict[str, List[float]]
-        self._resources_gained_history = {}  # type: Dict[str, List[float]]
-        self._num_ticks_stored = 0
-        self._temperature_history = []  # type: List[float]
-        for resource_type in self._node.getResourcesRequiredPerTick():
-            self._resources_gained_history[resource_type] = []
-
-    def _update(self, *args) -> None:
-        self._num_ticks_stored += 1
-        self._temperature_history.append(self._node.temperature)
-        resources_received = self._node.getResourcesReceivedThisTick()
-        resources_produced = self._node.getResourcesProducedThisTick()
-        for resource_type in self._node.getResourcesRequiredPerTick():
-            if resource_type not in resources_received:
-                self._resources_gained_history[resource_type].append(0)
-
-        for resource_type in resources_received:
-            if resource_type not in self._resources_gained_history:
-                self._resources_gained_history[resource_type] = []
-            self._resources_gained_history[resource_type].append(resources_received[resource_type])
-
-        for resource_type in self._node.getResourcesProducedThisTick():
-            if resource_type not in self._resources_produced_history:
-                self._resources_produced_history[resource_type] = []
-            self._resources_produced_history[resource_type].append(resources_produced[resource_type])
-
+class NodeGraph(NodeHistory):
     def showGraph(self):
         bar_width = 0.5
         plt.style.use('ggplot')

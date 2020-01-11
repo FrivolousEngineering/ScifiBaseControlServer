@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
+from Nodes.NodeHistory import NodeHistory
 from Signal import signalemitter, Signal
 
 
@@ -19,10 +20,12 @@ class NodeEngine:
 
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
+        self._node_histories = {} # type: Dict[str, Node]
 
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
             self._nodes[node.getId()] = node
+            self._node_histories[node.getId()] = NodeHistory(node)
         else:
             raise KeyError("Node must have an unique ID!")
 
@@ -31,6 +34,9 @@ class NodeEngine:
 
     def getNodeById(self, node_id: str) -> Optional[Node]:
         return self._nodes.get(node_id)
+
+    def getNodeHistoryById(self, node_id) -> Optional[NodeHistory]:
+        return self._node_histories.get(node_id)
 
     def registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
         for key, data in serialized.items():

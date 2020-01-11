@@ -17,11 +17,6 @@ with open("configuration.json") as f:
 
 storage = NodeStorage(engine)
 
-engine.doTick()
-engine.doTick()
-engine.doTick()
-
-
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
