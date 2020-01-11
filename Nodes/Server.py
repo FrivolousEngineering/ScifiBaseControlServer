@@ -49,7 +49,7 @@ class Server(Flask):
 
     def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
         self._nodes = None
-        return Response(flask.json.dumps({"error": "Failed to locate DBUS service"}),
+        return Response(flask.json.dumps({"error": "DBUS Exception", "message": str(exception)}),
                         status=500,
                         mimetype="application/json")
 
@@ -74,7 +74,12 @@ class Server(Flask):
 
     @register_route("/")
     def renderStartPage(self):
-        return render_template("index.html")
+        self._setupDBUS()
+        display_data = []
+        for node_id in self._nodes.getAllNodeIds():  # type: ignore
+            data = {"node_id": node_id, "temperature": self._nodes.getNodeTemperature(node_id)} # type: ignore
+            display_data.append(data)
+        return render_template("index.html", data = display_data)
 
     @register_route("/nodes")
     def listAllNodeIds(self) -> Response:

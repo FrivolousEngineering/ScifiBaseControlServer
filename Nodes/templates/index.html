@@ -10,6 +10,21 @@
 </form>
 <br/>
 
+
+<table>
+    <tr>
+        <th><b>Name</b></th>
+        <th><b>temperature</b></th>
+    </tr>
+    {% for item in data %}
+    <tr>
+            <th>{{item.node_id}}</th>
+            <th>{{item.temperature}}</th>
+    </tr>
+    {% endfor %}
+</table>
+
+
 <div id="message"></div>
 
 <script>
