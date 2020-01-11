@@ -82,6 +82,12 @@ class Server(Flask):
         result = self._nodes.getAllNodeIds()  # type: ignore
         return Response(flask.json.dumps(result), status=200, mimetype='application/json')
 
+    @register_route("/startTick", ["POST"])
+    def startTick(self) -> Response:
+        self._setupDBUS()
+        self._nodes.doTick() # type: ignore
+
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype='application/json')
 
 if __name__ == "__main__":
     Server().run(debug=True)

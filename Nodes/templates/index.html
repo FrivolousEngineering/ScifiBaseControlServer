@@ -1,55 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<script src="templates/cytoscape.min.js"></script>
-<head>
-    <meta charset="UTF-8">
-    <title>Node admin page</title>
-</head>
-<body>
+<!doctype html>
+<title>ADMIN TOOLS :D</title>
+<h1>Admin page</h1>
+<script src="templates/jquery-3.1.1.js"></script>
+
+
+<b>Do a tick;</b>
+<form action="startTick" method = "post">
+    <input type="submit" value="Start a Tick">
+</form>
+<br/>
+
+<div id="message"></div>
+
 <script>
-var cy = cytoscape({
-
-  container: document.getElementById('cy'), // container to render in
-
-  elements: [ // list of graph elements to start with
-    { // node a
-      data: { id: 'a' }
-    },
-    { // node b
-      data: { id: 'b' }
-    },
-    { // edge ab
-      data: { id: 'ab', source: 'a', target: 'b' }
-    }
-  ],
-
-  style: [ // the stylesheet for the graph
+    // Handle the POST calls of all forms
+    $(document).on("submit", "form", function(event)
     {
-      selector: 'node',
-      style: {
-        'background-color': '#666',
-        'label': 'data(id)'
-      }
-    },
+        event.preventDefault();
 
-    {
-      selector: 'edge',
-      style: {
-        'width': 3,
-        'line-color': '#ccc',
-        'target-arrow-color': '#ccc',
-        'target-arrow-shape': 'triangle'
-      }
-    }
-  ],
-
-  layout: {
-    name: 'grid',
-    rows: 1
-  }
-
-});
+        var url=$(this).attr("action");
+        $.ajax({
+            url: url,
+            type: $(this).attr("method"),
+            dataType: "JSON",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            beforeSend: function()
+            {
+                $("#message").html("sending...");
+            },
+            success: function(data)
+            {
+                $("#message").html("");
+            },
+            error: function (xhr, description, error)
+            {
+                $("#message").html(error);
+            }
+        });
+    });
 </script>
-
-</body>
-</html>
