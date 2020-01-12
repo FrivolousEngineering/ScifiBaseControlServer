@@ -11,13 +11,12 @@ class FluidCooler(ResourceStorage):
         self._surface_area = 8
         self._heat_emissivity = 0.9
 
+        # Also try to pump up resources!
+        self._resources_required_per_tick[resource_type] = fluid_per_tick
+
     def update(self) -> None:
         super().update()
 
         resource_available = self.getResourceAvailableThisTick(self._resource_type)
         resource_left = self._provideResourceToOutogingConnections(self._resource_type, resource_available)
-
-        # Some amount could not be dumped, so this means we will just request less next tick.
-        self._resources_left_over[self._resource_type] = resource_left
-
         self._amount = resource_left

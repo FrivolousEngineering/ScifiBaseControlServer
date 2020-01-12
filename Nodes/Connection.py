@@ -62,7 +62,7 @@ class Connection:
         :return: The amount it was actually able to get. If the planning was correct, it should be the same as what was
                  reserved.
         """
-        return self.getResource(self.reserved_requested_amount)
+        return self.getResource(self.reserved_available_amount)
 
     def isReservationStatisfied(self) -> bool:
         """

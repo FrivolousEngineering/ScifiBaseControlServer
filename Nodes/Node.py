@@ -166,7 +166,9 @@ class Node:
         The results are places in the _resources_received_this_tick dict.
         """
         for resource_type in self._resources_required_per_tick:
-            self._resources_received_this_tick[resource_type] = self._getReservedResourceByType(resource_type)
+            already_received_resources = self._resources_received_this_tick.get(resource_type, 0)
+            reserved_resources = self._getReservedResourceByType(resource_type)
+            self._resources_received_this_tick[resource_type] = already_received_resources + reserved_resources
 
     def replanReservations(self) -> None:
         """
