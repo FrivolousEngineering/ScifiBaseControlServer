@@ -18,7 +18,7 @@ class ResourceStorage(Node):
 
     @property
     def weight(self):
-        return self._weight + self._resource_weight_per_unit * self._amount
+        return self._weight + self._resource_weight_per_unit * self.amount_stored
 
     def preGetResource(self, resource_type: str, amount: float) -> float:
         if resource_type != self._resource_type:
@@ -31,9 +31,8 @@ class ResourceStorage(Node):
         return self._amount
 
     def updateReservations(self) -> None:
-        sorted_reservations = sorted(self._outgoing_connections,
-                                     key=lambda x: x.reserved_requested_amount,
-                                     reverse=True)
+        reservations = self.getAllOutgoingConnectionsByType(self._resource_type)
+        sorted_reservations = sorted(reservations, key=lambda x: x.reserved_requested_amount, reverse=True)
 
         reserved_amount = 0.
         while sorted_reservations:

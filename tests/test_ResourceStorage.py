@@ -1,5 +1,7 @@
+from unittest.mock import MagicMock
+
 import pytest
-from Nodes import ResourceStorage
+from Nodes import ResourceStorage, Node
 
 get_list = [(20,    0,      "energy"),  # Wrong resource type
             (20,    20,     "water"),
@@ -43,3 +45,28 @@ def test_giveResource(requested, stored, max_storage, resource_type):
 
     assert storage.giveResource(resource_type, requested) == stored
     assert storage._amount == 20 + stored
+
+@pytest.mark.parametrize("requested, received", [([20, 21], [10, 10]),
+                                                 ([5, 9],   [5, 9]),
+                                                 ([6, 6, 8], [6, 6, 8]),
+                                                 ([200, 6, 6], [8, 6, 6]),
+                                                 ([200, 200, 200, 200], [5, 5, 5, 5])
+                                                 ])
+def test_updateReservations(requested, received):
+    storage = ResourceStorage.ResourceStorage("", "energy", 20)
+    connections = []
+    for request in requested:
+        connections.append(MagicMock(reserved_requested_amount = request))
+
+    storage.getAllOutgoingConnectionsByType = MagicMock(return_value = connections)
+    storage.updateReservations()
+
+    for idx, received in enumerate(received):
+        assert connections[idx].reserved_available_amount == received
+
+
+def test_weight():
+    storage = ResourceStorage.ResourceStorage("", "energy", 20)
+    storage_2 = ResourceStorage.ResourceStorage("", "energy", 500)
+    # Energy storage should always be the same weight as eachoter (because energy doesn't have extra weight.
+    assert storage.weight == storage_2.weight
