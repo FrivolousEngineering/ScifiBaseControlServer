@@ -19,3 +19,5 @@ class FluidCooler(ResourceStorage):
 
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over[self._resource_type] = resource_left
+
+        self._amount = resource_left
