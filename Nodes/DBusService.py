@@ -45,16 +45,20 @@ class DBusService(dbus.service.Object):
     @dbus.service.method("com.frivengi.nodes", out_signature="d")
     def getAmountStored(self, node_id) -> float:
         node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return -1
         try:
-            return node.amount_stored
+            return node.amount_stored  # type: ignore
         except AttributeError:
             return -1
 
     @dbus.service.method("com.frivengi.nodes", out_signature="s", in_signature="s")
     def getNodeHistoryGraph(self, node_id) -> str:
         node_history = self._node_engine.getNodeHistoryById(node_id)
-        NodeGraph(node_history).storeGraph()
+        if not node_history:
+            return ""
 
+        NodeGraph(node_history).storeGraph()
         return "graphs/%s.png" % node_id
 
     @dbus.service.method("com.frivengi.nodes")

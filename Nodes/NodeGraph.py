@@ -6,15 +6,15 @@ from Nodes.NodeHistory import NodeHistory
 
 class NodeGraph:
 
-    def __init__(self, node_history: NodeHistory):
+    def __init__(self, node_history: NodeHistory) -> None:
         self._node_history = node_history
 
-    def createGraph(self):
+    def createGraph(self) -> None:
         num_ticks_stored = self._node_history.getNumTicksStored()
 
         plt.style.use('ggplot')
         ax1 = plt.subplot(3, 1, 1)
-        current_bar_width = 0
+        current_bar_width = 0.
         labels = [num + current_bar_width for num in range(0, num_ticks_stored)]
         plt.bar(labels, self._node_history.getTemperatureHistory(), label="Temperature")
         plt.ylabel("Degrees Kelvin")
