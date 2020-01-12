@@ -16,10 +16,6 @@ class DBusService(dbus.service.Object):
 
         self._node_engine = engine
 
-    @dbus.service.method("com.frivengi.nodes", out_signature="s", in_signature = "s")
-    def getNodeInfo(self, node_id: str) -> str:
-        return str(self._node_engine.getNodeById(node_id))
-
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def getNodeTemperature(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
