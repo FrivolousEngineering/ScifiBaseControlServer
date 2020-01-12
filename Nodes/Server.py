@@ -54,6 +54,15 @@ class Server(Flask):
                         mimetype="application/json")
 
     def _setupDBUS(self) -> None:
+        self._initDBUS()
+        try:
+            self._nodes.checkAlive()
+        except dbus.exceptions.DBusException:
+            self._nodes = None
+            # It could be that the service was rebooted, so we should try this again.
+            self._initDBUS()
+
+    def _initDBUS(self) -> None:
         """
         Create DBUS object.
         """
