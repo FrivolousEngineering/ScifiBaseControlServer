@@ -3,7 +3,7 @@ from typing import Optional, cast, Any, List, Dict
 from flask import Flask, Response
 from functools import partial
 import flask
-from flask import render_template
+from flask import render_template, send_file
 
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
@@ -77,7 +77,9 @@ class Server(Flask):
         self._setupDBUS()
         display_data = []
         for node_id in self._nodes.getAllNodeIds():  # type: ignore
-            data = {"node_id": node_id, "temperature": self._nodes.getNodeTemperature(node_id), "amount": self._nodes.getAmountStored(node_id)} # type: ignore
+            data = {"node_id": node_id,
+                    "temperature": self._nodes.getNodeTemperature(node_id),
+                    "amount": self._nodes.getAmountStored(node_id)} # type: ignore
             display_data.append(data)
         return render_template("index.html", data = display_data)
 
@@ -93,6 +95,12 @@ class Server(Flask):
         self._nodes.doTick() # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype='application/json')
+
+    @register_route("/historyGraph/<node_id>")
+    def historyGraph(self, node_id):
+        self._setupDBUS()
+        filename = "../" + self._nodes.getNodeHistoryGraph(node_id)
+        return send_file(filename, mimetype='image/jpg')
 
 if __name__ == "__main__":
     Server().run(debug=True)

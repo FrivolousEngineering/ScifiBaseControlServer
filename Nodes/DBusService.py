@@ -3,6 +3,7 @@ import dbus
 import dbus.service
 from typing import List
 from Nodes.NodeEngine import NodeEngine
+from Nodes.NodeGraph import NodeGraph
 
 
 class DBusService(dbus.service.Object):
@@ -48,6 +49,13 @@ class DBusService(dbus.service.Object):
             return node.amount_stored
         except AttributeError:
             return -1
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="s", in_signature="s")
+    def getNodeHistoryGraph(self, node_id) -> str:
+        node_history = self._node_engine.getNodeHistoryById(node_id)
+        NodeGraph(node_history).storeGraph()
+
+        return "graphs/%s.png" % node_id
 
     @dbus.service.method("com.frivengi.nodes")
     def checkAlive(self):

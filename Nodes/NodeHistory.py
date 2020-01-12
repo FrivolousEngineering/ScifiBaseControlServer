@@ -23,6 +23,12 @@ class NodeHistory:
 
         self._data_lock = Lock()
 
+    def getNode(self):
+        return self._node
+
+    def getNumTicksStored(self):
+        return self._num_ticks_stored
+
     def getResourcesProducedHistory(self) -> Dict[str, List[float]]:
         with self._data_lock:
             return self._resources_produced_history
