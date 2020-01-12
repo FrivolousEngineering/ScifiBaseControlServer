@@ -96,20 +96,25 @@ class Server(Flask):
     def listAllNodeIds(self) -> Response:
         self._setupDBUS()
         result = self._nodes.getAllNodeIds()  # type: ignore
-        return Response(flask.json.dumps(result), status=200, mimetype='application/json')
+        return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/startTick", ["POST"])
     def startTick(self) -> Response:
         self._setupDBUS()
         self._nodes.doTick() # type: ignore
 
-        return Response(flask.json.dumps({"message": ""}), status=200, mimetype='application/json')
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
     @register_route("/historyGraph/<node_id>")
     def historyGraph(self, node_id):
         self._setupDBUS()
+        filename = self._nodes.getNodeHistoryGraph(node_id)
+        if filename == "":
+            # nothing found
+            return Response(flask.json.dumps({"message": "Node with id [%s] was not found" % node_id}),
+                            status=404, mimetype="application/json")
         filename = "../" + self._nodes.getNodeHistoryGraph(node_id)
-        return send_file(filename, mimetype='image/jpg')
+        return send_file(filename, mimetype="image/png")
 
 if __name__ == "__main__":
     Server().run(debug=True)
