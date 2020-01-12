@@ -52,6 +52,30 @@ def test_doTick():
     node.postUpdate.assert_called_once()
 
 
+def test_getAllNodes():
+    engine = NodeEngine.NodeEngine()
+    node = createNode("test")
+    node_2 = createNode("test2")
+    engine.registerNode(node)
+    engine.registerNode(node_2)
+
+    all_nodes = engine.getAllNodes()
+    assert len(all_nodes) == 2
+    assert "test" in all_nodes
+    assert "test2" in all_nodes
+    assert all_nodes["test"] == node
+    assert all_nodes["test2"] == node_2
+
+
+def test_getNodeHistoryById():
+    engine = NodeEngine.NodeEngine()
+    node = createNode("test")
+    engine.registerNode(node)
+
+    assert engine.getNodeHistoryById("test") is not None
+    assert engine.getNodeHistoryById("BLARG") is None
+
+
 # This is a tad more than just a unit test, but it's good to have it since it checks if nodes can be loaded at all
 @pytest.mark.parametrize("serialized, all_ids", [({"blarg": {"type": "Node"}}, ["blarg"]),
                                                  ({"omg": {"type": "Generator"}, "zomg": {"type": "Node"}}, ["omg", "zomg"]),
