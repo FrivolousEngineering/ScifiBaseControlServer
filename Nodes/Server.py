@@ -56,7 +56,7 @@ class Server(Flask):
     def _setupDBUS(self) -> None:
         self._initDBUS()
         try:
-            self._nodes.checkAlive()
+            self._nodes.checkAlive()  # type: ignore
         except dbus.exceptions.DBusException:
             self._nodes = None
             # It could be that the service was rebooted, so we should try this again.

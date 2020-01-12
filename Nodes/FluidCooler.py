@@ -15,7 +15,7 @@ class FluidCooler(ResourceStorage):
         # Also try to pump up resources!
         self._resources_required_per_tick[resource_type] = fluid_per_tick
 
-    def _updateResourceRequiredPerTick(self):
+    def _updateResourceRequiredPerTick(self) -> None:
         self._resources_required_per_tick[self._resource_type] = max(0., self._fluid_per_tick - self._amount)
 
     def update(self) -> None:
