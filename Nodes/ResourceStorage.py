@@ -13,6 +13,10 @@ class ResourceStorage(Node):
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
 
     @property
+    def amount_stored(self):
+        return self._amount
+
+    @property
     def weight(self):
         return self._weight + self._resource_weight_per_unit * self._amount
 

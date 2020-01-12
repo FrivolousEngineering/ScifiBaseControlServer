@@ -77,7 +77,7 @@ class Server(Flask):
         self._setupDBUS()
         display_data = []
         for node_id in self._nodes.getAllNodeIds():  # type: ignore
-            data = {"node_id": node_id, "temperature": self._nodes.getNodeTemperature(node_id)} # type: ignore
+            data = {"node_id": node_id, "temperature": self._nodes.getNodeTemperature(node_id), "amount": self._nodes.getAmountStored(node_id)} # type: ignore
             display_data.append(data)
         return render_template("index.html", data = display_data)
 

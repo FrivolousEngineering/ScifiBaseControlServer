@@ -41,6 +41,14 @@ class DBusService(dbus.service.Object):
     def doTick(self) -> None:
         self._node_engine.doTick()
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="d")
+    def getAmountStored(self, node_id) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        try:
+            return node.amount_stored
+        except AttributeError:
+            return -1
+
     @dbus.service.method("com.frivengi.nodes")
     def checkAlive(self):
         """
