@@ -9,7 +9,7 @@ from gi.repository import GLib
 
 engine = NodeEngine()
 
-with open("configuration.json") as f:
+with open("GeneratorWaterCoolerConfiguration.json") as f:
     loaded_data = json.loads(f.read())
     engine.registerNodesFromConfigurationData(loaded_data["nodes"])
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
