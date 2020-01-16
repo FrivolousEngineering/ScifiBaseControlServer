@@ -1,3 +1,4 @@
+from threading import Lock
 from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
@@ -46,6 +47,8 @@ class Node:
 
         self._new_enabled_state = True
 
+        self._update_lock = Lock()
+
         # A few examples of heat_convection_coefficient all in W/m K:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
@@ -62,7 +65,8 @@ class Node:
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
-        self._new_enabled_state = enabled
+        with self._update_lock:
+            self._enabled = enabled
 
     def serialize(self) -> Dict[str, Any]:
         """
@@ -135,6 +139,7 @@ class Node:
             resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
+        self._update_lock.acquire()
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
@@ -222,9 +227,7 @@ class Node:
         self._resources_produced_this_tick = {}
         self._emitHeat()
         self._convectiveHeatTransfer()
-
-        # Enabled is updated delayed. This is to prevent having locks everywhere
-        self._enabled = self._new_enabled_state
+        self._update_lock.release()
 
     def _emitHeat(self) -> None:
         """
@@ -265,12 +268,14 @@ class Node:
         :param target: The node that is the target of the connection
         :return:
         """
-        new_connection = Connection(origin=self, target=target, resource_type = resource_type)
-        self._outgoing_connections.append(new_connection)
-        target.addConnection(new_connection)
+        with self._update_lock:
+            new_connection = Connection(origin=self, target=target, resource_type = resource_type)
+            self._outgoing_connections.append(new_connection)
+            target.addConnection(new_connection)
 
     def addConnection(self, connection: Connection) -> None:
-        self._incoming_connections.append(connection)
+        with self._update_lock:
+            self._incoming_connections.append(connection)
 
     def getAllIncomingConnectionsByType(self, resource_type: str) -> List[Connection]:
         return [connection for connection in self._incoming_connections if connection.resource_type == resource_type]
