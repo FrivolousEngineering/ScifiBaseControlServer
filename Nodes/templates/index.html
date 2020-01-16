@@ -3,37 +3,32 @@
 <h1>Admin page</h1>
 <script src="templates/jquery-3.1.1.js"></script>
 
+<style>
+th {
+    text-align: left;
+    padding-right: 20px;
+}
+
+</style>
 
 <b>Do a tick;</b>
 <form action="startTick" method = "post">
     <input type="submit" value="Start a Tick">
 </form>
 <br/>
-
-
-<table>
-    <tr>
-        <th><b>Name</b></th>
-        <th><b>temperature</b></th>
-        <th>Amount stored</th>
-        <th>Enabled</th>
-    </tr>
-    {% for item in data %}
-    <tr>
-            <th>
-                <a href=/{{item.node_id}}/historyGraph/>{{item.node_id}}</a>
-            </th>
-            <th>{{item.temperature}}</th>
-            <th>{{item.amount}}</th>
-            <th>
-                <form action="/{{item.node_id}}/enabled/" method="put">
-                    <input type="submit" value="{{item.enabled}}">
-                </form>
-            </th>
-    </tr>
-    {% endfor %}
+<p></p>
+<table id = "records_table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Temperature</th>
+            <th>Amount stored</th>
+            <th>Enabled</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
 </table>
-
 
 <div id="message"></div>
 
@@ -58,6 +53,7 @@
             success: function(data)
             {
                 $("#message").html("");
+                updateNodeData();
             },
             error: function (xhr, description, error)
             {
@@ -65,4 +61,36 @@
             }
         });
     });
+
+    function updateNodeData()
+    {
+        $.get( "/nodes/", function(data) {
+            updateTable(data);
+        });
+    }
+
+    updateNodeData();
+
+    function updateTable(response) {
+        // Clear the old data.
+        $('#records_table tbody').empty();
+        // Parse all the entries.
+        $.each(response, function(i, item) {
+            var form = $("<form/>", {
+                action: item.node_id + '/enabled/',
+                method: "put"
+            });
+            form.append($("<input>", {
+                type: "submit",
+                value: item.enabled
+            }));
+            var node_link = $("<a/>", {href: item.node_id + "/historyGraph/", text: item.node_id});
+            $('<tr>').append(
+                $('<td>').append(node_link),
+                $('<td>').text(item.temperature),
+                $('<td>').text(item.amount),
+                $('<td>').append(form)
+            ).appendTo('#records_table');
+        });
+    }
 </script>

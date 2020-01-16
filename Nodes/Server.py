@@ -93,6 +93,18 @@ class Server(Flask):
             display_data.append(data)
         return render_template("index.html", data = display_data)
 
+    @register_route("/nodes/")
+    def getAllNodeData(self):
+        self._setupDBUS()
+        display_data = []
+        for node_id in self._nodes.getAllNodeIds():  # type: ignore
+            data = {"node_id": node_id,
+                    "temperature": self._nodes.getNodeTemperature(node_id),
+                    "amount": round(self._nodes.getAmountStored(node_id), 2),
+                    "enabled": self._nodes.isNodeEnabled(node_id)}  # type: ignore
+            display_data.append(data)
+        return Response(flask.json.dumps(display_data), status=200, mimetype="application/json")
+
     @register_route("/nodes")
     def listAllNodeIds(self) -> Response:
         self._setupDBUS()
@@ -102,7 +114,7 @@ class Server(Flask):
     @register_route("/startTick", ["POST"])
     def startTick(self) -> Response:
         self._setupDBUS()
-        self._nodes.doTick() # type: ignore
+        self._nodes.doTick()  # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
