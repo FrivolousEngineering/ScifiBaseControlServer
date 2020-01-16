@@ -2,7 +2,7 @@
 <title>ADMIN TOOLS :D</title>
 <h1>Admin page</h1>
 <script src="templates/jquery-3.1.1.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <style>
 th {
     text-align: left;
@@ -31,8 +31,10 @@ th {
 </table>
 
 <div id="message"></div>
-
+<canvas id="chart"></canvas>
 <script>
+    var default_node = "generator";
+    var chart = null;
     // Handle the POST calls of all forms
     $(document).on("submit", "form", function(event)
     {
@@ -54,6 +56,7 @@ th {
             {
                 $("#message").html("");
                 updateNodeData();
+                drawTemperatureChart(default_node);
             },
             error: function (xhr, description, error)
             {
@@ -69,7 +72,6 @@ th {
         });
     }
 
-    updateNodeData();
 
     function updateTable(response) {
         // Clear the old data.
@@ -84,7 +86,12 @@ th {
                 type: "submit",
                 value: item.enabled
             }));
-            var node_link = $("<a/>", {href: item.node_id + "/historyGraph/", text: item.node_id});
+            var node_link = $("<a/>", {href: '#', text: item.node_id});
+            node_link.click(function(evt){
+                evt.preventDefault();
+                default_node = item.node_id;
+                drawTemperatureChart(default_node);
+            });
             $('<tr>').append(
                 $('<td>').append(node_link),
                 $('<td>').text(item.temperature),
@@ -93,4 +100,45 @@ th {
             ).appendTo('#records_table');
         });
     }
+
+    function drawTemperatureChart(node_id) {
+
+        var jsonData = $.ajax({
+            url: '/' + node_id + '/temperature/history',
+            dataType: 'json',
+        }).done(function(results) {
+
+            var label = [];
+            var output = [];
+
+            results.forEach(function(data, i) {
+                label.push((i + 1).toString());
+                output.push(data);
+            });
+
+            var data = {
+                labels: label,
+                datasets: [
+                    {
+                        label: "temperature",
+                        data: output,
+                        backgroundColor: "red"
+                    }
+                ]
+            };
+
+            var config = { type: 'bar',  data : data};
+            var ctx = $("#chart").get(0).getContext("2d");
+            if(chart != null){
+                chart.destroy();
+            }
+            chart = new Chart(ctx, config);
+        });
+    }
+    function updateAll()
+    {
+        updateNodeData();
+        drawTemperatureChart(default_node);
+    }
+    updateAll();
 </script>

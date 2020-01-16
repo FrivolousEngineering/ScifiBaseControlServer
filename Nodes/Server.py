@@ -138,6 +138,12 @@ class Server(Flask):
             return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
         return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
 
+    @register_route("/<node_id>/temperature/history/")
+    def temperatureHistory(self, node_id):
+        self._setupDBUS()
+        result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
+        return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+
 
 if __name__ == "__main__":
     Server().run(debug=True)
