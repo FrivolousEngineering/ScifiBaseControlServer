@@ -44,6 +44,8 @@ class Node:
         # Is the node working at all?
         self._enabled = True
 
+        self._new_enabled_state = True
+
         # A few examples of heat_convection_coefficient all in W/m K:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
@@ -60,7 +62,7 @@ class Node:
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
-        self._enabled = enabled
+        self._new_enabled_state = enabled
 
     def serialize(self) -> Dict[str, Any]:
         """
@@ -220,6 +222,9 @@ class Node:
         self._resources_produced_this_tick = {}
         self._emitHeat()
         self._convectiveHeatTransfer()
+
+        # Enabled is updated delayed. This is to prevent having locks everywhere
+        self._enabled = self._new_enabled_state
 
     def _emitHeat(self) -> None:
         """

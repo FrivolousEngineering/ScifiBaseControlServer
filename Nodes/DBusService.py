@@ -38,8 +38,8 @@ class DBusService(dbus.service.Object):
     def doTick(self) -> None:
         self._node_engine.doTick()
 
-    @dbus.service.method("com.frivengi.nodes", out_signature="d")
-    def getAmountStored(self, node_id) -> float:
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getAmountStored(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if not node:
             return -1
@@ -56,6 +56,19 @@ class DBusService(dbus.service.Object):
 
         NodeGraph(node_history).storeGraph()
         return "graphs/%s.png" % node_id
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
+    def isNodeEnabled(self, node_id: str) -> bool:
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return False
+        return node.enabled
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="sb")
+    def setNodeEnabled(self, node_id: str, enabled: bool):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            node.enabled = enabled
 
     @dbus.service.method("com.frivengi.nodes")
     def checkAlive(self):
