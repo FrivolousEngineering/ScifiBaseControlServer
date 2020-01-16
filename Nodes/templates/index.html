@@ -16,12 +16,20 @@
         <th><b>Name</b></th>
         <th><b>temperature</b></th>
         <th>Amount stored</th>
+        <th>Enabled</th>
     </tr>
     {% for item in data %}
     <tr>
-            <th><th><a href=/historyGraph/{{item.node_id}}>{{item.node_id}}</a></th>
+            <th>
+                <a href=/{{item.node_id}}/historyGraph/>{{item.node_id}}</a>
+            </th>
             <th>{{item.temperature}}</th>
             <th>{{item.amount}}</th>
+            <th>
+                <form action="/{{item.node_id}}/enabled/" method="put">
+                    <input type="submit" value="{{item.enabled}}">
+                </form>
+            </th>
     </tr>
     {% endfor %}
 </table>

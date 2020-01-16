@@ -3,7 +3,7 @@ from typing import Optional, cast, Any, List, Dict
 from flask import Flask, Response
 from functools import partial
 import flask
-from flask import render_template, send_file
+from flask import render_template, send_file, request
 
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
@@ -88,7 +88,8 @@ class Server(Flask):
         for node_id in self._nodes.getAllNodeIds():  # type: ignore
             data = {"node_id": node_id,
                     "temperature": self._nodes.getNodeTemperature(node_id),
-                    "amount": self._nodes.getAmountStored(node_id)} # type: ignore
+                    "amount": self._nodes.getAmountStored(node_id),
+                    "enabled": self._nodes.isNodeEnabled(node_id)} # type: ignore
             display_data.append(data)
         return render_template("index.html", data = display_data)
 
@@ -105,7 +106,7 @@ class Server(Flask):
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
-    @register_route("/historyGraph/<node_id>")
+    @register_route("/<node_id>/historyGraph/")
     def historyGraph(self, node_id):
         self._setupDBUS()
         filename = self._nodes.getNodeHistoryGraph(node_id)
@@ -115,6 +116,16 @@ class Server(Flask):
                             status=404, mimetype="application/json")
         filename = "../" + self._nodes.getNodeHistoryGraph(node_id)
         return send_file(filename, mimetype="image/png")
+
+    @register_route("/<node_id>/enabled/", ["PUT", "GET"])
+    def nodeEnabled(self, node_id):
+        self._setupDBUS()
+        if request.method == "PUT":
+
+            self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
+            return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+        elif request.method == "GET":
+            return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
 
 if __name__ == "__main__":
     Server().run(debug=True)
