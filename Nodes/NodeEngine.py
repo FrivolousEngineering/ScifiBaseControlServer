@@ -28,6 +28,9 @@ class NodeEngine:
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
             self._nodes[node.getId()] = node
+
+            self.preUpdateCalled.connect(node.acquireUpdateLock)
+            self.postUpdateCalled.connect(node.releaseUpdateLock)
             self._node_histories[node.getId()] = NodeHistory(node)
         else:
             raise KeyError("Node must have an unique ID!")

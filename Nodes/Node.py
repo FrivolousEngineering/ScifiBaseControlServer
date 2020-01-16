@@ -68,6 +68,15 @@ class Node:
         with self._update_lock:
             self._enabled = enabled
 
+    def acquireUpdateLock(self):
+        self._update_lock.acquire()
+
+    def releaseUpdateLock(self):
+        try:
+            self._update_lock.release()
+        except RuntimeError:
+            pass  # We don't care about releasing an unlocked lock
+
     def serialize(self) -> Dict[str, Any]:
         """
         Serialize this node so that it can be stored somewhere (eg; save to file)
@@ -139,7 +148,6 @@ class Node:
             resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
-        self._update_lock.acquire()
         self.preUpdateCalled.emit(self)
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
@@ -227,10 +235,6 @@ class Node:
         self._resources_produced_this_tick = {}
         self._emitHeat()
         self._convectiveHeatTransfer()
-        try:
-            self._update_lock.release()
-        except RuntimeError:
-            pass  # It doesn't matter that we release an unlocked lock.
 
     def _emitHeat(self) -> None:
         """

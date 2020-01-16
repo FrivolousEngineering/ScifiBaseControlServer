@@ -124,8 +124,8 @@ class Server(Flask):
 
             self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
             return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
-        elif request.method == "GET":
-            return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
+        return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
+
 
 if __name__ == "__main__":
     Server().run(debug=True)
