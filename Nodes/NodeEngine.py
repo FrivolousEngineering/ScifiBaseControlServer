@@ -67,7 +67,8 @@ class NodeEngine:
         Potential relaxation of these reservations will be done in _replanReservations.
         """
         for node in self._nodes.values():
-            node.updateReservations()
+            if node.enabled:
+                node.updateReservations()
 
     def _replanReservations(self) -> None:
         """
@@ -96,7 +97,8 @@ class NodeEngine:
     def _update(self) -> None:
         self.updateCalled.emit()
         for node in self._nodes.values():
-            node.update()
+            if node.enabled:
+                node.update()
 
     def _postUpdate(self) -> None:
         self.postUpdateCalled.emit()

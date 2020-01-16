@@ -41,6 +41,9 @@ class Node:
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
         self._heat_emissivity = 0.5
 
+        # Is the node working at all?
+        self._enabled = True
+
         # A few examples of heat_convection_coefficient all in W/m K:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
@@ -50,6 +53,14 @@ class Node:
         self._surface_area = 1.
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8
+
+    @property
+    def enabled(self) -> bool:
+        return self._enabled
+
+    @enabled.setter
+    def enabled(self, enabled: bool) -> None:
+        self._enabled = enabled
 
     def serialize(self) -> Dict[str, Any]:
         """
@@ -233,6 +244,8 @@ class Node:
 
         :return: If a replan is needed or not
         """
+        if not self.enabled:
+            return False  # Disabled nodes don't need replanning!
         num_statisfied_reservations = len(
             [connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
 
