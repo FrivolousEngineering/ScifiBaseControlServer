@@ -227,7 +227,10 @@ class Node:
         self._resources_produced_this_tick = {}
         self._emitHeat()
         self._convectiveHeatTransfer()
-        self._update_lock.release()
+        try:
+            self._update_lock.release()
+        except RuntimeError:
+            pass  # It doesn't matter that we release an unlocked lock.
 
     def _emitHeat(self) -> None:
         """
