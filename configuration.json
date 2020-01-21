@@ -5,7 +5,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "fuel",
-            "amount": 1000
+            "amount": 10000
         },
         "generator":
         {
@@ -15,19 +15,13 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 500
-        },
-        "fluid_cooler_2":
-        {
-            "type": "FluidCooler",
-            "resource_type": "water",
-            "fluid_per_tick": 500
+            "fluid_per_tick": 5000
         },
         "water_tank":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 100000
         },
         "water_tank_2":
         {
@@ -53,10 +47,9 @@
     [
         { "from": "fuel_tank", "to": "generator", "resource_type": "fuel" },
         { "from": "water_tank", "to": "generator", "resource_type": "water" },
-        { "from": "generator", "to": "fluid_cooler_1", "resource_type": "water" },
-        { "from": "generator", "to": "fluid_cooler_2", "resource_type": "water" },
+        { "from": "generator", "to": "water_tank", "resource_type": "water" },
         { "from": "fluid_cooler_1", "to": "water_tank", "resource_type": "water" },
-        { "from": "fluid_cooler_2", "to": "water_tank", "resource_type": "water" },
+        { "from": "water_tank", "to": "fluid_cooler_1", "resource_type": "water" },
         { "from": "generator", "to": "battery", "resource_type": "energy" },
         { "from": "generator", "to": "battery_2", "resource_type": "energy"}
     ]
