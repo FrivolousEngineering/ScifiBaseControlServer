@@ -7,13 +7,25 @@ from Nodes import Connection, Node
 def origin_node():
     return MagicMock(spec = Node.Node)
 
+
 @pytest.fixture
 def target_node():
     return MagicMock(spec = Node.Node)
 
+
 @pytest.fixture()
 def energy_connection(origin_node, target_node) -> Connection.Connection:
     return Connection.Connection(origin_node, target_node, "energy")
+
+
+# This is some next level pytest magic. This basicly ensures that any test that uses the energy_connection_with_disabled
+# fixture is called 3 times. Once where the target is disabled, once where origin is enabled and once more with both
+# disabled.
+@pytest.fixture(params = [[True, False], [False, True], [False, False]])
+def energy_connection_with_disabled(energy_connection, request):
+    energy_connection.origin.enabled = request.param[0]
+    energy_connection.target.enabled = request.param[1]
+    return energy_connection
 
 
 def test_create(origin_node, target_node):
@@ -62,6 +74,11 @@ def test_preGetResource(energy_connection: Connection.Connection):
     energy_connection.origin.preGetResource.assert_called_once_with("energy", 20)
 
 
+def test_preGetResourceDisabledNode(energy_connection_with_disabled):
+    energy_connection_with_disabled.origin.preGetResource = MagicMock(return_value=21)
+    assert energy_connection_with_disabled.preGetResource(20) == 0
+
+
 def test_preGiveResource(energy_connection: Connection.Connection):
     energy_connection.target.preGiveResource = MagicMock(return_value = 32)
 
@@ -72,6 +89,11 @@ def test_preGiveResource(energy_connection: Connection.Connection):
     energy_connection.target.preGiveResource.assert_called_once_with("energy", 20)
 
 
+def test_preGiveResourceDisabledNode(energy_connection_with_disabled):
+    energy_connection_with_disabled.target.preGiveResource = MagicMock(return_value=21)
+    assert energy_connection_with_disabled.preGiveResource(2000) == 0
+
+
 def test_getResource(energy_connection: Connection.Connection):
     energy_connection.origin.getResource = MagicMock(return_value = 900)
     assert energy_connection.getResource(200) == 900
@@ -79,11 +101,21 @@ def test_getResource(energy_connection: Connection.Connection):
     energy_connection.target.addHeat.assert_called_once()
 
 
+def test_getResourceDisabledNode(energy_connection_with_disabled):
+    energy_connection_with_disabled.origin.getResource = MagicMock(return_value=21)
+    assert energy_connection_with_disabled.getResource(2000) == 0
+
+
 def test_giveResource(energy_connection: Connection.Connection):
     energy_connection.target.giveResource = MagicMock(return_value = 9001)
     assert energy_connection.giveResource(300) == 9001
     # check if the target that got the resources got their heat tickled
     energy_connection.target.addHeat.assert_called_once()
+
+
+def test_giveResourceDisabledNode(energy_connection_with_disabled):
+    energy_connection_with_disabled.target.giveResource = MagicMock(return_value=21)
+    assert energy_connection_with_disabled.giveResource(2000) == 0
 
 
 def test_reset(energy_connection: Connection.Connection):
