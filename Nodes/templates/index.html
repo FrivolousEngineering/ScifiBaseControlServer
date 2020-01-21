@@ -34,6 +34,7 @@ th {
 <canvas id="chart"></canvas>
 <script>
     var default_node = "generator";
+    var current_node = null;
     var chart = null;
     // Handle the POST calls of all forms
     $(document).on("submit", "form", function(event)
@@ -129,10 +130,17 @@ th {
 
             var config = { type: 'bar',  data : data};
             var ctx = $("#chart").get(0).getContext("2d");
-            if(chart != null){
-                chart.destroy();
+            if(current_node !== node_id){
+                if(chart != null)
+                {
+                    chart.destroy();
+                }
+                current_node = node_id;
+                chart = new Chart(ctx, config);
+            } else{
+                chart.data = data;
+                chart.update(0); // Draw with update 0 (we don't want animations)
             }
-            chart = new Chart(ctx, config);
         });
     }
     function updateAll()
