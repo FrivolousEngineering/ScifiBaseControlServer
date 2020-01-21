@@ -21,7 +21,6 @@ class FluidCooler(ResourceStorage):
     def update(self) -> None:
         # First, we store the resources other nodes *gave* us (these are already added!)
         resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
-
         # Then we check how much resources in total we got this turn (aka; how much after we also requested resources)
         super().update()
         resource_available = self.getResourceAvailableThisTick(self._resource_type)

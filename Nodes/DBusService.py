@@ -68,7 +68,7 @@ class DBusService(dbus.service.Object):
     def setNodeEnabled(self, node_id: str, enabled: bool):
         node = self._node_engine.getNodeById(node_id)
         if node:
-            node.enabled = enabled
+            node.enabled = bool(enabled)
 
     @dbus.service.method("com.frivengi.nodes")
     def checkAlive(self):
