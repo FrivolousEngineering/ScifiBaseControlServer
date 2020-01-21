@@ -242,13 +242,21 @@ class Node:
         """
         temp_diff = pow(self.outside_temp, 4) - pow(self.temperature, 4)
         heat_radiation = self.__stefan_boltzmann_constant * self._heat_emissivity * self._surface_area * temp_diff
-
         self.addHeat(heat_radiation)
+
+        if heat_radiation < 0:
+            if self._temperature < self.outside_temp:
+                # We were warmer than the outside before, but no amount of radiation can make us go lower!
+                self._temperature = self.outside_temp
 
     def _convectiveHeatTransfer(self) -> None:
         delta_temp = self.outside_temp - self.temperature
         heat_convection = self._heat_convection_coefficient * self._surface_area * delta_temp
         self.addHeat(heat_convection)
+        if heat_convection < 0: # Cooling down happend.
+            if self._temperature < self.outside_temp:
+                # We were warmer than the outside before, but no amount of convection can make us go lower!
+                self._temperature = self.outside_temp
 
     def requiresReplanning(self) -> bool:
         """
