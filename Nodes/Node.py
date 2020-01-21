@@ -228,13 +228,14 @@ class Node:
         self._getAllReservedResources()
 
     def postUpdate(self) -> None:
+        self._emitHeat()
+        self._convectiveHeatTransfer()
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
-        self._emitHeat()
-        self._convectiveHeatTransfer()
+
 
     def _emitHeat(self) -> None:
         """
