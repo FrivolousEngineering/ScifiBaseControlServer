@@ -152,6 +152,14 @@ class Server(Flask):
         for prop in self._nodes.getAdditionalProperties(node_id):
             all_property_histories[prop] = self._nodes.getAdditionalPropertyHistory(node_id, prop)
         all_property_histories["temperature"] = self._nodes.getNodeTemperatureHistory(node_id)
+
+        resources_gained = self._nodes.getResourcesGainedHistory(node_id)
+        for key in resources_gained:
+            all_property_histories["%s received" % key] = resources_gained[key]
+
+        resources_produced = self._nodes.getResourcesProducedHistory(node_id)
+        for key in resources_produced:
+            all_property_histories["%s produced" % key] = resources_produced[str(key)]
         return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
 
 if __name__ == "__main__":

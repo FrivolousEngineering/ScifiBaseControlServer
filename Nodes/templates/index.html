@@ -1,6 +1,5 @@
 <!doctype html>
 <title>ADMIN TOOLS :D</title>
-<h1>Admin page</h1>
 <script src="templates/jquery-3.1.1.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <style>
@@ -10,13 +9,10 @@ th {
 }
 
 </style>
-
-<b>Do a tick;</b>
-<form action="startTick" method = "post">
-    <input type="submit" value="Start a Tick">
-</form>
-<br/>
-<p></p>
+<table>
+    <tr>Do a tick:</tr>
+    <tr><form action="startTick" method = "post"> <input type="submit" value="Start a Tick"></form></tr>
+</table>
 <table id = "records_table">
     <thead>
         <tr>
@@ -106,6 +102,28 @@ th {
         amount_stored: "blue",
         health: "green"
     };
+
+    var resource_type_colors = {
+        "water": "blue",
+        "fuel": "brown",
+        "energy": "yellow"
+    };
+
+
+    function getBackgroundColor(property)
+    {
+        if(property in background_colors)
+        {
+            return background_colors[property]
+        }
+        for(var resource_type in resource_type_colors)
+        {
+            if(property.includes(resource_type))
+            {
+                return resource_type_colors[resource_type]
+            }
+        }
+    }
     function drawChart(node_id) {
 
         var jsonData = $.ajax({
@@ -125,10 +143,13 @@ th {
 
             for(var prop in results)
             {
+                var hidden = false;
 
                 data.datasets.push({label: prop,
                                     data: results[prop],
-                                    backgroundColor: background_colors[prop]});
+                                    backgroundColor: getBackgroundColor(prop),
+                                    hidden: hidden
+                                    });
             }
 
             var config = { type: 'bar',  data : data};

@@ -29,6 +29,20 @@ class DBusService(dbus.service.Object):
             return history.getTemperatureHistory()
         return []
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesGainedHistory(self, node_id: str):
+        history = self._node_engine.getNodeHistoryById(node_id)
+        if history:
+            return dbus.Dictionary(history.getResourcesGainedHistory(), signature='sv')
+        return {}
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesProducedHistory(self, node_id: str):
+        history = self._node_engine.getNodeHistoryById(node_id)
+        if history:
+            return dbus.Dictionary(history.getResourcesProducedHistory(), signature='sv')
+        return {}
+
     @dbus.service.method("com.frivengi.nodes", out_signature="ad", in_signature="ss")
     def getAdditionalPropertyHistory(self, node_id: str, prop: str) -> List[float]:
         history = self._node_engine.getNodeHistoryById(node_id)
