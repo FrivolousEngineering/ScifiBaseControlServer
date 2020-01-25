@@ -45,8 +45,6 @@ class Node:
         # Is the node working at all?
         self._enabled = kwargs.get("enabled", True)
 
-        self._new_enabled_state = True
-
         self._update_lock = Lock()
 
         # A few examples of heat_convection_coefficient all in W/m K:
