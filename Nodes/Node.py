@@ -240,7 +240,6 @@ class Node:
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
 
-
     def _emitHeat(self) -> None:
         """
         Heat also leaves objects by grace of radiation. This is calculated by the The Stefan-Boltzmann Law
