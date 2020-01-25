@@ -5,7 +5,8 @@ from Nodes.Constants import WEIGHT_PER_UNIT
 
 
 class ResourceStorage(Node):
-    def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None, **kwargs):
+    def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None, **kwargs) \
+            -> None:
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount
@@ -14,18 +15,18 @@ class ResourceStorage(Node):
         self.additional_properties.append("amount_stored")
 
     @property
-    def amount_stored(self):
+    def amount_stored(self) -> float:
         return self._amount
 
     @property
-    def weight(self):
+    def weight(self) -> float:
         return self._weight + self._resource_weight_per_unit * self.amount_stored
 
     def preGetResource(self, resource_type: str, amount: float) -> float:
         if resource_type != self._resource_type:
             return 0
         if amount < 0:
-            return 0
+            return 0/
         if amount <= self._amount:
             return amount
 
@@ -50,17 +51,17 @@ class ResourceStorage(Node):
 
     def preGiveResource(self, resource_type: str, amount: float) -> float:
         if resource_type != self._resource_type:
-            return 0
+            return 0.
         if amount < 0:
-            return 0
+            return 0.
         if self._max_storage is not None and self._max_storage <= self._amount + amount:
-            return max(0, self._max_storage - self._amount)
+            return max(0., self._max_storage - self._amount)
         return amount
 
     def giveResource(self, resource_type: str, amount: float) -> float:
         resources_providable = self.preGiveResource(resource_type, amount)
         self._amount += resources_providable
         if self._resource_type not in self._resources_received_this_tick:
-            self._resources_received_this_tick[self._resource_type] = 0
+            self._resources_received_this_tick[self._resource_type] = 0.
         self._resources_received_this_tick[self._resource_type] += resources_providable
         return resources_providable
