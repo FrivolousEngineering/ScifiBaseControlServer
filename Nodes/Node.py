@@ -59,7 +59,16 @@ class Node:
 
         # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
         # This is to notify the other observers that the property exists (for example, the NodeHistory uses this)
-        self.additional_properties = []  # type: List[str]
+        self.additional_properties = ["health"]  # type: List[str]
+
+        # How healthy is the node?
+        self._health = 100
+
+        self._max_safe_temperature = 400
+
+    @property
+    def health(self) -> float:
+        return self._health
 
     @property
     def enabled(self) -> bool:
@@ -232,6 +241,7 @@ class Node:
     def postUpdate(self) -> None:
         self._emitHeat()
         self._convectiveHeatTransfer()
+        self._dealDamageFromHeat()
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
@@ -259,6 +269,25 @@ class Node:
             if self._temperature < self.outside_temp:
                 # We were warmer than the outside before, but no amount of convection can make us go lower!
                 self._temperature = self.outside_temp
+
+    def _dealDamageFromHeat(self) -> None:
+        delta_temp = self.temperature - self._max_safe_temperature
+        if delta_temp <= 0:
+            return
+        self._health -= delta_temp / self._max_safe_temperature
+        if self._health < 0:
+            self._health = 0
+
+    @property
+    def effectiveness_factor(self):
+        x = self._health / 100.
+        # This makes the effectiveness a bit less punishing.
+        # 75% health: 90% effectiveness
+        # 50% health: 75% effectiveness
+        # 25% health: 50% effectiveness
+        # 10% health: 25% effectiveness
+        # 1%  health: ~3% effectiveness
+        return (-((x + 0.5) / (x + 0.5) ** 2.) + 2) / 1.333333333333333
 
     def requiresReplanning(self) -> bool:
         """

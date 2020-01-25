@@ -21,23 +21,29 @@ class Generator(Node):
     def update(self) -> None:
         super().update()
 
+        fuel_gained = self.getResourceAvailableThisTick("fuel")
+
         # A generator creates 1 energy per fuel that it gets. Yay!
-        energy_available = self.getResourceAvailableThisTick("fuel")
+        energy_available = fuel_gained * self.effectiveness_factor
 
         # Attempt to "get rid" of the energy by offering it to connected sources.
         energy_left = self._provideResourceToOutogingConnections("energy", energy_available)
 
         # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
         # That's why we put whatever is left back into the fuel "reservoir"
-        self._resources_left_over["fuel"] = energy_left
+        if self.effectiveness_factor == 0:
+            fuel_left = fuel_gained
+        else:
+            fuel_left = 1 / self.effectiveness_factor * energy_left
+        self._resources_left_over["fuel"] = fuel_left
 
         # We specifically use what is in the received dict (instead of the energy_available), because we want to
         # know how much was generated (and the resources available also takes leftovers into account)
-        self._resources_produced_this_tick["energy"] = max(self._resources_received_this_tick["fuel"] - energy_left, 0)
+        self._resources_produced_this_tick["energy"] = max(energy_available - energy_left, 0)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
         inefficiency = 1.0 - self._efficiency
-        heat_produced = self._resources_produced_this_tick["energy"] * COMBUSTION_HEAT["fuel"] * inefficiency
+        heat_produced = (fuel_gained - fuel_left) * COMBUSTION_HEAT["fuel"] * inefficiency
         self.addHeat(heat_produced)
 
         # Same thing for the water. Check how much water we have.
