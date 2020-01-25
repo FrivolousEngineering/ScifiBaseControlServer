@@ -31,6 +31,9 @@ class NodeHistory:
     def getNumTicksStored(self) -> int:
         return self._num_ticks_stored
 
+    def getAdditionalPropertiesHistory(self):
+        return self._additional_properties_history
+
     def getResourcesProducedHistory(self) -> Dict[str, List[float]]:
         with self._data_lock:
             return self._resources_produced_history

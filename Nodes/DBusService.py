@@ -1,7 +1,7 @@
 
 import dbus
 import dbus.service
-from typing import List
+from typing import List, Dict
 from Nodes.NodeEngine import NodeEngine
 from Nodes.NodeGraph import NodeGraph
 
@@ -29,6 +29,20 @@ class DBusService(dbus.service.Object):
         if history:
             return history.getTemperatureHistory()
         return []
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="ad", in_signature="ss")
+    def getAdditionalPropertyHistory(self, node_id: str, prop: str) -> List[float]:
+        history = self._node_engine.getNodeHistoryById(node_id)
+        if history:
+            return history.getAdditionalPropertiesHistory().get(prop, [])
+        return []
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="as", in_signature="s")
+    def getAdditionalProperties(self, node_id: str) -> List[str]:
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return []
+        return node.additional_properties
 
     @dbus.service.method("com.frivengi.nodes", out_signature="as")
     def getAllNodeIds(self) -> List[str]:

@@ -144,6 +144,18 @@ class Server(Flask):
         result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
+    @register_route("/<node_id>/<prop>/history/")
+    def additionalPropertyHistory(self, node_id, prop):
+        self._setupDBUS()
+        additional_property_history = self._nodes.getAdditionalPropertyHistory(node_id, prop)
+        return Response(flask.json.dumps(additional_property_history), status=200, mimetype="application/json")
+
+    @register_route("/<node_id>/additional_properties")
+    def getAdditionalProperties(self, node_id):
+        self._setupDBUS()
+        result = self._nodes.getAdditionalProperties(node_id)
+        return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+
 
 if __name__ == "__main__":
     Server().run(debug=True)
