@@ -279,7 +279,7 @@ class Node:
             self._health = 0
 
     @property
-    def effectiveness_factor(self):
+    def effectiveness_factor(self) -> float:
         x = self._health / 100.
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
@@ -288,6 +288,13 @@ class Node:
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
         return (-((x + 0.5) / (x + 0.5) ** 2.) + 2) / 1.333333333333333
+
+    @property
+    def inverted_effectiveness_factor(self) -> float:
+        try:
+            return 1 / self.effectiveness_factor
+        except ZeroDivisionError:
+            return 1
 
     def requiresReplanning(self) -> bool:
         """

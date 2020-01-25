@@ -31,10 +31,7 @@ class Generator(Node):
 
         # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
         # That's why we put whatever is left back into the fuel "reservoir"
-        if self.effectiveness_factor == 0:
-            fuel_left = fuel_gained
-        else:
-            fuel_left = 1 / self.effectiveness_factor * energy_left
+        fuel_left = self.inverted_effectiveness_factor * energy_left
         self._resources_left_over["fuel"] = fuel_left
 
         # We specifically use what is in the received dict (instead of the energy_available), because we want to
