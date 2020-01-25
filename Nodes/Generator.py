@@ -11,7 +11,7 @@ class Generator(Node):
     def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id, **kwargs)
         self._resources_required_per_tick["fuel"] = 10
-        self._resources_required_per_tick["water"] = 500
+        self._resources_required_per_tick["water"] = 250
 
         # How (in)efficient is the generator in converting the fuel it gets into heat?
         # An efficiency of 1 means that no heat is produced. An efficiency of 0 means that all heat of burning it
@@ -19,6 +19,8 @@ class Generator(Node):
         self._efficiency = 0.5
 
         self._max_safe_temperature = 500
+
+        self._weight = 2000
 
     def update(self) -> None:
         super().update()

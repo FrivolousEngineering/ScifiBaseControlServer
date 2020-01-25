@@ -11,8 +11,10 @@ class FluidCooler(ResourceStorage):
     def __init__(self, node_id: str, resource_type: str, fluid_per_tick: float, **kwargs) -> None:
         super().__init__(node_id, resource_type, 0, 2 * fluid_per_tick, **kwargs)
         self._fluid_per_tick = fluid_per_tick
-        self._surface_area = 250
-        self._heat_emissivity = 1
+        self._surface_area = 50
+        self._heat_emissivity = 0.9
+
+        self._weight = 5000
 
         # Also try to pump up resources!
         self._resources_required_per_tick[self._resource_type] = fluid_per_tick
