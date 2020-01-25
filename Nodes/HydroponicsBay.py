@@ -3,7 +3,7 @@ from Nodes.Node import Node
 
 class HydroponicsBay(Node):
     """
-
+    The hydroponics bay produces oxygen, and requires water & energy to do so.
     """
     def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id, **kwargs)

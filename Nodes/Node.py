@@ -280,14 +280,14 @@ class Node:
 
     @property
     def effectiveness_factor(self) -> float:
-        x = self._health / 100.
+        health_factor = self._health / 100.
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
         # 50% health: 75% effectiveness
         # 25% health: 50% effectiveness
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
-        return (-((x + 0.5) / (x + 0.5) ** 2.) + 2) / 1.333333333333333
+        return (-((health_factor + 0.5) / (health_factor + 0.5) ** 2.) + 2) / 1.333333333333333
 
     @property
     def inverted_effectiveness_factor(self) -> float:
