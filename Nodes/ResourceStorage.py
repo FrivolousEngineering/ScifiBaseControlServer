@@ -26,7 +26,7 @@ class ResourceStorage(Node):
         if resource_type != self._resource_type:
             return 0
         if amount < 0:
-            return 0/
+            return 0.
         if amount <= self._amount:
             return amount
 
