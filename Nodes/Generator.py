@@ -18,6 +18,8 @@ class Generator(Node):
         # is transformed into heat.
         self._efficiency = 0.5
 
+        self._max_safe_temperature = 500
+
     def update(self) -> None:
         super().update()
 

@@ -5,7 +5,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "fuel",
-            "amount": 1000
+            "amount": 2000
         },
         "generator":
         {

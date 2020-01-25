@@ -12,7 +12,7 @@ def test_MultiWaterCooler():
         engine.registerNodesFromConfigurationData(loaded_data["nodes"])
         engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
-    for _ in range(0, 10):
+    for _ in range(0, 200):
         engine.doTick()
         total_water = engine.getNodeById("water_tank_1").amount_stored
         total_water += engine.getNodeById("water_tank_2").amount_stored

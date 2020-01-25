@@ -1,5 +1,5 @@
 from unittest.mock import MagicMock
-
+import math
 from Nodes import Generator
 
 
@@ -14,5 +14,6 @@ def test_update():
     generator.update()
 
     generator.addHeat.assert_called_once()
-
-    assert generator.getResourcesProducedThisTick() == {"energy": 15, "water": 0}
+    resources_produced_this_tick = generator.getResourcesProducedThisTick()
+    assert math.isclose(resources_produced_this_tick["energy"], 15)
+    assert math.isclose(resources_produced_this_tick["water"], 0)
