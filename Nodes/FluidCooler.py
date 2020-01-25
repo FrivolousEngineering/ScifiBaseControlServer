@@ -15,7 +15,7 @@ class FluidCooler(ResourceStorage):
         self._heat_emissivity = 1
 
         # Also try to pump up resources!
-        self._resources_required_per_tick[resource_type] = fluid_per_tick
+        self._resources_required_per_tick[self._resource_type] = fluid_per_tick
 
     def _updateResourceRequiredPerTick(self) -> None:
         new_amount_required = self._fluid_per_tick
