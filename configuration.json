@@ -49,13 +49,13 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 2000
         },
         "water_storage_2":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 2000
         },
         "battery_1":
         {
@@ -91,6 +91,47 @@
             "type": "ResourceDestroyer",
             "resource_type": "oxygen",
             "amount": 100
+        },
+        "lights":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "energy",
+            "amount": 8
+        },
+        "life_support":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "energy",
+            "amount": 7
+        },
+
+        "F2F1Valve":
+        {
+            "type": "FluidCooler",
+            "resource_type": "fuel",
+            "fluid_per_tick": 100,
+            "enabled": false
+        },
+        "F1F2Valve":
+        {
+            "type": "FluidCooler",
+            "resource_type": "fuel",
+            "fluid_per_tick": 100,
+            "enabled": false
+        },
+        "W2W1Valve":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 100,
+            "enabled": false
+        },
+        "W1W2Valve":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 100,
+            "enabled": false
         }
     },
     "connections":
@@ -113,6 +154,19 @@
         { "from": "water_storage_1", "to": "hydroponics_2", "resource_type": "water" },
         { "from": "hydroponics_1", "to": "oxygen_storage", "resource_type": "oxygen" },
         { "from": "hydroponics_2", "to": "oxygen_storage", "resource_type": "oxygen" },
-        { "from": "oxygen_storage", "to": "open_air", "resource_type": "oxygen" }
+        { "from": "oxygen_storage", "to": "open_air", "resource_type": "oxygen" },
+
+        { "from": "fuel_storage_1", "to": "F1F2Valve", "resource_type": "fuel" },
+        { "from": "fuel_storage_2", "to": "F2F1Valve", "resource_type": "fuel" },
+        { "from": "F1F2Valve", "to": "fuel_storage_2", "resource_type": "fuel" },
+        { "from": "F2F1Valve", "to": "fuel_storage_1", "resource_type": "fuel" },
+
+        { "from": "water_storage_1", "to": "W1W2Valve", "resource_type": "water" },
+        { "from": "water_storage_2", "to": "W2W1Valve", "resource_type": "water" },
+        { "from": "W1W2Valve", "to": "water_storage_2", "resource_type": "water" },
+        { "from": "W2W1Valve", "to": "water_storage_1", "resource_type": "water" },
+
+        { "from": "battery_1", "to": "life_support", "resource_type": "energy" },
+        { "from": "battery_1", "to": "lights", "resource_type": "energy" }
     ]
 }
