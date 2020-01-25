@@ -118,17 +118,6 @@ class Server(Flask):
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/historyGraph/")
-    def historyGraph(self, node_id):
-        self._setupDBUS()
-        filename = self._nodes.getNodeHistoryGraph(node_id)
-        if filename == "":
-            # nothing found
-            return Response(flask.json.dumps({"message": "Node with id [%s] was not found" % node_id}),
-                            status=404, mimetype="application/json")
-        filename = "../" + self._nodes.getNodeHistoryGraph(node_id)
-        return send_file(filename, mimetype="image/png")
-
     @register_route("/<node_id>/enabled/", ["PUT", "GET"])
     def nodeEnabled(self, node_id):
         self._setupDBUS()
