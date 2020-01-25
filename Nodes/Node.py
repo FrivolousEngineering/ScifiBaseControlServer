@@ -43,7 +43,7 @@ class Node:
         self._heat_emissivity = 0.5
 
         # Is the node working at all?
-        self._enabled = True
+        self._enabled = kwargs.get("enabled", True)
 
         self._new_enabled_state = True
 
