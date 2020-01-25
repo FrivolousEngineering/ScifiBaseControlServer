@@ -61,7 +61,7 @@ class Node:
 
         # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
         # This is to notify the other observers that the property exists (for example, the NodeHistory uses this)
-        self.additional_properties = []
+        self.additional_properties = []  # type: List[str]
 
     @property
     def enabled(self) -> bool:

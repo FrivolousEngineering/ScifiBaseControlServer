@@ -1,3 +1,5 @@
+from typing import cast
+
 from Nodes.ResourceStorage import ResourceStorage
 
 
@@ -17,7 +19,7 @@ class FluidCooler(ResourceStorage):
 
     def _updateResourceRequiredPerTick(self) -> None:
         new_amount_required = self._fluid_per_tick
-        storage_room_left = self._max_storage - self._amount
+        storage_room_left = cast(float, self._max_storage) - self._amount
         if storage_room_left < self._fluid_per_tick:
             new_amount_required = storage_room_left
 
