@@ -23,6 +23,8 @@ class NodeHistory:
 
         self._data_lock = Lock()
 
+        self._additional_properties_history = {}  # type: Dict[str, List[float]]
+
     def getNode(self) -> Node:
         return self._node
 
@@ -60,3 +62,8 @@ class NodeHistory:
                 if resource_type not in self._resources_produced_history:
                     self._resources_produced_history[resource_type] = []
                 self._resources_produced_history[resource_type].append(resources_produced[resource_type])
+
+            for prop in node.additional_properties:
+                if prop not in self._additional_properties_history:
+                    self._additional_properties_history[prop] = []
+                self._additional_properties_history[prop].append(getattr(node, prop))

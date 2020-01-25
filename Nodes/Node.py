@@ -59,6 +59,10 @@ class Node:
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8
 
+        # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
+        # This is to notify the other observers that the property exists (for example, the NodeHistory uses this)
+        self.additional_properties = []
+
     @property
     def enabled(self) -> bool:
         return self._enabled
