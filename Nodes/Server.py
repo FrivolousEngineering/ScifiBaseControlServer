@@ -156,6 +156,14 @@ class Server(Flask):
         result = self._nodes.getAdditionalProperties(node_id)
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
+    @register_route("/<node_id>/all_property_chart_data")
+    def getAllProperties(self, node_id):
+        self._setupDBUS()
+        all_property_histories = {}
+        for prop in self._nodes.getAdditionalProperties(node_id):
+            all_property_histories[prop] = self._nodes.getAdditionalPropertyHistory(node_id, prop)
+        all_property_histories["temperature"] = self._nodes.getNodeTemperatureHistory(node_id)
+        return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
 
 if __name__ == "__main__":
     Server().run(debug=True)

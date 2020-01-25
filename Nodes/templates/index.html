@@ -56,8 +56,7 @@ th {
             success: function(data)
             {
                 $("#message").html("");
-                updateNodeData();
-                drawTemperatureChart(default_node);
+                updateAll()
             },
             error: function (xhr, description, error)
             {
@@ -78,7 +77,7 @@ th {
         // Clear the old data.
         $('#records_table tbody').empty();
         // Parse all the entries.
-        $.each(response, function(i, item) {
+        $.each(response, function (i, item) {
             var form = $("<form/>", {
                 action: item.node_id + '/enabled/',
                 method: "put"
@@ -88,10 +87,10 @@ th {
                 value: item.enabled
             }));
             var node_link = $("<a/>", {href: '#', text: item.node_id});
-            node_link.click(function(evt){
+            node_link.click(function (evt) {
                 evt.preventDefault();
                 default_node = item.node_id;
-                drawTemperatureChart(default_node);
+                drawChart(default_node);
             });
             $('<tr>').append(
                 $('<td>').append(node_link),
@@ -102,31 +101,34 @@ th {
         });
     }
 
-    function drawTemperatureChart(node_id) {
+    var background_colors = {
+        temperature: "red",
+        amount_stored: "blue"
+    };
+    function drawChart(node_id) {
 
         var jsonData = $.ajax({
-            url: '/' + node_id + '/temperature/history',
+            url: '/' + node_id + '/all_property_chart_data',
             dataType: 'json',
         }).done(function(results) {
 
-            var label = [];
-            var output = [];
-
-            results.forEach(function(data, i) {
-                label.push((i + 1).toString());
-                output.push(data);
+            // Yes it's hacky. Blugh
+            var labels = [];
+            results.temperature.forEach(function(data, i) {
+                labels.push((i + 1).toString());
             });
-
             var data = {
-                labels: label,
-                datasets: [
-                    {
-                        label: "temperature",
-                        data: output,
-                        backgroundColor: "red"
-                    }
-                ]
+                labels: labels,
+                datasets: []
             };
+
+            for(var prop in results)
+            {
+
+                data.datasets.push({label: prop,
+                                    data: results[prop],
+                                    backgroundColor: background_colors[prop]});
+            }
 
             var config = { type: 'bar',  data : data};
             var ctx = $("#chart").get(0).getContext("2d");
@@ -146,7 +148,7 @@ th {
     function updateAll()
     {
         updateNodeData();
-        drawTemperatureChart(default_node);
+        drawChart(default_node);
     }
     updateAll();
 </script>
