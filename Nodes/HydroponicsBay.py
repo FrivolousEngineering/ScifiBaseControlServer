@@ -24,7 +24,7 @@ class HydroponicsBay(Node):
         self._resources_left_over["energy"] = energy_available - oxygen_produced
 
         oxygen_left = self._provideResourceToOutogingConnections("oxygen", oxygen_produced)
-        print("OXYGEN", oxygen_left, oxygen_produced)
+
         self._resources_left_over["water"] += oxygen_left
         self._resources_left_over["energy"] += oxygen_left
 

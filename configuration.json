@@ -1,13 +1,17 @@
 {
     "nodes":
     {
-        "fuel_tank":
+        "solar_panel":
         {
-            "type": "ResourceStorage",
-            "resource_type": "fuel",
-            "amount": 10000
+            "type": "ResourceGenerator",
+            "resource_type": "energy",
+            "amount": 10
         },
-        "generator":
+        "generator_1":
+        {
+            "type": "Generator"
+        },
+        "generator_2":
         {
             "type": "Generator"
         },
@@ -15,50 +19,100 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 1000
+            "fluid_per_tick": 500
         },
         "fluid_cooler_2":
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 1000
+            "fluid_per_tick": 500
         },
-        "water_tank":
+        "fuel_storage_1":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "fuel",
+            "amount": 10000
+        },
+        "fuel_storage_2":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "fuel",
+            "amount": 10000
+        },
+        "rain_collector":
+        {
+            "type": "ResourceGenerator",
+            "resource_type": "water",
+            "amount": 10
+        },
+        "water_storage_1":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 100000
+            "amount": 1000
         },
-        "water_tank_2":
+        "water_storage_2":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 0
+            "amount": 1000
         },
-        "battery":
+        "battery_1":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
-            "amount": 10
+            "amount": 0
         },
+
         "battery_2":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
+            "amount": 0
+        },
+
+        "hydroponics_1":
+        {
+            "type": "HydroponicsBay"
+        },
+        "hydroponics_2":
+        {
+            "type": "HydroponicsBay"
+        },
+        "oxygen_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "oxygen",
             "amount": 0,
-            "max_storage": 15
+            "max_storage": 200
+        },
+        "open_air":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "oxygen",
+            "amount": 100
         }
     },
     "connections":
     [
-        { "from": "fuel_tank", "to": "generator", "resource_type": "fuel" },
-        { "from": "water_tank", "to": "generator", "resource_type": "water" },
-        { "from": "generator", "to": "fluid_cooler_1", "resource_type": "water" },
-        { "from": "fluid_cooler_1", "to": "water_tank", "resource_type": "water" },
-        { "from": "water_tank", "to": "fluid_cooler_1", "resource_type": "water" },
-        { "from": "fluid_cooler_2", "to": "water_tank", "resource_type": "water" },
-        { "from": "water_tank", "to": "fluid_cooler_2", "resource_type": "water" },
-        { "from": "generator", "to": "battery", "resource_type": "energy" },
-        { "from": "generator", "to": "battery_2", "resource_type": "energy"}
+        { "from": "solar_panel", "to": "battery_1", "resource_type": "energy" },
+        { "from": "fuel_storage_1", "to": "generator_1", "resource_type": "fuel" },
+        { "from": "fuel_storage_1", "to": "generator_2", "resource_type": "fuel" },
+        { "from": "water_storage_1", "to": "generator_2", "resource_type": "water" },
+        { "from": "water_storage_2", "to": "generator_1", "resource_type": "water" },
+        { "from": "generator_1", "to": "fluid_cooler_1", "resource_type": "water" },
+        { "from": "fluid_cooler_1", "to": "water_storage_2", "resource_type": "water" },
+        { "from": "generator_2", "to": "fluid_cooler_2", "resource_type": "water" },
+        { "from": "fluid_cooler_2", "to": "water_storage_1", "resource_type": "water" },
+        { "from": "rain_collector", "to": "water_storage_1", "resource_type": "water" },
+        { "from": "generator_2", "to": "battery_1", "resource_type": "energy" },
+        { "from": "generator_1", "to": "battery_2", "resource_type": "energy" },
+        { "from": "battery_2", "to": "hydroponics_1", "resource_type": "energy" },
+        { "from": "battery_2", "to": "hydroponics_2", "resource_type": "energy" },
+        { "from": "water_storage_1", "to": "hydroponics_1", "resource_type": "water" },
+        { "from": "water_storage_1", "to": "hydroponics_2", "resource_type": "water" },
+        { "from": "hydroponics_1", "to": "oxygen_storage", "resource_type": "oxygen" },
+        { "from": "hydroponics_2", "to": "oxygen_storage", "resource_type": "oxygen" },
+        { "from": "oxygen_storage", "to": "open_air", "resource_type": "oxygen" }
     ]
 }
