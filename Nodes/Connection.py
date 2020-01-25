@@ -105,8 +105,6 @@ class Connection:
         # extra parameter to account for this)
         self.target.addHeat(result * (self.origin.temperature - self.target.temperature) * self._specific_heat,
                             amount * self._weight_per_unit)
-        if self.target.getId() == "fluid_cooler_1":
-            print("addedHEAT:", result * (self.origin.temperature - self.target.temperature) * self._specific_heat, self.origin.getId())
         return result
 
     def preGiveResource(self, amount: float) -> float:
