@@ -15,7 +15,7 @@ with open("configuration.json") as f:
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
 
-storage = NodeStorage(engine)
+#storage = NodeStorage(engine)
 
 for _ in range(0, 175):
     engine.doTick()

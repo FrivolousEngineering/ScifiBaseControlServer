@@ -63,7 +63,7 @@ class Node:
 
         # How healthy is the node?
         self._health = 100
-
+        self._active = False
         self._max_safe_temperature = 400
 
     @property
@@ -78,6 +78,10 @@ class Node:
     def enabled(self, enabled: bool) -> None:
         with self._update_lock:
             self._enabled = enabled
+
+    @property
+    def active(self):
+        return self._active
 
     def acquireUpdateLock(self):
         self._update_lock.acquire()
@@ -238,7 +242,14 @@ class Node:
         self.updateCalled.emit(self)
         self._getAllReservedResources()
 
+    def _reEvaluateIsActive(self):
+        for resource_required, amount_needed in self._resources_required_per_tick.items():
+            if self._resources_received_this_tick.get(resource_required, 0) != amount_needed:
+                return False
+        return True
+
     def postUpdate(self) -> None:
+        self._active = self._reEvaluateIsActive()
         self._emitHeat()
         self._convectiveHeatTransfer()
         self._dealDamageFromHeat()

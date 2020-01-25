@@ -22,6 +22,13 @@ class DBusService(dbus.service.Object):
             return node.temperature
         return -9000.
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
+    def isNodeActive(self, node_id: str) -> bool:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.active
+        return False
+
     @dbus.service.method("com.frivengi.nodes", out_signature="ad", in_signature="s")
     def getNodeTemperatureHistory(self, node_id: str) -> List[float]:
         history = self._node_engine.getNodeHistoryById(node_id)

@@ -101,7 +101,8 @@ class Server(Flask):
             data = {"node_id": node_id,
                     "temperature": self._nodes.getNodeTemperature(node_id),
                     "amount": round(self._nodes.getAmountStored(node_id), 2),
-                    "enabled": self._nodes.isNodeEnabled(node_id)}  # type: ignore
+                    "enabled": self._nodes.isNodeEnabled(node_id),
+                    "active": self._nodes.isNodeActive(node_id)}  # type: ignore
             display_data.append(data)
         return Response(flask.json.dumps(display_data), status=200, mimetype="application/json")
 

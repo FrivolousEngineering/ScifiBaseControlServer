@@ -20,6 +20,7 @@ th {
             <th>Temperature</th>
             <th>Amount stored</th>
             <th>Enabled</th>
+            <th>Active</th>
         </tr>
     </thead>
     <tbody>
@@ -92,7 +93,8 @@ th {
                 $('<td>').append(node_link),
                 $('<td>').text(item.temperature),
                 $('<td>').text(item.amount),
-                $('<td>').append(form)
+                $('<td>').append(form),
+                $('<td>').append(item.active),
             ).appendTo('#records_table');
         });
     }
