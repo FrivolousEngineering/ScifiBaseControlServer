@@ -3,7 +3,7 @@ from typing import Optional, cast, Any, List, Dict
 from flask import Flask, Response
 from functools import partial
 import flask
-from flask import render_template, send_file, request
+from flask import render_template, request
 
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]

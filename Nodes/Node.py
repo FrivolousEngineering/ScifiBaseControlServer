@@ -242,7 +242,7 @@ class Node:
         self.updateCalled.emit(self)
         self._getAllReservedResources()
 
-    def _reEvaluateIsActive(self):
+    def _reEvaluateIsActive(self) -> bool:
         for resource_required, amount_needed in self._resources_required_per_tick.items():
             if self._resources_received_this_tick.get(resource_required, 0) != amount_needed:
                 return False
