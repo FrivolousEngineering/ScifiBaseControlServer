@@ -86,6 +86,17 @@
         {
             "type": "HydroponicsBay"
         },
+        "server":
+        {
+            "type": "ComputationNode"
+        },
+        "database":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "data",
+            "amount": 0,
+            "max_storage": 500
+        },
         "hydroponics_2":
         {
             "type": "HydroponicsBay"
@@ -179,6 +190,9 @@
         { "from": "W2W1Valve", "to": "water_storage_1", "resource_type": "water" },
 
         { "from": "battery_1", "to": "life_support", "resource_type": "energy" },
-        { "from": "battery_1", "to": "lights", "resource_type": "energy" }
+        { "from": "battery_1", "to": "lights", "resource_type": "energy" },
+
+        { "from": "battery_1", "to": "server", "resource_type": "energy" },
+        { "from": "server", "to": "database", "resource_type": "data" }
     ]
 }
