@@ -64,7 +64,7 @@ class Node:
         # How healthy is the node?
         self._health = 100
         self._active = False
-        self._max_safe_temperature = 400
+        self._max_safe_temperature = 400  # type: float
 
     @property
     def health(self) -> float:

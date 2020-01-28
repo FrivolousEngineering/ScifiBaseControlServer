@@ -22,4 +22,3 @@ class ResourceGenerator(Node):
         resources_left = self._provideResourceToOutogingConnections(self._resource_type, self._amount)
 
         self._resources_produced_this_tick[self._resource_type] = max(self._amount - resources_left, 0)
-
