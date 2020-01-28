@@ -6,12 +6,13 @@ import math
 
 class FluctuatingResourceGenerator(ResourceGenerator):
     def __init__(self, node_id: str, resource_type: str, amount: float, amplitude: float, frequency: float,
-                 **kwargs) -> None:
+                 offset: float = 0, **kwargs) -> None:
         super().__init__(node_id, resource_type, amount)
         self._tick_count = 0
         self._original_amount = amount
         self._amplitude = amplitude
         self._frequency = frequency
+        self._offset = offset
 
     def serialize(self) -> Dict[str, Any]:
         result = super().serialize()
@@ -26,7 +27,8 @@ class FluctuatingResourceGenerator(ResourceGenerator):
 
     def postUpdate(self) -> None:
         super().postUpdate()
+        tick_count = (self._tick_count + self._offset) / (0.5 * math.pi)
 
-        self._amount = math.sin(self._frequency * self._tick_count / math.pi) * self._amplitude + self._original_amount
+        self._amount = math.sin(10 * self._frequency * tick_count) * self._amplitude + self._original_amount
 
         self._tick_count += 1

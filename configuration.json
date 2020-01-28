@@ -43,9 +43,18 @@
         {
             "type": "FluctuatingResourceGenerator",
             "resource_type": "water",
-            "amount": 10,
-            "frequency": 0.1,
+            "amount": 5,
+            "frequency": 0.01,
             "amplitude": 5
+        },
+        "rain_collector_2":
+        {
+            "type": "FluctuatingResourceGenerator",
+            "resource_type": "water",
+            "amount": 5,
+            "frequency": 0.03,
+            "amplitude": 5,
+            "offset": 3
         },
         "water_storage_1":
         {
@@ -148,6 +157,7 @@
         { "from": "generator_2", "to": "fluid_cooler_2", "resource_type": "water" },
         { "from": "fluid_cooler_2", "to": "water_storage_1", "resource_type": "water" },
         { "from": "rain_collector", "to": "water_storage_1", "resource_type": "water" },
+        { "from": "rain_collector_2", "to": "water_storage_1", "resource_type": "water" },
         { "from": "generator_2", "to": "battery_1", "resource_type": "energy" },
         { "from": "generator_1", "to": "battery_2", "resource_type": "energy" },
         { "from": "battery_2", "to": "hydroponics_1", "resource_type": "energy" },
