@@ -19,6 +19,9 @@ class ComputationNode(Node):
         self._heat_per_data_not_computed = 20
         self._max_safe_temperature = 353.15  # 80 Degree celcius.
 
+        # It's going to break down pretty darn fast!
+        self._temperature_degradation_speed = 3
+
     def update(self) -> None:
         super().update()
 

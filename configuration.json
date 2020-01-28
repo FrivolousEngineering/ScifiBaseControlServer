@@ -94,8 +94,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "data",
-            "amount": 0,
-            "max_storage": 500
+            "amount": 0
         },
         "hydroponics_2":
         {

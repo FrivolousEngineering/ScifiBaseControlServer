@@ -66,6 +66,9 @@ class Node:
         self._active = False
         self._max_safe_temperature = 400  # type: float
 
+        # How fast should this node degrade if it's above a certain temperature?
+        self._temperature_degradation_speed = 1.
+
     @property
     def health(self) -> float:
         return self._health
@@ -285,7 +288,7 @@ class Node:
         delta_temp = self.temperature - self._max_safe_temperature
         if delta_temp <= 0:
             return
-        self._health -= delta_temp / self._max_safe_temperature
+        self._health -= self._temperature_degradation_speed * (delta_temp / self._max_safe_temperature)
         if self._health < 0:
             self._health = 0
 
