@@ -154,7 +154,14 @@ th {
                                     });
             }
 
-            var config = { type: 'bar',  data : data};
+            var config = { type: 'bar',
+                data : data,
+                options: {
+                title: {
+                    display: true,
+                    text: node_id
+                }
+            }};
             var ctx = $("#chart").get(0).getContext("2d");
             if(current_node !== node_id){
                 if(chart != null)
