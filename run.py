@@ -17,7 +17,7 @@ with open("configuration.json") as f:
 
 #storage = NodeStorage(engine)
 
-for _ in range(0, 34):
+for _ in range(0, 250):
     engine.doTick()
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)

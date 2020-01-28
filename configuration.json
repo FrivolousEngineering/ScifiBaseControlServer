@@ -41,9 +41,11 @@
         },
         "rain_collector":
         {
-            "type": "ResourceGenerator",
+            "type": "FluctuatingResourceGenerator",
             "resource_type": "water",
-            "amount": 10
+            "amount": 10,
+            "frequency": 0.1,
+            "amplitude": 5
         },
         "water_storage_1":
         {

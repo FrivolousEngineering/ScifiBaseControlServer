@@ -16,9 +16,11 @@ class ResourceGenerator(Node):
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount
+        self._original_amount = amount
 
     def update(self) -> None:
         super().update()
         resources_left = self._provideResourceToOutogingConnections(self._resource_type, self._amount)
 
         self._resources_produced_this_tick[self._resource_type] = max(self._amount - resources_left, 0)
+
