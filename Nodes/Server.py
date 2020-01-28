@@ -93,16 +93,26 @@ class Server(Flask):
             display_data.append(data)
         return render_template("index.html", data = display_data)
 
+    def getNodeData(self, node_id: str):
+        data = {"node_id": node_id,
+                "temperature": self._nodes.getNodeTemperature(node_id),
+                "amount": round(self._nodes.getAmountStored(node_id), 2),
+                "enabled": self._nodes.isNodeEnabled(node_id),
+                "active": self._nodes.isNodeActive(node_id)}  # type: ignore
+        return data
+
+    @register_route("/<node_id>/")
+    def nodeData(self, node_id: str):
+        self._setupDBUS()
+        data = self.getNodeData((node_id))
+        return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
+
     @register_route("/nodes/")
     def getAllNodeData(self):
         self._setupDBUS()
         display_data = []
         for node_id in self._nodes.getAllNodeIds():  # type: ignore
-            data = {"node_id": node_id,
-                    "temperature": self._nodes.getNodeTemperature(node_id),
-                    "amount": round(self._nodes.getAmountStored(node_id), 2),
-                    "enabled": self._nodes.isNodeEnabled(node_id),
-                    "active": self._nodes.isNodeActive(node_id)}  # type: ignore
+            data = self.getNodeData(node_id)
             display_data.append(data)
         return Response(flask.json.dumps(display_data), status=200, mimetype="application/json")
 
@@ -132,6 +142,12 @@ class Server(Flask):
     def temperatureHistory(self, node_id):
         self._setupDBUS()
         result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
+        return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+
+    @register_route("/<node_id>/temperature/")
+    def temperature(self, node_id):
+        self._setupDBUS()
+        result = self._nodes.getNodeTemperature(node_id)  # type: ignore
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/<prop>/history/")
