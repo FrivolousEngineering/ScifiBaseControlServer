@@ -16,7 +16,6 @@ class ResourceGenerator(Node):
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount
-        self._original_amount = amount
 
     def update(self) -> None:
         super().update()

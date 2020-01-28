@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from Nodes.ResourceGenerator import ResourceGenerator
 import math
 
@@ -10,6 +12,17 @@ class FluctuatingResourceGenerator(ResourceGenerator):
         self._original_amount = amount
         self._amplitude = amplitude
         self._frequency = frequency
+
+    def serialize(self) -> Dict[str, Any]:
+        result = super().serialize()
+        result["original_amount"] = self._original_amount
+        result["tick"] = self._tick_count
+        return result
+
+    def deserialize(self, data: Dict[str, Any]) -> None:
+        super().deserialize(data)
+        self._original_amount = data["original_amount"]
+        self._tick_count = data["tick"]
 
     def postUpdate(self) -> None:
         super().postUpdate()

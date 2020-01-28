@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from Nodes.Node import Node
 from Nodes.Constants import WEIGHT_PER_UNIT
@@ -13,6 +13,15 @@ class ResourceStorage(Node):
         self._max_storage = max_storage
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
         self.additional_properties.append("amount_stored")
+
+    def serialize(self) -> Dict[str, Any]:
+        data = super().serialize()
+        data["amount_stored"] = self._amount
+        return data
+
+    def deserialize(self, data: Dict[str, Any]) -> None:
+        super().deserialize(data)
+        self._amount = data["amount_stored"]
 
     @property
     def amount_stored(self) -> float:
