@@ -95,9 +95,9 @@ class Server(Flask):
 
     def getNodeData(self, node_id: str):
         data = {"node_id": node_id,
-                "temperature": self._nodes.getNodeTemperature(node_id),
-                "amount": round(self._nodes.getAmountStored(node_id), 2),
-                "enabled": self._nodes.isNodeEnabled(node_id),
+                "temperature": self._nodes.getNodeTemperature(node_id),  # type: ignore
+                "amount": round(self._nodes.getAmountStored(node_id), 2),  # type: ignore
+                "enabled": self._nodes.isNodeEnabled(node_id),  # type: ignore
                 "active": self._nodes.isNodeActive(node_id)}  # type: ignore
         return data
 

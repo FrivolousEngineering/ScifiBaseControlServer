@@ -15,11 +15,11 @@ class WaterPurifier(Node):
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
-    def _updateResourceRequiredPerTick(self):
+    def _updateResourceRequiredPerTick(self) -> None:
         resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
 
-        self._resources_required_per_tick["oxygen"] = max(self._original_resources_required_per_tick[
-                                                          "oxygen"] * self.effectiveness_factor - resources_left, 0)
+        self._resources_required_per_tick["oxygen"] = max(self._original_resources_required_per_tick["oxygen"]
+                                                          * self.effectiveness_factor - resources_left, 0)
         self._resources_required_per_tick["dirty_water"] = max(
             self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left, 0)
 
