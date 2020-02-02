@@ -3,7 +3,9 @@ from Nodes.Node import Node
 
 class WaterPurifier(Node):
     """
-    A water purifier accepts dirty water & oxygen, which it converts into clean water & waste
+    A water purifier accepts dirty water & oxygen, which it converts into clean water & waste.
+
+    When it gets damaged, it will start requesting less resources (and thus decrease it's output)
     """
 
     def __init__(self, node_id: str, **kwargs) -> None:
@@ -14,11 +16,12 @@ class WaterPurifier(Node):
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
     def _updateResourceRequiredPerTick(self):
-        resources_left = max(self._resources_left_over.values())
-        self._resources_required_per_tick["oxygen"] = self._original_resources_required_per_tick[
-                                                          "oxygen"] - resources_left
-        self._resources_required_per_tick["dirty_water"] = self._original_resources_required_per_tick[
-                                                          "dirty_water"] - resources_left
+        resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
+
+        self._resources_required_per_tick["oxygen"] = max(self._original_resources_required_per_tick[
+                                                          "oxygen"] * self.effectiveness_factor - resources_left, 0)
+        self._resources_required_per_tick["dirty_water"] = max(
+            self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left, 0)
 
     def update(self) -> None:
         super().update()
@@ -31,8 +34,6 @@ class WaterPurifier(Node):
 
         self._resources_left_over["oxygen"] = oxygen_available - resources_produced
         self._resources_left_over["dirty_water"] = dirty_water_available - resources_produced
-
-        resources_produced *= self.effectiveness_factor
 
         # Ensure that we also check how much we had left from the last turn
         clean_water_available = resources_produced + self._resources_left_over.get("water", 0)
