@@ -160,7 +160,7 @@
             "type": "ResourceStorage",
             "resource_type": "waste",
             "amount": 0,
-            "max_storage": 37
+            "max_storage": 200
         },
         "dirty_water_storage":
         {
@@ -176,6 +176,18 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
+            "amount": 0
+        },
+        "waste_generator":
+        {
+            "type": "Generator",
+            "fuel_type": "waste",
+            "energy_factor": 0.2
+        },
+        "battery_3":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
             "amount": 0
         }
     },
@@ -221,7 +233,9 @@
         { "from": "water_purifier", "to": "waste_storage", "resource_type": "waste" },
         { "from": "water_purifier", "to": "water_storage_3", "resource_type": "water" },
         { "from": "oxygen_storage", "to":  "water_purifier", "resource_type":  "oxygen"},
-        { "from": "dirty_water_storage", "to":  "water_purifier", "resource_type":  "dirty_water"}
+        { "from": "dirty_water_storage", "to":  "water_purifier", "resource_type":  "dirty_water"},
+        { "from": "waste_storage", "to": "waste_generator", "resource_type": "waste" },
 
+        { "from": "waste_generator", "to": "battery_3", "resource_type": "energy" }
     ]
 }
