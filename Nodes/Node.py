@@ -20,7 +20,7 @@ class Node:
     updateCalled = Signal()
     postUpdateCalled = Signal()
 
-    def __init__(self, node_id: str, **kwargs) -> None:
+    def __init__(self, node_id: str, temperature: float = 293.15, **kwargs) -> None:
         """
         :param node_id: Unique identifier of the node.
         """
@@ -35,8 +35,8 @@ class Node:
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
 
-        # Temperature is in kelvin (so default is 20 deg c)
-        self._temperature = 293.15
+        # Temperature is in kelvin
+        self._temperature = temperature
         self._weight = 300.
 
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
