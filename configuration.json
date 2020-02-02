@@ -104,14 +104,15 @@
         {
             "type": "ResourceStorage",
             "resource_type": "oxygen",
-            "amount": 0,
+            "amount": 100,
             "max_storage": 200
         },
         "open_air":
         {
             "type": "ResourceDestroyer",
             "resource_type": "oxygen",
-            "amount": 100
+            "amount": 100,
+            "enabled": false
         },
         "lights":
         {
@@ -153,6 +154,29 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "enabled": false
+        },
+        "waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "waste",
+            "amount": 0,
+            "max_storage": 37
+        },
+        "dirty_water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "dirty_water",
+            "amount": 2000
+        },
+        "water_purifier":
+        {
+            "type": "WaterPurifier"
+        },
+        "water_storage_3":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 0
         }
     },
     "connections":
@@ -192,6 +216,12 @@
         { "from": "battery_1", "to": "lights", "resource_type": "energy" },
 
         { "from": "battery_1", "to": "server", "resource_type": "energy" },
-        { "from": "server", "to": "database", "resource_type": "data" }
+        { "from": "server", "to": "database", "resource_type": "data" },
+
+        { "from": "water_purifier", "to": "waste_storage", "resource_type": "waste" },
+        { "from": "water_purifier", "to": "water_storage_3", "resource_type": "water" },
+        { "from": "oxygen_storage", "to":  "water_purifier", "resource_type":  "oxygen"},
+        { "from": "dirty_water_storage", "to":  "water_purifier", "resource_type":  "dirty_water"}
+
     ]
 }
