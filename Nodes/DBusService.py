@@ -95,6 +95,28 @@ class DBusService(dbus.service.Object):
         if node:
             node.enabled = bool(enabled)
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
+    def getIncomingConnections(self, node_id) -> List[Dict[str, str]]:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            all_connections = node.getAllIncomingConnections()
+            return [{"target": connection.target.getId(),
+                     "origin": connection.origin.getId(),
+                     "resource_type": connection.resource_type}
+                    for connection in all_connections]
+        return []
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
+    def getOutgoingConnections(self, node_id) -> List[Dict[str, str]]:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            all_connections = node.getAllOutgoingConnections()
+            return [{"target": connection.target.getId(),
+                     "origin": connection.origin.getId(),
+                     "resource_type": connection.resource_type}
+                    for connection in all_connections]
+        return []
+
     @dbus.service.method("com.frivengi.nodes")
     def checkAlive(self):
         """

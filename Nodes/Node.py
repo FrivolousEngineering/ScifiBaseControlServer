@@ -344,6 +344,12 @@ class Node:
         with self._update_lock:
             self._incoming_connections.append(connection)
 
+    def getAllOutgoingConnections(self) -> List[Connection]:
+        return self._outgoing_connections
+
+    def getAllIncomingConnections(self) -> List[Connection]:
+        return self._incoming_connections
+
     def getAllIncomingConnectionsByType(self, resource_type: str) -> List[Connection]:
         return [connection for connection in self._incoming_connections if connection.resource_type == resource_type]
 

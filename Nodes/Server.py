@@ -179,5 +179,20 @@ class Server(Flask):
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
         return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
 
+    @register_route("/<node_id>/connections/incoming")
+    def getIncomingConnections(self, node_id):
+        self._setupDBUS()
+
+        data = self._nodes.getIncomingConnections(node_id)
+        return Response(flask.json.dumps(data), status = 200, mimetype ="application/json")
+
+    @register_route("/<node_id>/connections/outgoing")
+    def getOutgoingConnections(self, node_id):
+        self._setupDBUS()
+
+        data = self._nodes.getOutgoingConnections(node_id)
+        return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+
+
 if __name__ == "__main__":
     Server().run(debug=True)
