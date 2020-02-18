@@ -192,11 +192,14 @@ class Server(Flask):
         data = self._nodes.getOutgoingConnections(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/description")
-    def getDescription(self, node_id):
-        self._setupDBUS()
-
-        data = self._nodes.getNodeDescription(node_id)
+    @register_route("/<node_id>/static_properties")
+    def getStaticProperties(self, node_id):
+        data = {}
+        data["surface_area"] = self._nodes.getSurfaceArea(node_id)
+        data["max_safe_temperature"] = self._nodes.getMaxSafeTemperature(node_id)
+        data["heat_convection"] = self._nodes.getHeatConvection(node_id)
+        data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)
+        data["description"] = self._nodes.getNodeDescription(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
 

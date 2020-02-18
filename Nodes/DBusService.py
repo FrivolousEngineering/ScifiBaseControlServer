@@ -29,6 +29,34 @@ class DBusService(dbus.service.Object):
             return node.description
         return ""
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getHeatEmissivity(self, node_id) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.heat_emissivity
+        return 0.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getSurfaceArea(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.surface_area
+        return 0.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getHeatConvection(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.heat_convection_coefficient
+        return 0.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getMaxSafeTemperature(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.max_safe_temperature
+        return 0.
+
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def isNodeActive(self, node_id: str) -> bool:
         node = self._node_engine.getNodeById(node_id)

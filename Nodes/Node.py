@@ -73,6 +73,22 @@ class Node:
         self._custom_description = ""  # type: str
 
     @property
+    def heat_emissivity(self) -> float:
+        return self._heat_emissivity
+
+    @property
+    def surface_area(self) -> float:
+        return self._surface_area
+
+    @property
+    def heat_convection_coefficient(self) -> float:
+        return self._heat_convection_coefficient
+
+    @property
+    def max_safe_temperature(self) -> float:
+        return self._max_safe_temperature
+
+    @property
     def description(self) -> str:
         return self._description
 
