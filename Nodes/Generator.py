@@ -34,6 +34,9 @@ class Generator(Node):
         self._max_safe_temperature = 500
 
         self._weight = 2000
+        self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
+                            "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
+                            "with cooling down.".format(fuel_type = fuel_type)
 
     def update(self) -> None:
         super().update()

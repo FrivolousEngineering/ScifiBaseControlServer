@@ -69,6 +69,17 @@ class Node:
         # How fast should this node degrade if it's above a certain temperature?
         self._temperature_degradation_speed = 1.
 
+        self._description = ""  # type: str
+        self._custom_description = ""  # type: str
+
+    @property
+    def description(self) -> str:
+        return self._description
+
+    @property
+    def custom_description(self) -> str:
+        return self._custom_description
+
     @property
     def health(self) -> float:
         return self._health
@@ -106,6 +117,7 @@ class Node:
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
         result["resources_left_over"] = self._resources_left_over
         result["temperature"] = self._temperature
+        result["custom_description"] = self._custom_description
         return result
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -118,6 +130,7 @@ class Node:
         self._resources_produced_this_tick = data["resources_produced_this_tick"]
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
+        self._custom_description = data.get("custom_description", "")
 
     @property
     def weight(self):

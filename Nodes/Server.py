@@ -133,7 +133,6 @@ class Server(Flask):
     def nodeEnabled(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-
             self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
             return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
         return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
@@ -191,6 +190,13 @@ class Server(Flask):
         self._setupDBUS()
 
         data = self._nodes.getOutgoingConnections(node_id)
+        return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+
+    @register_route("/<node_id>/description")
+    def getDescription(self, node_id):
+        self._setupDBUS()
+
+        data = self._nodes.getNodeDescription(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
 
