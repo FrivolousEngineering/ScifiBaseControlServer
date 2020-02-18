@@ -23,8 +23,8 @@ class ComputationNode(Node):
         self._temperature_degradation_speed = 3
         self._description = "This device requires energy to run, which it requires to generate data. It is <i>very" \
                             "</i> sensitive to heat and will break down very rapidly if reaches higher temperatures." \
-                            "Even when this device is not generating any data, it will still consume a bit of energy, " \
-                            "albeit way less than it would when it's generating data."
+                            "Even when this device is not generating any data, it will still consume a bit of " \
+                            "energy, albeit way less than it would when it's generating data."
 
     def update(self) -> None:
         super().update()
