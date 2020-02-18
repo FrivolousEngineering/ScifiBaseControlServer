@@ -20,6 +20,9 @@ class FluidCooler(ResourceStorage):
         # Also try to pump up resources!
         self._resources_required_per_tick[self._resource_type] = fluid_per_tick
 
+        self._description = "This device pumps {resource_type} from all incomming connections and provides them to" \
+                            " all of it's outgoing connections.".format(resource_type = resource_type)
+
     def _updateResourceRequiredPerTick(self) -> None:
         new_amount_required = self._fluid_per_tick
         storage_room_left = cast(float, self._max_storage) - self._amount
