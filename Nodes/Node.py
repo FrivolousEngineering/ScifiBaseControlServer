@@ -66,11 +66,34 @@ class Node:
         self._active = False
         self._max_safe_temperature = 400  # type: float
 
+        # At what level should this node perform?
+        self._performance = 1.
+
+        self._min_performance = 1.
+        self._max_performance = 1.
+
         # How fast should this node degrade if it's above a certain temperature?
         self._temperature_degradation_speed = 1.
 
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
+
+    @property
+    def performance(self) -> float:
+        return self._performance
+
+    @performance.setter
+    def performance(self, new_performance: float) -> None:
+        with self._update_lock:
+            old_performance = self._performance
+            self._performance = new_performance
+            if self._performance < self._min_performance:
+                self._performance = self._min_performance
+            elif self._performance > self._max_performance:
+                self._performance = self._max_performance
+            for resource in self._resources_required_per_tick:
+                self._resources_required_per_tick[resource] *= 1.0 / old_performance
+                self._resources_required_per_tick[resource] *= self._performance
 
     @property
     def heat_emissivity(self) -> float:
@@ -134,6 +157,7 @@ class Node:
         result["resources_left_over"] = self._resources_left_over
         result["temperature"] = self._temperature
         result["custom_description"] = self._custom_description
+        result["performace"] = self._performance
         return result
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -147,6 +171,7 @@ class Node:
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
+        self.performance = data.get("performance", 1.)
 
     @property
     def weight(self):

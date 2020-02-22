@@ -57,6 +57,19 @@ class DBusService(dbus.service.Object):
             return node.max_safe_temperature
         return 0.
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="sd")
+    def setPerformance(self, node_id, performance):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            node.performance = performance
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getPerformance(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.performance
+        return 0
+
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def isNodeActive(self, node_id: str) -> bool:
         node = self._node_engine.getNodeById(node_id)

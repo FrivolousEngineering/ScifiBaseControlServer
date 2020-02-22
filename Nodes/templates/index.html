@@ -20,6 +20,7 @@ th {
             <th>Temperature</th>
             <th>Amount stored</th>
             <th>Enabled</th>
+            <th>Performance</th>
             <th>Active</th>
         </tr>
     </thead>
@@ -83,6 +84,21 @@ th {
                 type: "submit",
                 value: item.enabled
             }));
+            var form2 = $("<form/>", {
+                action: item.node_id + '/performance/',
+                method: "put"
+            });
+            form2.append($("<input>", {
+                type: "text",
+                value: item.performance,
+                id: "performance",
+                name: "performance"
+            }));
+            form2.append($("<input>", {
+                type: "submit",
+                value: "set Performance"
+            }));
+
             var node_link = $("<a/>", {href: '#', text: item.node_id});
             node_link.click(function (evt) {
                 evt.preventDefault();
@@ -94,6 +110,7 @@ th {
                 $('<td>').text(item.temperature),
                 $('<td>').text(item.amount),
                 $('<td>').append(form),
+                $('<td>').append(form2),
                 $('<td>').append(item.active),
             ).appendTo('#records_table');
         });

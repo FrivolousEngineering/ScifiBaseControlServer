@@ -89,7 +89,8 @@ class Server(Flask):
             data = {"node_id": node_id,
                     "temperature": self._nodes.getNodeTemperature(node_id),
                     "amount": self._nodes.getAmountStored(node_id),
-                    "enabled": self._nodes.isNodeEnabled(node_id)} # type: ignore
+                    "enabled": self._nodes.isNodeEnabled(node_id),
+                    "performance": self._nodes.getPerformance(node_id)} # type: ignore
             display_data.append(data)
         return render_template("index.html", data = display_data)
 
@@ -98,7 +99,8 @@ class Server(Flask):
                 "temperature": self._nodes.getNodeTemperature(node_id),  # type: ignore
                 "amount": round(self._nodes.getAmountStored(node_id), 2),  # type: ignore
                 "enabled": self._nodes.isNodeEnabled(node_id),  # type: ignore
-                "active": self._nodes.isNodeActive(node_id)}  # type: ignore
+                "active": self._nodes.isNodeActive(node_id), # type: ignore
+                "performance": self._nodes.getPerformance(node_id)}  # type: ignore
         return data
 
     @register_route("/<node_id>/")
@@ -136,6 +138,18 @@ class Server(Flask):
             self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
             return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
         return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
+
+    @register_route("/<node_id>/performance/", ["PUT", "GET"])
+    def nodePerformance(self, node_id):
+        self._setupDBUS()
+        if request.method == "PUT":
+            new_performance = request.form["performance"]
+            self._nodes.setPerformance(node_id, float(new_performance))
+        return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
+        #if request.method == "PUT":
+        #    self._nodes.setPerformance(node_id, not self._nodes.setPerformance(node_id))
+        #    return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+        #return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/temperature/history/")
     def temperatureHistory(self, node_id):

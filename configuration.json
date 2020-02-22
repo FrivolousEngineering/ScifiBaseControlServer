@@ -9,7 +9,8 @@
         },
         "generator_1":
         {
-            "type": "Generator"
+            "type": "Generator",
+            "performance": 2
         },
         "generator_2":
         {
