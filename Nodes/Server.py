@@ -182,10 +182,13 @@ class Server(Flask):
 
     @register_route("/<node_id>/all_property_chart_data")
     def getAllProperties(self, node_id):
+        showLast = request.args.get("showLast")
+
         self._setupDBUS()
         all_property_histories = {}
         for prop in self._nodes.getAdditionalProperties(node_id):
             all_property_histories[prop] = self._nodes.getAdditionalPropertyHistory(node_id, prop)
+
         all_property_histories["temperature"] = self._nodes.getNodeTemperatureHistory(node_id)
 
         resources_gained = self._nodes.getResourcesGainedHistory(node_id)
@@ -195,6 +198,13 @@ class Server(Flask):
         resources_produced = self._nodes.getResourcesProducedHistory(node_id)
         for key in resources_produced:
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
+
+        for key in all_property_histories:
+            if showLast is not None and showLast:
+                try:
+                    all_property_histories[key] = all_property_histories[key][-int(showLast):]
+                except ValueError:
+                    pass
         return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/connections/incoming")
