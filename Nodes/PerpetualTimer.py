@@ -13,7 +13,7 @@ class PerpetualTimer:
         A wrapper around the python timer class that keeps executing the target each interval.
         Note that it simply waits in between the executions. It will therefore *always* be slower than the interval.
         :param interval: How much seconds should be in between the calls.
-        :param target: Function that needs to be called 
+        :param target: Function that needs to be called
         """
         self._should_continue = False
         self._is_running = False

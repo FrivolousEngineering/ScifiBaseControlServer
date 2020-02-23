@@ -7,7 +7,7 @@ from Nodes.NodeHistory import NodeHistory
 from Nodes.PerpetualTimer import PerpetualTimer
 from Signal import signalemitter, Signal
 
-TICK_INTERVAL = 10
+TICK_INTERVAL = 1
 
 @signalemitter
 class NodeEngine:
@@ -28,7 +28,12 @@ class NodeEngine:
         self._update_lock = Lock()
 
         self._tick_timer = PerpetualTimer(TICK_INTERVAL, self.doTick)
+
+    def start(self) -> None:
         self._tick_timer.start()
+
+    def stop(self) -> None:
+        self._tick_timer.cancel()
 
     def registerNode(self, node: Node) -> None:
         if node.getId() not in self._nodes:
