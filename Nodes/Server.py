@@ -4,7 +4,7 @@ from flask import Flask, Response
 from functools import partial
 import flask
 from flask import render_template, request
-
+import json
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
@@ -143,13 +143,12 @@ class Server(Flask):
     def nodePerformance(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-            new_performance = request.form["performance"]
+            if "performance" in request.form:
+                new_performance = request.form["performance"]
+            else:
+                new_performance = json.loads(request.data)["performance"]
             self._nodes.setPerformance(node_id, float(new_performance))
         return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
-        #if request.method == "PUT":
-        #    self._nodes.setPerformance(node_id, not self._nodes.setPerformance(node_id))
-        #    return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
-        #return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/temperature/history/")
     def temperatureHistory(self, node_id):
