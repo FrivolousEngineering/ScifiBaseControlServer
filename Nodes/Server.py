@@ -154,10 +154,10 @@ class Server(Flask):
     def temperatureHistory(self, node_id):
         self._setupDBUS()
         result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
-        showLast = request.args.get("showLast")
-        if showLast is not None and showLast:
+        show_last = request.args.get("showLast")
+        if show_last is not None and show_last:
             try:
-                result = result[-int(showLast):]
+                result = result[-int(show_last):]
             except ValueError:
                 pass
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
@@ -182,7 +182,7 @@ class Server(Flask):
 
     @register_route("/<node_id>/all_property_chart_data")
     def getAllProperties(self, node_id):
-        showLast = request.args.get("showLast")
+        show_last = request.args.get("showLast")
 
         self._setupDBUS()
         all_property_histories = {}
@@ -200,9 +200,9 @@ class Server(Flask):
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
 
         for key in all_property_histories:
-            if showLast is not None and showLast:
+            if show_last is not None and show_last:
                 try:
-                    all_property_histories[key] = all_property_histories[key][-int(showLast):]
+                    all_property_histories[key] = all_property_histories[key][-int(show_last):]
                 except ValueError:
                     pass
         return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
