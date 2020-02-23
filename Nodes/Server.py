@@ -154,6 +154,12 @@ class Server(Flask):
     def temperatureHistory(self, node_id):
         self._setupDBUS()
         result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
+        showLast = request.args.get("showLast")
+        if showLast is not None and showLast:
+            try:
+                result = result[-int(showLast):]
+            except ValueError:
+                pass
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/temperature/")
