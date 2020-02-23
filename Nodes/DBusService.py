@@ -173,3 +173,17 @@ class DBusService(dbus.service.Object):
         :return:
         """
         return
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getMinPerformance(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.min_performance
+        return 1.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getMaxPerformance(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.max_performance
+        return 1.

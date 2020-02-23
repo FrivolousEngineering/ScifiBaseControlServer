@@ -79,6 +79,14 @@ class Node:
         self._custom_description = ""  # type: str
 
     @property
+    def min_performance(self):
+        return self._min_performance
+
+    @property
+    def max_performance(self):
+        return self._max_performance
+
+    @property
     def performance(self) -> float:
         return self._performance
 

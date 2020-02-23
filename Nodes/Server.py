@@ -213,6 +213,8 @@ class Server(Flask):
         data["heat_convection"] = self._nodes.getHeatConvection(node_id)
         data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)
         data["description"] = self._nodes.getNodeDescription(node_id)
+        data["min_performance"] = self._nodes.getMinPerformance(node_id)
+        data["max_performance"] = self._nodes.getMaxPerformance(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
 
