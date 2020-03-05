@@ -79,7 +79,7 @@ class Node:
         self.additional_properties = ["health"]  # type: List[str]
 
         # How healthy is the node?
-        self._health = 100
+        self._health = 100.  # type: float
         self._active = False
         self._max_safe_temperature = 400  # type: float
 
@@ -168,6 +168,13 @@ class Node:
     @modifiable_property
     def health(self) -> float:
         return self._health
+
+    def repair(self, amount: float) -> None:
+        if amount < 0.:
+            amount = 0.
+        self._health += amount
+        if self._health > 100:
+            self._health = 100.
 
     @property
     def enabled(self) -> bool:
