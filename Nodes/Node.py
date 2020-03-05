@@ -97,6 +97,15 @@ class Node:
 
         self._modifiers = []  # type: List[Modifier]
 
+        # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
+        # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
+        # transformed into heat.
+        self._temperature_efficiency = 1.
+
+    @modifiable_property
+    def temperature_efficiency(self):
+        return self._temperature_efficiency
+
     def addModifier(self, modifier: Modifier) -> None:
         self._modifiers.append(modifier)
         modifier.setNode(self)

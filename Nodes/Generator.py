@@ -29,10 +29,7 @@ class Generator(Node):
         self._min_performance = 0.5
         self._max_performance = 2
 
-        # How (in)efficient is the generator in converting the fuel it gets into heat?
-        # An efficiency of 1 means that no heat is produced. An efficiency of 0 means that all heat of burning it
-        # is transformed into heat.
-        self._efficiency = 0.5
+        self._temperature_efficiency = 0.5
 
         self._max_safe_temperature = 500
 
@@ -61,8 +58,7 @@ class Generator(Node):
         self._resources_produced_this_tick["energy"] = max(energy_available - energy_left, 0)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
-        inefficiency = 1.0 - self._efficiency
-        heat_produced = (fuel_gained - fuel_left) * COMBUSTION_HEAT[self._fuel_type] * inefficiency
+        heat_produced = (fuel_gained - fuel_left) * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
         # Same thing for the water. Check how much water we have.

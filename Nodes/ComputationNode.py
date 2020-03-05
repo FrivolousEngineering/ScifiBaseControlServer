@@ -42,6 +42,6 @@ class ComputationNode(Node):
         self._resources_produced_this_tick["data"] = data_produced
 
         # But we do give a bit of a discount heat wise!
-        heat_produced = data_produced * self._heat_per_data_computed
+        heat_produced = data_produced * self._heat_per_data_computed * self.temperature_efficiency
         heat_produced += data_left * self._heat_per_data_not_computed
         self.addHeat(heat_produced)
