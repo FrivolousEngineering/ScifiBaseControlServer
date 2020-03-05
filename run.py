@@ -1,3 +1,4 @@
+from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
 from Nodes.NodeEngine import NodeEngine
 import json
 
@@ -15,9 +16,12 @@ with open("configuration.json") as f:
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
 
+generator = engine.getNodeById("generator_1")
+generator.addModifier(BoostCoolingModifier(50))
+engine.doTick()
 #storage = NodeStorage(engine)
 
-engine.start()
+#engine.start()
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
