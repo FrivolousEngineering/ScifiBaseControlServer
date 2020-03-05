@@ -1,4 +1,5 @@
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
+from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.NodeEngine import NodeEngine
 import json
 
@@ -17,7 +18,7 @@ with open("configuration.json") as f:
 
 
 generator = engine.getNodeById("generator_1")
-generator.addModifier(BoostCoolingModifier(50))
+generator.addModifier(OverrideDefaultSafetyControlsModifier(5))
 engine.doTick()
 #storage = NodeStorage(engine)
 
