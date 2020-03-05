@@ -9,12 +9,16 @@ from Signal import signalemitter, Signal
 def modifiable_property(f):
     @property
     def wrapper(self, *args, **kwargs):
-        value = 0
+        modifier_value = 0
+        factor_value = 1.0
         property_name = f.__name__
         for modifier in self._modifiers:
-            if modifier.type == property_name:
-                value += modifier.value
-        return f(self, *args, **kwargs) + value
+            modifier_value += modifier.getModifierForProperty(property_name)
+            factor_value *= modifier.getFactorForProperty(property_name)
+
+        unmodified_value = f(self, *args, **kwargs)
+        final_value = factor_value * unmodified_value + modifier_value
+        return final_value
     return wrapper
 
 
@@ -95,6 +99,7 @@ class Node:
 
     def addModifier(self, modifier: Modifier) -> None:
         self._modifiers.append(modifier)
+        modifier.setNode(self)
 
     def removeModifier(self, modifier: Modifier) -> None:
         try:
@@ -357,7 +362,7 @@ class Node:
         Heat also leaves objects by grace of radiation. This is calculated by the The Stefan-Boltzmann Law
         """
         temp_diff = pow(self.outside_temp, 4) - pow(self.temperature, 4)
-        heat_radiation = self.__stefan_boltzmann_constant * self._heat_emissivity * self._surface_area * temp_diff
+        heat_radiation = self.__stefan_boltzmann_constant * self.heat_emissivity * self._surface_area * temp_diff
         self.addHeat(heat_radiation)
 
         if heat_radiation < 0:
@@ -367,7 +372,7 @@ class Node:
 
     def _convectiveHeatTransfer(self) -> None:
         delta_temp = self.outside_temp - self.temperature
-        heat_convection = self._heat_convection_coefficient * self._surface_area * delta_temp
+        heat_convection = self.heat_convection_coefficient * self._surface_area * delta_temp
         self.addHeat(heat_convection)
         if heat_convection < 0: # Cooling down happend.
             if self._temperature < self.outside_temp:

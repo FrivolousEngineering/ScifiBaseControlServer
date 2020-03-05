@@ -1,12 +1,12 @@
-from typing import Optional
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Dict
 
 if TYPE_CHECKING:
     from Node import Node
 
 
 class Modifier:
-    def __init__(self, attribute: str, value: float, duration: int) -> None:
+    def __init__(self, modifiers: Optional[Dict[str, float]] = None, factors:  Optional[Dict[str, float]] = None,
+                 duration: int = 0) -> None:
         """
 
         :param duration: The duration this modifier will active, measured in ticks.
@@ -15,14 +15,25 @@ class Modifier:
 
         self._duration = duration
 
-        self.attribute = attribute
-        self.value = value
+        self._modifiers = {}
+        if modifiers is not None:
+            self._modifiers = modifiers
+
+        self._factors = {}
+        if factors is not None:
+            self._factors = factors
 
     def setNode(self, node: "Node") -> None:
         self._node = node
 
     def getNode(self) -> Optional["Node"]:
         return self._node
+
+    def getModifierForProperty(self, property: str) -> float:
+        return self._modifiers.get(property, 0.)
+
+    def getFactorForProperty(self, property: str):
+        return self._factors.get(property, 1)
 
     def update(self) -> None:
         self._duration -= 1
