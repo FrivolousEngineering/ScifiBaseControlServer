@@ -8,4 +8,6 @@ class OverrideDefaultSafetyControlsModifier(Modifier):
     def _onModifierRemoved(self) -> None:
         # Set performance ensures that the limits are respected.
         # Once this modifier gets removed, we need to ensure that the performance is in range again!
-        self._node.performance = self._node.performance
+        node = self._node
+        if node is not None:
+            node.performance = node.performance

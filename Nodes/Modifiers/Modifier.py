@@ -15,11 +15,11 @@ class Modifier:
 
         self._duration = duration
 
-        self._modifiers = {}
+        self._modifiers = {}  # type: Dict[str, float]
         if modifiers is not None:
             self._modifiers = modifiers
 
-        self._factors = {}
+        self._factors = {}  # type: Dict[str, float]
         if factors is not None:
             self._factors = factors
 
