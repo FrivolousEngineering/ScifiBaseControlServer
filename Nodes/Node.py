@@ -2,7 +2,7 @@ from threading import Lock
 from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
-from Nodes.Modifier import Modifier
+from Nodes.Modifiers.Modifier import Modifier
 from Signal import signalemitter, Signal
 
 

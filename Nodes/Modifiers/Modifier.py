@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 
 class Modifier:
-    def __init__(self, duration: int = 0) -> None:
+    def __init__(self, attribute: str, value: float, duration: int) -> None:
         """
 
         :param duration: The duration this modifier will active, measured in ticks.
@@ -15,8 +15,8 @@ class Modifier:
 
         self._duration = duration
 
-        self.type = ""
-        self.value = 0
+        self.attribute = attribute
+        self.value = value
 
     def setNode(self, node: "Node") -> None:
         self._node = node
