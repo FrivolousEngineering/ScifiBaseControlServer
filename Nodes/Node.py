@@ -2,7 +2,20 @@ from threading import Lock
 from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
+from Nodes.Modifier import Modifier
 from Signal import signalemitter, Signal
+
+
+def modifiable_property(f):
+    @property
+    def wrapper(self, *args, **kwargs):
+        value = 0
+        property_name = f.__name__
+        for modifier in self._modifiers:
+            if modifier.type == property_name:
+                value += modifier.value
+        return f(self, *args, **kwargs) + value
+    return wrapper
 
 
 @signalemitter
@@ -78,11 +91,22 @@ class Node:
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
 
-    @property
+        self._modifiers = []  # type: List[Modifier]
+
+    def addModifier(self, modifier: Modifier) -> None:
+        self._modifiers.append(modifier)
+
+    def removeModifier(self, modifier: Modifier) -> None:
+        try:
+            self._modifiers.remove(modifier)
+        except ValueError:
+            pass
+
+    @modifiable_property
     def min_performance(self):
         return self._min_performance
 
-    @property
+    @modifiable_property
     def max_performance(self):
         return self._max_performance
 
@@ -95,15 +119,15 @@ class Node:
         with self._update_lock:
             old_performance = self._performance
             self._performance = new_performance
-            if self._performance < self._min_performance:
-                self._performance = self._min_performance
-            elif self._performance > self._max_performance:
-                self._performance = self._max_performance
+            if self._performance < self.min_performance:
+                self._performance = self.min_performance
+            elif self._performance > self.max_performance:
+                self._performance = self.max_performance
             for resource in self._resources_required_per_tick:
                 self._resources_required_per_tick[resource] *= 1.0 / old_performance
                 self._resources_required_per_tick[resource] *= self._performance
 
-    @property
+    @modifiable_property
     def heat_emissivity(self) -> float:
         return self._heat_emissivity
 
@@ -111,11 +135,11 @@ class Node:
     def surface_area(self) -> float:
         return self._surface_area
 
-    @property
+    @modifiable_property
     def heat_convection_coefficient(self) -> float:
         return self._heat_convection_coefficient
 
-    @property
+    @modifiable_property
     def max_safe_temperature(self) -> float:
         return self._max_safe_temperature
 
@@ -127,7 +151,7 @@ class Node:
     def custom_description(self) -> str:
         return self._custom_description
 
-    @property
+    @modifiable_property
     def health(self) -> float:
         return self._health
 
@@ -185,7 +209,7 @@ class Node:
     def weight(self):
         return self._weight
 
-    @property
+    @modifiable_property
     def temperature(self):
         """
         The temperature of this node in Kelvin
@@ -323,6 +347,10 @@ class Node:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
+
+        # Update the timers of the modifiers (and remove them if they have expired)
+        for modifier in self._modifiers:
+            modifier.update()
 
     def _emitHeat(self) -> None:
         """

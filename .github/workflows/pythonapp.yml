@@ -27,6 +27,3 @@ jobs:
       run: |
         python -m pip install pytest
         PYTHONPATH=. python3 -m pytest
-    - name: Run Pylint
-      run: |
-        pylint Nodes
