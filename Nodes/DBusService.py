@@ -129,6 +129,16 @@ class DBusService(dbus.service.Object):
             return []
         return node.additional_properties
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="d")
+    def getAdditionalPropertyValue(self, node_id: str, prop: str) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return -1
+        try:
+            return getattr(node, prop)
+        except AttributeError:
+            return -1
+
     @dbus.service.method("com.frivengi.nodes", out_signature="as")
     def getAllNodeIds(self) -> List[str]:
         return self._node_engine.getAllNodeIds()

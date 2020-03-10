@@ -35,12 +35,13 @@ class Server(Flask):
         super().__init__(*args, **kwargs)
 
         # Register the routes from the decorator
+        self.add_url_rule(rule="/<path:path>", view_func=self.staticHost)
         for route, config_options in _REGISTERED_ROUTES.items():
             partial_fn = partial(config_options["func"], self)
             # We must set a name to for this partial function.
             cast(Any, partial_fn).__name__ = config_options["func"].__name__
             self.add_url_rule(route, view_func = partial_fn, methods = config_options["methods"])
-        self.add_url_rule(rule="/<path:path>", view_func=self.staticHost)
+
         self._bus = dbus.SessionBus()
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
@@ -238,6 +239,12 @@ class Server(Flask):
         data["description"] = self._nodes.getNodeDescription(node_id)
         data["min_performance"] = self._nodes.getMinPerformance(node_id)
         data["max_performance"] = self._nodes.getMaxPerformance(node_id)
+        return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+
+    @register_route("/<string:node_id>/<string:additional_property>/")
+    def getAdditionalPropertyValue(self, node_id, additional_property):
+        self._setupDBUS()
+        data = self._nodes.getAdditionalPropertyValue(node_id, additional_property)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
 
