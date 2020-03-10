@@ -179,7 +179,10 @@ class Server(Flask):
     @register_route("/<node_id>/additional_properties")
     def getAdditionalProperties(self, node_id):
         self._setupDBUS()
-        result = self._nodes.getAdditionalProperties(node_id)
+        additional_properties = self._nodes.getAdditionalProperties(node_id)
+        result = {}
+        for prop in additional_properties:
+            result[prop] = self._nodes.getAdditionalPropertyValue(node_id, prop)
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/all_property_chart_data")
