@@ -2,6 +2,8 @@
 import dbus
 import dbus.service
 from typing import List, Dict
+
+from Nodes.Modifiers.ModifierFactory import createModifier
 from Nodes.NodeEngine import NodeEngine
 
 
@@ -14,6 +16,20 @@ class DBusService(dbus.service.Object):
         )
 
         self._node_engine = engine
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="ss")
+    def addModifierToNode(self, node_id: str, modifier_type: str) -> None:
+        node = self._node_engine.getNodeById(node_id)
+        modifier = createModifier(modifier_type)
+        node.addModifier(modifier)
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
+    def getActiveModifiers(self, node_id):
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return []
+
+        return [{"name": modifier.name, "duration": modifier.duration} for modifier in node.getModifiers()]
 
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def getNodeTemperature(self, node_id: str) -> float:

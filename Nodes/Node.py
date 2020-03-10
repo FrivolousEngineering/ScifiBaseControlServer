@@ -106,6 +106,10 @@ class Node:
     def temperature_efficiency(self):
         return self._temperature_efficiency
 
+
+    def getModifiers(self) -> List[Modifier]:
+        return self._modifiers
+
     def addModifier(self, modifier: Modifier) -> None:
         self._modifiers.append(modifier)
         modifier.setNode(self)

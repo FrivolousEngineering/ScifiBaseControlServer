@@ -26,6 +26,10 @@ class Modifier:
         self._name = "Modifier"
 
     @property
+    def duration(self):
+        return self._duration
+
+    @property
     def name(self):
         return self._name
 
