@@ -23,6 +23,12 @@ class Modifier:
         if factors is not None:
             self._factors = factors
 
+        self._name = "Modifier"
+
+    @property
+    def name(self):
+        return self._name
+
     def setNode(self, node: "Node") -> None:
         self._node = node
 
