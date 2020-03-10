@@ -131,6 +131,7 @@ class Server(Flask):
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
+
     @register_route("/<node_id>/enabled/", ["PUT", "GET"])
     def nodeEnabled(self, node_id):
         self._setupDBUS()
@@ -219,6 +220,12 @@ class Server(Flask):
         self._setupDBUS()
 
         data = self._nodes.getOutgoingConnections(node_id)
+        return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+
+    @register_route("/<node_id>/modifiers")
+    def getModifiers(self, node_id):
+        self._setupDBUS()
+        data = self._nodes.getActiveModifiers(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/static_properties")
