@@ -21,7 +21,8 @@ class DBusService(dbus.service.Object):
     def addModifierToNode(self, node_id: str, modifier_type: str) -> None:
         node = self._node_engine.getNodeById(node_id)
         modifier = createModifier(modifier_type)
-        node.addModifier(modifier)
+        if node and modifier:
+            node.addModifier(modifier)
 
     @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
     def getActiveModifiers(self, node_id):
