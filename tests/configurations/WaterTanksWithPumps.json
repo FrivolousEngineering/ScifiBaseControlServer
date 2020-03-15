@@ -1,0 +1,36 @@
+{
+    "nodes":
+    {
+        "fluid_cooler_1":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 10
+        },
+        "water_tank":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 750
+        },
+        "water_tank_2":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 50
+        },
+        "fluid_cooler_2":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 15
+        }
+    },
+    "connections":
+    [
+        { "from": "water_tank", "to": "fluid_cooler_1" , "resource_type": "water"},
+        { "from": "fluid_cooler_1", "to": "water_tank_2", "resource_type": "water" },
+        { "from": "water_tank_2", "to": "fluid_cooler_2", "resource_type": "water" },
+        { "from": "fluid_cooler_2", "to": "water_tank" , "resource_type": "water"}
+    ]
+}

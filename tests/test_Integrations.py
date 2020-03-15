@@ -27,15 +27,16 @@ def test_MultiWaterCooler():
         total_water += engine.getNodeById("generator").getResourceAvailableThisTick("water")
         assert total_water == 2000  # We start with 2000 water, so during all ticks, this *must* remain the same!
 
-
-def test_restoreFromFile():
+@pytest.mark.parametrize("ticks_to_run", [10, 20, 30])
+@pytest.mark.parametrize("config_file", ["MultiWaterTankConfig.json", "WaterTanksWithPumps.json", "GeneratorWaterCoolerConfiguration.json"])
+def test_restoreFromFile(config_file, ticks_to_run):
     engine_with_storage = NodeEngine()
     storage = NodeStorage(engine_with_storage)
 
     engine = NodeEngine()
-
+    path = "tests/configurations/" + config_file
     # Load a nice complex setup.
-    with open("tests/configurations/MultiWaterTankConfig.json") as f:
+    with open(path) as f:
         loaded_data = json.loads(f.read())
         engine_with_storage.registerNodesFromConfigurationData(loaded_data["nodes"])
         engine_with_storage.registerConnectionsFromConfigurationData(loaded_data["connections"])
@@ -46,9 +47,8 @@ def test_restoreFromFile():
     # Add a modifier
     first_key = next(iter(engine_with_storage.getAllNodes()))
     first_node = engine_with_storage.getNodeById(first_key)
-    first_node.addModifier(OverrideDefaultSafetyControlsModifier(13))
-
-    for _ in range(0, 10):
+    first_node.addModifier(OverrideDefaultSafetyControlsModifier(15))
+    for _ in range(0, ticks_to_run):
         engine_with_storage.doTick()
 
     # We've now created a storage file by letting the given configuration run for 10 ticks!
