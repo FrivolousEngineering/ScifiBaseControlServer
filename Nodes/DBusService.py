@@ -139,6 +139,16 @@ class DBusService(dbus.service.Object):
         except AttributeError:
             return -1
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="d")
+    def getMaxAdditionalPropertyValue(self, node_id, prop: str) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return -1
+        try:
+            return getattr(node, "max_" + prop)
+        except AttributeError:
+            return -1
+
     @dbus.service.method("com.frivengi.nodes", out_signature="as")
     def getAllNodeIds(self) -> List[str]:
         return self._node_engine.getAllNodeIds()

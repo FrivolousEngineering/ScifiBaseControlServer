@@ -75,11 +75,13 @@ class Node:
         self.__stefan_boltzmann_constant = 5.67e-8
 
         # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
-        # This is to notify the other observers that the property exists (for example, the NodeHistory uses this)
+        # This is to notify the other observers that the property exists (for example, the NodeHistory uses this).
+        # If the max value a property can take should also be communicated, the max_{property_name} is also requested
         self.additional_properties = ["health"]  # type: List[str]
 
         # How healthy is the node?
         self._health = 100.  # type: float
+        self._max_health = 100
         self._active = False
         self._max_safe_temperature = 400  # type: float
 
@@ -105,7 +107,6 @@ class Node:
     @modifiable_property
     def temperature_efficiency(self):
         return self._temperature_efficiency
-
 
     def getModifiers(self) -> List[Modifier]:
         return self._modifiers
@@ -172,6 +173,10 @@ class Node:
     @modifiable_property
     def health(self) -> float:
         return self._health
+
+    @property
+    def max_health(self) -> float:
+        return self._max_health
 
     def repair(self, amount: float) -> None:
         if amount < 0.:

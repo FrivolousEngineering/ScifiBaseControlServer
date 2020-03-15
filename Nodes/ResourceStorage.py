@@ -18,6 +18,12 @@ class ResourceStorage(Node):
             resource_type = resource_type
         )
 
+    @property
+    def max_amount_stored(self) -> float:
+        if self._max_storage is None:
+            return -1
+        return self._max_storage
+
     def serialize(self) -> Dict[str, Any]:
         data = super().serialize()
         data["amount_stored"] = self._amount

@@ -182,7 +182,9 @@ class Server(Flask):
         additional_properties = self._nodes.getAdditionalProperties(node_id)
         result = {}
         for prop in additional_properties:
-            result[prop] = self._nodes.getAdditionalPropertyValue(node_id, prop)
+            result[prop] = {}
+            result[prop]["max_value"] = self._nodes.getMaxAdditionalPropertyValue(node_id, prop)
+            result[prop]["value"] = self._nodes.getAdditionalPropertyValue(node_id, prop)
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/all_property_chart_data")
