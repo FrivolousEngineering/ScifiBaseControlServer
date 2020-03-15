@@ -1,4 +1,4 @@
-from threading import Lock
+from threading import RLock
 from typing import List, Dict, Any, Optional
 
 from Nodes.Node import Node
@@ -25,7 +25,7 @@ class NodeEngine:
         self._nodes = {}  # type: Dict[str, Node]
         self._node_histories = {} # type: Dict[str, NodeHistory]
 
-        self._update_lock = Lock()
+        self._update_lock = RLock()
 
         self._tick_timer = PerpetualTimer(TICK_INTERVAL, self.doTick)
 
@@ -113,7 +113,6 @@ class NodeEngine:
                 node.update()
         for node in self._nodes.values():
             node.updateModifiers()
-
 
     def _postUpdate(self) -> None:
         self.postUpdateCalled.emit()

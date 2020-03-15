@@ -1,4 +1,4 @@
-from threading import Lock
+from threading import RLock
 from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
@@ -63,7 +63,7 @@ class Node:
         # Is the node working at all?
         self._enabled = kwargs.get("enabled", True)
 
-        self._update_lock = Lock()
+        self._update_lock = RLock()
 
         # A few examples of heat_convection_coefficient all in W/m K:
         # Plastic: 0.1-0.22
