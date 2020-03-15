@@ -61,26 +61,30 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 2000
+            "amount": 2000,
+            "max_storage": 3000
         },
         "water_storage_2":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 2000
+            "amount": 2000,
+            "max_storage": 3000
         },
         "battery_1":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
-            "amount": 0
+            "amount": 0,
+            "max_storage": 1000
         },
 
         "battery_2":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
-            "amount": 0
+            "amount": 0,
+            "max_storage": 2000
         },
 
         "hydroponics_1":
@@ -167,7 +171,8 @@
         {
             "type": "ResourceStorage",
             "resource_type": "dirty_water",
-            "amount": 2000
+            "amount": 2000,
+            "max_storage": 3000
         },
         "water_purifier":
         {
@@ -177,7 +182,8 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 0
+            "amount": 0,
+            "max_storage": 2000
         },
         "waste_generator":
         {
