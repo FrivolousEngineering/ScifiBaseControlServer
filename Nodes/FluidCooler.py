@@ -15,6 +15,9 @@ class FluidCooler(ResourceStorage):
         self._heat_emissivity = 0.9
         self._heat_convection_coefficient = 100
 
+        # A fluid cooler pretends to be a resource storage, but it shouldn't display this.
+        self.additional_properties.remove("amount_stored")
+
         self._weight = 5000
 
         # Also try to pump up resources!
