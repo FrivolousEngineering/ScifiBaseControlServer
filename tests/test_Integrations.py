@@ -46,7 +46,7 @@ def test_restoreFromFile():
     # Add a modifier
     first_key = next(iter(engine_with_storage.getAllNodes()))
     first_node = engine_with_storage.getNodeById(first_key)
-    first_node.addModifier(OverrideDefaultSafetyControlsModifier(5))
+    first_node.addModifier(OverrideDefaultSafetyControlsModifier(13))
 
     for _ in range(0, 10):
         engine_with_storage.doTick()
@@ -60,6 +60,7 @@ def test_restoreFromFile():
         original_node = engine_with_storage.getNodeById(node_id)
         assert restored_node.temperature, original_node.temperature
         assert restored_node.additional_properties == original_node.additional_properties
+
         assert restored_node.getModifiers() == original_node.getModifiers()
 
     assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())

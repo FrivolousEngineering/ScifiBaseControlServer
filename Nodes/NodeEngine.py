@@ -111,6 +111,9 @@ class NodeEngine:
         for node in self._nodes.values():
             if node.enabled:
                 node.update()
+        for node in self._nodes.values():
+            node.updateModifiers()
+
 
     def _postUpdate(self) -> None:
         self.postUpdateCalled.emit()
