@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
 from Nodes.Modifiers.Modifier import Modifier
+from Nodes.Modifiers.ModifierFactory import createModifier
 from Signal import signalemitter, Signal
 
 
@@ -220,6 +221,9 @@ class Node:
         result["temperature"] = self._temperature
         result["custom_description"] = self._custom_description
         result["performace"] = self._performance
+        result["modifiers"] = []
+        for modifier in self._modifiers:
+            result["modifiers"].append(modifier.serialize())
         return result
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -234,6 +238,12 @@ class Node:
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
         self.performance = data.get("performance", 1.)
+
+        for modifier in data.get("modifiers", []):
+            mod = createModifier(modifier["type"])
+            if mod:
+                mod.deserialize(modifier)
+                self.addModifier(mod)
 
     @property
     def weight(self):
@@ -372,12 +382,14 @@ class Node:
         self._emitHeat()
         self._convectiveHeatTransfer()
         self._dealDamageFromHeat()
+
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
 
+    def updateModifiers(self) -> None:
         # Update the timers of the modifiers (and remove them if they have expired)
         for modifier in self._modifiers:
             modifier.update()

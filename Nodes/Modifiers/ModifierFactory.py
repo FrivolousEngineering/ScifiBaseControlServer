@@ -9,10 +9,10 @@ DEFAULT_DURATION = 10
 
 
 def createModifier(modifier: str) -> Optional[Modifier]:
-    if modifier == "BoostCooling":
+    if modifier == "BoostCoolingModifier":
         return BoostCoolingModifier(DEFAULT_DURATION)
-    if modifier == "SafetyOverride":
+    if modifier == "OverrideDefaultSafetyControlsModifier":
         return OverrideDefaultSafetyControlsModifier(DEFAULT_DURATION)
-    if modifier == "RepairOverTime":
+    if modifier == "RepairOverTimeModifier":
         return RepairOverTimeModifier(2, DEFAULT_DURATION)
     return None

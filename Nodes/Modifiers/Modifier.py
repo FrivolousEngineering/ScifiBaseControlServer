@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING, Dict
+from typing import Optional, TYPE_CHECKING, Dict, Any
 
 if TYPE_CHECKING:
     from Node import Node
@@ -24,6 +24,32 @@ class Modifier:
             self._factors = factors
 
         self._name = "Modifier"
+
+    def __eq__(self, other) -> bool:
+        if type(self) != type(other):
+            return False
+
+        if self.duration != other.duration:
+            return False
+
+        if self._modifiers != other._modifiers:
+            return False
+        if self._factors != other._factors:
+            return False
+        return True
+
+    def serialize(self) -> Dict[str, Any]:
+        data = {}  # type: Dict[str, Any]
+        data["type"] = type(self).__name__
+        data["modifiers"] = self._modifiers
+        data["factors"] = self._factors
+        data["duration"] = self._duration
+        return data
+
+    def deserialize(self, data: Dict[str, Any]) -> None:
+        self._modifiers = data["modifiers"]
+        self._factors = data["factors"]
+        self._duration = data["duration"]
 
     @property
     def duration(self):
