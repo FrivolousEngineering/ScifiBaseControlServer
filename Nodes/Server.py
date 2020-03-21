@@ -101,13 +101,25 @@ class Server(Flask):
                 "amount": round(self._nodes.getAmountStored(node_id), 2),  # type: ignore
                 "enabled": self._nodes.isNodeEnabled(node_id),  # type: ignore
                 "active": self._nodes.isNodeActive(node_id), # type: ignore
-                "performance": self._nodes.getPerformance(node_id)}  # type: ignore
+                "performance": self._nodes.getPerformance(node_id),
+                "min_performance": self._nodes.getMinPerformance(node_id),
+                "max_performance": self._nodes.getMaxPerformance(node_id),
+                "max_safe_temperature": self._nodes.getMaxSafeTemperature(node_id),
+                "heat_convection": self._nodes.getHeatConvection(node_id),
+                "heat_emissivity": self._nodes.getHeatEmissivity(node_id)
+                }
         return data
 
     @register_route("/<node_id>/")
     def nodeData(self, node_id: str):
         self._setupDBUS()
-        data = self.getNodeData((node_id))
+        data = self.getNodeData(node_id)
+        data["surface_area"] = self._nodes.getSurfaceArea(node_id)
+        data["max_safe_temperature"] = self._nodes.getMaxSafeTemperature(node_id)
+        data["heat_convection"] = self._nodes.getHeatConvection(node_id)
+        data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)
+        data["description"] = self._nodes.getNodeDescription(node_id)
+
         return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
 
     @register_route("/nodes/")
@@ -131,7 +143,6 @@ class Server(Flask):
         self._nodes.doTick()  # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
-
 
     @register_route("/<node_id>/enabled/", ["PUT", "GET"])
     def nodeEnabled(self, node_id):
@@ -236,15 +247,12 @@ class Server(Flask):
 
     @register_route("/<node_id>/static_properties")
     def getStaticProperties(self, node_id):
+        self._setupDBUS()
         data = {}
         data["surface_area"] = self._nodes.getSurfaceArea(node_id)
-        data["max_safe_temperature"] = self._nodes.getMaxSafeTemperature(node_id)
-        data["heat_convection"] = self._nodes.getHeatConvection(node_id)
-        data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)
         data["description"] = self._nodes.getNodeDescription(node_id)
-        data["min_performance"] = self._nodes.getMinPerformance(node_id)
-        data["max_performance"] = self._nodes.getMaxPerformance(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+
 
     @register_route("/<string:node_id>/<string:additional_property>/")
     def getAdditionalPropertyValue(self, node_id, additional_property):
