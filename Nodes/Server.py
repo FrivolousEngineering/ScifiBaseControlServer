@@ -96,11 +96,13 @@ class Server(Flask):
         return render_template("index.html", data = display_data)
 
     def getNodeData(self, node_id: str):
+        if self._nodes is None:
+            return {}
         data = {"node_id": node_id,
-                "temperature": self._nodes.getNodeTemperature(node_id),  # type: ignore
-                "amount": round(self._nodes.getAmountStored(node_id), 2),  # type: ignore
-                "enabled": self._nodes.isNodeEnabled(node_id),  # type: ignore
-                "active": self._nodes.isNodeActive(node_id), # type: ignore
+                "temperature": self._nodes.getNodeTemperature(node_id),
+                "amount": round(self._nodes.getAmountStored(node_id), 2),
+                "enabled": self._nodes.isNodeEnabled(node_id),
+                "active": self._nodes.isNodeActive(node_id),
                 "performance": self._nodes.getPerformance(node_id),
                 "min_performance": self._nodes.getMinPerformance(node_id),
                 "max_performance": self._nodes.getMaxPerformance(node_id),
@@ -114,11 +116,11 @@ class Server(Flask):
     def nodeData(self, node_id: str):
         self._setupDBUS()
         data = self.getNodeData(node_id)
-        data["surface_area"] = self._nodes.getSurfaceArea(node_id)
-        data["max_safe_temperature"] = self._nodes.getMaxSafeTemperature(node_id)
-        data["heat_convection"] = self._nodes.getHeatConvection(node_id)
-        data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)
-        data["description"] = self._nodes.getNodeDescription(node_id)
+        data["surface_area"] = self._nodes.getSurfaceArea(node_id)  # type: ignore
+        data["max_safe_temperature"] = self._nodes.getMaxSafeTemperature(node_id)  # type: ignore
+        data["heat_convection"] = self._nodes.getHeatConvection(node_id)  # type: ignore
+        data["heat_emissivity"] = self._nodes.getHeatEmissivity(node_id)  # type: ignore
+        data["description"] = self._nodes.getNodeDescription(node_id)  # type: ignore
 
         return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
 
