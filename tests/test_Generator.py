@@ -1,5 +1,8 @@
 from unittest.mock import MagicMock
 import math
+
+import pytest
+
 from Nodes import Generator
 
 
@@ -17,3 +20,9 @@ def test_update():
     resources_produced_this_tick = generator.getResourcesProducedThisTick()
     assert math.isclose(resources_produced_this_tick["energy"], 15)
     assert math.isclose(resources_produced_this_tick["water"], 0)
+
+
+def test_waterGenerator():
+    # Water can't be burned. 
+    with pytest.raises(ValueError):
+        Generator.Generator("omg", fuel_type = "water")
