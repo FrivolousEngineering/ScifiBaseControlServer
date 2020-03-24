@@ -59,11 +59,11 @@ class Modifier:
         self._duration = data["duration"]
 
     @property
-    def duration(self):
+    def duration(self) -> int:
         return self._duration
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     def setNode(self, node: "Node") -> None:
@@ -72,11 +72,11 @@ class Modifier:
     def getNode(self) -> Optional["Node"]:
         return self._node
 
-    def getModifierForProperty(self, property: str) -> float:
-        return self._modifiers.get(property, 0.)
+    def getModifierForProperty(self, prop: str) -> float:
+        return self._modifiers.get(prop, 0.)
 
-    def getFactorForProperty(self, property: str):
-        return self._factors.get(property, 1)
+    def getFactorForProperty(self, prop: str) -> float:
+        return self._factors.get(prop, 1)
 
     def update(self) -> None:
         self._duration -= 1
