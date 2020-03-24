@@ -8,7 +8,14 @@ class Modifier:
     def __init__(self, modifiers: Optional[Dict[str, float]] = None, factors:  Optional[Dict[str, float]] = None,
                  duration: int = 0) -> None:
         """
+        A modifier is a (temporariy) modifier to one or more attributes of a node. Only attributes that have the
+        'modifiable_property' decorator can be modified in this way. Two types of modification can be done. Adding (or
+        subtracting), which is done with modifiers property. You can also use factors, which work as multipliers.
 
+        :param modifiers: Dict with keys to indicate which property it should modify (by adding the value to the
+        original)
+        :param factors: Dict with keys to indicate which property it should modify (by mutliplying the original
+        with the value)
         :param duration: The duration this modifier will active, measured in ticks.
         """
         self._node = None  # type: Optional["Node"]
