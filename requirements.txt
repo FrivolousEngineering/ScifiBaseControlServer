@@ -4,3 +4,4 @@ atomicwrites
 dbus-python
 pylint
 pylint-quotes
+pytest-flask
