@@ -133,12 +133,6 @@ class Server(Flask):
             display_data.append(data)
         return Response(flask.json.dumps(display_data), status=200, mimetype="application/json")
 
-    @register_route("/nodes")
-    def listAllNodeIds(self) -> Response:
-        self._setupDBUS()
-        result = self._nodes.getAllNodeIds()  # type: ignore
-        return Response(flask.json.dumps(result), status=200, mimetype="application/json")
-
     @register_route("/startTick", ["POST"])
     def startTick(self) -> Response:
         self._setupDBUS()
