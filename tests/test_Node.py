@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 from Nodes import Node
+from Nodes.Modifiers import Modifier
 import pytest
 
 from Nodes.Constants import WEIGHT_PER_UNIT
@@ -26,6 +27,29 @@ def createConnection(is_statisfied, reservation_deficiency, pre_give_result = 0)
 def test_getId():
     node = Node.Node("zomg")
     assert node.getId() == "zomg"
+
+
+def test_enabled():
+    node = Node.Node("zomg")
+    assert node.enabled
+
+    node.enabled = False
+    assert not node.enabled
+
+
+def test_repair():
+    node = Node.Node("zomg")
+
+    node._health = 20
+
+    node.repair(100)
+    assert node.health == 100
+
+
+def test_negativeRepair():
+    node = Node.Node("zomg")
+    node.repair(-200)
+    assert node.health == 100
 
 
 def test_addHeat():
@@ -245,3 +269,39 @@ def test_deserialize():
 
     assert node.getId() == "omgzomg"
     assert node.temperature == 200
+
+
+def test_releaseLock():
+    node = Node.Node("BLOOORPP")
+    # We should be allowed to release a lock multiple times, yay!
+    node.releaseUpdateLock()
+    node.releaseUpdateLock()
+
+
+def test_nodePerformance():
+    node = Node.Node("SuchNode!")
+    node._min_performance = 0.5
+    node._max_performance = 1.5
+
+    assert node.performance == 1
+
+    node.performance = 200
+    assert node.performance == 1.5
+
+    node.performance = 0
+    assert node.performance == 0.5
+
+
+def test_modifier():
+    node = Node.Node("ModifiedNode")
+    modifier = MagicMock(spec=Modifier.Modifier)
+
+    node.addModifier(modifier)
+
+    assert modifier in node.getModifiers()
+
+    node.removeModifier(modifier)
+    assert modifier not in node.getModifiers()
+
+    # Removing a modifier that is not in the list should cause no issues
+    node.removeModifier(modifier)
