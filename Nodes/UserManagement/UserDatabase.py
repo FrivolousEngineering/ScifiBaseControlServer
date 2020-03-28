@@ -7,6 +7,10 @@ class UserDatabase:
     def __init__(self) -> None:
         self._users = {}  # type: Dict[str, User]
 
+
+        # DEBUG CODE!
+        self.addUser(User("Admin", "The", "Overlord"))
+
     def addUser(self, user: User) -> None:
         self._users[user.id] = user
 

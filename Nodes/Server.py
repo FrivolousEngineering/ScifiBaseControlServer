@@ -6,6 +6,8 @@ import flask
 from flask import render_template, request
 import json
 
+from Nodes.UserManagement.UserDatabase import UserDatabase
+
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
 import dbus
@@ -45,6 +47,8 @@ class Server(Flask):
         self._bus = dbus.SessionBus()
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
+
+        self._user_database = UserDatabase()
 
         self._nodes = None
 
@@ -106,6 +110,10 @@ class Server(Flask):
                 "heat_emissivity": self._nodes.getHeatEmissivity(node_id)
                 }
         return data
+
+    @register_route("/users/")
+    def listAllUsers(self):
+        return Response(flask.json.dumps([user.id for user in self._user_database.getAllUsers()]), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/")
     def nodeData(self, node_id: str):
