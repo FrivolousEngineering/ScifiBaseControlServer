@@ -1,21 +1,31 @@
 
 import dbus
 import dbus.service
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from Nodes.Modifiers.ModifierFactory import createModifier
 from Nodes.NodeEngine import NodeEngine
 
 
 class DBusService(dbus.service.Object):
-    def __init__(self, engine: NodeEngine) -> None:
-        self._bus = dbus.SessionBus()
-        super().__init__(
-            bus_name = dbus.service.BusName("com.frivengi.nodes", self._bus),
-            object_path = "/com/frivengi/nodes"
-        )
+    def __init__(self, engine: NodeEngine, session_bus: Optional[dbus.SessionBus] = None, bus_name: Optional[dbus.service.BusName] = None) -> None:
 
+        if session_bus is None:
+            self._bus = dbus.SessionBus()
+        else:
+            self._bus = session_bus
+
+        if bus_name is None:
+            self._bus_name = dbus.service.BusName("com.frivengi.nodes", self._bus)
+        else:
+            self._bus_name = bus_name
+
+        self._object_path = "/com/frivengi/nodes"
         self._node_engine = engine
+        super().__init__(
+            bus_name=self._bus_name,
+            object_path=self._object_path
+        )
 
     @dbus.service.method("com.frivengi.nodes", in_signature="ss")
     def addModifierToNode(self, node_id: str, modifier_type: str) -> None:
