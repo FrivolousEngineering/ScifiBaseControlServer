@@ -1,7 +1,7 @@
 
 import dbus
 import dbus.service
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 from Nodes.Modifiers.ModifierFactory import createModifier
 from Nodes.NodeEngine import NodeEngine
@@ -9,7 +9,17 @@ from Nodes.NodeEngine import NodeEngine
 
 class DBusService(dbus.service.Object):
     def __init__(self, engine: NodeEngine, session_bus: Optional[dbus.SessionBus] = None, bus_name: Optional[dbus.service.BusName] = None) -> None:
+        """
+        The DBUS Service exposes a large number of properties from the NodeEngine to DBUS.
 
+        This enables other services (A web service) to poll for this data. Although this does create some overhead, it
+        has the major advantage that it separates the systems (So if one of the services breaks, it can be re-spawned
+        without breaking the others)
+
+        :param engine: The engine this service is listening to
+        :param session_bus:
+        :param bus_name:
+        """
         if session_bus is None:
             self._bus = dbus.SessionBus()
         else:
@@ -35,7 +45,13 @@ class DBusService(dbus.service.Object):
             node.addModifier(modifier)
 
     @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
-    def getActiveModifiers(self, node_id):
+    def getActiveModifiers(self, node_id: str) -> List[Dict[str, Union[str, int]]]:
+        """
+        Get the modifiers that are currently attached to this node.
+        Due to constraints of DBUS, this only provides you with some subset of the data in dict form.
+        :param node_id: ID of the node to get.
+        :return: List of dicts that contain the name and duration of the found modifiers.
+        """
         node = self._node_engine.getNodeById(node_id)
         if not node:
             return []
@@ -64,38 +80,38 @@ class DBusService(dbus.service.Object):
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getSurfaceArea(self, node_id):
+    def getSurfaceArea(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.surface_area
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getHeatConvectionCoefficient(self, node_id):
+    def getHeatConvectionCoefficient(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.heat_convection_coefficient
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getMaxSafeTemperature(self, node_id):
+    def getMaxSafeTemperature(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.max_safe_temperature
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="sd")
-    def setPerformance(self, node_id, performance):
+    def setPerformance(self, node_id: str, performance: float) -> None:
         node = self._node_engine.getNodeById(node_id)
         if node:
             node.performance = performance
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getPerformance(self, node_id):
+    def getPerformance(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.performance
-        return 0
+        return 0.
 
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def isNodeActive(self, node_id: str) -> bool:
@@ -112,14 +128,14 @@ class DBusService(dbus.service.Object):
         return []
 
     @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
-    def getResourcesGainedHistory(self, node_id: str):
+    def getResourcesGainedHistory(self, node_id: str) -> Dict:
         history = self._node_engine.getNodeHistoryById(node_id)
         if history:
             return dbus.Dictionary(history.getResourcesGainedHistory(), signature='sv')
         return {}
 
     @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
-    def getResourcesProducedHistory(self, node_id: str):
+    def getResourcesProducedHistory(self, node_id: str) -> Dict:
         history = self._node_engine.getNodeHistoryById(node_id)
         if history:
             return dbus.Dictionary(history.getResourcesProducedHistory(), signature='sv')
@@ -213,7 +229,7 @@ class DBusService(dbus.service.Object):
         return []
 
     @dbus.service.method("com.frivengi.nodes")
-    def checkAlive(self):
+    def checkAlive(self) -> None:
         """
         Yes, this serves a purpose. As the name implies, this is used to check if this service is still alive.
         It doesn't actually need to return an answer, since if the service isn't there, we get an exception.
@@ -222,14 +238,14 @@ class DBusService(dbus.service.Object):
         return
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getMinPerformance(self, node_id):
+    def getMinPerformance(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.min_performance
         return 1.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getMaxPerformance(self, node_id):
+    def getMaxPerformance(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.max_performance
