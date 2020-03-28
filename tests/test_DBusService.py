@@ -43,7 +43,7 @@ def DBus(session_bus, bus_name, node_engine):
 
 
 def test_getUnknownNodeTemperature(DBus):
-    assert DBus.getNodeTemperature("zomg") == -9000
+    assert DBus.getTemperature("zomg") == -9000
 
 @pytest.mark.parametrize("attribute, value", [("temperature", 2000),
                                               ("description", "omgzomg")])
@@ -53,7 +53,7 @@ def test_getNodeTemperature(DBus, node, attribute, value):
     func_name = list(attribute)
     func_name[0] = func_name[0].capitalize()
     func_name = "".join(func_name)
-    func_name = "getNode" + func_name
+    func_name = "get" + func_name
 
     with patch.dict(node_dict, {"zomg": node}):
         assert getattr(DBus, func_name)("zomg") == value

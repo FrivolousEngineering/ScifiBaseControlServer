@@ -94,7 +94,7 @@ class Server(Flask):
         if self._nodes is None:
             return {}
         data = {"node_id": node_id,
-                "temperature": self._nodes.getNodeTemperature(node_id),
+                "temperature": self._nodes.getTemperature(node_id),
                 "amount": round(self._nodes.getAmountStored(node_id), 2),
                 "enabled": self._nodes.isNodeEnabled(node_id),
                 "active": self._nodes.isNodeActive(node_id),
@@ -112,7 +112,7 @@ class Server(Flask):
         self._setupDBUS()
         data = self.getNodeData(node_id)
         data["surface_area"] = self._nodes.getSurfaceArea(node_id)  # type: ignore
-        data["description"] = self._nodes.getNodeDescription(node_id)  # type: ignore
+        data["description"] = self._nodes.getDescription(node_id)  # type: ignore
 
         return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
 
@@ -154,7 +154,7 @@ class Server(Flask):
     @register_route("/<node_id>/temperature/history/")
     def temperatureHistory(self, node_id):
         self._setupDBUS()
-        result = self._nodes.getNodeTemperatureHistory(node_id)  # type: ignore
+        result = self._nodes.getTemperatureHistory(node_id)  # type: ignore
         show_last = request.args.get("showLast")
         if show_last is not None and show_last:
             try:
@@ -166,7 +166,7 @@ class Server(Flask):
     @register_route("/<node_id>/temperature/")
     def temperature(self, node_id):
         self._setupDBUS()
-        result = self._nodes.getNodeTemperature(node_id)  # type: ignore
+        result = self._nodes.getTemperature(node_id)  # type: ignore
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/<prop>/history/")
@@ -195,7 +195,7 @@ class Server(Flask):
         for prop in self._nodes.getAdditionalProperties(node_id):
             all_property_histories[prop] = self._nodes.getAdditionalPropertyHistory(node_id, prop)
 
-        all_property_histories["temperature"] = self._nodes.getNodeTemperatureHistory(node_id)
+        all_property_histories["temperature"] = self._nodes.getTemperatureHistory(node_id)
 
         resources_gained = self._nodes.getResourcesGainedHistory(node_id)
         for key in resources_gained:
@@ -238,7 +238,7 @@ class Server(Flask):
         self._setupDBUS()
         data = {}
         data["surface_area"] = self._nodes.getSurfaceArea(node_id)
-        data["description"] = self._nodes.getNodeDescription(node_id)
+        data["description"] = self._nodes.getDescription(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
 

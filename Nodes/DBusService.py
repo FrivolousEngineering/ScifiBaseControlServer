@@ -43,14 +43,14 @@ class DBusService(dbus.service.Object):
         return [{"name": modifier.name, "duration": modifier.duration} for modifier in node.getModifiers()]
 
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
-    def getNodeTemperature(self, node_id: str) -> float:
+    def getTemperature(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.temperature
         return -9000.
 
     @dbus.service.method("com.frivengi.nodes", out_signature="s", in_signature="s")
-    def getNodeDescription(self, node_id: str) -> str:
+    def getDescription(self, node_id: str) -> str:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.description
@@ -105,7 +105,7 @@ class DBusService(dbus.service.Object):
         return False
 
     @dbus.service.method("com.frivengi.nodes", out_signature="ad", in_signature="s")
-    def getNodeTemperatureHistory(self, node_id: str) -> List[float]:
+    def getTemperatureHistory(self, node_id: str) -> List[float]:
         history = self._node_engine.getNodeHistoryById(node_id)
         if history:
             return history.getTemperatureHistory()
