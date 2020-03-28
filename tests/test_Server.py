@@ -38,7 +38,7 @@ def app():
     mocked_dbus.getAmountStored = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="amount"))
     mocked_dbus.getMaxSafeTemperature = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="max_safe_temperature"))
     mocked_dbus.getHeatEmissivity = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_emissivity"))
-    mocked_dbus.getHeatConvection = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_convection"))
+    mocked_dbus.getHeatConvectionCoefficient = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_convection"))
     mocked_dbus.isNodeActive = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="active"))
     return app
 

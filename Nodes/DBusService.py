@@ -71,7 +71,7 @@ class DBusService(dbus.service.Object):
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getHeatConvection(self, node_id):
+    def getHeatConvectionCoefficient(self, node_id):
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.heat_convection_coefficient

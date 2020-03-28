@@ -102,7 +102,7 @@ class Server(Flask):
                 "min_performance": self._nodes.getMinPerformance(node_id),
                 "max_performance": self._nodes.getMaxPerformance(node_id),
                 "max_safe_temperature": self._nodes.getMaxSafeTemperature(node_id),
-                "heat_convection": self._nodes.getHeatConvection(node_id),
+                "heat_convection": self._nodes.getHeatConvectionCoefficient(node_id),
                 "heat_emissivity": self._nodes.getHeatEmissivity(node_id)
                 }
         return data
