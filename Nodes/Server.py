@@ -16,7 +16,12 @@ import dbus.exceptions
 
 
 def register_route(route: Optional[str] = None, accepted_methods: Optional[List[str]] = None):
-    # simple decorator for class based views
+    """
+    Simple decorator for class based views. It's probably hacking a bit around the default stuff of flask...
+    :param route: url it needs to listen to.
+    :param accepted_methods: What methods (GET, PUT, SET) are accepted?
+    :return:
+    """
     def inner(function):
         result_dict = {"func": function}
         if accepted_methods is None:
@@ -29,6 +34,11 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
 
 
 def requires_user_ability(abilities: Union[str, List[str]]):
+    """
+    Decorator that marks a given endpoint as needing an ability (A certain right, which a user gets from a role!)
+    :param abilities:
+    :return:
+    """
     def wrapper(func):
         @wraps(func)
         def inner(*args, **kwargs):
@@ -38,6 +48,7 @@ def requires_user_ability(abilities: Union[str, List[str]]):
             user = User.query.filter_by(id = user_id).first()
             if not user:
                 raise Forbidden("User is unknown")
+
             if isinstance(abilities, str):
                 desired_abilities = [Ability.query.filter_by(name = abilities).first()]
             else:
@@ -78,11 +89,13 @@ class Server(Flask):
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
 
+        # This is needed for the sqlalchemy database
         self.teardown_appcontext(self._shutdownSession)
 
         self._nodes = None
 
-    def _shutdownSession(self, _):
+    @staticmethod
+    def _shutdownSession(exception):
         db_session.remove()
 
     def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
@@ -292,7 +305,6 @@ class Server(Flask):
         data["surface_area"] = self._nodes.getSurfaceArea(node_id)
         data["description"] = self._nodes.getDescription(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
-
 
     @register_route("/<string:node_id>/<string:additional_property>/")
     def getAdditionalPropertyValue(self, node_id, additional_property):
