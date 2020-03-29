@@ -6,8 +6,8 @@ import flask
 from flask import render_template, request
 import json
 
-from Nodes.Database import db_session
-from Nodes.models import User, Ability
+from Server.Database import db_session
+from Server.models import User, Ability
 from werkzeug.exceptions import Forbidden, Unauthorized
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 

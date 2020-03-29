@@ -1,8 +1,8 @@
-from Nodes.Database import init_db
+from Server.Database import init_db
 
 
-from Nodes.Database import db_session
-from Nodes.models import User, Role, Ability
+from Server.Database import db_session
+from Server.models import User, Role, Ability
 
 init_db()
 u = User('admin', 'admin@localhost')

@@ -23,6 +23,7 @@ jobs:
     - name: Run mypy
       run: |
         python -m mypy Nodes --disallow-untyped-calls --ignore-missing-imports
+	python -m mypy Server --disallow-untyped-calls --ignore-missing-imports
     - name: Run pytest
       run: |
         python -m pip install pytest
