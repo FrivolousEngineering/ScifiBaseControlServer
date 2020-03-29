@@ -1,4 +1,4 @@
-from typing import Optional, cast, Any, List, Dict
+from typing import Optional, cast, Any, List, Dict, Union
 from functools import wraps
 from flask import Flask, Response
 from functools import partial
@@ -28,7 +28,7 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
     return inner
 
 
-def requires_user_ability(ability: str):
+def requires_user_ability(abilities: Union[str, List[str]]):
     def wrapper(func):
         @wraps(func)
         def inner(*args, **kwargs):
@@ -38,13 +38,18 @@ def requires_user_ability(ability: str):
             user = User.query.filter_by(id = user_id).first()
             if not user:
                 raise Forbidden("User is unknown")
-            desired_ability = Ability.query.filter_by(name = ability).first()
+            if isinstance(abilities, str):
+                desired_abilities = [Ability.query.filter_by(name = abilities).first()]
+            else:
+                desired_abilities = Ability.query.filter(Ability.name.in_(abilities)).all()
+
             user_abilities = []
             for role in user.roles:
                 user_abilities += role.abilities
 
-            if desired_ability in user_abilities:
-                return func(*args, **kwargs)
+            for desired_ability in desired_abilities:
+                if desired_ability in user_abilities:
+                    return func(*args, **kwargs)
 
             raise Forbidden("User is not allowed to do this!")
 
@@ -72,7 +77,6 @@ class Server(Flask):
         self._bus = dbus.SessionBus()
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
-
 
         self.teardown_appcontext(self._shutdownSession)
 
@@ -144,7 +148,6 @@ class Server(Flask):
     @requires_user_ability("see_users")
     def listAllUsers(self):
         all_users = User.query.all()
-        print([user.roles for user in all_users])
         return Response(flask.json.dumps([user.name for user in all_users]), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/")
