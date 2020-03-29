@@ -6,7 +6,6 @@ import flask
 from flask import render_template, request
 import json
 
-from Nodes.UserManagement.UserDatabase import UserDatabase
 from Nodes.Database import db_session
 from Nodes.models import User, Ability
 from werkzeug.exceptions import Forbidden, Unauthorized
@@ -74,7 +73,6 @@ class Server(Flask):
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
 
-        self._user_database = UserDatabase()
 
         self.teardown_appcontext(self._shutdownSession)
 
