@@ -15,7 +15,7 @@ role_ability_table = Table('role_ability', Base.metadata,
 )
 
 
-class User(Base):
+class User(Base):  # type: ignore
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
 
@@ -34,7 +34,7 @@ class User(Base):
         return '<User %r>' % (self.name)
 
 
-class Ability(Base):
+class Ability(Base): # type: ignore
     __tablename__ = 'ability'
     id = Column(Integer, primary_key=True)
     name = Column(String(12), unique=True)
@@ -49,7 +49,7 @@ class Ability(Base):
       return self.name
 
 
-class Role(Base):
+class Role(Base): # type: ignore
     __tablename__ = 'role'
 
     id = Column(Integer, primary_key=True)

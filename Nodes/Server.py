@@ -29,7 +29,7 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
     return inner
 
 
-def requires_user_ability(ability):
+def requires_user_ability(ability: str):
     def wrapper(func):
         @wraps(func)
         def inner(*args, **kwargs):
