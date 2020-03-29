@@ -179,19 +179,28 @@ class Server(Flask):
     def nodeEnabled(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-            self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
-            return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+            return self.setNodeEnabled(node_id)
+
         return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
+
+    def setNodeEnabled(self, node_id):
+        self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/performance/", ["PUT", "GET"])
     def nodePerformance(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-            if "performance" in request.form:
-                new_performance = request.form["performance"]
-            else:
-                new_performance = json.loads(request.data)["performance"]
-            self._nodes.setPerformance(node_id, float(new_performance))
+            return self.setNodePerformance(node_id)
+
+        return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
+
+    def setNodePerformance(self, node_id):
+        if "performance" in request.form:
+            new_performance = request.form["performance"]
+        else:
+            new_performance = json.loads(request.data)["performance"]
+        self._nodes.setPerformance(node_id, float(new_performance))
         return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/temperature/history/")
