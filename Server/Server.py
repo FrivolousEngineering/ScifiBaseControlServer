@@ -1,13 +1,14 @@
-from typing import Optional, cast, Any, List, Dict
-
+from typing import Optional, cast, Any, List, Dict, Union
+from functools import wraps
 from flask import Flask, Response
 from functools import partial
 import flask
 from flask import render_template, request
 import json
 
-from Nodes.UserManagement.UserDatabase import UserDatabase
-
+from Server.Database import db_session
+from Server.models import User, Ability
+from werkzeug.exceptions import Forbidden, Unauthorized
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
 import dbus
@@ -15,7 +16,12 @@ import dbus.exceptions
 
 
 def register_route(route: Optional[str] = None, accepted_methods: Optional[List[str]] = None):
-    # simple decorator for class based views
+    """
+    Simple decorator for class based views. It's probably hacking a bit around the default stuff of flask...
+    :param route: url it needs to listen to.
+    :param accepted_methods: What methods (GET, PUT, SET) are accepted?
+    :return:
+    """
     def inner(function):
         result_dict = {"func": function}
         if accepted_methods is None:
@@ -25,6 +31,41 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
         _REGISTERED_ROUTES[route] = result_dict
         return function
     return inner
+
+
+def requires_user_ability(abilities: Union[str, List[str]]):
+    """
+    Decorator that marks a given endpoint as needing an ability (A certain right, which a user gets from a role!)
+    :param abilities:
+    :return:
+    """
+    def wrapper(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            user_id = request.args.get("userID")
+            if not user_id:
+                raise Unauthorized("You need to provide some credentials first!")
+            user = User.query.filter_by(id = user_id).first()
+            if not user:
+                raise Forbidden("User is unknown")
+
+            if isinstance(abilities, str):
+                desired_abilities = [Ability.query.filter_by(name = abilities).first()]
+            else:
+                desired_abilities = Ability.query.filter(Ability.name.in_(abilities)).all()
+
+            user_abilities = []
+            for role in user.roles:
+                user_abilities += role.abilities
+
+            for desired_ability in desired_abilities:
+                if desired_ability in user_abilities:
+                    return func(*args, **kwargs)
+
+            raise Forbidden("User is not allowed to do this!")
+
+        return inner
+    return wrapper
 
 
 class Server(Flask):
@@ -48,9 +89,14 @@ class Server(Flask):
 
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
 
-        self._user_database = UserDatabase()
+        # This is needed for the sqlalchemy database
+        self.teardown_appcontext(self._shutdownSession)
 
         self._nodes = None
+
+    @staticmethod
+    def _shutdownSession(exception):
+        db_session.remove()
 
     def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
         self._nodes = None
@@ -112,8 +158,10 @@ class Server(Flask):
         return data
 
     @register_route("/users/")
+    @requires_user_ability("see_users")
     def listAllUsers(self):
-        return Response(flask.json.dumps([user.id for user in self._user_database.getAllUsers()]), status=200, mimetype="application/json")
+        all_users = User.query.all()
+        return Response(flask.json.dumps([user.name for user in all_users]), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/")
     def nodeData(self, node_id: str):
@@ -144,19 +192,28 @@ class Server(Flask):
     def nodeEnabled(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-            self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
-            return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+            return self.setNodeEnabled(node_id)
+
         return Response(flask.json.dumps(self._nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
+
+    def setNodeEnabled(self, node_id):
+        self._nodes.setNodeEnabled(node_id, not self._nodes.isNodeEnabled(node_id))
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/performance/", ["PUT", "GET"])
     def nodePerformance(self, node_id):
         self._setupDBUS()
         if request.method == "PUT":
-            if "performance" in request.form:
-                new_performance = request.form["performance"]
-            else:
-                new_performance = json.loads(request.data)["performance"]
-            self._nodes.setPerformance(node_id, float(new_performance))
+            return self.setNodePerformance(node_id)
+
+        return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
+
+    def setNodePerformance(self, node_id):
+        if "performance" in request.form:
+            new_performance = request.form["performance"]
+        else:
+            new_performance = json.loads(request.data)["performance"]
+        self._nodes.setPerformance(node_id, float(new_performance))
         return Response(flask.json.dumps(self._nodes.getPerformance(node_id)), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/temperature/history/")
@@ -248,7 +305,6 @@ class Server(Flask):
         data["surface_area"] = self._nodes.getSurfaceArea(node_id)
         data["description"] = self._nodes.getDescription(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
-
 
     @register_route("/<string:node_id>/<string:additional_property>/")
     def getAdditionalPropertyValue(self, node_id, additional_property):

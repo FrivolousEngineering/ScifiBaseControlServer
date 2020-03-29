@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from Nodes.Server import Server
+from Server.Server import Server
 
 
 default_property_dict = {}

@@ -5,3 +5,4 @@ dbus-python
 pylint
 pylint-quotes
 pytest-flask
+SQLAlchemy
