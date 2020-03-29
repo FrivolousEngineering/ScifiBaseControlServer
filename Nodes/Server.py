@@ -7,6 +7,8 @@ from flask import render_template, request
 import json
 
 from Nodes.UserManagement.UserDatabase import UserDatabase
+from Nodes.Database import db_session
+from Nodes.models import User
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
@@ -50,7 +52,12 @@ class Server(Flask):
 
         self._user_database = UserDatabase()
 
+        self.teardown_appcontext(self._shutdownSession)
+
         self._nodes = None
+
+    def _shutdownSession(self, _):
+        db_session.remove()
 
     def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
         self._nodes = None
@@ -113,7 +120,8 @@ class Server(Flask):
 
     @register_route("/users/")
     def listAllUsers(self):
-        return Response(flask.json.dumps([user.id for user in self._user_database.getAllUsers()]), status=200, mimetype="application/json")
+        all_users = User.query.all()
+        return Response(flask.json.dumps([user.name for user in all_users]), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/")
     def nodeData(self, node_id: str):
