@@ -1,5 +1,5 @@
 from typing import Optional, cast, Any, List, Dict
-
+from functools import wraps
 from flask import Flask, Response
 from functools import partial
 import flask
@@ -8,8 +8,8 @@ import json
 
 from Nodes.UserManagement.UserDatabase import UserDatabase
 from Nodes.Database import db_session
-from Nodes.models import User
-
+from Nodes.models import User, Ability
+from werkzeug.exceptions import Forbidden, Unauthorized
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
 import dbus
@@ -27,6 +27,30 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
         _REGISTERED_ROUTES[route] = result_dict
         return function
     return inner
+
+
+def requires_user_ability(ability):
+    def wrapper(func):
+        @wraps(func)
+        def inner(*args, **kwargs):
+            user_id = request.args.get("userID")
+            if not user_id:
+                raise Unauthorized("You need to provide some credentials first!")
+            user = User.query.filter_by(id = user_id).first()
+            if not user:
+                raise Forbidden("User is unknown")
+            desired_ability = Ability.query.filter_by(name = ability).first()
+            user_abilities = []
+            for role in user.roles:
+                user_abilities += role.abilities
+
+            if desired_ability in user_abilities:
+                return func(*args, **kwargs)
+
+            raise Forbidden("User is not allowed to do this!")
+
+        return inner
+    return wrapper
 
 
 class Server(Flask):
@@ -119,8 +143,10 @@ class Server(Flask):
         return data
 
     @register_route("/users/")
+    @requires_user_ability("see_users")
     def listAllUsers(self):
         all_users = User.query.all()
+        print([user.roles for user in all_users])
         return Response(flask.json.dumps([user.name for user in all_users]), status=200, mimetype="application/json")
 
     @register_route("/<node_id>/")
