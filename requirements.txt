@@ -5,5 +5,3 @@ dbus-python
 pylint
 pylint-quotes
 pytest-flask
-flask-login
-flask-permissions
