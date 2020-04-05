@@ -1,6 +1,8 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+from Server.NodeBlueprint import node_blueprint
 from Server.Server import Server
 
 
@@ -16,6 +18,7 @@ def getNodeAttribute(*args, **kwargs):
 def app():
     with patch("dbus.SessionBus"):
         app = Server()
+        app.register_blueprint(node_blueprint)
     mocked_dbus = MagicMock()
     app._nodes = mocked_dbus
     app.getMockedClient = MagicMock(return_value = mocked_dbus)
