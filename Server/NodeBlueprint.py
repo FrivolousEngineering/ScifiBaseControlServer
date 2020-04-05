@@ -1,27 +1,51 @@
 from flask import Blueprint, Response, request
 import flask
 from flask import current_app as app
-from flask_restplus import Resource, Api, apidoc, fields
+from flask_restplus import Resource, Api, apidoc, fields, Namespace, Model
 import json
 
 
 node_blueprint = Blueprint('node', __name__)
 api = Api(node_blueprint, description="Node data. Yay")
+node_namespace = Namespace("node", description = "omgzomgbbq")
+
+api.add_namespace(node_namespace)
+
+connection = api.model("connection", {
+    "target": fields.String,
+    "origin": fields.String,
+    "resource_type": fields.String
+}
+)
+
+node = api.model("node", {
+    "node_id": fields.String,
+    "temperature": fields.Float,
+    "amount": fields.Float,
+    "performance": fields.Float,
+    "min_performance": fields.Float,
+    "max_performance": fields.Float,
+    "max_safe_temperature": fields.Float,
+    "heat_convection": fields.Float,
+    "heat_emissivity": fields.Float
+})
 
 
-@node_blueprint.route("/<node_id>/")
-def nodeData(node_id: str):
-    nodes = app.getDBusObject()
-    data = getNodeData(node_id)
-    data["surface_area"] = nodes.getSurfaceArea(node_id)  # type: ignore
-    data["description"] = nodes.getDescription(node_id)  # type: ignore
+@node_namespace.route("/<node_id>/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class Node(Resource):
+    @api.response(200, "success", node)
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        data = getNodeData(node_id)
+        data["surface_area"] = nodes.getSurfaceArea(node_id)  # type: ignore
+        data["description"] = nodes.getDescription(node_id)  # type: ignore
+        return data
 
-    return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
-
-@api.route('/<string:node_id>/enabled/')
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route('/<string:node_id>/enabled/')
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Enabled(Resource):
-    @api.response(200, 'Success', fields.Boolean)
+    @api.response(200, 'Success', fields.Boolean())
     def get(self, node_id):
         nodes = app.getDBusObject()
 
@@ -35,8 +59,8 @@ class Enabled(Resource):
 performance_parser = api.parser()
 performance_parser.add_argument('performance', type=float, help='New performance', location='form')
 
-@api.route('/<string:node_id>/performance/')
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route('/<string:node_id>/performance/')
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Performance(Resource):
     @api.response(200, 'Success', fields.Float(default = 1))
     def get(self, node_id):
@@ -55,14 +79,13 @@ class Performance(Resource):
         return nodes.getPerformance(node_id)
 
 
-
 @node_blueprint.route('/doc/')
 def swagger_ui():
     return apidoc.ui_for(api)
 
 
-@api.route("/<node_id>/temperature/history/")
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route("/<node_id>/temperature/history/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class TemperatureHistory(Resource):
     @api.response(200, "success", fields.List(fields.Float))
     def get(self, node_id):
@@ -77,8 +100,8 @@ class TemperatureHistory(Resource):
         return result
 
 
-@api.route("/<node_id>/temperature/")
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route("/<node_id>/temperature/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Temperature(Resource):
     @api.response(200, 'Success', fields.Float)
     def get(self, node_id):
@@ -86,16 +109,16 @@ class Temperature(Resource):
         return nodes.getTemperature(node_id)
 
 
-@api.route("/<node_id>/<prop>/history/")
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route("/<node_id>/<prop>/history/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class AdditionalPropertyHistory(Resource):
     def get(self, node_id, prop):
         nodes = app.getDBusObject()
         return nodes.getAdditionalPropertyHistory(node_id, prop)
 
 
-@api.route("/<node_id>/additional_properties/")
-@api.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.route("/<node_id>/additional_properties/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class AdditionalProperties(Resource):
     @api.response(200, "success", fields.List(fields.Float))
     def get(self, node_id):
@@ -108,82 +131,88 @@ class AdditionalProperties(Resource):
             result[prop]["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
         return result
 
+@node_namespace.route("/<node_id>/all_property_chart_data/")
+class AllProperties(Resource):
+    def get(self, node_id):
+        show_last = request.args.get("showLast")
 
-@node_blueprint.route("/<node_id>/all_property_chart_data/")
-def getAllProperties(node_id):
-    show_last = request.args.get("showLast")
+        nodes = app.getDBusObject()
+        all_property_histories = {}
+        for prop in nodes.getAdditionalProperties(node_id):
+            all_property_histories[prop] = nodes.getAdditionalPropertyHistory(node_id, prop)
 
-    nodes = app.getDBusObject()
-    all_property_histories = {}
-    for prop in nodes.getAdditionalProperties(node_id):
-        all_property_histories[prop] = nodes.getAdditionalPropertyHistory(node_id, prop)
+        all_property_histories["temperature"] = nodes.getTemperatureHistory(node_id)
 
-    all_property_histories["temperature"] = nodes.getTemperatureHistory(node_id)
+        resources_gained = nodes.getResourcesGainedHistory(node_id)
+        for key in resources_gained:
+            all_property_histories["%s received" % key] = resources_gained[key]
 
-    resources_gained = nodes.getResourcesGainedHistory(node_id)
-    for key in resources_gained:
-        all_property_histories["%s received" % key] = resources_gained[key]
+        resources_produced = nodes.getResourcesProducedHistory(node_id)
+        for key in resources_produced:
+            all_property_histories["%s produced" % key] = resources_produced[str(key)]
 
-    resources_produced = nodes.getResourcesProducedHistory(node_id)
-    for key in resources_produced:
-        all_property_histories["%s produced" % key] = resources_produced[str(key)]
+        for key in all_property_histories:
+            if show_last is not None and show_last:
+                try:
+                    all_property_histories[key] = all_property_histories[key][-int(show_last):]
+                except ValueError:
+                    pass
+        return all_property_histories
 
-    for key in all_property_histories:
-        if show_last is not None and show_last:
-            try:
-                all_property_histories[key] = all_property_histories[key][-int(show_last):]
-            except ValueError:
-                pass
-    return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
-
-
-@node_blueprint.route("/<node_id>/connections/incoming/")
-def getIncomingConnections(node_id):
-    nodes = app.getDBusObject()
-
-    data = nodes.getIncomingConnections(node_id)
-    return Response(flask.json.dumps(data), status = 200, mimetype ="application/json")
-
-
-@node_blueprint.route("/<node_id>/connections/outgoing/")
-def getOutgoingConnections(node_id):
-    nodes = app.getDBusObject()
-
-    data = nodes.getOutgoingConnections(node_id)
-    return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+@node_namespace.route("/<node_id>/connections/incoming/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class IncomingConnections(Resource):
+    @api.response(200, 'Success', [connection])
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getIncomingConnections(node_id)
 
 
-@node_blueprint.route("/<node_id>/modifiers/")
-def getModifiers(node_id):
-    nodes = app.getDBusObject()
-    data = nodes.getActiveModifiers(node_id)
-    return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+@node_namespace.route("/<node_id>/connections/outgoing/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class OutgoingConnections(Resource):
+    @api.response(200, 'Success', [connection])
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getOutgoingConnections(node_id)
 
 
-@node_blueprint.route("/<node_id>/static_properties/")
-def getStaticProperties(node_id):
-    nodes = app.getDBusObject()
-    data = {}
-    data["surface_area"] = nodes.getSurfaceArea(node_id)
-    data["description"] = nodes.getDescription(node_id)
-    return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+@node_namespace.route("/<node_id>/modifiers/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class Modifiers(Resource):
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getActiveModifiers(node_id)
 
 
-@node_blueprint.route("/<string:node_id>/<string:additional_property>/")
-def getAdditionalPropertyValue(node_id, additional_property):
-    nodes = app.getDBusObject()
-    data = nodes.getAdditionalPropertyValue(node_id, additional_property)
-    return Response(flask.json.dumps(data), status=200, mimetype="application/json")
+@node_namespace.route("/<node_id>/static_properties/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class StaticProperties(Resource):
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        data = {}
+        data["surface_area"] = nodes.getSurfaceArea(node_id)
+        data["description"] = nodes.getDescription(node_id)
+        return data
+
+@node_namespace.route("/<string:node_id>/<string:additional_property>/")
+class AdditionalProperty(Resource):
+    def get(self, node_id, additional_property):
+        nodes = app.getDBusObject()
+        data = nodes.getAdditionalPropertyValue(node_id, additional_property)
+        return data
 
 
-@node_blueprint.route("/nodes/")
-def getAllNodeData():
-    nodes = app.getDBusObject()
-    display_data = []
-    for node_id in nodes.getAllNodeIds():  # type: ignore
-        data = getNodeData(node_id)
-        display_data.append(data)
-    return Response(flask.json.dumps(display_data), status=200, mimetype="application/json")
+@node_namespace.route("/")
+class Nodes(Resource):
+    @api.response(200, "Sucess", fields.List(fields.Nested(node)))
+    def get(self):
+        nodes = app.getDBusObject()
+        display_data = []
+        for node_id in nodes.getAllNodeIds():  # type: ignore
+            data = getNodeData(node_id)
+            display_data.append(data)
+        return display_data
 
 
 def getNodeData(node_id: str):
