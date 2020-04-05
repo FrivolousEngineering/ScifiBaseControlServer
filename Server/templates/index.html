@@ -148,7 +148,7 @@ th {
     function drawChart(node_id) {
 
         var jsonData = $.ajax({
-            url: '/' + node_id + '/all_property_chart_data',
+            url: '/' + node_id + '/all_property_chart_data/',
             dataType: 'json',
         }).done(function(results) {
 

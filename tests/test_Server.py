@@ -45,13 +45,13 @@ def app():
 
 def test_getStaticProperties(client):
     with patch.dict(default_property_dict, {"surface_area": 20, "description": 300}):
-        response = client.get("/default/static_properties")
+        response = client.get("/default/static_properties/")
     assert response.data == b'{"description": 300, "surface_area": 20}'
 
 
 def test_getModifiers(client):
     with patch.dict(default_property_dict, {"modifiers": 90001}):
-        response = client.get("/default/modifiers")
+        response = client.get("/default/modifiers/")
     assert response.data == b'90001'
 
 
@@ -63,13 +63,13 @@ def test_temperature(client):
 
 def test_getIncommingConnections(client):
     with patch.dict(default_property_dict, {"incoming_connections": ["100", 300]}):
-        response = client.get("/default/connections/incoming")
+        response = client.get("/default/connections/incoming/")
     assert response.data == b'["100", 300]'
 
 
 def test_getOutgoingConnections(client):
     with patch.dict(default_property_dict, {"outgoing_connections": [300, "100"]}):
-        response = client.get("/default/connections/outgoing")
+        response = client.get("/default/connections/outgoing/")
     assert response.data == b'[300, "100"]'
 
 
@@ -120,7 +120,7 @@ def test_getEnabled(client):
 
 def test_getAdditionalProperties(client):
     with patch.dict(default_property_dict, {"additional_properties": ["zomg", "omg"], "additional_property_max": {"zomg": 20, "omg": 200}, "additional_property_value": {"omg": 300, "zomg": 1}}):
-        response = client.get("/default/additional_properties")
+        response = client.get("/default/additional_properties/")
     assert response.status_code == 200
     assert response.data == b'{"omg": {"max_value": 200, "value": 300}, "zomg": {"max_value": 20, "value": 1}}'
 
@@ -161,7 +161,7 @@ def test_getAllProperties(client):
             "additional_property_history": {"zomg": [12, 30]},
             "temperature_history": [20, 21]}
     with patch.dict(default_property_dict, data):
-        response = client.get("/default/all_property_chart_data")
+        response = client.get("/default/all_property_chart_data/")
 
     assert response.data == b'{"temperature": [20, 21], "zomg": [12, 30]}'
 

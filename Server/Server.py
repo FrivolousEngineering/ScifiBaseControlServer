@@ -245,7 +245,7 @@ class Server(Flask):
         additional_property_history = self._nodes.getAdditionalPropertyHistory(node_id, prop)
         return Response(flask.json.dumps(additional_property_history), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/additional_properties")
+    @register_route("/<node_id>/additional_properties/")
     def getAdditionalProperties(self, node_id):
         self._setupDBUS()
         additional_properties = self._nodes.getAdditionalProperties(node_id)
@@ -256,7 +256,7 @@ class Server(Flask):
             result[prop]["value"] = self._nodes.getAdditionalPropertyValue(node_id, prop)
         return Response(flask.json.dumps(result), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/all_property_chart_data")
+    @register_route("/<node_id>/all_property_chart_data/")
     def getAllProperties(self, node_id):
         show_last = request.args.get("showLast")
 
@@ -283,27 +283,27 @@ class Server(Flask):
                     pass
         return Response(flask.json.dumps(all_property_histories), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/connections/incoming")
+    @register_route("/<node_id>/connections/incoming/")
     def getIncomingConnections(self, node_id):
         self._setupDBUS()
 
         data = self._nodes.getIncomingConnections(node_id)
         return Response(flask.json.dumps(data), status = 200, mimetype ="application/json")
 
-    @register_route("/<node_id>/connections/outgoing")
+    @register_route("/<node_id>/connections/outgoing/")
     def getOutgoingConnections(self, node_id):
         self._setupDBUS()
 
         data = self._nodes.getOutgoingConnections(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/modifiers")
+    @register_route("/<node_id>/modifiers/")
     def getModifiers(self, node_id):
         self._setupDBUS()
         data = self._nodes.getActiveModifiers(node_id)
         return Response(flask.json.dumps(data), status=200, mimetype="application/json")
 
-    @register_route("/<node_id>/static_properties")
+    @register_route("/<node_id>/static_properties/")
     def getStaticProperties(self, node_id):
         self._setupDBUS()
         data = {}
