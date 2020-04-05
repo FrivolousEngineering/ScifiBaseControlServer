@@ -9,11 +9,14 @@ from Nodes.NodeEngine import NodeEngine
 
 node_dict = {}
 
+node_history_dict = {}
+
 
 @pytest.fixture
 def node():
     mock_node = MagicMock(spec = Node)
     return mock_node
+
 
 @pytest.fixture
 def session_bus():
@@ -25,7 +28,9 @@ def session_bus():
 def node_engine():
     node_engine = MagicMock(spec=NodeEngine)
     node_engine.getNodeById = MagicMock(side_effect = lambda r: node_dict.get(r))
+    node_engine.getNodeHistoryById = MagicMock(side_effect = lambda r: node_history_dict.get(r))
     return node_engine
+
 
 @pytest.fixture
 def bus_name():
@@ -92,3 +97,31 @@ def test_setPerformance(DBus, node):
     with patch.dict(node_dict, {"zomg": node}):
         DBus.setPerformance("zomg", 2000)
         assert node.performance == 2000
+
+
+def test_isNodeActive(DBus):
+    inactive_node = MagicMock(active = False)
+    active_node = MagicMock(active = True)
+    with patch.dict(node_dict, {"inactive_node": inactive_node, "active_node": active_node}):
+        assert DBus.isNodeActive("active_node")
+        assert not DBus.isNodeActive("inactive_node")
+        assert not DBus.isNodeActive("unknown_node")
+
+
+def test_getTemperatureHistory(DBus):
+    history = MagicMock(getTemperatureHistory = MagicMock(return_value = [10, 20, 21]))
+
+    with patch.dict(node_history_dict, {"zomg": history}):
+        assert DBus.getTemperatureHistory("zomg") == [10, 20, 21]
+        assert DBus.getTemperatureHistory("whoo") == []
+
+
+def test_getAdditionalPropertyHistory(DBus):
+    history = MagicMock(getAdditionalPropertiesHistory = MagicMock(return_value = {"yay" : [10, 20, 21]}))
+
+    with patch.dict(node_history_dict, {"zomg": history}):
+        assert DBus.getAdditionalPropertyHistory("zomg", "yay") == [10, 20, 21]
+        assert DBus.getAdditionalPropertyHistory("zomg", "nope") == []
+        assert DBus.getAdditionalPropertyHistory("whoo", "yay") == []
+
+
