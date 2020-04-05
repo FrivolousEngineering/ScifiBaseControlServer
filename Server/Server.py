@@ -140,6 +140,11 @@ class Server(Flask):
             display_data.append(self.getNodeData(node_id))
         return render_template("index.html", data = display_data)
 
+    @register_route("/userManagement")
+    def renderUserManagementPage(self):
+
+        return render_template("userManagement.html")
+
     def getNodeData(self, node_id: str):
         if self._nodes is None:
             return {}

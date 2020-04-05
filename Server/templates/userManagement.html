@@ -1,0 +1,49 @@
+<!doctype html>
+<title>User Management page!</title>
+<script type=text/javascript src="{{url_for('static', filename='jquery-3.1.1.js') }}"></script>
+<style>
+th {
+    text-align: left;
+    padding-right: 20px;
+}
+
+</style>
+
+<table id = "records_table">
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+
+    function updateAllUsers()
+    {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        url = "/users/?userID=".concat(urlParams.get("userID"));
+        $.get(url, function(data) {
+            updateTable(data);
+
+        });
+    }
+
+
+    function updateTable(response) {
+        // Clear the old data.
+        $('#records_table tbody').empty();
+        // Parse all the entries.
+        $.each(response, function (i, item) {
+            $('<tr>').append(
+                $('<td>').append(item),
+            ).appendTo('#records_table');
+        });
+    }
+
+    updateAllUsers();
+
+</script>
