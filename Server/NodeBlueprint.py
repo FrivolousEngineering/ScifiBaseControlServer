@@ -1,5 +1,4 @@
-from flask import Blueprint, Response, request
-import flask
+from flask import Blueprint, request
 from flask import current_app as app
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 import json
