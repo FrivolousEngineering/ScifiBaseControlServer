@@ -1,0 +1,34 @@
+@startuml SciFiBaseControl Container
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+
+LAYOUT_TOP_DOWN
+
+
+Container_Boundary(ScifiBaseControl, "Base control backend"){
+	Container(admin_page, "Node admin page", "Javascript, Jinja, HTML, jquery, chartJS", "Provide debug information and control for administrator")
+	Container(user_page, "User admin page", "Javascript, Jinja, HTML, jquery", "View and modify user rights & roles")
+
+
+	Container(server, "Web Server", "Python3, Flask", "Provides Restful API and admin interface")
+
+
+	ContainerDb(user_database, "User Database", "sqlalchemy", "Store users, roles & rights")
+
+
+	Container(NodeEngine, "NodeEngine", "Python, DBUS", "Simulate the nodes, keeps track of active state. Runs in it's own python process")
+	
+	ContainerDb(node_database, "Node Database", "JSON", "Store node state and history")
+	Rel(NodeEngine, node_database, "Reads from and writes to", "JSON")
+	Rel(server, NodeEngine, "Request state/data, control nodes", "DBUS")
+	Rel(server, user_database, "Reads from and writes to", "SQL")
+
+	Rel(admin_page, server, "Make API calls to", "JSON, HTTP")
+	Rel(user_page, server, "Make API calls to", "JSON, HTTP")
+}
+
+System(engineering_console, "Engineering console", "Stand alone console operated by the engineers")
+
+Rel(engineering_console, server, "Make API calls to", "JSON, HTTP")
+
+
+@enduml
