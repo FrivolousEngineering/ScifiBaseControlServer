@@ -109,7 +109,6 @@ class Server(Flask):
                         status=500,
                         mimetype="application/json")
 
-
     def _setupDBUS(self) -> None:
         self._initDBUS()
         try:
@@ -137,10 +136,6 @@ class Server(Flask):
         :return:
         """
         return flask.send_from_directory(self.STATIC_LOCATION, path)
-
-    @register_route("/spec")
-    def spec(self):
-        return jsonify(swagger(self))
 
     @register_route("/")
     def renderStartPage(self):

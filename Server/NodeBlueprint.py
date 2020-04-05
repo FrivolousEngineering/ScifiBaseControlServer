@@ -1,10 +1,12 @@
 from flask import Blueprint, Response, request
 import flask
 from flask import current_app as app
+from flask_restplus import Resource, Api, apidoc, fields
 import json
 
 
 node_blueprint = Blueprint('node', __name__)
+api = Api(node_blueprint, description="Node data. Yay")
 
 
 @node_blueprint.route("/<node_id>/")
@@ -16,78 +18,95 @@ def nodeData(node_id: str):
 
     return Response(flask.json.dumps(data), status = 200, mimetype="application/json")
 
+@api.route('/<string:node_id>/enabled/')
+@api.doc(params={'node_id': 'Identifier of the node'})
+class Enabled(Resource):
+    @api.response(200, 'Success', fields.Boolean)
+    def get(self, node_id):
+        nodes = app.getDBusObject()
 
-@node_blueprint.route("/<node_id>/enabled/", methods=["PUT", "GET"])
-def nodeEnabled(node_id):
-    nodes = app.getDBusObject()
-    if request.method == "PUT":
-        return setNodeEnabled(node_id)
+        return nodes.isNodeEnabled(node_id)
 
-    return Response(flask.json.dumps(nodes.isNodeEnabled(node_id)), status=200, mimetype="application/json")
-
-
-def setNodeEnabled(node_id):
-    nodes = app.getDBusObject()
-    nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
-    return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+    def put(self, node_id):
+        nodes = app.getDBusObject()
+        nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
 
 
-@node_blueprint.route("/<node_id>/performance/", methods = ["PUT", "GET"])
-def nodePerformance(node_id):
-    nodes = app.getDBusObject()
-    if request.method == "PUT":
-        return setNodePerformance(node_id)
+performance_parser = api.parser()
+performance_parser.add_argument('performance', type=float, help='New performance', location='form')
 
-    return Response(flask.json.dumps(nodes.getPerformance(node_id)), status=200, mimetype="application/json")
+@api.route('/<string:node_id>/performance/')
+@api.doc(params={'node_id': 'Identifier of the node'})
+class Performance(Resource):
+    @api.response(200, 'Success', fields.Float(default = 1))
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getPerformance(node_id)
 
-
-def setNodePerformance(node_id):
-    nodes = app.getDBusObject()
-    if "performance" in request.form:
-        new_performance = request.form["performance"]
-    else:
-        new_performance = json.loads(request.data)["performance"]
-    nodes.setPerformance(node_id, float(new_performance))
-    return Response(flask.json.dumps(nodes.getPerformance(node_id)), status=200, mimetype="application/json")
-
-
-@node_blueprint.route("/<node_id>/temperature/history/")
-def temperatureHistory(node_id):
-    nodes = app.getDBusObject()
-    result = nodes.getTemperatureHistory(node_id)  # type: ignore
-    show_last = request.args.get("showLast")
-    if show_last is not None and show_last:
-        try:
-            result = result[-int(show_last):]
-        except ValueError:
-            pass
-    return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+    @api.response(200, 'Success', fields.Float)
+    @api.expect(performance_parser)
+    def put(self, node_id):
+        nodes = app.getDBusObject()
+        if "performance" in request.form:
+            new_performance = request.form["performance"]
+        else:
+            new_performance = json.loads(request.data)["performance"]
+        nodes.setPerformance(node_id, float(new_performance))
+        return nodes.getPerformance(node_id)
 
 
-@node_blueprint.route("/<node_id>/temperature/")
-def temperature(node_id):
-    nodes = app.getDBusObject()
-    result = nodes.getTemperature(node_id)  # type: ignore
-    return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+
+@node_blueprint.route('/doc/')
+def swagger_ui():
+    return apidoc.ui_for(api)
 
 
-@node_blueprint.route("/<node_id>/<prop>/history/")
-def additionalPropertyHistory(node_id, prop):
-    nodes = app.getDBusObject()
-    additional_property_history = nodes.getAdditionalPropertyHistory(node_id, prop)
-    return Response(flask.json.dumps(additional_property_history), status=200, mimetype="application/json")
+@api.route("/<node_id>/temperature/history/")
+@api.doc(params={'node_id': 'Identifier of the node'})
+class TemperatureHistory(Resource):
+    @api.response(200, "success", fields.List(fields.Float))
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        result = nodes.getTemperatureHistory(node_id)  # type: ignore
+        show_last = request.args.get("showLast")
+        if show_last is not None and show_last:
+            try:
+                result = result[-int(show_last):]
+            except ValueError:
+                pass
+        return result
 
 
-@node_blueprint.route("/<node_id>/additional_properties/")
-def getAdditionalProperties(node_id):
-    nodes = app.getDBusObject()
-    additional_properties = nodes.getAdditionalProperties(node_id)
-    result = {}
-    for prop in additional_properties:
-        result[prop] = {}
-        result[prop]["max_value"] = nodes.getMaxAdditionalPropertyValue(node_id, prop)
-        result[prop]["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
-    return Response(flask.json.dumps(result), status=200, mimetype="application/json")
+@api.route("/<node_id>/temperature/")
+@api.doc(params={'node_id': 'Identifier of the node'})
+class Temperature(Resource):
+    @api.response(200, 'Success', fields.Float)
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getTemperature(node_id)
+
+
+@api.route("/<node_id>/<prop>/history/")
+@api.doc(params={'node_id': 'Identifier of the node'})
+class AdditionalPropertyHistory(Resource):
+    def get(self, node_id, prop):
+        nodes = app.getDBusObject()
+        return nodes.getAdditionalPropertyHistory(node_id, prop)
+
+
+@api.route("/<node_id>/additional_properties/")
+@api.doc(params={'node_id': 'Identifier of the node'})
+class AdditionalProperties(Resource):
+    @api.response(200, "success", fields.List(fields.Float))
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        additional_properties = nodes.getAdditionalProperties(node_id)
+        result = {}
+        for prop in additional_properties:
+            result[prop] = {}
+            result[prop]["max_value"] = nodes.getMaxAdditionalPropertyValue(node_id, prop)
+            result[prop]["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
+        return result
 
 
 @node_blueprint.route("/<node_id>/all_property_chart_data/")
