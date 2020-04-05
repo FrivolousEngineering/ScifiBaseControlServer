@@ -18,13 +18,13 @@ connection = api.model("connection", {
 })
 
 node = api.model("node", {
-    "node_id": fields.String,
-    "temperature": fields.Float,
-    "amount": fields.Float,
-    "performance": fields.Float,
-    "min_performance": fields.Float,
-    "max_performance": fields.Float,
-    "max_safe_temperature": fields.Float,
+    "node_id": fields.String(description = "Unique identifier of the node", example = "generator"),
+    "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin", example = 273.3),
+    "amount": fields.Float(description = "How much has this node stored. If the node has no storage, the value will be -1", example = -1),
+    "performance": fields.Float(description = "At what capacity is this node trying to run? The number is a factor and will always be between min_performance and max_performance", example = 1),
+    "min_performance": fields.Float(example = 0.5),
+    "max_performance": fields.Float(example = 1.5),
+    "max_safe_temperature": fields.Float(example = 500),
     "heat_convection": fields.Float,
     "heat_emissivity": fields.Float
 })
