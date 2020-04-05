@@ -15,8 +15,7 @@ connection = api.model("connection", {
     "target": fields.String,
     "origin": fields.String,
     "resource_type": fields.String
-}
-)
+})
 
 node = api.model("node", {
     "node_id": fields.String,
@@ -42,6 +41,7 @@ class Node(Resource):
         data["description"] = nodes.getDescription(node_id)  # type: ignore
         return data
 
+
 @node_namespace.route('/<string:node_id>/enabled/')
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Enabled(Resource):
@@ -58,6 +58,7 @@ class Enabled(Resource):
 
 performance_parser = api.parser()
 performance_parser.add_argument('performance', type=float, help='New performance', location='form')
+
 
 @node_namespace.route('/<string:node_id>/performance/')
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
@@ -101,7 +102,8 @@ class TemperatureHistory(Resource):
 
 
 @node_namespace.route("/<node_id>/temperature/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'},
+                    description = "Get the temperature of the node in deg Kelvin")
 class Temperature(Resource):
     @api.response(200, 'Success', fields.Float)
     def get(self, node_id):
@@ -110,7 +112,8 @@ class Temperature(Resource):
 
 
 @node_namespace.route("/<node_id>/<prop>/history/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'},
+                    description = "Get the history of a certain attribute")
 class AdditionalPropertyHistory(Resource):
     def get(self, node_id, prop):
         nodes = app.getDBusObject()
@@ -118,7 +121,8 @@ class AdditionalPropertyHistory(Resource):
 
 
 @node_namespace.route("/<node_id>/additional_properties/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'},
+                    description = "Get the value of all extra attributes")
 class AdditionalProperties(Resource):
     @api.response(200, "success", fields.List(fields.Float))
     def get(self, node_id):
@@ -130,6 +134,7 @@ class AdditionalProperties(Resource):
             result[prop]["max_value"] = nodes.getMaxAdditionalPropertyValue(node_id, prop)
             result[prop]["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
         return result
+
 
 @node_namespace.route("/<node_id>/all_property_chart_data/")
 class AllProperties(Resource):
@@ -159,8 +164,10 @@ class AllProperties(Resource):
                     pass
         return all_property_histories
 
+
 @node_namespace.route("/<node_id>/connections/incoming/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'},
+                    description = "Get a list of all connections that connect to this node")
 class IncomingConnections(Resource):
     @api.response(200, 'Success', [connection])
     def get(self, node_id):
@@ -169,7 +176,8 @@ class IncomingConnections(Resource):
 
 
 @node_namespace.route("/<node_id>/connections/outgoing/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'},
+                    description = "Get a list of all connections that connect from this node")
 class OutgoingConnections(Resource):
     @api.response(200, 'Success', [connection])
     def get(self, node_id):
@@ -195,7 +203,10 @@ class StaticProperties(Resource):
         data["description"] = nodes.getDescription(node_id)
         return data
 
+
 @node_namespace.route("/<string:node_id>/<string:additional_property>/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node',
+                            "additional_property": "name of the attribute"})
 class AdditionalProperty(Resource):
     def get(self, node_id, additional_property):
         nodes = app.getDBusObject()
@@ -204,6 +215,7 @@ class AdditionalProperty(Resource):
 
 
 @node_namespace.route("/")
+@node_namespace.doc(description = "Get all the known nodes.")
 class Nodes(Resource):
     @api.response(200, "Sucess", fields.List(fields.Nested(node)))
     def get(self):
