@@ -6,4 +6,4 @@ pylint
 pylint-quotes
 pytest-flask
 SQLAlchemy
-flask-restplus
+flask-restx

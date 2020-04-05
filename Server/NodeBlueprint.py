@@ -1,7 +1,7 @@
 from flask import Blueprint, Response, request
 import flask
 from flask import current_app as app
-from flask_restplus import Resource, Api, apidoc, fields, Namespace, Model
+from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 import json
 
 
