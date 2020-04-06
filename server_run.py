@@ -6,4 +6,4 @@ app = Server()
 
 app.register_blueprint(node_blueprint)
 
-app.run(debug=True)
+app.run(debug=True, host="0.0.0.0")
