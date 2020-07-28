@@ -113,6 +113,14 @@ class Node:
     def temperature_efficiency(self):
         return self._temperature_efficiency
 
+    @modifiable_property
+    def optimal_temperature(self):
+        return self._optimal_temperature
+
+    @modifiable_property
+    def optimal_temperature_range(self):
+        return self._optimal_temperature_range
+
     def getModifiers(self) -> List[Modifier]:
         return self._modifiers
 
@@ -443,11 +451,11 @@ class Node:
             return factor
 
         # Now to compensate a bit for temperature
-        temperature_difference = abs(self._temperature - self._optimal_temperature)
-        temperature_difference = min(self._optimal_temperature_range, temperature_difference)
+        temperature_difference = abs(self._temperature - self.optimal_temperature)
+        temperature_difference = min(self.optimal_temperature_range, temperature_difference)
 
         # This factor runs from 0 to 1
-        t = 1. - (temperature_difference / self._optimal_temperature_range)
+        t = 1. - (temperature_difference / self.optimal_temperature_range)
 
         # Add a nice easing function.
         if t < 0.5:
