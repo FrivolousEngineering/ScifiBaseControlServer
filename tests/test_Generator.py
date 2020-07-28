@@ -14,6 +14,9 @@ def test_update():
     generator._getAllReservedResources = MagicMock()
     generator.addHeat = MagicMock()
 
+    # Set the generator at the perfect temperature
+    generator._temperature = generator._optimal_temperature
+
     generator.update()
 
     generator.addHeat.assert_called_once()

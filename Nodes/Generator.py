@@ -1,3 +1,5 @@
+from math import sqrt
+
 from Nodes.Node import Node
 from Nodes.Constants import COMBUSTION_HEAT
 
@@ -30,13 +32,36 @@ class Generator(Node):
         self._max_performance = 2
 
         self._temperature_efficiency = 0.5
+        self._surface_area = 8
+        self._max_safe_temperature = 400
+        self._heat_convection_coefficient = 20
 
-        self._max_safe_temperature = 500
+        self._optimal_temperature = 375
+        self._optimal_temperature_range = 75
 
-        self._weight = 2000
+        self._weight = 8000
         self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down.".format(fuel_type = fuel_type)
+    @property
+    def effectiveness_factor(self):
+        # Health taken into account
+        factor = super().effectiveness_factor
+
+        # Now to compensate a bit for temperature
+        temperature_difference = abs(self._temperature - self._optimal_temperature)
+        temperature_difference = min(self._optimal_temperature_range, temperature_difference)
+
+        # This factor runs from 0 to 1
+        t = 1. - (temperature_difference / self._optimal_temperature_range)
+
+        # Add a nice easing function.
+        if t < 0.5:
+            result = 8 * t * t * t * t
+        else:
+            p = t - 1
+            result = -8 * p * p * p * p + 1
+        return factor * result
 
     def update(self) -> None:
         super().update()
