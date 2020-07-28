@@ -100,6 +100,10 @@ class Node:
 
         self._modifiers = []  # type: List[Modifier]
 
+        self._use_temperature_dependant_effectiveness_factor = False
+        self._optimal_temperature = 375
+        self._optimal_temperature_range = 75
+
         # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
         # transformed into heat.
@@ -433,7 +437,25 @@ class Node:
         # 25% health: 50% effectiveness
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
-        return (-((health_factor + 0.5) / (health_factor + 0.5) ** 2.) + 2) / 1.333333333333333
+        factor = (-((health_factor + 0.5) / (health_factor + 0.5) ** 2.) + 2) / 1.333333333333333
+
+        if not self._use_temperature_dependant_effectiveness_factor:
+            return factor
+
+        # Now to compensate a bit for temperature
+        temperature_difference = abs(self._temperature - self._optimal_temperature)
+        temperature_difference = min(self._optimal_temperature_range, temperature_difference)
+
+        # This factor runs from 0 to 1
+        t = 1. - (temperature_difference / self._optimal_temperature_range)
+
+        # Add a nice easing function.
+        if t < 0.5:
+            result = 8 * t * t * t * t
+        else:
+            p = t - 1
+            result = -8 * p * p * p * p + 1
+        return factor * result
 
     @property
     def inverted_effectiveness_factor(self) -> float:
