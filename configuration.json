@@ -134,28 +134,28 @@
 
         "F2F1Valve":
         {
-            "type": "FluidCooler",
+            "type": "Valve",
             "resource_type": "fuel",
             "fluid_per_tick": 100,
             "enabled": false
         },
         "F1F2Valve":
         {
-            "type": "FluidCooler",
+            "type": "Valve",
             "resource_type": "fuel",
             "fluid_per_tick": 100,
             "enabled": false
         },
         "W2W1Valve":
         {
-            "type": "FluidCooler",
+            "type": "Valve",
             "resource_type": "water",
             "fluid_per_tick": 100,
             "enabled": false
         },
         "W1W2Valve":
         {
-            "type": "FluidCooler",
+            "type": "Valve",
             "resource_type": "water",
             "fluid_per_tick": 100,
             "enabled": false
