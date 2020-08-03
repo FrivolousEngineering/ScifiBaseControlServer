@@ -40,7 +40,7 @@ class Generator(Node):
         self._optimal_temperature_range = 75
 
         self._use_temperature_dependant_effectiveness_factor = True
-        self._direct_performance_change = False
+        self._performance_change_factor = 3
 
         self._weight = 8000
         self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \

@@ -106,7 +106,8 @@ class Node:
         self._use_temperature_dependant_effectiveness_factor = False
 
         # Does this node change it's performance instantly?
-        self._direct_performance_change = True
+        # a value of 1 means it changes instantly, higher values means it changes slower.
+        self._performance_change_factor = 1
 
         self._optimal_temperature = 375
         self._optimal_temperature_range = 75
@@ -340,10 +341,8 @@ class Node:
         # Performance works with a target and an actual performance.
         if self.performance == self.target_performance:
             return
-        if self._direct_performance_change:
-            self._setPerformance(self.target_performance)
     
-        new_performance = self.performance + (self.target_performance - self.performance) / 3
+        new_performance = self.performance + (self.target_performance - self.performance) / self._performance_change_factor
 
         if abs(new_performance - self.target_performance) < 0.001:
             new_performance = self.target_performance
