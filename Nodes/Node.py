@@ -47,6 +47,8 @@ class Node:
         self._outgoing_connections = []  # type: List[Connection]
 
         self._resources_required_per_tick = {}  # type: Dict[str, float]
+        self._original_resources_required_per_tick = {} # type: Dict[str, float]
+
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
 
@@ -156,8 +158,10 @@ class Node:
             elif self._performance > self.max_performance:
                 self._performance = self.max_performance
             for resource in self._resources_required_per_tick:
-                self._resources_required_per_tick[resource] *= 1.0 / old_performance
-                self._resources_required_per_tick[resource] *= self._performance
+                if resource not in self._original_resources_required_per_tick:
+                    self._original_resources_required_per_tick[resource] = self._resources_required_per_tick[resource]
+
+                self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[resource] * self._performance
 
     @modifiable_property
     def heat_emissivity(self) -> float:
