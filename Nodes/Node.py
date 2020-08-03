@@ -463,10 +463,10 @@ class Node:
 
         # Add a nice easing function.
         if t < 0.5:
-            result = 8 * t * t * t * t
+            result = 4 * t * t * t
         else:
-            p = t - 1
-            result = -8 * p * p * p * p + 1
+            p = 2 * t - 2
+            result = 0.5 * p * p * p + 1
         return factor * result
 
     @property
