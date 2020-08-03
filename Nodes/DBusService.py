@@ -101,16 +101,23 @@ class DBusService(dbus.service.Object):
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", in_signature="sd")
-    def setPerformance(self, node_id: str, performance: float) -> None:
+    def setTargetPerformance(self, node_id: str, performance: float) -> None:
         node = self._node_engine.getNodeById(node_id)
         if node:
-            node.performance = performance
+            node.target_performance = performance
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
     def getPerformance(self, node_id: str) -> float:
         node = self._node_engine.getNodeById(node_id)
         if node:
             return node.performance
+        return 0.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getTargetPerformance(self, node_id: str) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.target_performance
         return 0.
 
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")

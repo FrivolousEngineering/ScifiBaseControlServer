@@ -90,6 +90,7 @@ class Node:
 
         # At what level should this node perform?
         self._performance = 1.
+        self._target_performance = 1.
 
         self._min_performance = 1.
         self._max_performance = 1.
@@ -103,6 +104,10 @@ class Node:
         self._modifiers = []  # type: List[Modifier]
 
         self._use_temperature_dependant_effectiveness_factor = False
+
+        # Does this node change it's performance instantly?
+        self._direct_performance_change = True
+
         self._optimal_temperature = 375
         self._optimal_temperature_range = 75
 
@@ -148,20 +153,27 @@ class Node:
     def performance(self) -> float:
         return self._performance
 
-    @performance.setter
-    def performance(self, new_performance: float) -> None:
+    def _setPerformance(self, new_performance: float) -> None:
         with self._update_lock:
-            old_performance = self._performance
             self._performance = new_performance
-            if self._performance < self.min_performance:
-                self._performance = self.min_performance
-            elif self._performance > self.max_performance:
-                self._performance = self.max_performance
             for resource in self._resources_required_per_tick:
                 if resource not in self._original_resources_required_per_tick:
                     self._original_resources_required_per_tick[resource] = self._resources_required_per_tick[resource]
 
-                self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[resource] * self._performance
+                self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[
+                                                                  resource] * self._performance
+    @property
+    def target_performance(self) -> float:
+        return self._target_performance
+
+    @target_performance.setter
+    def target_performance(self, new_performance: float) -> None:
+        with self._update_lock:
+            self._target_performance = new_performance
+            if self._target_performance < self.min_performance:
+                self._target_performance = self.min_performance
+            elif self._target_performance > self.max_performance:
+                self._target_performance = self.max_performance
 
     @modifiable_property
     def heat_emissivity(self) -> float:
@@ -253,7 +265,7 @@ class Node:
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
-        self.performance = data.get("performance", 1.)
+        self._setPerformance(data.get("performance", 1.))
 
         for modifier in data.get("modifiers", []):
             mod = createModifier(modifier["type"])
@@ -309,6 +321,9 @@ class Node:
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
+
+        self._updatePerformance()
+
         for resource_type in self._resources_required_per_tick:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             if not connections:
@@ -320,6 +335,20 @@ class Node:
 
             for connection in connections:
                 connection.reserveResource(resource_to_reserve)
+
+    def _updatePerformance(self) -> None:
+        # Performance works with a target and an actual performance.
+        if self.performance == self.target_performance:
+            return
+        if self._direct_performance_change:
+            self._setPerformance(self.target_performance)
+    
+        new_performance = self.performance + (self.target_performance - self.performance) / 3
+
+        if abs(new_performance - self.target_performance) < 0.001:
+            new_performance = self.target_performance
+
+        self._setPerformance(new_performance)
 
     def _getReservedResourceByType(self, resource_type: str) -> float:
         result = 0.

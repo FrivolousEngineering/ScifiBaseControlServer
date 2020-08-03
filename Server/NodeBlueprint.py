@@ -75,7 +75,7 @@ class Performance(Resource):
             new_performance = request.form["performance"]
         else:
             new_performance = json.loads(request.data)["performance"]
-        nodes.setPerformance(node_id, float(new_performance))
+        nodes.setTargetPerformance(node_id, float(new_performance))
         return nodes.getPerformance(node_id)
 
 

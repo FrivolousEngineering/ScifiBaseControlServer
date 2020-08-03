@@ -283,13 +283,13 @@ def test_nodePerformance():
     node._min_performance = 0.5
     node._max_performance = 1.5
 
-    assert node.performance == 1
+    assert node.target_performance == 1
 
-    node.performance = 200
-    assert node.performance == 1.5
+    node.target_performance = 200
+    assert node.target_performance == 1.5
 
-    node.performance = 0
-    assert node.performance == 0.5
+    node.target_performance = 0
+    assert node.target_performance == 0.5
 
 
 def test_ZeroPerformance():
@@ -299,10 +299,12 @@ def test_ZeroPerformance():
     node._resources_required_per_tick["water"] = 10
     assert node.getResourcesRequiredPerTick()["water"] == 10
 
-    node.performance = 0
+    node._target_performance = 0
+    node._updatePerformance()
     assert node.getResourcesRequiredPerTick()["water"] == 0
 
-    node.performance = 0.5
+    node._target_performance = 0.5
+    node._updatePerformance()
     assert node.getResourcesRequiredPerTick()["water"] == 5
 
 

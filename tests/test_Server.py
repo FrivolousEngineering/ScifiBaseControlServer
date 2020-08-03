@@ -112,7 +112,7 @@ def test_temperatureHistoryGetLast(client):
 def test_putPerformance(client):
     response = client.put("/node/default/performance/", data = {"performance": 200})
     assert response.status_code == 200
-    client.application.getMockedClient().setPerformance.assert_called_with("default", 200)
+    client.application.getMockedClient().setTargetPerformance.assert_called_with("default", 200)
 
 
 def test_getEnabled(client):

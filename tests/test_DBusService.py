@@ -95,8 +95,8 @@ def test_getAttributeValueUnknownNode(DBus, node, attribute, value):
 
 def test_setPerformance(DBus, node):
     with patch.dict(node_dict, {"zomg": node}):
-        DBus.setPerformance("zomg", 2000)
-        assert node.performance == 2000
+        DBus.setTargetPerformance("zomg", 2000)
+        assert node.target_performance == 2000
 
 
 def test_isNodeActive(DBus):

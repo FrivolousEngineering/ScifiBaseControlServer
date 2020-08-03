@@ -11,4 +11,4 @@ class OverrideDefaultSafetyControlsModifier(Modifier):
         # Once this modifier gets removed, we need to ensure that the performance is in range again!
         node = self._node
         if node is not None:
-            node.performance = node.performance
+            node.target_performance = node.target_performance
