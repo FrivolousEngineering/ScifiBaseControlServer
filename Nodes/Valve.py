@@ -24,10 +24,10 @@ class Valve(ResourceStorage):
             new_amount_required = storage_room_left
         self._resources_required_per_tick[self._resource_type] = max(0., new_amount_required)
 
-    @ResourceStorage.performance.setter
+    @ResourceStorage.performance.setter  # type: ignore  # Mypy is wrongly complaining about this.
     def performance(self, perf) -> float:
         self._updateResourceRequiredPerTick()
-        ResourceStorage.performance.fset(self, perf)
+        ResourceStorage.performance.fset(self, perf)  # type: ignore # Mypy is wrongly complaining about this.
 
         self._max_storage = 2 * self._performance * self._fluid_per_tick
 
