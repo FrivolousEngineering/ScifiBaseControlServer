@@ -279,6 +279,10 @@ class Node:
         return self._weight
 
     @modifiable_property
+    def performance_change_factor(self):
+        return self._performance_change_factor
+
+    @modifiable_property
     def temperature(self):
         """
         The temperature of this node in Kelvin
@@ -342,7 +346,7 @@ class Node:
         if self.performance == self.target_performance:
             return
     
-        new_performance = self.performance + (self.target_performance - self.performance) / self._performance_change_factor
+        new_performance = self.performance + (self.target_performance - self.performance) / self.performance_change_factor
 
         if abs(new_performance - self.target_performance) < 0.001:
             new_performance = self.target_performance
