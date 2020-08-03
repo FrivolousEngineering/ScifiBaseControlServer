@@ -292,6 +292,20 @@ def test_nodePerformance():
     assert node.performance == 0.5
 
 
+def test_ZeroPerformance():
+    # Ensure that we can set the performance to 0 and back again.
+    node = Node.Node("SuchNode!")
+    node._min_performance = 0
+    node._resources_required_per_tick["water"] = 10
+    assert node.getResourcesRequiredPerTick()["water"] == 10
+
+    node.performance = 0
+    assert node.getResourcesRequiredPerTick()["water"] == 0
+
+    node.performance = 0.5
+    assert node.getResourcesRequiredPerTick()["water"] == 5
+
+
 def test_modifier():
     node = Node.Node("ModifiedNode")
     modifier = MagicMock(spec=Modifier.Modifier)
