@@ -9,6 +9,8 @@ from Nodes.DBusService import DBusService
 import dbus.mainloop.glib
 from gi.repository import GLib
 
+from Nodes.OutsideTemperatureHandler import OutsideTemperatureHandler
+
 engine = NodeEngine()
 
 with open("configuration.json") as f:
@@ -16,6 +18,8 @@ with open("configuration.json") as f:
     engine.registerNodesFromConfigurationData(loaded_data["nodes"])
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
+    # Add a random temperature fluctuation 
+    engine.setOutsideTemperatureHandler(OutsideTemperatureHandler())
 
 generator = engine.getNodeById("generator_1")
 generator.addModifier(OverrideDefaultSafetyControlsModifier(5))

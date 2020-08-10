@@ -4,10 +4,12 @@ from typing import List, Dict, Any, Optional
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
 from Nodes.NodeHistory import NodeHistory
+from Nodes.OutsideTemperatureHandler import OutsideTemperatureHandler
 from Nodes.PerpetualTimer import PerpetualTimer
 from Signal import signalemitter, Signal
 
 TICK_INTERVAL = 1
+
 
 @signalemitter
 class NodeEngine:
@@ -23,11 +25,25 @@ class NodeEngine:
 
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
-        self._node_histories = {} # type: Dict[str, NodeHistory]
+        self._node_histories = {}  # type: Dict[str, NodeHistory]
 
         self._update_lock = RLock()
 
         self._tick_timer = PerpetualTimer(TICK_INTERVAL, self.doTick)
+
+        self._outside_temperature_handler = None  # type: Optional[OutsideTemperatureHandler]
+        self._tick_count = 0
+
+    def setOutsideTemperatureHandler(self, temp_handler: OutsideTemperatureHandler) -> None:
+        self._outside_temperature_handler = temp_handler
+
+    def _updateOutsideTemperature(self) -> None:
+        new_temperature = 293.15
+        if self._outside_temperature_handler is not None:
+            new_temperature = self._outside_temperature_handler.getTemperatureForTick(self._tick_count)
+
+        for node in self.getAllNodes().values():
+            node.outside_temp = new_temperature
 
     def start(self) -> None:
         self._tick_timer.start()
@@ -125,9 +141,11 @@ class NodeEngine:
         """
         print("TICK STARTED")
         with self._update_lock:
+            self._updateOutsideTemperature()
             self._preUpdate()
             self._updateReservations()
             self._replanReservations()
             self._update()
             self._postUpdate()
+            self._tick_count += 1
         print("TICK ENDED!")
