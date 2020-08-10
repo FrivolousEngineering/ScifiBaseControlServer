@@ -177,23 +177,40 @@ th {
                 {
                     continue;
                 }
+                var y_axis_to_use = "normal_y";
+                if(prop === "temperature")
+                {
+                    y_axis_to_use = "temperature_y";
+                }
                 data.datasets.push({label: prop,
                                     data: results[prop],
                                     backgroundColor: getBackgroundColor(prop),
                                     borderColor: getBackgroundColor(prop),
                                     hidden: hidden,
-                                    fill: false
+                                    fill: false,
+                                    yAxisID: y_axis_to_use
                                     });
             }
 
             var config = { type: 'line',
                 data : data,
                 options: {
-                title: {
-                    display: true,
-                    text: node_id
+                    title: {
+                        display: true,
+                        text: node_id
+                    },
+                    scales: {
+                        yAxes: [{
+                            id: "temperature_y",
+                            position: 'right'
+                        },
+                            {
+                                id: "normal_y"
+                            }
+                        ]
+                    }
                 }
-            }};
+            };
             var ctx = $("#chart").get(0).getContext("2d");
             if(current_node !== node_id){
                 if(chart != null)
