@@ -146,6 +146,7 @@ th {
             }
         }
     }
+
     function drawChart(node_id) {
 
         var jsonData = $.ajax({
@@ -178,11 +179,12 @@ th {
                 data.datasets.push({label: prop,
                                     data: results[prop],
                                     backgroundColor: getBackgroundColor(prop),
-                                    hidden: hidden
+                                    hidden: hidden,
+                                    fill: false
                                     });
             }
 
-            var config = { type: 'bar',
+            var config = { type: 'line',
                 data : data,
                 options: {
                 title: {
