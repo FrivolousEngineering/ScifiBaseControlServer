@@ -1,18 +1,17 @@
-from typing import Optional, cast, Any, List, Dict, Union
-from functools import wraps
-from flask import Flask, Response
-from functools import partial
+import dbus
+import dbus.exceptions
 import flask
-from flask import render_template, request
 
+from typing import Optional, cast, Any, List, Dict, Union
+
+from functools import wraps, partial
+from flask import Flask, Response, render_template, request
 
 from Server.Database import db_session
 from Server.models import User, Ability
 from werkzeug.exceptions import Forbidden, Unauthorized
-_REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
-import dbus
-import dbus.exceptions
+_REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
 
 def register_route(route: Optional[str] = None, accepted_methods: Optional[List[str]] = None):
@@ -87,9 +86,7 @@ class Server(Flask):
 
         self._bus = dbus.SessionBus()
 
-
         self.register_error_handler(dbus.exceptions.DBusException, self._dbusExceptionHandler)
-
 
         # This is needed for the sqlalchemy database
         self.teardown_appcontext(self._shutdownSession)
