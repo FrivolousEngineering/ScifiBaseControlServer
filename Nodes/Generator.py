@@ -52,7 +52,6 @@ class Generator(Node):
         # A damaged generator starts burning fuel less efficient (making it run more hot!)
         health_factor = self._getHealthEffectivenessFactor()
         result = self._temperature_efficiency * (2 - health_factor)
-        print(result)
         return result
 
     def update(self) -> None:
