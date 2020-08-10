@@ -60,6 +60,7 @@ th {
             error: function (xhr, description, error)
             {
                 $("#message").html(xhr.responseText);
+                $([document.documentElement, document.body]).animate({scrollTop: $("#message").offset().top}, 500);
             }
         });
     });
