@@ -43,6 +43,7 @@ def app():
     mocked_dbus.getHeatEmissivity = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_emissivity"))
     mocked_dbus.getHeatConvectionCoefficient = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_convection"))
     mocked_dbus.isNodeActive = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="active"))
+    mocked_dbus.getHistoryOffset = MagicMock(return_value = 0)
     return app
 
 
@@ -158,7 +159,7 @@ def test_getAllProperties(client):
     with patch.dict(default_property_dict, data):
         response = client.get("/node/default/all_property_chart_data/")
 
-    assert response.data.strip() == b'{"zomg": [12, 30], "temperature": [20, 21]}'
+    assert response.data.strip() == b'{"offset": 0, "zomg": [12, 30], "temperature": [20, 21]}'
 
 
 def test_getAdditionalPropertyHistory(client):

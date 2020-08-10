@@ -139,9 +139,10 @@ class AdditionalProperties(Resource):
 class AllProperties(Resource):
     def get(self, node_id):
         show_last = request.args.get("showLast")
-
         nodes = app.getDBusObject()
         all_property_histories = {}
+
+        all_property_histories["offset"] = nodes.getHistoryOffset(node_id)
         for prop in nodes.getAdditionalProperties(node_id):
             all_property_histories[prop] = nodes.getAdditionalPropertyHistory(node_id, prop)
 

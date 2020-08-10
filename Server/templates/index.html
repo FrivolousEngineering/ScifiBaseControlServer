@@ -155,8 +155,12 @@ th {
 
             // Yes it's hacky. Blugh
             var labels = [];
+
+            // Not all ticks are stored (we only store the last x ticks)
+            // So we need to compensate for that in the labels.
+            var offset = results.offset;
             results.temperature.forEach(function(data, i) {
-                labels.push((i + 1).toString());
+                labels.push((i + 1 + offset).toString());
             });
             var data = {
                 labels: labels,

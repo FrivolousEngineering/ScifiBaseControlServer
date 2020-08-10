@@ -155,6 +155,19 @@ class DBusService(dbus.service.Object):
             return history.getAdditionalPropertiesHistory().get(prop, [])
         return []
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getHistoryOffset(self, node_id: str):
+        """
+        Not all data of the entire history is stored (because that would get out of hand).
+        In order to still display the data correctly, we track the amount of ticks that we deleted
+        :param node_id:
+        :return:
+        """
+        history = self._node_engine.getNodeHistoryById(node_id)
+        if history:
+            return history.getTickOffset()
+        return 0
+
     @dbus.service.method("com.frivengi.nodes", out_signature="as", in_signature="s")
     def getAdditionalProperties(self, node_id: str) -> List[str]:
         node = self._node_engine.getNodeById(node_id)
