@@ -170,7 +170,11 @@ th {
             for(var prop in results)
             {
                 var hidden = false;
-
+                // We cleary don't want to graph the offset.
+                if (prop === "offset")
+                {
+                    continue;
+                }
                 data.datasets.push({label: prop,
                                     data: results[prop],
                                     backgroundColor: getBackgroundColor(prop),
