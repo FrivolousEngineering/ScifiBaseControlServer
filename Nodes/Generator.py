@@ -1,6 +1,6 @@
 from math import sqrt
 
-from Nodes.Node import Node
+from Nodes.Node import Node, modifiable_property
 from Nodes.Constants import COMBUSTION_HEAT
 
 
@@ -46,6 +46,14 @@ class Generator(Node):
         self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down.".format(fuel_type = fuel_type)
+
+    @modifiable_property
+    def temperature_efficiency(self):
+        # A damaged generator starts burning fuel less efficient (making it run more hot!)
+        health_factor = self._getHealthEffectivenessFactor()
+        result = self._temperature_efficiency * (2 - health_factor)
+        print(result)
+        return result
 
     def update(self) -> None:
         super().update()

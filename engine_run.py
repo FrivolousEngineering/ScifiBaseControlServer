@@ -18,7 +18,7 @@ with open("configuration.json") as f:
     engine.registerNodesFromConfigurationData(loaded_data["nodes"])
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
-    # Add a random temperature fluctuation 
+    # Add a random temperature fluctuation
     engine.setOutsideTemperatureHandler(OutsideTemperatureHandler())
 
 generator = engine.getNodeById("generator_1")

@@ -114,7 +114,7 @@ class Node:
 
         # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
-        # transformed into heat.
+        # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
         self._temperature_efficiency = 1.
 
     @modifiable_property
@@ -472,8 +472,7 @@ class Node:
         if self._health < 0:
             self._health = 0
 
-    @property
-    def effectiveness_factor(self) -> float:
+    def _getHealthEffectivenessFactor(self) -> float:
         health_factor = self._health / 100.
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
@@ -482,6 +481,11 @@ class Node:
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
         factor = (-((health_factor + 0.5) / (health_factor + 0.5) ** 2.) + 2) / 1.333333333333333
+        return factor
+
+    @property
+    def effectiveness_factor(self) -> float:
+        factor = self._getHealthEffectivenessFactor()
 
         if not self._use_temperature_dependant_effectiveness_factor:
             return factor
