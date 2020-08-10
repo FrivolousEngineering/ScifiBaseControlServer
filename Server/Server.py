@@ -87,7 +87,9 @@ class Server(Flask):
 
         self._bus = dbus.SessionBus()
 
-        self.register_error_handler(dbus.exceptions.DBusException, self._dbusNotRunning)
+
+        self.register_error_handler(dbus.exceptions.DBusException, self._dbusExceptionHandler)
+
 
         # This is needed for the sqlalchemy database
         self.teardown_appcontext(self._shutdownSession)
@@ -102,9 +104,14 @@ class Server(Flask):
         self._setupDBUS()
         return self._nodes
 
-    def _dbusNotRunning(self, exception: dbus.exceptions.DBusException) -> Response:
-        self._nodes = None
-        return Response(flask.json.dumps({"error": "DBUS Exception", "message": str(exception)}),
+    def _dbusExceptionHandler(self, exception: dbus.exceptions.DBusException) -> Response:
+        if exception.get_dbus_name() == "org.freedesktop.DBus.Error.ServiceUnknown":
+            # We couldn't find the server on the other side. No need to log it more
+            self._nodes = None
+        else:
+            self.logger.warning("An exception occured %s" % str(exception))
+
+        return Response(str(exception),
                         status=500,
                         mimetype="application/json")
 
