@@ -106,6 +106,7 @@ th {
                 evt.preventDefault();
                 default_node = item.node_id;
                 drawChart(default_node);
+                $([document.documentElement, document.body]).animate({scrollTop: $("#chart").offset().top}, 500);
             });
             $('<tr>').append(
                 $('<td>').append(node_link),
@@ -200,11 +201,10 @@ th {
                 }
                 current_node = node_id;
                 chart = new Chart(ctx, config);
-            } else{
+            } else {
                 chart.data = data;
                 chart.update(0); // Draw with update 0 (we don't want animations)
             }
-            $([document.documentElement, document.body]).animate({scrollTop: $("#chart").offset().top}, 500);
         });
     }
     function updateAll()
