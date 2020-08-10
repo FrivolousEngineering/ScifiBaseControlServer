@@ -59,7 +59,7 @@ th {
             },
             error: function (xhr, description, error)
             {
-                $("#message").html(error);
+                $("#message").html(xhr.responseText);
             }
         });
     });
