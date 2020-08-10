@@ -296,6 +296,7 @@ def test_ZeroPerformance():
     # Ensure that we can set the performance to 0 and back again.
     node = Node.Node("SuchNode!")
     node._min_performance = 0
+    node._performance_change_factor = 1
     node._resources_required_per_tick["water"] = 10
     assert node.getResourcesRequiredPerTick()["water"] == 10
 
@@ -305,6 +306,19 @@ def test_ZeroPerformance():
 
     node._target_performance = 0.5
     node._updatePerformance()
+    assert node.getResourcesRequiredPerTick()["water"] == 5
+
+
+def test_performanceChangeFactor():
+    node = Node.Node("SuchNode!")
+    node._min_performance = 0
+    node._performance_change_factor = 2
+    node._resources_required_per_tick["water"] = 10
+    assert node.getResourcesRequiredPerTick()["water"] == 10
+
+    node._target_performance = 0
+    node._updatePerformance()
+    # It has a certain speed in which it's performance changes, so it should be 5 (and not zero!)
     assert node.getResourcesRequiredPerTick()["water"] == 5
 
 

@@ -107,7 +107,7 @@ class Node:
 
         # Does this node change it's performance instantly?
         # a value of 1 means it changes instantly, higher values means it changes slower.
-        self._performance_change_factor = 1
+        self._performance_change_factor = 2
 
         self._optimal_temperature = 375
         self._optimal_temperature_range = 75

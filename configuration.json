@@ -20,13 +20,13 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 500
+            "fluid_per_tick": 250
         },
         "fluid_cooler_2":
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 500
+            "fluid_per_tick": 250
         },
         "fuel_storage_1":
         {
