@@ -4,7 +4,7 @@ from typing import List, Dict, Any, Optional
 from Nodes.Node import Node
 from Nodes.NodeFactory import NodeFactory
 from Nodes.NodeHistory import NodeHistory
-from Nodes.OutsideTemperatureHandler import OutsideTemperatureHandler
+from Nodes.TemperatureHandlers.TemperatureHandler import TemperatureHandler
 from Nodes.PerpetualTimer import PerpetualTimer
 from Signal import signalemitter, Signal
 
@@ -31,10 +31,10 @@ class NodeEngine:
 
         self._tick_timer = PerpetualTimer(TICK_INTERVAL, self.doTick)
 
-        self._outside_temperature_handler = None  # type: Optional[OutsideTemperatureHandler]
+        self._outside_temperature_handler = None  # type: Optional[TemperatureHandler]
         self._tick_count = 0
 
-    def setOutsideTemperatureHandler(self, temp_handler: OutsideTemperatureHandler) -> None:
+    def setOutsideTemperatureHandler(self, temp_handler: TemperatureHandler) -> None:
         self._outside_temperature_handler = temp_handler
 
     def _updateOutsideTemperature(self) -> None:

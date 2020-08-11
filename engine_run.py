@@ -1,15 +1,13 @@
-from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.NodeEngine import NodeEngine
 import json
 
-from Nodes.NodeStorage import NodeStorage
 from Nodes.DBusService import DBusService
 
 import dbus.mainloop.glib
 from gi.repository import GLib
 
-from Nodes.OutsideTemperatureHandler import OutsideTemperatureHandler
+from Nodes.TemperatureHandlers.RandomFluctuatingTemperatureHandler import RandomFluctuatingTemperatureHandler
 
 engine = NodeEngine()
 
@@ -19,7 +17,7 @@ with open("configuration.json") as f:
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
 
     # Add a random temperature fluctuation
-    engine.setOutsideTemperatureHandler(OutsideTemperatureHandler())
+    engine.setOutsideTemperatureHandler(RandomFluctuatingTemperatureHandler())
 
 generator = engine.getNodeById("generator_1")
 generator.addModifier(OverrideDefaultSafetyControlsModifier(5))

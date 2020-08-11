@@ -1,7 +1,9 @@
 import random
 
+from .TemperatureHandler import TemperatureHandler
 
-class OutsideTemperatureHandler:
+
+class RandomFluctuatingTemperatureHandler(TemperatureHandler):
     """
     Randomly vary the outside temperature a tiny bit (between -1 and 1 degree)
     """
