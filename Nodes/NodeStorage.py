@@ -53,9 +53,11 @@ class NodeStorage:
         return "%s.~%s~" % (self._base_storage_path, revision)
 
     def storeNodeState(self) -> None:
-        data_to_write = self.serializeAllNodes()
+        node_data = self.serializeAllNodes()
 
         name = self._getVersionedName(self._getCurrentRevision() + 1)
+
+        data_to_write = {"nodes": node_data}
 
         data_to_store = json.dumps(data_to_write, separators=(", ", ": "), indent=4)
         with atomic_write(name) as file:
@@ -84,7 +86,7 @@ class NodeStorage:
             data = file.read()
 
         parsed_json = json.loads(data)
-        for entry in parsed_json:
+        for entry in parsed_json["nodes"]:
             # TODO: This has no fault handling what so ever, which should be added at some point.
             node = self._engine.getNodeById(entry["node_id"])
             if node is not None:

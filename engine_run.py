@@ -7,12 +7,13 @@ from Nodes.DBusService import DBusService
 import dbus.mainloop.glib
 from gi.repository import GLib
 
+from Nodes.NodeStorage import NodeStorage
 from Nodes.TemperatureHandlers.PreScriptedTemperatureHandler import PreScriptedTemperatureHandler
 from Nodes.TemperatureHandlers.RandomFluctuatingTemperatureHandler import RandomFluctuatingTemperatureHandler
 
 engine = NodeEngine()
 
-with open("configuration.json") as f:
+with open("configuration2.json") as f:
     loaded_data = json.loads(f.read())
     engine.registerNodesFromConfigurationData(loaded_data["nodes"])
     engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
@@ -20,10 +21,12 @@ with open("configuration.json") as f:
     # Add a random temperature fluctuation
     engine.setOutsideTemperatureHandler(PreScriptedTemperatureHandler())
 
-generator = engine.getNodeById("generator_1")
-generator.addModifier(OverrideDefaultSafetyControlsModifier(5))
-engine.doTick()
-#storage = NodeStorage(engine)
+storage = NodeStorage(engine)
+
+#storage.restoreNodeState()
+
+#engine.doTick()
+
 
 #engine.start()
 
