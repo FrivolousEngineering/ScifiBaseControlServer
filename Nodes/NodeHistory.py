@@ -1,5 +1,5 @@
 from threading import Lock
-from typing import Dict, List, Deque
+from typing import Dict, List, Deque, Any
 from collections import deque
 
 from Nodes.Node import Node
@@ -34,6 +34,16 @@ class NodeHistory:
 
     def getNode(self) -> Node:
         return self._node
+
+    def serialize(self) -> Dict[str, Any]:
+        """
+        Serialize this nodeHistory so that it can be stored somewhere (eg; save to file)
+        :return: A dict with keys for the attribute.
+        """
+        result = {}  # type: Dict[str, Any]
+        result["resources_produced_history"] = self._convertDequeDictToListDict(self._resources_produced_history)
+        result["resources_gained_history"] = self._convertDequeDictToListDict(self._resources_gained_history)
+        return result
 
     def getTickOffset(self) -> int:
         """

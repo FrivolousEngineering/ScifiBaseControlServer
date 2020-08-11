@@ -44,6 +44,16 @@ class NodeStorage:
             data.append(node.serialize())
         return data
 
+    def serializeAllNodeHistories(self) -> Dict[str, Dict[str, Any]]:
+        data = {}
+        for node_id in self._engine.getAllNodes().keys():
+            history = self._engine.getNodeHistoryById(node_id)
+            if history:
+                data[node_id] = history.serialize()
+            else:
+                print("Unable to restore %s" % node_id)
+        return data
+
     def _getVersionedName(self, revision: int) -> str:
         """
         Create a versioned path name based on the provided revision
@@ -58,6 +68,7 @@ class NodeStorage:
         name = self._getVersionedName(self._getCurrentRevision() + 1)
 
         data_to_write = {"nodes": node_data}
+        data_to_write["histories"] = self.serializeAllNodeHistories()
 
         data_to_store = json.dumps(data_to_write, separators=(", ", ": "), indent=4)
         with atomic_write(name) as file:
