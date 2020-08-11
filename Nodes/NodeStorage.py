@@ -67,7 +67,7 @@ class NodeStorage:
 
         name = self._getVersionedName(self._getCurrentRevision() + 1)
 
-        data_to_write = {"nodes": node_data}
+        data_to_write = {"nodes": node_data}  # type: Dict[str, Any]
         data_to_write["histories"] = self.serializeAllNodeHistories()
 
         data_to_store = json.dumps(data_to_write, separators=(", ", ": "), indent=4)
@@ -102,3 +102,13 @@ class NodeStorage:
             node = self._engine.getNodeById(entry["node_id"])
             if node is not None:
                 node.deserialize(entry)
+
+            history_data = parsed_json["histories"].get(entry["node_id"])
+            if history_data:
+                node_history = self._engine.getNodeHistoryById(entry["node_id"])
+                if node_history is not None:
+                    node_history.deserialize(history_data)
+                else:
+                    print("Could not find node_history for %s", entry["node_id"])
+            else:
+                print("Could not find history_data for %s", entry["node_id"])
