@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class NodeStorage:
     def __init__(self, engine: "NodeEngine") -> None:
         self._engine = engine
-        self._engine.postUpdateCalled.connect(self.storeNodeState)
+        self._engine.tickCompleted.connect(self.storeNodeState)
         self._base_storage_path = "node_state.json"
         self._num_versions_to_save = 3
 

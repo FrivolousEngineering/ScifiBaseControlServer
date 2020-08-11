@@ -22,6 +22,7 @@ class NodeEngine:
     preUpdateCalled = Signal()
     updateCalled = Signal()
     postUpdateCalled = Signal()
+    tickCompleted = Signal()
 
     def __init__(self) -> None:
         self._nodes = {}  # type: Dict[str, Node]
@@ -148,4 +149,5 @@ class NodeEngine:
             self._update()
             self._postUpdate()
             self._tick_count += 1
+            self.tickCompleted.emit()
         print("TICK ENDED!")
