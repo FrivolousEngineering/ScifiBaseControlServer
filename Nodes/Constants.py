@@ -28,3 +28,5 @@ COMBUSTION_HEAT = {"water": 0,
                    "dirty_water": 0,
                    "waste": 3000
                    }
+
+SECONDS_PER_TICK = 60
