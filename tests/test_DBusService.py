@@ -127,6 +127,29 @@ def test_getAdditionalPropertyHistory(DBus):
         assert DBus.getAdditionalPropertyHistory("whoo", "yay") == []
 
 
+def test_getResourcesGainedHistory(DBus):
+    history = MagicMock(getResourcesGainedHistory=MagicMock(return_value={"yay": [10, 22, 21]}))
+
+    with patch.dict(node_history_dict, {"zomg": history}):
+        assert DBus.getResourcesGainedHistory("zomg") == {"yay": [10, 22, 21]}
+        assert DBus.getResourcesGainedHistory("unknown_node") == {}
+
+
+def test_getResourcesProducedHistory(DBus):
+    history = MagicMock(getResourcesProducedHistory=MagicMock(return_value={"yay": [10, 22, 200]}))
+
+    with patch.dict(node_history_dict, {"zomg": history}):
+        assert DBus.getResourcesProducedHistory("zomg") == {"yay": [10, 22, 200]}
+        assert DBus.getResourcesProducedHistory("unknown_node") == {}
+
+
+def test_getHistoryOffset(DBus):
+    history = MagicMock(getTickOffset=MagicMock(return_value=20))
+    with patch.dict(node_history_dict, {"history_node": history}):
+        assert DBus.getHistoryOffset("history_node") == 20
+        assert DBus.getHistoryOffset("unknown_node") == 0
+
+
 def test_addModifierToNode(DBus):
     mod_node = MagicMock()
     modifier = MagicMock()
