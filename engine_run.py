@@ -15,8 +15,7 @@ engine = NodeEngine()
 
 with open("configuration2.json") as f:
     loaded_data = json.loads(f.read())
-    engine.registerNodesFromConfigurationData(loaded_data["nodes"])
-    engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
+    engine.deserialize(loaded_data)
 
     # Add a random temperature fluctuation
     engine.setOutsideTemperatureHandler(PreScriptedTemperatureHandler())

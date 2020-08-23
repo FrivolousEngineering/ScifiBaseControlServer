@@ -13,8 +13,7 @@ def test_MultiWaterCooler():
     # Load a nice complex setup.
     with open("tests/configurations/MultiWaterTankConfig.json") as f:
         loaded_data = json.loads(f.read())
-        engine.registerNodesFromConfigurationData(loaded_data["nodes"])
-        engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
+        engine.deserialize(loaded_data)
 
     for _ in range(0, 200):
         engine.doTick()
@@ -38,11 +37,8 @@ def test_restoreFromFile(config_file, ticks_to_run):
     # Load a nice complex setup.
     with open(path) as f:
         loaded_data = json.loads(f.read())
-        engine_with_storage.registerNodesFromConfigurationData(loaded_data["nodes"])
-        engine_with_storage.registerConnectionsFromConfigurationData(loaded_data["connections"])
-
-        engine.registerNodesFromConfigurationData(loaded_data["nodes"])
-        engine.registerConnectionsFromConfigurationData(loaded_data["connections"])
+        engine_with_storage.deserialize(loaded_data)
+        engine.deserialize(loaded_data)
 
     # Add a modifier
     first_key = next(iter(engine_with_storage.getAllNodes()))

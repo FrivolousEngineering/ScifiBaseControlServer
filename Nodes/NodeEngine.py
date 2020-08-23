@@ -70,11 +70,20 @@ class NodeEngine:
     def getNodeHistoryById(self, node_id) -> Optional[NodeHistory]:
         return self._node_histories.get(node_id)
 
-    def registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
+    def deserialize(self, serialized: Dict[str, Any]) -> None:
+        """
+        Load a configuration file and create all the nodes & connections defined in it.
+        :param serialized: A Dict that must contain the keys nodes & connections.
+        :return:
+        """
+        self._registerNodesFromConfigurationData(serialized["nodes"])
+        self._registerConnectionsFromConfigurationData(serialized["connections"])
+
+    def _registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
         for key, data in serialized.items():
             self.registerNode(NodeFactory.createNode(key, data))
 
-    def registerConnectionsFromConfigurationData(self, serialized: List[Dict[str, str]]) -> None:
+    def _registerConnectionsFromConfigurationData(self, serialized: List[Dict[str, str]]) -> None:
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
