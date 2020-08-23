@@ -107,10 +107,8 @@ class Server(Flask):
             self._nodes = None
         else:
             self.logger.warning("An exception occured %s" % str(exception))
-
         return Response(str(exception),
-                        status=500,
-                        mimetype="application/json")
+                        status=500)
 
     def _setupDBUS(self) -> None:
         self._initDBUS()
