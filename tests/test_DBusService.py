@@ -59,7 +59,8 @@ def test_getUnknownNodeTemperature(DBus):
                                               ("additional_properties", ["omg", "woah!", "panda"]),
                                               ("amount_stored", 17),
                                               ("min_performance", 0.2),
-                                              ("max_performance", 1.3)])
+                                              ("max_performance", 1.3),
+                                              ("target_performance", 0.2)])
 def test_getAttributeValue(DBus, node, attribute, value):
     setattr(node, attribute, value)
 
@@ -81,7 +82,8 @@ def test_getAttributeValue(DBus, node, attribute, value):
                                               ("additional_properties", []),
                                               ("amount_stored", -1),
                                               ("min_performance", 1),
-                                              ("max_performance", 1)])
+                                              ("max_performance", 1),
+                                              ("target_performance", 0)])
 def test_getAttributeValueUnknownNode(DBus, node, attribute, value):
     setattr(node, attribute, value)
 
@@ -125,3 +127,35 @@ def test_getAdditionalPropertyHistory(DBus):
         assert DBus.getAdditionalPropertyHistory("whoo", "yay") == []
 
 
+def test_addModifierToNode(DBus):
+    mod_node = MagicMock()
+    modifier = MagicMock()
+    modifier_func = MagicMock(return_value = modifier, name ="mod func")
+    with patch("Nodes.DBusService.createModifier", modifier_func):
+        with patch.dict(node_dict, {"to_be_modified_node": mod_node}):
+            DBus.addModifierToNode("to_be_modified_node", "yay")
+    modifier_func.assert_called_once_with("yay")
+    mod_node.addModifier.assert_called_once_with(modifier)
+
+
+def test_getActiveModifiers(DBus):
+    mod_node = MagicMock()
+    unmodded_node = MagicMock()
+
+    modifier = MagicMock(duration = 200)
+    modifier.name = "modifier"  # Can't set that directly in constructor, since magicMock uses name itself
+    mod_node.getModifiers = MagicMock(return_value=[modifier])
+    unmodded_node.getModifiers = MagicMock(return_value = [])
+    with patch.dict(node_dict, {"modded_node": mod_node, "unmodded_node": unmodded_node}):
+        assert DBus.getActiveModifiers("modded_node") == [{"name": "modifier", "duration": 200}]
+        assert DBus.getActiveModifiers("unmodded_node") == []
+        assert DBus.getActiveModifiers("unknown_node") == []
+
+
+def test_isNodeEnabled(DBus):
+    node = MagicMock(enabled = True)
+    disabled_node = MagicMock(enabled = False)
+    with patch.dict(node_dict, {"node": node, "disabled_node": disabled_node}):
+        assert DBus.isNodeEnabled("node")
+        assert not DBus.isNodeEnabled("disabled_node")
+        assert not DBus.isNodeEnabled("unknown_node")
