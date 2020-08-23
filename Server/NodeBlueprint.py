@@ -18,6 +18,8 @@ connection = api.model("connection", {
     "resource_type": fields.String
 })
 
+UNKNOWN_NODE_RESPONSE = Response("Could not find the requested node", status=404)
+
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
                              example = "generator",
@@ -53,8 +55,7 @@ class Node(Resource):
         nodes = app.getDBusObject()
         data = getNodeData(node_id)
         if data is None:
-            return Response("Could not find the requested node",
-                            status=404)
+            return UNKNOWN_NODE_RESPONSE
         data["surface_area"] = nodes.getSurfaceArea(node_id)  # type: ignore
         data["description"] = nodes.getDescription(node_id)  # type: ignore
         return data
@@ -64,13 +65,17 @@ class Node(Resource):
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Enabled(Resource):
     @api.response(200, 'Success', fields.Boolean())
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
-
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.isNodeEnabled(node_id)
 
     def put(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
 
 
@@ -82,14 +87,20 @@ performance_parser.add_argument('performance', type=float, help='New performance
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Performance(Resource):
     @api.response(200, 'Success', fields.Float(default = 1))
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getPerformance(node_id)
 
     @api.response(200, 'Success', fields.Float)
+    @api.response(404, "Unknown Node")
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         if "performance" in request.form:
             new_performance = request.form["performance"]
         else:
@@ -97,18 +108,25 @@ class Performance(Resource):
         nodes.setTargetPerformance(node_id, float(new_performance))
         return nodes.getPerformance(node_id)
 
+
 @node_namespace.route('/<string:node_id>/target_performance/')
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class TargetPerformance(Resource):
     @api.response(200, 'Success', fields.Float(default = 1))
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getTargetPerformance(node_id)
 
     @api.response(200, 'Success', fields.Float)
+    @api.response(404, "Unknown Node")
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         if "performance" in request.form:
             new_performance = request.form["performance"]
         else:
@@ -126,8 +144,11 @@ def swagger_ui():
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class TemperatureHistory(Resource):
     @api.response(200, "success", fields.List(fields.Float))
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         result = nodes.getTemperatureHistory(node_id)  # type: ignore
         show_last = request.args.get("showLast")
         if show_last is not None and show_last:
@@ -143,8 +164,11 @@ class TemperatureHistory(Resource):
                     description = "Get the temperature of the node in deg Kelvin")
 class Temperature(Resource):
     @api.response(200, 'Success', fields.Float)
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getTemperature(node_id)
 
 
@@ -152,8 +176,11 @@ class Temperature(Resource):
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get the history of a certain attribute")
 class AdditionalPropertyHistory(Resource):
+    @api.response(404, "Unknown Node")
     def get(self, node_id, prop):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getAdditionalPropertyHistory(node_id, prop)
 
 
@@ -162,8 +189,11 @@ class AdditionalPropertyHistory(Resource):
                     description = "Get the value of all extra attributes")
 class AdditionalProperties(Resource):
     @api.response(200, "success", fields.List(fields.Float))
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         additional_properties = nodes.getAdditionalProperties(node_id)
         result = {}
         for prop in additional_properties:
@@ -175,9 +205,13 @@ class AdditionalProperties(Resource):
 
 @node_namespace.route("/<node_id>/all_property_chart_data/")
 class AllProperties(Resource):
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         show_last = request.args.get("showLast")
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
+
         all_property_histories = {}
 
         all_property_histories["offset"] = nodes.getHistoryOffset(node_id)
@@ -208,8 +242,11 @@ class AllProperties(Resource):
                     description = "Get a list of all connections that connect to this node")
 class IncomingConnections(Resource):
     @api.response(200, 'Success', [connection])
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getIncomingConnections(node_id)
 
 
@@ -218,24 +255,34 @@ class IncomingConnections(Resource):
                     description = "Get a list of all connections that connect from this node")
 class OutgoingConnections(Resource):
     @api.response(200, 'Success', [connection])
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
+
         return nodes.getOutgoingConnections(node_id)
 
 
 @node_namespace.route("/<node_id>/modifiers/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Modifiers(Resource):
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         return nodes.getActiveModifiers(node_id)
 
 
 @node_namespace.route("/<node_id>/static_properties/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class StaticProperties(Resource):
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         data = {}
         data["surface_area"] = nodes.getSurfaceArea(node_id)
         data["description"] = nodes.getDescription(node_id)
@@ -246,8 +293,11 @@ class StaticProperties(Resource):
 @node_namespace.doc(params={'node_id': 'Identifier of the node',
                             "additional_property": "The name of the attribute to request"})
 class AdditionalProperty(Resource):
+    @api.response(404, "Unknown Node")
     def get(self, node_id, additional_property):
         nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
         data = nodes.getAdditionalPropertyValue(node_id, additional_property)
         return data
 

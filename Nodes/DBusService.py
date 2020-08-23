@@ -199,6 +199,10 @@ class DBusService(dbus.service.Object):
     def getAllNodeIds(self) -> List[str]:
         return self._node_engine.getAllNodeIds()
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
+    def doesNodeExist(self, node_id) -> bool:
+        return node_id in self._node_engine.getAllNodeIds()
+
     @dbus.service.method("com.frivengi.nodes")
     def doTick(self) -> None:
         self._node_engine.doTick()
