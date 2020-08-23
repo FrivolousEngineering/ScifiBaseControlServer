@@ -67,7 +67,7 @@ class NodeEngine:
     def getNodeById(self, node_id: str) -> Optional[Node]:
         return self._nodes.get(node_id)
 
-    def getNodeHistoryById(self, node_id) -> Optional[NodeHistory]:
+    def getNodeHistoryById(self, node_id: str) -> Optional[NodeHistory]:
         return self._node_histories.get(node_id)
 
     def deserialize(self, serialized: Dict[str, Any]) -> None:
