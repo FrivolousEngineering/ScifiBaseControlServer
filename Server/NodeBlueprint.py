@@ -20,7 +20,8 @@ node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node", example = "generator"),
     "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin", example = 273.3),
     "amount": fields.Float(description = "How much has this node stored. If the node has no storage, the value will be -1", example = -1),
-    "performance": fields.Float(description = "At what capacity is this node trying to run? The number is a factor and will always be between min_performance and max_performance", example = 1),
+    "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance", example = 1),
+    "target_performance": fields.Float(description = "What performance / capacity level is this node trying to reach? Note that not all nodes have an instant change, so it's target can be different from it's actual performance ", example = 1),
     "min_performance": fields.Float(example = 0.5),
     "max_performance": fields.Float(example = 1.5),
     "max_safe_temperature": fields.Float(example = 500),
@@ -66,6 +67,25 @@ class Performance(Resource):
     def get(self, node_id):
         nodes = app.getDBusObject()
         return nodes.getPerformance(node_id)
+
+    @api.response(200, 'Success', fields.Float)
+    @api.expect(performance_parser)
+    def put(self, node_id):
+        nodes = app.getDBusObject()
+        if "performance" in request.form:
+            new_performance = request.form["performance"]
+        else:
+            new_performance = json.loads(request.data)["performance"]
+        nodes.setTargetPerformance(node_id, float(new_performance))
+        return nodes.getPerformance(node_id)
+
+@node_namespace.route('/<string:node_id>/target_performance/')
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class TargetPerformance(Resource):
+    @api.response(200, 'Success', fields.Float(default = 1))
+    def get(self, node_id):
+        nodes = app.getDBusObject()
+        return nodes.getTargetPerformance(node_id)
 
     @api.response(200, 'Success', fields.Float)
     @api.expect(performance_parser)
@@ -235,6 +255,7 @@ def getNodeData(node_id: str):
             "enabled": nodes.isNodeEnabled(node_id),
             "active": nodes.isNodeActive(node_id),
             "performance": nodes.getPerformance(node_id),
+            "target_performance": nodes.getTargetPerformance(node_id),
             "min_performance": nodes.getMinPerformance(node_id),
             "max_performance": nodes.getMaxPerformance(node_id),
             "max_safe_temperature": nodes.getMaxSafeTemperature(node_id),

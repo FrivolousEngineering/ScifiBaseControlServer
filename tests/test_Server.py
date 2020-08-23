@@ -44,6 +44,7 @@ def app():
     mocked_dbus.getHeatConvectionCoefficient = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_convection"))
     mocked_dbus.isNodeActive = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="active"))
     mocked_dbus.getHistoryOffset = MagicMock(return_value = 0)
+    mocked_dbus.getTargetPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="target_performance"))
     return app
 
 
@@ -114,6 +115,12 @@ def test_putPerformance(client):
     response = client.put("/node/default/performance/", data = {"performance": 200})
     assert response.status_code == 200
     client.application.getMockedClient().setTargetPerformance.assert_called_with("default", 200)
+
+
+def test_getTargetPerformance(client):
+    with patch.dict(default_property_dict, {"target_performance": 2}):
+        response = client.get("/node/default/target_performance/")
+    assert response.data.strip() == b'2'
 
 
 def test_getEnabled(client):
