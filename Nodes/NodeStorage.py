@@ -12,8 +12,14 @@ class NodeStorage:
     def __init__(self, engine: "NodeEngine") -> None:
         self._engine = engine
         self._engine.tickCompleted.connect(self.storeNodeState)
-        self._base_storage_path = "node_state.json"
+        self.storage_name = "node_state.json"
         self._num_versions_to_save = 3
+
+    @property
+    def base_storage_path(self):
+        if self.storage_name.endswith(".json"):
+            return self.storage_name
+        return self.storage_name + ".json"
 
     def _getCurrentRevision(self) -> int:
         """
@@ -27,7 +33,7 @@ class NodeStorage:
         :return: Get the revision numbers of all of backups.
         """
         revisions = []
-        backup_names = glob.glob("%s.~[0-9]*~" % (self._base_storage_path))
+        backup_names = glob.glob("%s.~[0-9]*~" % self.base_storage_path)
         for name in backup_names:
             try:
                 revision = int(name.split("~")[-2])
@@ -60,7 +66,7 @@ class NodeStorage:
         :param revision:
         :return: New path with a versioned name
         """
-        return "%s.~%s~" % (self._base_storage_path, revision)
+        return "%s.~%s~" % (self.base_storage_path, revision)
 
     def storeNodeState(self) -> None:
         node_data = self.serializeAllNodes()
@@ -74,7 +80,7 @@ class NodeStorage:
         with atomic_write(name) as file:
             file.write(data_to_store)
 
-        with atomic_write(self._base_storage_path, overwrite = True) as file:
+        with atomic_write(self.base_storage_path, overwrite = True) as file:
             file.write(data_to_store)
 
         self._deleteOldRevisions()
@@ -92,8 +98,20 @@ class NodeStorage:
             if os.path.isfile(pathname):
                 os.remove(pathname)
 
+    def purgeAllRevisions(self):
+        """
+        Not for the faint of heart! This will purge *all* data regarding stored versions from the disk.
+        This is used to clean up after tests.
+        :return:
+        """
+        revisions = self._getAllRevisions()
+        for revision in revisions:
+            pathname = self._getVersionedName(revision)
+            if os.path.isfile(pathname):
+                os.remove(pathname)
+
     def restoreNodeState(self) -> None:
-        with open("node_state.json") as file:
+        with open(self.base_storage_path) as file:
             data = file.read()
 
         parsed_json = json.loads(data)

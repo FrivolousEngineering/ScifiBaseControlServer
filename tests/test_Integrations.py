@@ -31,6 +31,7 @@ def test_MultiWaterCooler():
 def test_restoreFromFile(config_file, ticks_to_run):
     engine_with_storage = NodeEngine()
     storage = NodeStorage(engine_with_storage)
+    storage.storage_name = "test_storage"
 
     engine = NodeEngine()
     path = "tests/configurations/" + config_file
@@ -50,6 +51,7 @@ def test_restoreFromFile(config_file, ticks_to_run):
     # We've now created a storage file by letting the given configuration run for 10 ticks!
     # Time to restore it!
     new_storage = NodeStorage(engine)
+    new_storage.storage_name = "test_storage.json"
     new_storage.restoreNodeState()
 
     for node_id, restored_node in engine.getAllNodes().items():
@@ -60,3 +62,5 @@ def test_restoreFromFile(config_file, ticks_to_run):
         assert restored_node.getModifiers() == original_node.getModifiers()
 
     assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())
+
+    storage.purgeAllRevisions()
