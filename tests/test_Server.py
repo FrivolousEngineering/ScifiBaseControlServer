@@ -8,6 +8,7 @@ from Server.Server import Server
 
 default_property_dict = {}
 
+known_ids = []
 
 def getNodeAttribute(*args, **kwargs):
     if args[0] == "default":
@@ -35,7 +36,7 @@ def app():
     mocked_dbus.getMaxAdditionalPropertyValue = MagicMock(side_effect=lambda r, s: getNodeAttribute(r, attribute_name="additional_property_max")[s])
     mocked_dbus.getAdditionalPropertyValue = MagicMock(side_effect=lambda r, s: getNodeAttribute(r, attribute_name="additional_property_value")[s])
     mocked_dbus.getAdditionalPropertyHistory = MagicMock(side_effect=lambda r, s: getNodeAttribute(r, attribute_name="additional_property_history")[s])
-    mocked_dbus.getAllNodeIds = MagicMock(side_effect=lambda : getNodeAttribute("default", attribute_name="node_ids"))
+    mocked_dbus.getAllNodeIds = MagicMock(return_value = known_ids)
     mocked_dbus.getMinPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="min_performance"))
     mocked_dbus.getMaxPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="max_performance"))
     mocked_dbus.getAmountStored = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="amount"))
@@ -45,6 +46,7 @@ def app():
     mocked_dbus.isNodeActive = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="active"))
     mocked_dbus.getHistoryOffset = MagicMock(return_value = 0)
     mocked_dbus.getTargetPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="target_performance"))
+
     return app
 
 
@@ -134,6 +136,13 @@ def test_getAdditionalProperties(client):
         response = client.get("/node/default/additional_properties/")
     assert response.status_code == 200
     assert response.data.strip() == b'{"zomg": {"max_value": 20, "value": 1}, "omg": {"max_value": 200, "value": 300}}'
+
+
+def test_getUnknownNode(client):
+    with patch.dict(default_property_dict, {"default": {"node_ids": []}}):
+        response = client.get("/node/zomg/")
+
+    assert response.status_code == 404
 
 
 @pytest.mark.skip

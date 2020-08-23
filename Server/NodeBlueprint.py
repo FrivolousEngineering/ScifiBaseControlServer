@@ -1,4 +1,6 @@
-from flask import Blueprint, request
+from typing import Optional, Dict, Any
+
+from flask import Blueprint, request, Response
 from flask import current_app as app
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 import json
@@ -42,13 +44,17 @@ node = api.model("node", {
 })
 
 
-@node_namespace.route("/<node_id>/")
+@node_namespace.route("/<string:node_id>/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Node(Resource):
     @api.response(200, "success", node)
+    @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getDBusObject()
         data = getNodeData(node_id)
+        if data is None:
+            return Response("Could not find the requested node",
+                            status=404)
         data["surface_area"] = nodes.getSurfaceArea(node_id)  # type: ignore
         data["description"] = nodes.getDescription(node_id)  # type: ignore
         return data
@@ -259,8 +265,10 @@ class Nodes(Resource):
         return display_data
 
 
-def getNodeData(node_id: str):
+def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
     nodes = app.getDBusObject()
+    if node_id not in nodes.getAllNodeIds():
+        return None
     data = {"node_id": node_id,
             "temperature": nodes.getTemperature(node_id),
             "amount": round(nodes.getAmountStored(node_id), 2),
