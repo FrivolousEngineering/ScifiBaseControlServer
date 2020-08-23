@@ -5,8 +5,8 @@ import json
 
 
 node_blueprint = Blueprint('node', __name__)
-api = Api(node_blueprint, description="Node data. Yay")
-node_namespace = Namespace("node", description = "omgzomgbbq")
+api = Api(node_blueprint, description="This API enables access & control of this system.")
+node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
 api.add_namespace(node_namespace)
 
@@ -17,16 +17,28 @@ connection = api.model("connection", {
 })
 
 node = api.model("node", {
-    "node_id": fields.String(description = "Unique identifier of the node", example = "generator"),
-    "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin", example = 273.3),
-    "amount": fields.Float(description = "How much has this node stored. If the node has no storage, the value will be -1", example = -1),
-    "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance", example = 1),
-    "target_performance": fields.Float(description = "What performance / capacity level is this node trying to reach? Note that not all nodes have an instant change, so it's target can be different from it's actual performance ", example = 1),
-    "min_performance": fields.Float(example = 0.5),
-    "max_performance": fields.Float(example = 1.5),
-    "max_safe_temperature": fields.Float(example = 500),
+    "node_id": fields.String(description = "Unique identifier of the node",
+                             example = "generator",
+                             readonly = True),
+    "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin",
+                                example = 273.3),
+    "amount": fields.Float(description = "How much has this node stored. If the node has no storage, the value will be -1",
+                           example = -1),
+    "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance",
+                                example = 1),
+    "target_performance": fields.Float(description = "What performance / capacity level is this node trying to reach? Note that not all nodes have an instant change, so it's target can be different from it's actual performance ",
+                                       example = 1),
+    "min_performance": fields.Float(description = "What is the minimum value of performance that this node can have?",
+                                    example = 0.5),
+    "max_performance": fields.Float(description = "What is the max value of performance that this node can have?",
+                                    example = 1.5),
+    "max_safe_temperature": fields.Float(description = "From what temperature up will this node start getting damage?",
+                                         example = 500),
     "heat_convection": fields.Float,
-    "heat_emissivity": fields.Float
+    "heat_emissivity": fields.Float,
+    "health": fields.Float(description = "How much health does this node have? This usually runs from 0 to 100.",
+                           example = 50,
+                           readonly = True)
 })
 
 
@@ -226,7 +238,7 @@ class StaticProperties(Resource):
 
 @node_namespace.route("/<string:node_id>/<string:additional_property>/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node',
-                            "additional_property": "name of the attribute"})
+                            "additional_property": "The name of the attribute to request"})
 class AdditionalProperty(Resource):
     def get(self, node_id, additional_property):
         nodes = app.getDBusObject()
@@ -260,6 +272,7 @@ def getNodeData(node_id: str):
             "max_performance": nodes.getMaxPerformance(node_id),
             "max_safe_temperature": nodes.getMaxSafeTemperature(node_id),
             "heat_convection": nodes.getHeatConvectionCoefficient(node_id),
-            "heat_emissivity": nodes.getHeatEmissivity(node_id)
+            "heat_emissivity": nodes.getHeatEmissivity(node_id),
+            "health": nodes.getAdditionalPropertyValue(node_id, "health")
             }
     return data
