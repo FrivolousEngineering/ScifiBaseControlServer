@@ -28,6 +28,10 @@ class Generator(Node):
         self._resources_required_per_tick[fuel_type] = 10
         self._resources_required_per_tick["water"] = 250
 
+        self._resources_left_over["energy"] = 0
+
+        self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
+
         self._min_performance = 0.5
         self._max_performance = 2
 
@@ -54,27 +58,27 @@ class Generator(Node):
         result = self._temperature_efficiency * (2 - health_factor)
         return result
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        resources_left = self._resources_left_over["energy"]
+
+        self._resources_required_per_tick[self._fuel_type] = max(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - resources_left, 0)
+
     def update(self) -> None:
         super().update()
 
         fuel_gained = self.getResourceAvailableThisTick(self._fuel_type)
 
-        energy_available = fuel_gained * self.effectiveness_factor * self._energy_factor
+        energy_available = fuel_gained * self.effectiveness_factor * self._energy_factor + self._resources_left_over["energy"]
 
         # Attempt to "get rid" of the energy by offering it to connected sources.
         energy_left = self._provideResourceToOutogingConnections("energy", energy_available)
-
-        # So, every energy that we didn't give away also means that didn't actually result in fuel being burnt.
-        # That's why we put whatever is left back into the fuel "reservoir"
-        fuel_left = self.inverted_health_effectiveness_factor * energy_left
-        self._resources_left_over[self._fuel_type] = fuel_left
 
         # We specifically use what is in the received dict (instead of the energy_available), because we want to
         # know how much was generated (and the resources available also takes leftovers into account)
         self._resources_produced_this_tick["energy"] = max(energy_available - energy_left, 0)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
-        heat_produced = (fuel_gained - fuel_left) * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
+        heat_produced = fuel_gained * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
         # Same thing for the water. Check how much water we have.
@@ -86,3 +90,8 @@ class Generator(Node):
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left
         self._resources_produced_this_tick["water"] = max(self._resources_received_this_tick["water"] - water_left, 0)
+
+        self._resources_left_over["energy"] = energy_left
+
+        # Based on what happened last turn, we should potentially ask for a bit less.
+        self._updateResourceRequiredPerTick()
