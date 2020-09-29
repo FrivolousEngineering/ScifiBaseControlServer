@@ -92,7 +92,7 @@ class Performance(Resource):
         nodes = app.getDBusObject()
         if not nodes.doesNodeExist(node_id):
             return UNKNOWN_NODE_RESPONSE
-        return nodes.getPerformance(node_id)
+        return float(nodes.getPerformance(node_id))
 
     @api.response(200, 'Success', fields.Float)
     @api.response(404, "Unknown Node")

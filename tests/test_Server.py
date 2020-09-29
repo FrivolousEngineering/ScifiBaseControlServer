@@ -83,7 +83,7 @@ def test_getOutgoingConnections(client):
 def test_getPerformance(client):
     with patch.dict(default_property_dict, {"performance": 12}):
         response = client.get("/node/default/performance/")
-    assert response.data.strip() == b'12'
+    assert response.data.strip() == b'12.0'
 
 
 def test_setEnabled(client):
