@@ -15,6 +15,8 @@ class WaterPurifier(Node):
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
+        self._waste_oxygen_conversion_rate = 2 # Two oxygen is required to convert one waste
+
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
 
@@ -30,14 +32,25 @@ class WaterPurifier(Node):
 
         dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
 
-        resources_produced = min(oxygen_available, dirty_water_available)
+        # Half of the production can be done without using oxygen.
+        dirty_water_converted_for_free = max(0, dirty_water_available - self._original_resources_required_per_tick["dirty_water"] / 2)
 
-        self._resources_left_over["oxygen"] = oxygen_available - resources_produced
-        self._resources_left_over["dirty_water"] = dirty_water_available - resources_produced
+        # Now we know how much dirty water we can convert as a bonus
+        dirty_water_converted_oxygen = max(0, dirty_water_available - dirty_water_converted_for_free)
+
+        # Now figure out how much oxygen we could spend on the "extra" water
+        max_oxygen_required = dirty_water_converted_oxygen * self._waste_oxygen_conversion_rate
+
+        oxygen_required = min(max_oxygen_required, oxygen_available)
+        dirty_water_converted_oxygen = 1 / self._waste_oxygen_conversion_rate * oxygen_required
+        dirty_water_converted_total = dirty_water_converted_for_free + dirty_water_converted_oxygen
+
+        self._resources_left_over["oxygen"] = oxygen_available - oxygen_required
+        self._resources_left_over["dirty_water"] = dirty_water_available - dirty_water_converted_total
 
         # Ensure that we also check how much we had left from the last turn
-        clean_water_available = resources_produced + self._resources_left_over.get("water", 0)
-        waste_available = resources_produced + self._resources_left_over.get("waste", 0)
+        clean_water_available = dirty_water_converted_total + self._resources_left_over.get("water", 0)
+        waste_available = oxygen_required + self._resources_left_over.get("waste", 0)
 
         # Attempt to distribute the resources.
         clean_water_left = self._provideResourceToOutogingConnections("water", clean_water_available)
