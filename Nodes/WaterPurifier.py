@@ -22,6 +22,7 @@ class WaterPurifier(Node):
 
         self._resources_required_per_tick["oxygen"] = max(self._original_resources_required_per_tick["oxygen"]
                                                           * self.effectiveness_factor - resources_left, 0)
+
         self._resources_required_per_tick["dirty_water"] = max(
             self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left, 0)
 
@@ -50,7 +51,7 @@ class WaterPurifier(Node):
 
         # Ensure that we also check how much we had left from the last turn
         clean_water_available = dirty_water_converted_total + self._resources_left_over.get("water", 0)
-        waste_available = oxygen_required + self._resources_left_over.get("waste", 0)
+        waste_available = dirty_water_converted_total + self._resources_left_over.get("waste", 0)
 
         # Attempt to distribute the resources.
         clean_water_left = self._provideResourceToOutogingConnections("water", clean_water_available)
