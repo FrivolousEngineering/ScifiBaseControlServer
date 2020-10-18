@@ -345,7 +345,7 @@ class Node:
         # Performance works with a target and an actual performance.
         if self.performance == self.target_performance:
             return
-    
+
         new_performance = self.performance + (self.target_performance - self.performance) / self.performance_change_factor
 
         if abs(new_performance - self.target_performance) < 0.001:
