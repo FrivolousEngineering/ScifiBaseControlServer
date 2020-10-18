@@ -8,7 +8,7 @@ def test_setPerformance():
 
     valve.getResourceAvailableThisTick = MagicMock(return_value = 10)
 
-    valve._provideResourceToOutogingConnections = MagicMock(return_value=5)
+    valve._provideResourceToOutgoingConnections = MagicMock(return_value=5)
 
     valve._performance = 0.5
     valve._target_performance = 0.5
@@ -16,4 +16,4 @@ def test_setPerformance():
     valve.preUpdate()
     valve.update()
 
-    valve._provideResourceToOutogingConnections.assert_called_with("fuel", 5)
+    valve._provideResourceToOutgoingConnections.assert_called_with("fuel", 5)

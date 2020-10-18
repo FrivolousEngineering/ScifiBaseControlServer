@@ -10,7 +10,7 @@ def test_update():
     generator = Generator.Generator("omg")
 
     generator._resources_received_this_tick = {"fuel": 20, "water": 0}
-    generator._provideResourceToOutogingConnections = MagicMock(return_value = 5)
+    generator._provideResourceToOutgoingConnections = MagicMock(return_value = 5)
     generator._getAllReservedResources = MagicMock()
     generator.addHeat = MagicMock()
 
@@ -35,7 +35,7 @@ def test_setPerformance():
     generator = Generator.Generator("omg")
 
     generator._resources_received_this_tick = {"fuel": 10, "water": 0}
-    generator._provideResourceToOutogingConnections = MagicMock(return_value=0)
+    generator._provideResourceToOutgoingConnections = MagicMock(return_value=0)
     generator._getAllReservedResources = MagicMock()
     generator.addHeat = MagicMock()
 

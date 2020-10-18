@@ -230,7 +230,7 @@ def test_provideResourceToOutogingConnections(connections, amount_to_provide, re
 
     node.getAllOutgoingConnectionsByType = MagicMock(return_value = connections)
 
-    assert node._provideResourceToOutogingConnections("fuel", amount_to_provide) == resources_left
+    assert node._provideResourceToOutgoingConnections("fuel", amount_to_provide) == resources_left
 
 
 @pytest.mark.parametrize("resource_type", WEIGHT_PER_UNIT.keys())

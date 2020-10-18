@@ -46,7 +46,7 @@ class Valve(ResourceStorage):
         resources_left = self._amount - resources_to_distribute
 
         # Then we try to give as much away as possible.
-        self._amount = self._provideResourceToOutogingConnections(self._resource_type, resources_to_distribute) + resources_left
+        self._amount = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute) + resources_left
 
         # Finally, update how much the cooler should try to pull in.
         self._updateResourceRequiredPerTick()

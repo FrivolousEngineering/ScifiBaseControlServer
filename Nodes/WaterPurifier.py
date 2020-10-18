@@ -54,8 +54,8 @@ class WaterPurifier(Node):
         waste_available = dirty_water_converted_total + self._resources_left_over.get("waste", 0)
 
         # Attempt to distribute the resources.
-        clean_water_left = self._provideResourceToOutogingConnections("water", clean_water_available)
-        waste_left = self._provideResourceToOutogingConnections("waste", waste_available)
+        clean_water_left = self._provideResourceToOutgoingConnections("water", clean_water_available)
+        waste_left = self._provideResourceToOutgoingConnections("waste", waste_available)
 
         # Update the data for bookkeeping
         clean_water_provided = max(clean_water_available - clean_water_left, 0)

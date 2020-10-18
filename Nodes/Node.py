@@ -359,7 +359,7 @@ class Node:
             result += connection.getReservedResource()
         return result
 
-    def _provideResourceToOutogingConnections(self, resource_type: str, amount: float) -> float:
+    def _provideResourceToOutgoingConnections(self, resource_type: str, amount: float) -> float:
         """
         Provide resources of a given type to all outgoing connections. It's possible that not all resources could be
         moved. In this case the return value is > 0 (indicating how much could not be moved to another node).

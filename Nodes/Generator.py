@@ -70,7 +70,7 @@ class Generator(Node):
         energy_available = fuel_gained * self.effectiveness_factor * self._energy_factor + self._resources_left_over["energy"]
 
         # Attempt to "get rid" of the energy by offering it to connected sources.
-        energy_left = self._provideResourceToOutogingConnections("energy", energy_available)
+        energy_left = self._provideResourceToOutgoingConnections("energy", energy_available)
 
         # We specifically use what is in the received dict (instead of the energy_available), because we want to
         # know how much was generated (and the resources available also takes leftovers into account)
@@ -84,7 +84,7 @@ class Generator(Node):
         water_available = self.getResourceAvailableThisTick("water")
 
         # And try to get rid of some water
-        water_left = self._provideResourceToOutogingConnections("water", water_available)
+        water_left = self._provideResourceToOutgoingConnections("water", water_available)
 
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left

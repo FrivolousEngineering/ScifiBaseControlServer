@@ -35,7 +35,7 @@ class ComputationNode(Node):
         data_available = energy_gained * self.effectiveness_factor
 
         # Attempt to get rid of the data by offering it to connected sources.
-        data_left = self._provideResourceToOutogingConnections("data", data_available)
+        data_left = self._provideResourceToOutgoingConnections("data", data_available)
 
         # Note that we don't actually store the data we have left over. Data is a "use it or lose it" resource!
         data_produced = max(data_available - data_left, 0)
