@@ -64,6 +64,8 @@ class Node:
         # Is the node working at all?
         self._enabled = kwargs.get("enabled", True)
 
+        self._can_be_modified = kwargs.get("can_be_modified", True)
+
         self._update_lock = RLock()
 
         # A few examples of heat_convection_coefficient all in W/m K:
@@ -128,10 +130,16 @@ class Node:
     def optimal_temperature_range(self):
         return self._optimal_temperature_range
 
+    @property
+    def can_be_modified(self) -> bool:
+        return self._can_be_modified
+
     def getModifiers(self) -> List[Modifier]:
         return self._modifiers
 
     def addModifier(self, modifier: Modifier) -> None:
+        if not self._can_be_modified:
+            return
         self._modifiers.append(modifier)
         modifier.setNode(self)
 
