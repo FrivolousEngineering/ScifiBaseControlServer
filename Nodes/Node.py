@@ -31,7 +31,6 @@ class Node:
     Nodes can produce and require a certain amount of resources per tick.
     """
 
-    # TODO: Right now outside temp is hardcoded to 20 deg celcius
     outside_temp = 293.15
 
     preUpdateCalled = Signal()
