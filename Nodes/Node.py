@@ -8,6 +8,13 @@ from Signal import signalemitter, Signal
 
 
 def modifiable_property(f):
+    """
+    A modifiable property is one that can be modified by, you guessed it, modifiers.
+
+    If a property has a max_{property_name}, it will also be used to clamp it's max.
+    :param f:
+    :return:
+    """
     @property
     def wrapper(self, *args, **kwargs):
         modifier_value = 0
@@ -19,7 +26,10 @@ def modifiable_property(f):
 
         unmodified_value = f(self, *args, **kwargs)
         final_value = factor_value * unmodified_value + modifier_value
-        return final_value
+        try:
+            return min(getattr(self, "max_" + property_name), final_value)
+        except AttributeError:
+            return final_value
     return wrapper
 
 
@@ -209,7 +219,7 @@ class Node:
 
     @modifiable_property
     def health(self) -> float:
-        return self._health
+        return min(self.max_health, self._health)
 
     @property
     def max_health(self) -> float:
@@ -219,8 +229,13 @@ class Node:
         if amount < 0.:
             amount = 0.
         self._health += amount
-        if self._health > 100:
-            self._health = 100.
+        if self._health > self.max_health:
+            self._health = self.max_health
+
+    def damage(self, amount: float) -> None:
+        self._health -= amount
+        if self._health < 0:
+            self._health = 0
 
     @property
     def enabled(self) -> bool:
