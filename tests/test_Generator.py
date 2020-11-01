@@ -36,6 +36,15 @@ def test_oxygenGenerator():
         Generator.Generator("omg", fuel_type = "oxygen")
 
 
+@pytest.mark.parametrize("effectiveness_factor, efficiency", [(1, 0.5), (0.5, 0.75), (0.25, 0.875)])
+def test_temperature_efficiency(effectiveness_factor, efficiency):
+    generator = Generator.Generator("omg")
+
+    generator._getHealthEffectivenessFactor = MagicMock(return_value = effectiveness_factor)
+
+    assert generator.temperature_efficiency == efficiency
+
+
 def test_setPerformance():
     generator = Generator.Generator("omg")
 
