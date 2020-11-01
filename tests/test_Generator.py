@@ -48,7 +48,9 @@ def test_temperature_efficiency(effectiveness_factor, efficiency):
 @pytest.mark.parametrize("energy_left, fuel_per_tick_required, health_effectiveness_factor", [(1, 9, 1),  # One energy left over, so next turn we need 9 (10-1)
                                                                                               (5, 5, 1),  # 5 energy left over, so next turn we need 5 fuel (10-5)
                                                                                               (9, 1, 1),  # 9 energy left over, so next turn we need 1 fuel (10 - 9)
-                                                                                              (1, 4, 0.5)])  # 1 energy left over, but we were running at 50%, so (10 * 0.5 - 1)
+                                                                                              (1, 4, 0.5),  # 1 energy left over, but we were running at 50%, so (10 * 0.5 - 1)
+                                                                                              (11, 0, 1),  # Shouldn't happen; more energy was left than possible. Don't request anything!
+                                                                                              ])
 def test__update_resources_required_per_tick(energy_left, fuel_per_tick_required, health_effectiveness_factor):
     generator = Generator.Generator("omg")
     generator._resources_left_over["energy"] = energy_left
