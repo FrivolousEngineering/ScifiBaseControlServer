@@ -27,8 +27,13 @@ def test_update():
 
 def test_waterGenerator():
     # Water can't be burned. 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"^The provided fuel type \[water\] can't be burned!"):
         Generator.Generator("omg", fuel_type = "water")
+
+
+def test_oxygenGenerator():
+    with pytest.raises(ValueError, match=r"^The provided fuel type \[oxygen\] can't be burned!"):
+        Generator.Generator("omg", fuel_type = "oxygen")
 
 
 def test_setPerformance():

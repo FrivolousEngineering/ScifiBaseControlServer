@@ -21,7 +21,7 @@ class Generator(Node):
 
         # Some sanity checking.
         if COMBUSTION_HEAT[fuel_type] == 0:
-            raise ValueError("The provided fuel type [{fuel_type} can't be burned!]".format(fuel_type = fuel_type))
+            raise ValueError("The provided fuel type [{fuel_type}] can't be burned!".format(fuel_type = fuel_type))
 
         self._fuel_type = fuel_type
         self._energy_factor = energy_factor
