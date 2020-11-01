@@ -21,8 +21,30 @@ def test_update():
 
     generator.addHeat.assert_called_once()
     resources_produced_this_tick = generator.getResourcesProducedThisTick()
-    assert math.isclose(resources_produced_this_tick["energy"], 15)
+    assert math.isclose(resources_produced_this_tick["energy"], 15) # 20 fuel, 5 energy was provided, so 15 left
     assert math.isclose(resources_produced_this_tick["water"], 0)
+
+
+def test_update_with_different_energy_factor():
+    generator = Generator.Generator("omg", energy_factor=0.25)
+
+    generator._resources_received_this_tick = {"fuel": 20, "water": 0}
+
+    generator._provideResourceToOutgoingConnections = MagicMock(return_value=0)
+    generator._getAllReservedResources = MagicMock()
+    generator.addHeat = MagicMock()
+
+    # Set the generator at the perfect temperature
+    generator._temperature = generator._optimal_temperature
+
+    generator.update()
+
+    generator.addHeat.assert_called_once()
+    resources_produced_this_tick = generator.getResourcesProducedThisTick()
+    assert math.isclose(resources_produced_this_tick["energy"], 5) # 25% of how much fuel was obtained
+    assert math.isclose(resources_produced_this_tick["water"], 0)
+
+
 
 
 def test_waterGenerator():
