@@ -66,10 +66,10 @@ class Node:
 
         # Temperature is in kelvin
         self._temperature = temperature
-        self._weight = 300.
+        self._weight = 300.  # type: float
 
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
-        self._heat_emissivity = 0.5
+        self._heat_emissivity = 0.5  # type: float
 
         # Is the node working at all?
         self._enabled = kwargs.get("enabled", True)
@@ -82,11 +82,11 @@ class Node:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
         # Aluminum: 205 - 250
-        self._heat_convection_coefficient = 10.
+        self._heat_convection_coefficient = 10.  # type: float
         # How large is the surface of this object (in M2)
-        self._surface_area = 1.
+        self._surface_area = 1.  # type: float
         # A constant for heat.
-        self.__stefan_boltzmann_constant = 5.67e-8
+        self.__stefan_boltzmann_constant = 5.67e-8  # type: float
 
         # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
         # This is to notify the other observers that the property exists (for example, the NodeHistory uses this).
@@ -95,19 +95,19 @@ class Node:
 
         # How healthy is the node?
         self._health = 100.  # type: float
-        self._max_health = 100
-        self._active = False
+        self._max_health = 100  # type: float
+        self._active = False  # type: bool
         self._max_safe_temperature = 400  # type: float
 
         # At what level should this node perform?
-        self._performance = 1.
-        self._target_performance = 1.
+        self._performance = 1.  # type: float
+        self._target_performance = 1.  # type: float
 
-        self._min_performance = 1.
-        self._max_performance = 1.
+        self._min_performance = 1.  # type: float
+        self._max_performance = 1.  # type: float
 
         # How fast should this node degrade if it's above a certain temperature?
-        self._temperature_degradation_speed = 1.
+        self._temperature_degradation_speed = 1.  # type: float
 
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
@@ -118,15 +118,15 @@ class Node:
 
         # Does this node change it's performance instantly?
         # a value of 1 means it changes instantly, higher values means it changes slower.
-        self._performance_change_factor = 2
+        self._performance_change_factor = 2  # type: float
 
-        self._optimal_temperature = 375
-        self._optimal_temperature_range = 75
+        self._optimal_temperature = 375  # type: float
+        self._optimal_temperature_range = 75  # type: float
 
         # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
-        self._temperature_efficiency = 1.
+        self._temperature_efficiency = 1.  # type: float
 
     @modifiable_property
     def temperature_efficiency(self):
