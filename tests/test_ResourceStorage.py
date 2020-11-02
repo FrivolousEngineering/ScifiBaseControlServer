@@ -5,16 +5,16 @@ from Nodes import ResourceStorage, Node
 
 get_list = [(20,    0,      "energy"),  # Wrong resource type
             (20,    20,     "water"),
-            (3.7,   3.7,    "water"),
+            (0.9,   0.9,    "water"),
             (9001,  20,     "water"),
             (-20,   0,      "water")]
 
-give_list = [(20,   0,  None,   "energy"),
-             (20,   20, None,   "water"),
-             (99,   99, None,   "water"),
-             (5,    1,  21,     "water"),
-             (-20,  0,  200,    "water"),
-             (20,   20, 9000,   "water")]
+give_list = [(20,   0,      None,   "energy"),
+             (20,   20,     None,   "water"),
+             (0.9,  0.9,    None,   "water"),
+             (5,    1,      21,     "water"),
+             (-20,  0,      200,    "water"),
+             (20,   20,     9000,   "water")]
 
 
 @pytest.mark.parametrize("requested, gained, resource_type", get_list)
