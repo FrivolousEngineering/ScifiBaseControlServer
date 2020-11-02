@@ -46,6 +46,13 @@ def test_giveResource(requested, stored, max_storage, resource_type):
     assert storage.giveResource(resource_type, requested) == stored
     assert storage._amount == 20 + stored
 
+
+def test_giveResourceTwice():
+    storage = ResourceStorage.ResourceStorage("", "water", 20)
+    storage.giveResource("water", 10)
+    storage.giveResource("water", 20)
+    assert storage.amount_stored == 50
+
 @pytest.mark.parametrize("requested, received", [([20, 21], [10, 10]),
                                                  ([5, 9],   [5, 9]),
                                                  ([6, 6, 8], [6, 6, 8]),
