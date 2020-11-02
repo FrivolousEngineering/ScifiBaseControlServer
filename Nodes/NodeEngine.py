@@ -98,7 +98,8 @@ class NodeEngine:
     def _preUpdate(self) -> None:
         self.preUpdateCalled.emit()
         for node in self._nodes.values():
-            node.preUpdate()
+            if node.enabled:
+                node.preUpdate()
 
     def _updateReservations(self) -> None:
         """
@@ -129,6 +130,8 @@ class NodeEngine:
         while True:
             run_again = False
             for node in self._nodes.values():
+                if not node.enabled:
+                    continue
                 if node.requiresReplanning():
                     run_again = True
                     node.replanReservations()
@@ -147,7 +150,8 @@ class NodeEngine:
     def _postUpdate(self) -> None:
         self.postUpdateCalled.emit()
         for node in self._nodes.values():
-            node.postUpdate()
+            if node.enabled:
+                node.postUpdate()
 
     def doTick(self) -> None:
         """

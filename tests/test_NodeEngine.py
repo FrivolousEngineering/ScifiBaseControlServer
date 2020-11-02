@@ -53,6 +53,21 @@ def test_doTick():
     node.update.assert_called_once()
     node.postUpdate.assert_called_once()
 
+def test_disabledNode():
+    engine = NodeEngine.NodeEngine()
+    node = createNode("test")
+    node.requiresReplanning = MagicMock(return_value=False)
+    node.enabled = False
+
+    engine.registerNode(node)
+
+    engine.doTick()
+
+    node.preUpdate.assert_not_called()
+    node.updateReservations.assert_not_called()
+    node.update.assert_not_called()
+    node.postUpdate.assert_not_called()
+
 
 def test_getAllNodes():
     engine = NodeEngine.NodeEngine()
