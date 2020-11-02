@@ -23,6 +23,15 @@ def test_update():
     assert math.isclose(resources_produced_this_tick["energy"], 15) # 20 fuel, 5 energy was provided, so 15 left
     assert math.isclose(resources_produced_this_tick["water"], 0)
 
+
+    # Ensure that the an attempt was made to provide energy (20!)
+    assert generator._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "energy"
+    assert math.isclose(generator._provideResourceToOutgoingConnections.call_args_list[0][0][1], 20)
+
+    # Ensure that an attempt was made to provide water (0!)
+    assert generator._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "water"
+    assert math.isclose(generator._provideResourceToOutgoingConnections.call_args_list[1][0][1], 0)
+
     assert math.isclose(generator.addHeat.call_args[0][0], 75000) # 20 fuel, 7500 combustion heat, 50% effiency
 
 
