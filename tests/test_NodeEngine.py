@@ -6,9 +6,11 @@ from Nodes.Generator import Generator  # Your IDE lies. It needs this.
 from Nodes.FluidCooler import FluidCooler
 import pytest
 
+from Nodes.TemperatureHandlers.TemperatureHandler import TemperatureHandler
+
 
 def createNode(node_id: str):
-    return MagicMock(getId = MagicMock(return_value = node_id), Spec = Node)
+    return MagicMock(getId = MagicMock(return_value = node_id), spec = Node)
 
 
 def test_registerNode():
@@ -118,3 +120,20 @@ def test_tickCount():
 
     engine.doTick()
     assert engine.tick_count == 2
+
+
+def test_outsideTemperatureHandler():
+    engine = NodeEngine.NodeEngine()
+
+    node = createNode("test")
+    node.requiresReplanning = MagicMock(return_value=False) # Prevent engine going into a lock
+
+    engine.registerNode(node)
+    temperature_handler = MagicMock(spec = TemperatureHandler)
+    temperature_handler.getTemperatureForTick = MagicMock(return_value = 200)
+    engine.setOutsideTemperatureHandler(temperature_handler)
+
+    engine.doTick()
+
+    assert node.outside_temp == 200
+
