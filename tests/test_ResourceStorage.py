@@ -65,6 +65,19 @@ def test_updateReservations(requested, received):
         assert connections[idx].reserved_available_amount == received
 
 
+def test_deserialize():
+    storage = ResourceStorage.ResourceStorage("", "energy", 20)
+    assert storage.amount_stored == 20
+
+    storage.deserialize({'node_id': '', 'resources_received_this_tick': {}, 'resources_produced_this_tick': {}, 'resources_left_over': {}, 'temperature': 293.15, 'amount_stored': 120})
+    assert storage.amount_stored == 120
+
+
+def test_serialize():
+    storage = ResourceStorage.ResourceStorage("", "energy", 291)
+    assert storage.serialize()["amount_stored"] == 291
+
+
 def test_weight_energy():
     storage = ResourceStorage.ResourceStorage("", "energy", 20)
     storage_2 = ResourceStorage.ResourceStorage("", "energy", 500)
