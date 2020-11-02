@@ -135,6 +135,14 @@ def test_requiresReplanningOneConnectionStatisified():
 
     assert node.requiresReplanning()
 
+def test_requiresReplanningOneConnectionStatisifiedButDisabled():
+    node = Node.Node("")
+    node.enabled = False
+    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=True)))
+    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=False)))
+
+    assert not node.requiresReplanning() # Disabled nods should never need to be replanned!
+
 
 def test_getResourceAvailableThisTick(node_energy_left):
     # The node had 10 resources left over. So even though nothing was requested, it should report 10.
