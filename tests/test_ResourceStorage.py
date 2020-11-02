@@ -65,8 +65,22 @@ def test_updateReservations(requested, received):
         assert connections[idx].reserved_available_amount == received
 
 
-def test_weight():
+def test_weight_energy():
     storage = ResourceStorage.ResourceStorage("", "energy", 20)
     storage_2 = ResourceStorage.ResourceStorage("", "energy", 500)
     # Energy storage should always be the same weight as eachoter (because energy doesn't have extra weight.
     assert storage.weight == storage_2.weight
+
+
+def test_weight_water():
+    energy_store = ResourceStorage.ResourceStorage("", "energy", 20)
+    water_store = ResourceStorage.ResourceStorage("", "water", 20)
+    assert water_store.weight > energy_store.weight
+
+
+def test_max_storage():
+    storage = ResourceStorage.ResourceStorage("", "energy", 20)
+    assert storage.max_amount_stored == -1
+
+    storage_with_max = ResourceStorage.ResourceStorage("", "energy", 20, max_storage= 200)
+    assert storage_with_max.max_amount_stored == 200
