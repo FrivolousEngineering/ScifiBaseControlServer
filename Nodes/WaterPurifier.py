@@ -15,7 +15,7 @@ class WaterPurifier(Node):
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
-        self._waste_oxygen_conversion_rate = 2 # Two oxygen is required to convert one waste
+        self._waste_oxygen_conversion_rate = 2  # Two oxygen is required to convert one waste
 
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
