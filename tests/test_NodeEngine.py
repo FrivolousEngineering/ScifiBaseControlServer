@@ -107,3 +107,14 @@ def test_serializeConnection():
 
     assert node_a_connections[0].target == node_b
     assert node_b_connections[0].origin == node_a
+
+
+def test_tickCount():
+    engine = NodeEngine.NodeEngine()
+    assert engine.tick_count == 0
+
+    engine.doTick()
+    assert engine.tick_count == 1
+
+    engine.doTick()
+    assert engine.tick_count == 2

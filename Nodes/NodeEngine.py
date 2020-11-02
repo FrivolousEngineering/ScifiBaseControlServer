@@ -35,6 +35,10 @@ class NodeEngine:
         self._outside_temperature_handler = None  # type: Optional[TemperatureHandler]
         self._tick_count = 0
 
+    @property
+    def tick_count(self):
+        return self._tick_count
+
     def setOutsideTemperatureHandler(self, temp_handler: TemperatureHandler) -> None:
         self._outside_temperature_handler = temp_handler
 

@@ -5,6 +5,7 @@ import pytest
 
 from Nodes import Generator
 
+
 def test_update():
     generator = Generator.Generator("omg")
 
@@ -35,6 +36,8 @@ def test_update():
     assert math.isclose(generator.addHeat.call_args[0][0], 75000) # 20 fuel, 7500 combustion heat, 50% effiency
 
 
+
+
 def test_update_with_different_energy_factor():
     generator = Generator.Generator("omg", energy_factor=0.25)
 
@@ -53,9 +56,6 @@ def test_update_with_different_energy_factor():
     resources_produced_this_tick = generator.getResourcesProducedThisTick()
     assert math.isclose(resources_produced_this_tick["energy"], 5) # 25% of how much fuel was obtained
     assert math.isclose(resources_produced_this_tick["water"], 0)
-
-
-
 
 
 def test_waterGenerator():
