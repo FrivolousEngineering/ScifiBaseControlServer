@@ -98,6 +98,7 @@ def test_getAttributeValueUnknownNode(DBus, node, attribute, value):
 def test_setPerformance(DBus, node):
     with patch.dict(node_dict, {"zomg": node}):
         DBus.setTargetPerformance("zomg", 2000)
+        DBus.setTargetPerformance("whatever", 20001) # This shouldn't have any effect
         assert node.target_performance == 2000
 
 
@@ -160,6 +161,11 @@ def test_addModifierToNode(DBus):
     modifier_func.assert_called_once_with("yay")
     mod_node.addModifier.assert_called_once_with(modifier)
 
+    with patch("Nodes.DBusService.createModifier", modifier_func):
+        with patch.dict(node_dict, {"to_be_modified_node": mod_node}):
+            DBus.addModifierToNode("nonExistingNode", "yay")
+    # It's only added to the node that we requested!
+    mod_node.addModifier.assert_called_once_with(modifier)
 
 def test_getActiveModifiers(DBus):
     mod_node = MagicMock()
