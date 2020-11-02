@@ -52,6 +52,19 @@ def test_negativeRepair():
     assert node.health == 100
 
 
+def test_damage():
+    node = Node.Node("zomg")
+
+    node.damage(20)
+    assert node.health == 80
+
+def test_massiveDamage():
+    node = Node.Node("zomg")
+
+    node.damage(9001)
+    assert node.health == 0
+
+
 def test_addHeat():
     node = Node.Node("yay")
 
