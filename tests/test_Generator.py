@@ -36,6 +36,21 @@ def test_update():
     assert math.isclose(generator.addHeat.call_args[0][0], 75000) # 20 fuel, 7500 combustion heat, 50% effiency
 
 
+def test_generator_resources_left_previous_update():
+    generator = Generator.Generator("omg")
+    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
+                      "resources_produced_this_tick": {}, "resources_left_over": {"energy": 5}})
+
+    generator.getResourceAvailableThisTick = MagicMock(return_value = 0)
+
+    generator._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
+
+    generator.update()
+
+    # This generator didn't get any resources, but it had resources left (5 energy).
+    # Ensure that it attempted to dump that!
+    assert generator._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "energy"
+    assert generator._provideResourceToOutgoingConnections.call_args_list[0][0][1] == 5
 
 
 def test_update_with_different_energy_factor():
