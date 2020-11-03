@@ -5,6 +5,7 @@ from Nodes import ResourceStorage, Node
 
 get_list = [(20,    0,      "energy"),  # Wrong resource type
             (20,    20,     "water"),
+            (0,     0,      "water"),  # Not giving anything work
             (0.9,   0.9,    "water"),
             (9001,  20,     "water"),
             (-20,   0,      "water")]
