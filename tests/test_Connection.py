@@ -37,6 +37,18 @@ def test_createUnknownResource(origin_node, target_node):
     with pytest.raises(ValueError):
         Connection.Connection(origin_node, target_node, "zomg")
 
+def test_getReservationDeficiency(origin_node, target_node):
+    connection = Connection.Connection(origin_node, target_node, "energy")
+
+    connection.reserved_available_amount = 10
+    connection.reserved_requested_amount = 12
+
+    assert connection.getReservationDeficiency() == 2
+
+    connection.reserved_available_amount = 12
+    assert connection.getReservationDeficiency() == 0
+
+
 
 def test_lock(origin_node, target_node):
     connection = Connection.Connection(origin_node, target_node, "energy")
