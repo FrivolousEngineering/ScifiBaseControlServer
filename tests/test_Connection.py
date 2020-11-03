@@ -121,6 +121,8 @@ def test_giveResourceDisabledNode(energy_connection_with_disabled):
 def test_reset(energy_connection: Connection.Connection):
     energy_connection.lock()
     energy_connection.reserveResource(200)
+    energy_connection.reserved_available_amount = 12
     energy_connection.reset()
     assert not energy_connection.locked
     assert energy_connection.reserved_requested_amount == 0
+    assert energy_connection.reserved_available_amount == 0
