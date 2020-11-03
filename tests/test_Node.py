@@ -366,3 +366,25 @@ def test_unmodifiableNodeWithModifier():
 
     node.addModifier(modifier)
     assert modifier not in node.getModifiers()
+
+
+def test_connectNodes():
+    node = Node.Node("SuchNode!")
+    node_2 = Node.Node("anotherNode")
+
+    node.connectWith("energy",node_2)
+
+    assert len(node.getAllOutgoingConnections()) == 1
+    assert len(node.getAllIncomingConnections()) == 0
+
+    assert len(node_2.getAllOutgoingConnections()) == 0
+    assert len(node_2.getAllIncomingConnections()) == 1
+
+
+def test_massiveHeatDamage():
+    node = Node.Node("SuchNode!")
+    node._temperature = 900000000000000
+
+    node._dealDamageFromHeat()
+
+    assert node.health == 0  # No amount of damage should ever let the health go below 0
