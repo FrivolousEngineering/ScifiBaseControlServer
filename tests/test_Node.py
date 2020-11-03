@@ -356,3 +356,13 @@ def test_modifier():
 
     # Removing a modifier that is not in the list should cause no issues
     node.removeModifier(modifier)
+
+
+def test_unmodifiableNodeWithModifier():
+    node = Node.Node("ModifiedNode", can_be_modified = False)
+    assert node.can_be_modified == False
+
+    modifier = MagicMock(spec=Modifier.Modifier)
+
+    node.addModifier(modifier)
+    assert modifier not in node.getModifiers()
