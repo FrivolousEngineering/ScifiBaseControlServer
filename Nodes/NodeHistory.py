@@ -3,6 +3,7 @@ from typing import Dict, List, Deque, Any
 from collections import deque
 
 from Nodes.Node import Node
+from Nodes.Util import enforcePositive
 
 
 class NodeHistory:
@@ -67,7 +68,7 @@ class NodeHistory:
         Since not all data is stored, it could be that there is an offset.
         :return:
         """
-        return max(0, self._num_ticks_stored - self._max_elements_to_store)
+        return int(enforcePositive(self._num_ticks_stored - self._max_elements_to_store))
 
     @staticmethod
     def _convertDequeDictToListDict(deque_dict: Dict[str, Deque[float]]) -> Dict[str, List[float]]:

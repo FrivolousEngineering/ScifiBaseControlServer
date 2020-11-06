@@ -2,6 +2,7 @@ from typing import Optional, Dict, Any
 
 from Nodes.Node import Node
 from Nodes.Constants import WEIGHT_PER_UNIT
+from Nodes.Util import enforcePositive
 
 
 class ResourceStorage(Node):
@@ -74,7 +75,7 @@ class ResourceStorage(Node):
         if amount < 0:
             return 0.
         if self._max_storage is not None and self._max_storage <= self._amount + amount:
-            return max(0., self._max_storage - self._amount)
+            return enforcePositive(self._max_storage - self._amount)
         return amount
 
     def giveResource(self, resource_type: str, amount: float) -> float:

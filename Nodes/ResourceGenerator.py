@@ -1,4 +1,5 @@
 from Nodes.Node import Node
+from Nodes.Util import enforcePositive
 
 
 class ResourceGenerator(Node):
@@ -21,4 +22,4 @@ class ResourceGenerator(Node):
         super().update()
         resources_left = self._provideResourceToOutgoingConnections(self._resource_type, self._amount)
 
-        self._resources_produced_this_tick[self._resource_type] = max(self._amount - resources_left, 0)
+        self._resources_produced_this_tick[self._resource_type] = enforcePositive(self._amount - resources_left)

@@ -2,6 +2,7 @@ from math import sqrt
 
 from Nodes.Node import Node, modifiable_property
 from Nodes.Constants import COMBUSTION_HEAT
+from Nodes.Util import enforcePositive
 
 
 class Generator(Node):
@@ -60,7 +61,7 @@ class Generator(Node):
 
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = self._resources_left_over["energy"]
-        self._resources_required_per_tick[self._fuel_type] = self._performance * max(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - resources_left, 0)
+        self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - resources_left)
 
     def update(self) -> None:
         super().update()
@@ -74,7 +75,7 @@ class Generator(Node):
 
         # We specifically use what is in the received dict (instead of the energy_available), because we want to
         # know how much was generated (and the resources available also takes leftovers into account)
-        self._resources_produced_this_tick["energy"] = max(energy_available - energy_left, 0)
+        self._resources_produced_this_tick["energy"] = enforcePositive(energy_available - energy_left)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
         heat_produced = fuel_gained * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
@@ -88,7 +89,7 @@ class Generator(Node):
 
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left
-        self._resources_produced_this_tick["water"] = max(self._resources_received_this_tick["water"] - water_left, 0)
+        self._resources_produced_this_tick["water"] = enforcePositive(self._resources_received_this_tick["water"] - water_left)
 
         self._resources_left_over["energy"] = energy_left
 

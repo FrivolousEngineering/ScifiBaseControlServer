@@ -1,4 +1,5 @@
 from Nodes.Node import Node
+from Nodes.Util import enforcePositive
 
 
 class WaterPurifier(Node):
@@ -20,11 +21,11 @@ class WaterPurifier(Node):
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
 
-        self._resources_required_per_tick["oxygen"] = max(self._original_resources_required_per_tick["oxygen"]
-                                                          * self.effectiveness_factor - resources_left, 0)
+        self._resources_required_per_tick["oxygen"] = enforcePositive(self._original_resources_required_per_tick["oxygen"]
+                                                          * self.effectiveness_factor - resources_left)
 
-        self._resources_required_per_tick["dirty_water"] = max(
-            self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left, 0)
+        self._resources_required_per_tick["dirty_water"] = enforcePositive(
+            self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left)
 
     def update(self) -> None:
         super().update()
@@ -34,10 +35,10 @@ class WaterPurifier(Node):
         dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
 
         # Half of the production can be done without using oxygen.
-        dirty_water_converted_for_free = max(0, dirty_water_available - self._original_resources_required_per_tick["dirty_water"] / 2)
+        dirty_water_converted_for_free = enforcePositive(dirty_water_available - self._original_resources_required_per_tick["dirty_water"] / 2)
 
         # Now we know how much dirty water we can convert as a bonus
-        dirty_water_converted_oxygen = max(0, dirty_water_available - dirty_water_converted_for_free)
+        dirty_water_converted_oxygen = enforcePositive(dirty_water_available - dirty_water_converted_for_free)
 
         # Now figure out how much oxygen we could spend on the "extra" water
         max_oxygen_required = dirty_water_converted_oxygen * self._waste_oxygen_conversion_rate
@@ -58,8 +59,8 @@ class WaterPurifier(Node):
         waste_left = self._provideResourceToOutgoingConnections("waste", waste_available)
 
         # Update the data for bookkeeping
-        clean_water_provided = max(clean_water_available - clean_water_left, 0)
-        waste_provided = max(waste_available - waste_left, 0)
+        clean_water_provided = enforcePositive(clean_water_available - clean_water_left)
+        waste_provided = enforcePositive(waste_available - waste_left)
         self._resources_produced_this_tick["water"] = clean_water_provided
         self._resources_produced_this_tick["waste"] = waste_provided
 

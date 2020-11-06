@@ -1,4 +1,5 @@
 from Nodes.Node import Node
+from Nodes.Util import enforcePositive
 
 
 class HydroponicsBay(Node):
@@ -28,5 +29,5 @@ class HydroponicsBay(Node):
         self._resources_left_over["water"] += oxygen_left * self.inverted_effectiveness_factor
         self._resources_left_over["energy"] += oxygen_left * self.inverted_effectiveness_factor
 
-        oxygen_provided = max(oxygen_produced - oxygen_left, 0)
+        oxygen_provided = enforcePositive(oxygen_produced - oxygen_left)
         self._resources_produced_this_tick["oxygen"] = oxygen_provided
