@@ -5,7 +5,7 @@ from Nodes.NodeEngine import NodeEngine
 import pytest
 
 from Nodes.NodeStorage import NodeStorage
-
+import os
 
 @pytest.mark.integration
 def test_MultiWaterCooler():
@@ -53,6 +53,9 @@ def test_restoreFromFile(config_file, ticks_to_run):
     new_storage = NodeStorage(engine)
     new_storage.storage_name = "test_storage.json"
     new_storage.restoreNodeState()
+
+    # We need to remove the file after ourselves
+    os.remove("{storage_name}.json".format(storage_name = storage.storage_name))
 
     for node_id, restored_node in engine.getAllNodes().items():
         original_node = engine_with_storage.getNodeById(node_id)
