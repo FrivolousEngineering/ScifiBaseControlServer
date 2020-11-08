@@ -15,7 +15,8 @@ class Valve(ResourceStorage):
         self._resources_required_per_tick[self._resource_type] = fluid_per_tick
         self._min_performance = 0
         self._description = "This device pumps {resource_type} from all incomming connections and provides them to" \
-                            " all of it's outgoing connections.".format(resource_type = resource_type)
+                            " all of it's outgoing connections."
+        self._description.format(resource_type = resource_type)
         self._performance_change_factor = 4
 
     def _updateResourceRequiredPerTick(self) -> None:

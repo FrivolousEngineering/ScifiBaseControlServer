@@ -15,9 +15,8 @@ class ResourceStorage(Node):
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
         self.additional_properties.append("amount_stored")
 
-        self._description = "This device stores {resource_type}, which can be used by any connected device.".format(
-            resource_type = resource_type
-        )
+        self._description = "This device stores {resource_type}, which can be used by any connected device."
+        self._description.format(resource_type = resource_type)
 
     @property
     def max_amount_stored(self) -> float:

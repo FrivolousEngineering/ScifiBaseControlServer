@@ -18,4 +18,5 @@ class FluidCooler(Valve):
         self._weight = 5000
 
         self._description = "This device pumps {resource_type} from all incomming connections and provides them to" \
-                            " all of it's outgoing connections all the while cooling them down significantly.".format(resource_type=resource_type)
+                            " all of it's outgoing connections all the while cooling them down significantly."
+        self._description.format(resource_type=resource_type)
