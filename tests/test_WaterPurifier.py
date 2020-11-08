@@ -28,3 +28,21 @@ def test_update(resources_received, resources_produced):
 
 
 
+@pytest.mark.parametrize("waste_left,   water_left, oxygen_required,    dirty_water_required,   health_effectiveness_factor",
+                         [(1,           9,          1,                  1,                      1),
+                          (9,           1,          1,                  1,                      1),
+                          (0,           0,          10,                 10,                     1),
+                          (0,           0,          5,                  5,                      0.5),
+                          (3,           3,          2,                  2,                      0.5),
+                          (8,           2,          0,                  0,                      0.5),  # More left than needed!
+                          (1,           1,          1,                  1,                      0.2)
+                                                                                              ])
+def test__update_resources_required_per_tick(waste_left, water_left, oxygen_required, dirty_water_required, health_effectiveness_factor):
+    water_purifier = WaterPurifier.WaterPurifier("omg")
+    water_purifier._resources_left_over["waste"] = waste_left
+    water_purifier._resources_left_over["water"] = water_left
+    water_purifier._getHealthEffectivenessFactor = MagicMock(return_value = health_effectiveness_factor)
+    water_purifier._updateResourceRequiredPerTick()
+
+    assert math.isclose(water_purifier._resources_required_per_tick["dirty_water"], dirty_water_required)
+    assert math.isclose(water_purifier._resources_required_per_tick["oxygen"], oxygen_required)
