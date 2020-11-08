@@ -14,7 +14,7 @@ class Modifier:
 
         :param modifiers: Dict with keys to indicate which property it should modify (by adding the value to the
         original)
-        :param factors: Dict with keys to indicate which property it should modify (by mutliplying the original
+        :param factors: Dict with keys to indicate which property it should modify (by multiplying the original
         with the value)
         :param duration: The duration this modifier will active, measured in ticks.
         """
