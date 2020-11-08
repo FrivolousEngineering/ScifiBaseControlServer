@@ -56,3 +56,28 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
 
     assert math.isclose(water_purifier._resources_required_per_tick["dirty_water"], dirty_water_required)
     assert math.isclose(water_purifier._resources_required_per_tick["oxygen"], oxygen_required)
+
+
+def test_purifier_resources_left_previous_update():
+    water_purifier = WaterPurifier.WaterPurifier("omg")
+    water_purifier.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
+                      "resources_produced_this_tick": {}, "resources_left_over": {"waste": 5, "water": 3}})
+
+    original_resources_available = water_purifier.getResourceAvailableThisTick
+    water_purifier.getResourceAvailableThisTick = MagicMock(return_value = 0)
+
+    water_purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 4)
+
+    water_purifier.update()
+
+    # This generator didn't get any resources, but it had resources left (5 water)
+    # Ensure that it attempted to dump that!
+    assert water_purifier._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "water"
+    assert water_purifier._provideResourceToOutgoingConnections.call_args_list[0][0][1] == 3
+
+    # Ensure that an attempt was made to provide waste (3!)
+    assert water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "waste"
+    assert math.isclose(water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], 5)
+
+    # Also ensure that it was unable to provide the 4 of the 5 energy it had!
+    assert original_resources_available("water") == 4
