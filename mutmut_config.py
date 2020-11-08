@@ -12,3 +12,12 @@ def pre_mutation(context):
     # Ignore shit that is printed.
     if line.startswith("print("):
         context.skip = True
+
+    # Modifying the dbus stuff makes little sense
+    if line.startswith("@dbus.service.method("):
+        context.skip = True
+
+    # It's just a human readable label. Changing it doesn't matter...
+    if line.startswith("self._name"):
+        context.skip = True
+
