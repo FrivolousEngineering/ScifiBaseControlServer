@@ -125,7 +125,7 @@ def test_setPerformance():
 
     # Ensure that the default that it's requesting is 10
     assert generator.getResourcesRequiredPerTick()["fuel"] == 10
-
+    generator._min_performance = 0
     # Change the performance
     generator.target_performance = 0.5
     while generator.performance != 0.5:
