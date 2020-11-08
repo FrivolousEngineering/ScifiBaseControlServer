@@ -6,10 +6,12 @@ import pytest
 from Nodes import WaterPurifier
 
 
-@pytest.mark.parametrize("resources_received, resources_produced", [({"dirty_water": 10}, {"water": 5, "waste": 5}),
-                                                                    ({"dirty_water": 10, "oxygen": 10}, {"water": 10, "waste": 10}),
-                                                                    ({"dirty_water": 10, "oxygen": 5}, {"water": 7.5, "waste": 7.5}),
-                                                                    ({"dirty_water": 7.5, "oxygen": 10}, {"water": 7.5, "waste": 7.5})])
+@pytest.mark.parametrize("resources_received,                   resources_produced",
+                        [({"dirty_water": 10},                  {"water": 5, "waste": 5}),
+                         ({"dirty_water": 10, "oxygen": 10},    {"water": 10, "waste": 10}),
+                         ({"dirty_water": 10, "oxygen": 5},     {"water": 7.5, "waste": 7.5}),
+                         ({"dirty_water": 7.5, "oxygen": 10},   {"water": 7.5, "waste": 7.5}),
+                         ({"oxygen": 10},                       {"water": 0, "waste": 0})])
 def test_update(resources_received, resources_produced):
     purifier = WaterPurifier.WaterPurifier("omg")
 
