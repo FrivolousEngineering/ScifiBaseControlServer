@@ -26,6 +26,14 @@ def test_update(resources_received, resources_produced):
     for key in resources_produced:
         assert math.isclose(resources_produced_this_tick[key], resources_produced[key]), "%s doesn't match" % key
 
+    # Ensure that the an attempt was made to provide energy (20!)
+    assert purifier._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "water"
+    assert math.isclose(purifier._provideResourceToOutgoingConnections.call_args_list[0][0][1], resources_produced["water"])
+
+    # Ensure that an attempt was made to provide water (0!)
+    assert purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "waste"
+    assert math.isclose(purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], resources_produced["waste"])
+
 
 
 @pytest.mark.parametrize("waste_left,   water_left, oxygen_required,    dirty_water_required,   health_effectiveness_factor",
