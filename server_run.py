@@ -1,10 +1,18 @@
+from Server.NodeNamespace import node_namespace
 from Server.Server import Server
 
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
-from Server.NodeBlueprint import node_blueprint
+from Server.Blueprint import blueprint, api
+from Server.ValveNamespace import valve_namespace
+
 app = Server()
 
-app.register_blueprint(node_blueprint)
+
+api.add_namespace(node_namespace)
+api.add_namespace(valve_namespace)
+app.register_blueprint(blueprint)
+
+
 
 import sys
 import signal

@@ -6,11 +6,9 @@ from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 import json
 
 
-node_blueprint = Blueprint('node', __name__)
-api = Api(node_blueprint, description="This API enables access & control of this system.")
-node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
+from Server.Blueprint import api
 
-api.add_namespace(node_namespace)
+node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
 connection = api.model("connection", {
     "target": fields.String,
@@ -133,11 +131,6 @@ class TargetPerformance(Resource):
             new_performance = json.loads(request.data)["performance"]
         nodes.setTargetPerformance(node_id, float(new_performance))
         return nodes.getPerformance(node_id)
-
-
-@node_blueprint.route('/doc/')
-def swagger_ui():
-    return apidoc.ui_for(api)
 
 
 @node_namespace.route("/<node_id>/temperature/history/")

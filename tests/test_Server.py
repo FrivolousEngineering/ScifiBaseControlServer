@@ -2,9 +2,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from Server.NodeBlueprint import node_blueprint
+from Server.Blueprint import blueprint, api
+from Server.NodeNamespace import node_namespace
 from Server.Server import Server
-
+from Server.ValveNamespace import valve_namespace
 
 default_property_dict = {}
 
@@ -19,7 +20,9 @@ def getNodeAttribute(*args, **kwargs):
 def app():
     with patch("dbus.SessionBus"):
         app = Server()
-        app.register_blueprint(node_blueprint)
+        api.add_namespace(node_namespace)
+        api.add_namespace(valve_namespace)
+        app.register_blueprint(blueprint)
     mocked_dbus = MagicMock()
     app._nodes = mocked_dbus
     app.getMockedClient = MagicMock(return_value = mocked_dbus)
