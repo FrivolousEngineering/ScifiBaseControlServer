@@ -30,7 +30,7 @@ def getControllerData(controller_id):
             "sensors": []}
 
     for key in controller.getAllSensorNames():
-        result["sensors"].append({"name": key, "value": controller.getSensorValue(key)})
+        result["sensors"].append({"name": key, "value": controller.getSensorValue(key), "target": manager.getMappedIdFromSensor(controller_id, key)})
 
     return result
 
