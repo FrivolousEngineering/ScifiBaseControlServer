@@ -8,7 +8,7 @@ import dbus.exceptions
 class ControllerManager:
     __instance = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._controllers = {}  # type: Dict[str, Controller]
 
         self._mapping = {"Base-Control-C64AF4": {"sensor_value": "generator"}}
