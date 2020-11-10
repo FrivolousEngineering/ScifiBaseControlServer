@@ -2,14 +2,49 @@
 <title>Hardware list</title>
 <script type=text/javascript src="{{url_for('static', filename='jquery-3.1.1.js') }}"></script>
 <style>
-th {
-    text-align: left;
+
+.table-grid {
+  border-collapse: collapse;
+}
+
+.table-grid>tbody>tr>th {
+  padding: 0;
+}
+
+.table-grid>thead>tr>th,
+.table-grid>tbody>tr>th,
+.table-grid>tfoot>tr>th,
+.table-grid>thead>tr>td,
+.table-grid>tbody>tr>td,
+.table-grid>tfoot>tr>td {
+  border: 1px solid;
+}
+
+.table-grid td{
+    padding-left: 20px;
     padding-right: 20px;
 }
+.table-grid .table-grid td,
+.table-grid .table-grid th {
+  border-top: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.table-grid .table-grid td:last-child,
+.table-grid .table-grid th:last-child {
+  border-right: 0;
+}
+
+th {
+    text-align: center;
+}
+
 
 </style>
 
-<table id = "records_table">
+<table id = "records_table" class = "table-grid">
     <thead>
         <tr>
             <th>Name</th>
