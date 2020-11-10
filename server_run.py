@@ -3,13 +3,13 @@ from Server.Server import Server
 
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
 from Server.Blueprint import blueprint, api
-from Server.ValveNamespace import valve_namespace
+from Server.ControllerNamespace import control_namespace
 
 app = Server()
 
 
 api.add_namespace(node_namespace)
-api.add_namespace(valve_namespace)
+api.add_namespace(control_namespace)
 app.register_blueprint(blueprint)
 
 

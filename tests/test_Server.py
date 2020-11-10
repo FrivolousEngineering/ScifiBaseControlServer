@@ -5,7 +5,7 @@ import pytest
 from Server.Blueprint import blueprint, api
 from Server.NodeNamespace import node_namespace
 from Server.Server import Server
-from Server.ValveNamespace import valve_namespace
+from Server.ControllerNamespace import control_namespace
 
 default_property_dict = {}
 
@@ -21,7 +21,7 @@ def app():
     with patch("dbus.SessionBus"):
         app = Server()
         api.add_namespace(node_namespace)
-        api.add_namespace(valve_namespace)
+        api.add_namespace(control_namespace)
         app.register_blueprint(blueprint)
     mocked_dbus = MagicMock()
     app._nodes = mocked_dbus
