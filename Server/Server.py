@@ -148,6 +148,9 @@ class Server(Flask):
     def renderUserManagementPage(self):
         return render_template("userManagement.html")
 
+    @register_route("/controllerManagement")
+    def renderControllerManagementPage(self):
+        return render_template("controllerManagement.html")
 
     @register_route("/users/")
     @requires_user_ability("see_users")

@@ -4,6 +4,7 @@ from Server.Controller import Controller
 import dbus
 import dbus.exceptions
 
+
 class ControllerManager:
     __instance = None
 
@@ -69,6 +70,9 @@ class ControllerManager:
 
     def getController(self, controller_id) -> Optional[Controller]:
         return self._controllers.get(controller_id)
+
+    def getAllControllerIds(self):
+        return self._controllers.keys()
 
     @staticmethod
     def getInstance() -> "ControllerManager":

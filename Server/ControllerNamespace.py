@@ -12,13 +12,27 @@ controller = api.model("controller", {
     "time_since_last_update": fields.Float
 })
 
+def getControllerData(controller_id):
+    manager = ControllerManager.getInstance()
+    controller = manager.getController(controller_id)
+    if not controller:
+        return None
+
+    return {"id": controller_id,
+            "time_since_last_update": controller.time_since_last_update}
 
 @control_namespace.route("/")
 @control_namespace.doc(description ="Get all the known controllers.")
 class Controllers(Resource):
     @api.response(200, "Sucess", fields.List(fields.Nested(controller)))
     def get(self):
-        return []
+        result = []
+        manager = ControllerManager.getInstance()
+        for key in manager.getAllControllerIds():
+            controller_data = getControllerData(key)
+            if controller_data is not None:
+                result.append(controller_data)
+        return result
 
 
 @control_namespace.route("/<string:controller_id>/")
@@ -28,11 +42,7 @@ class Controller(Resource):
     @api.response(404, "Unknown Node")
     def get(self, controller_id):
         manager = ControllerManager.getInstance()
-        controller = manager.getController(controller_id)
-        if controller is None:
-            return {}
-        return {"id": controller_id,
-                "time_since_last_update": controller.time_since_last_update}
+        return getControllerData(controller_id)
 
     @api.response(200, "success")
     def put(self, controller_id):
