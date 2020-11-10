@@ -14,6 +14,7 @@ th {
         <tr>
             <th>Name</th>
             <th>Time since last update</th>
+            <th>Sensors</th>
         </tr>
     </thead>
     <tbody>
@@ -29,10 +30,8 @@ th {
         url = "/controller/";
         $.get(url, function(data) {
             updateTable(data);
-
         });
     }
-
 
     function updateTable(response) {
         // Clear the old data.
@@ -42,7 +41,16 @@ th {
             $('<tr>').append(
                 $('<td>').append(item.id),
                 $('<td>').text(item.time_since_last_update),
+                $('<td>').attr('id', item.id)
             ).appendTo('#records_table');
+            // Add each sensor
+            $.each(item.sensors, function(i, item_2)
+            {
+                $('<tr>').append(
+                    $('<td>').append(item_2.name),
+                    $('<td>').text(item_2.value),
+                ).appendTo('#' + item.id);
+            });
         });
     }
 

@@ -7,19 +7,32 @@ from Server.ControllerManager import ControllerManager
 
 control_namespace = Namespace("controller", description ="Controllers are the remote devices that provide us with state.")
 
+sensor = api.model("sensor", {
+    "name": fields.String,
+    "value": fields.Float
+})
+
 controller = api.model("controller", {
     "id": fields.String,
-    "time_since_last_update": fields.Float
+    "time_since_last_update": fields.Float,
+    "sensors": fields.List(fields.Nested(sensor))
 })
+
+
 
 def getControllerData(controller_id):
     manager = ControllerManager.getInstance()
     controller = manager.getController(controller_id)
     if not controller:
         return None
+    result = {"id": controller_id,
+            "time_since_last_update": controller.time_since_last_update,
+            "sensors": []}
 
-    return {"id": controller_id,
-            "time_since_last_update": controller.time_since_last_update}
+    for key in controller.getAllSensorNames():
+        result["sensors"].append({"name": key, "value": controller.getSensorValue(key)})
+
+    return result
 
 @control_namespace.route("/")
 @control_namespace.doc(description ="Get all the known controllers.")

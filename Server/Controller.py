@@ -15,6 +15,9 @@ class Controller:
     def getSensorValue(self, sensor_id):
         return self._sensors_values.get(sensor_id)
 
+    def getAllSensorNames(self):
+        return self._sensors_values.keys()
+
     @property
     def time_since_last_update(self):
         return time.time() - self.time_last_seen
