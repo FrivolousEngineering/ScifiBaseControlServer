@@ -8,7 +8,8 @@ from Server.ControllerManager import ControllerManager
 control_namespace = Namespace("controller", description ="Controllers are the remote devices that provide us with state.")
 
 controller = api.model("controller", {
-    "controller_id": fields.String
+    "id": fields.String,
+    "time_since_last_update": fields.Float
 })
 
 
