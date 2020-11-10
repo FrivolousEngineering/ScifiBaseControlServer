@@ -26,7 +26,7 @@ def getControllerData(controller_id):
     if not controller:
         return None
     result = {"id": controller_id,
-            "time_since_last_update": controller.time_since_last_update,
+            "time_since_last_update": round(controller.time_since_last_update, 2),
             "sensors": []}
 
     for key in controller.getAllSensorNames():

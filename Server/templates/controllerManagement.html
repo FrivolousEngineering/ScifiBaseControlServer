@@ -48,7 +48,7 @@ th {
     <thead>
         <tr>
             <th>Name</th>
-            <th>Time since last update</th>
+            <th style="width:300px">Time since last update</th>
             <th>Sensors</th>
         </tr>
     </thead>
@@ -75,9 +75,19 @@ th {
         $.each(response, function (i, item) {
             $('<tr>').append(
                 $('<td>').append(item.id),
-                $('<td>').text(item.time_since_last_update),
+                $('<td>').text(item.time_since_last_update).attr('id', "last_time_" + item.id),
                 $('<td>').attr('id', item.id)
             ).appendTo('#records_table');
+
+            if(item.time_since_last_update > 2)
+            {
+                $("#last_time_" + item.id).css("background-color", "yellow");
+            }
+            if(item.time_since_last_update > 10)
+            {
+                $("#last_time_" + item.id).css("background-color", "red");
+            }
+
             // Add each sensor
             $.each(item.sensors, function(i, item_2)
             {
@@ -91,5 +101,7 @@ th {
     }
 
     updateAllControllers();
+
+    setInterval(updateAllControllers, 5000);//1000 is miliseconds
 
 </script>
