@@ -34,19 +34,21 @@ class ControllerManager:
             # It could be that the service was rebooted, so we should try this again.
             self._initDBUS()
 
+    def _getMappedIdFromSensor(self, controller_id: str, sensor_id: str) -> Optional[str]:
+        # Find if there is a mapping!
+        sensor_mapping = self._mapping.get(controller_id)
+        if sensor_mapping is None:
+            return None # No mapping!
+
+        return sensor_mapping.get(sensor_id)
+
     def _onSensorValueChanged(self, controller_id, sensor_id):
         new_value = self._controllers[controller_id].getSensorValue(sensor_id)
         new_value /= 1024.
 
-        # Find if there is a mapping!
-        sensor_mapping = self._mapping.get(controller_id)
-        if sensor_mapping is None:
-            return  # No mapping!
-
-        node_id = sensor_mapping.get(sensor_id)
-        if not node_id:
-            print('no node')
-            return  # No mapping!
+        node_id = self._getMappedIdFromSensor(controller_id, sensor_id)
+        if node_id is None:
+            return
 
         self._setupDBUS()
         if self._dbus is None:
