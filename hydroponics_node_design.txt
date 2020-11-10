@@ -1,0 +1,72 @@
+
+class hydroponics
+class plant_storage
+class hydroponics_water_tank
+class extractor_water_storage
+class plant_press
+class food_storage
+class e_to_h_valve
+class h_to_e_valve
+
+class h_to_g_valve
+class g_to_h_valve
+
+class extractor
+class waste_storage
+class fuel_storage
+class oxygen_storage
+
+class generator_water_tank
+class generator
+
+class generator_cooler
+
+
+hydroponics_battery --> hydroponics: energy
+battery --> plant_press: energy
+hydroponics_water_tank --> hydroponics :water
+hydroponics --> plant_storage: plants
+hydroponics --> oxygen_storage: oxygen
+
+extractor -> extractor_water_storage: water
+extractor_water_storage --> extractor: water
+
+extractor_water_storage --> e_to_h_valve: water
+e_to_h_valve --> hydroponics_water_tank: water
+
+hydroponics_water_tank --> h_to_e_valve:water
+h_to_e_valve --> extractor_water_storage
+
+plant_storage --> plant_press: plants
+plant_storage --> extractor: plants
+plant_press --> food_storage : food
+plant_press--> generator_water_tank: water
+
+
+generator_water_tank -->  g_to_h_valve: water
+g_to_h_valve --> hydroponics_water_tank: water
+
+hydroponics_water_tank -->  h_to_g_valve: water
+h_to_g_valve --> generator_water_tank: water
+
+extractor-->waste_storage: waste
+extractor-->fuel_storage: fuel
+fuel_storage-->extractor: fuel
+
+waste_storage --> waste_generator: waste
+generator_water_tank --> waste_generator: water
+waste_generator --> generator_water_tank: water
+waste_generator --> battery: energy
+
+generator --> battery: energy
+generator --> hydroponics_battery: energy
+generator --> generator_water_tank: water
+generator_water_tank --> generator: water
+
+
+fuel_storage --> generator: fuel
+
+
+generator_cooler --> generator_water_tank: water
+generator_water_tank --> generator_cooler: water
+
