@@ -1,0 +1,81 @@
+from Nodes.Constants import COMBUSTION_HEAT
+from Nodes.Node import Node, modifiable_property
+from Nodes.Util import enforcePositive
+
+
+class OilExtractor(Node):
+    def __init__(self, node_id: str, **kwargs) -> None:
+        super().__init__(node_id, **kwargs)
+
+        self._resources_required_per_tick["fuel"] = 2.5
+        self._resources_required_per_tick["water"] = 250
+        self._resources_required_per_tick["plants"] = 10
+        self._health = 100
+        self._temperature_effiency = 0.5
+        self._weight = 1000
+        self._surface_area = 8
+
+        self._fuel_per_plant_ratio = self._resources_required_per_tick["plants"] / self._resources_required_per_tick["fuel"]
+
+    @modifiable_property
+    def temperature_efficiency(self):
+        # A damaged OilExtractor starts burning fuel less efficient (making it run more hot!)
+        health_factor = self._getHealthEffectivenessFactor()
+        result = self._temperature_efficiency * (1.5 - health_factor)
+        return result
+
+    def update(self) -> None:
+        super().update()
+        # Get all the resources that we want
+        fuel_available = self.getResourceAvailableThisTick("fuel")
+        plants_available = self.getResourceAvailableThisTick("plants")
+
+        water_available = self.getResourceAvailableThisTick("water")
+
+        oil_produced = min(2 * fuel_available, plants_available)
+
+        self._resources_left_over["plants"] = plants_available - oil_produced
+        self._resources_left_over["fuel"] = fuel_available - oil_produced / self._fuel_per_plant_ratio
+
+        # If the extractor gets damaged it will start to generate more waste.
+        # For every oil that isn't produced, we generate an extra waste.
+        # So, if it's running at 75% effiency, we will generate 0.75 oil and 1.25 waste
+        waste_produced = oil_produced + (oil_produced - oil_produced * self.effectiveness_factor)
+
+        oil_produced *= self.effectiveness_factor
+
+        # Dump the resources produced
+        oil_left = self._provideResourceToOutgoingConnections("plant_oil", oil_produced)
+        waste_left = self._provideResourceToOutgoingConnections("waste", waste_produced)
+
+        # If we couldn't dump one of our resources, we just produce less.
+        max_resource_left = max(oil_left, waste_left)
+
+        # If a part of the resources (oil or waste) could not be dumped, we have more plants/fuel left.
+        self._resources_left_over["plants"] += max_resource_left * self.inverted_effectiveness_factor
+        self._resources_left_over["fuel"] += max_resource_left / self._fuel_per_plant_ratio * self.inverted_effectiveness_factor
+
+        fuel_used = fuel_available - self._resources_left_over["fuel"]
+
+        # Burn half of the fuel used to acutaly produce something
+        heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        self.addHeat(heat_produced)
+
+        # Then try to dump half of the fuel that we received back again
+        self._resources_left_over["fuel"] += self._provideResourceToOutgoingConnections("fuel", 0.5 * fuel_used)
+
+        # Burn *all* of the fuel that was not used to produce something (or could not be dumped!)
+        heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        self.addHeat(heat_produced)
+        self._resources_left_over["fuel"] = 0
+
+        # And try to get rid of some water
+        water_left = self._provideResourceToOutgoingConnections("water", water_available)
+        self._resources_left_over["water"] = water_left
+
+        oil_provided = enforcePositive(oil_produced - oil_left)
+        self._resources_produced_this_tick["plant_oil"] = oil_provided
+
+        waste_provided = enforcePositive(waste_produced - waste_left)
+        self._resources_produced_this_tick["waste"] = waste_provided
+

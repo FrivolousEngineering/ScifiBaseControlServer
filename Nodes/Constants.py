@@ -6,7 +6,9 @@ SPECIFIC_HEAT = {"energy": 0,
                  "oxygen": 0.25,
                  "data": 0,
                  "dirty_water": 1,
-                 "waste": 1
+                 "waste": 1,
+                 "plants": 0.39,
+                 "plant_oil": 0.5
                  }
 
 # 1 liter of this unit is how much kg?
@@ -16,7 +18,9 @@ WEIGHT_PER_UNIT = {"water": 1,
                    "oxygen": 0.001429,
                    "data": 0,
                    "dirty_water": 1.1,
-                   "waste": 1.2
+                   "waste": 1.2,
+                   "plants": 0.408,
+                   "plant_oil": 0.92
                    }
 
 
