@@ -100,8 +100,8 @@ class Node:
         self._max_safe_temperature = 400  # type: float
 
         # At what level should this node perform?
-        self._performance = 1.  # type: float
-        self._target_performance = 1.  # type: float
+        self._performance = kwargs.get("performance", 1)  # type: float
+        self._target_performance = kwargs.get("target_performance", 1)  # type: float
 
         self._min_performance = 1.  # type: float
         self._max_performance = 1.  # type: float
