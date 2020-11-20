@@ -1,4 +1,4 @@
-
+@startuml
 class hydroponics
 class plant_storage
 class hydroponics_water_tank
@@ -12,6 +12,7 @@ class h_to_g_valve
 class g_to_h_valve
 
 class extractor
+class plant_oil_storage
 class waste_storage
 class fuel_storage
 class oxygen_storage
@@ -19,15 +20,22 @@ class oxygen_storage
 class generator_water_tank
 class generator
 class hydroponics_water_cooler
+class hydroponics_uncooled_water_valve
+class hydroponics_cooled_water_valve
 
 class generator_cooler
 
 
 hydroponics_battery --> hydroponics: energy
 battery --> plant_press: energy
-hydroponics_water_tank --> hydroponics :water
+hydroponics_water_tank --> hydroponics_uncooled_water_valve :water
+hydroponics_uncooled_water_valve --> hydroponics : water
+hydroponics_water_tank --> hydroponics_water_cooler: water
+hydroponics_water_cooler --> hydroponics_cooled_water_valve: water
+hydroponics_cooled_water_valve--> hydroponics: water
 hydroponics --> plant_storage: plants
 hydroponics --> oxygen_storage: oxygen
+hydroponics --> hydroponics_water_tank: water
 
 extractor -> extractor_water_storage: water
 extractor_water_storage --> extractor: water
@@ -36,8 +44,8 @@ extractor_water_storage --> e_to_h_valve: water
 e_to_h_valve --> hydroponics_water_tank: water
 
 hydroponics_water_tank --> h_to_e_valve:water
-h_to_e_valve --> hydroponics_water_cooler: water
-hydroponics_water_cooler --> extractor_water_storage: water
+h_to_e_valve --> water_cooler: water
+water_cooler --> extractor_water_storage: water
 
 plant_storage --> plant_press: plants
 plant_storage --> extractor: plants
@@ -52,6 +60,7 @@ hydroponics_water_tank -->  h_to_g_valve: water
 h_to_g_valve --> generator_water_tank: water
 
 extractor-->waste_storage: waste
+extractor-->plant_oil_storage: plant_oil
 extractor-->fuel_storage: fuel
 fuel_storage-->extractor: fuel
 
@@ -59,6 +68,7 @@ waste_storage --> waste_generator: waste
 generator_water_tank --> waste_generator: water
 waste_generator --> generator_water_tank: water
 waste_generator --> battery: energy
+waste_generator --> hydroponics_battery: energy
 
 generator --> battery: energy
 generator --> hydroponics_battery: energy
@@ -71,4 +81,4 @@ fuel_storage --> generator: fuel
 
 generator_cooler --> generator_water_tank: water
 generator_water_tank --> generator_cooler: water
-
+@enduml

@@ -44,9 +44,7 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
-            "target_performance": 0,
-            "performance": 0
+            "fluid_per_tick": 100
         },
         "h_to_g_valve":
         {
@@ -60,9 +58,7 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
-            "target_performance": 0,
-            "performance": 0
+            "fluid_per_tick": 100
         },
 
         "g_to_h_valve":
@@ -85,7 +81,7 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 5
+            "fluid_per_tick": 100
         },
         "generator_cooler":
         {
@@ -97,14 +93,14 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 5
+            "fluid_per_tick": 100
         },
 
         "hydroponics_uncooled_water_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 5
+            "fluid_per_tick": 100
         },
 
         "plant_press":
@@ -206,6 +202,7 @@
 
         { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
         { "from": "hydroponics", "to": "oxygen_storage", "resource_type": "oxygen" },
+        { "from": "hydroponics", "to": "hydroponics_water_storage", "resource_type": "water" },
 
         { "from": "plant_storage", "to": "plant_press", "resource_type": "plants" },
 
