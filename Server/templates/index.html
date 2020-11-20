@@ -113,7 +113,7 @@ th {
             });
             $('<tr>').append(
                 $('<td>').append(node_link),
-                $('<td>').text(item.temperature),
+                $('<td>').text((item.temperature - 273.15).toFixed(2)),
                 $('<td>').text(item.amount),
                 $('<td>').append(form),
                 $('<td>').append(form2),
