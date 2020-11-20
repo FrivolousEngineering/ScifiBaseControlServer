@@ -163,7 +163,9 @@
             "optimal_temperature_range": 200,
             "min_performance": 0,
             "performance": 0,
-            "target_performance": 0
+            "target_performance": 0,
+            "weight" : 1000,
+            "surface_area": 3
         },
         "generator":
         {

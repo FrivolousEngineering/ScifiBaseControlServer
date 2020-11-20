@@ -66,10 +66,10 @@ class Node:
 
         # Temperature is in kelvin
         self._temperature = temperature
-        self._weight = 300.  # type: float
+        self._weight = kwargs.get("weight", 300)   # type: float
 
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
-        self._heat_emissivity = 0.5  # type: float
+        self._heat_emissivity = kwargs.get("heat_emissivity", 0.5)  # type: float
 
         # Is the node working at all?
         self._enabled = kwargs.get("enabled", True)
@@ -82,9 +82,9 @@ class Node:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
         # Aluminum: 205 - 250
-        self._heat_convection_coefficient = 10.  # type: float
+        self._heat_convection_coefficient = kwargs.get("heat_convection_coefficient", 10.)  # type: float
         # How large is the surface of this object (in M2)
-        self._surface_area = 1.  # type: float
+        self._surface_area = kwargs.get("surface_area", 1)  # type: float
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8  # type: float
 

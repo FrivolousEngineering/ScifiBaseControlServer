@@ -21,7 +21,10 @@ class Generator(Node):
         # Update the defaults like this so that the actual property can be set by base class
         defaults = {"temperature_efficiency": 0.5,
                     "min_performance": 0.5,
-                    "max_performance": 2}
+                    "max_performance": 2,
+                    "weight": 8000,
+                    "surface_area": 8,
+                    "heat_convection_coefficient": 20}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
 
@@ -38,14 +41,11 @@ class Generator(Node):
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
-        self._surface_area = 8
         self._max_safe_temperature = 400
-        self._heat_convection_coefficient = 20
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._performance_change_factor = 3
 
-        self._weight = 8000
         self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down."
