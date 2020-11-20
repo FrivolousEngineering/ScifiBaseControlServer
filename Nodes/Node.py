@@ -355,7 +355,7 @@ class Node:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             if not connections:
                 # Can't get the resource at all!
-                return
+                continue
             total_resource_to_reserve = self._resources_required_per_tick[resource_type] \
                                         - self._resources_left_over.get(resource_type, 0)
             resource_to_reserve = total_resource_to_reserve / len(connections)
