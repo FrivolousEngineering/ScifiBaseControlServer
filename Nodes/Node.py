@@ -103,8 +103,8 @@ class Node:
         self._performance = kwargs.get("performance", 1)  # type: float
         self._target_performance = kwargs.get("target_performance", 1)  # type: float
 
-        self._min_performance = 1.  # type: float
-        self._max_performance = 1.  # type: float
+        self._min_performance = kwargs.get("min_performance", 1)  # type: float
+        self._max_performance = kwargs.get("max_performance", 1)  # type: float
 
         # How fast should this node degrade if it's above a certain temperature?
         self._temperature_degradation_speed = 1.  # type: float
@@ -126,7 +126,7 @@ class Node:
         # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
-        self._temperature_efficiency = kwargs.get("temperature_effiency", 1)  # type: float
+        self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
 
     @modifiable_property
     def temperature_efficiency(self):

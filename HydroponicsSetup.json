@@ -159,7 +159,7 @@
             "type": "Generator",
             "fuel_type": "waste",
             "energy_factor": 0.2,
-            "temperature_effiency": 0.8,
+            "temperature_efficiency": 0.8,
             "optimal_temperature_range": 200
         },
         "generator":

@@ -18,7 +18,12 @@ class Generator(Node):
         :param energy_factor: How much energy should be produced with one fuel resource?
         :param kwargs:
         """
-        super().__init__(node_id, **kwargs)
+        # Update the defaults like this so that the actual property can be set by base class
+        defaults = {"temperature_efficiency": 0.5,
+                    "min_performance": 0.5,
+                    "max_performance": 2}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         # Some sanity checking.
         if COMBUSTION_HEAT[fuel_type] == 0:
@@ -33,10 +38,6 @@ class Generator(Node):
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
 
-        self._min_performance = 0.5
-        self._max_performance = 2
-
-        self._temperature_efficiency = kwargs.get("temperature_effiency", 0.5)
         self._surface_area = 8
         self._max_safe_temperature = 400
         self._heat_convection_coefficient = 20
