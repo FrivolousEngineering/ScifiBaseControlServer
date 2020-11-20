@@ -36,13 +36,10 @@ class Generator(Node):
         self._min_performance = 0.5
         self._max_performance = 2
 
-        self._temperature_efficiency = 0.5
+        self._temperature_efficiency = kwargs.get("temperature_effiency", 0.5)
         self._surface_area = 8
         self._max_safe_temperature = 400
         self._heat_convection_coefficient = 20
-
-        self._optimal_temperature = 375
-        self._optimal_temperature_range = 75
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._performance_change_factor = 3

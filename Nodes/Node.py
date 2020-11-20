@@ -120,13 +120,13 @@ class Node:
         # a value of 1 means it changes instantly, higher values means it changes slower.
         self._performance_change_factor = 2  # type: float
 
-        self._optimal_temperature = 375  # type: float
-        self._optimal_temperature_range = 75  # type: float
+        self._optimal_temperature = kwargs.get("optimal_temperature", 375) # type: float
+        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75) # type: float
 
         # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
-        self._temperature_efficiency = 1.  # type: float
+        self._temperature_efficiency = kwargs.get("temperature_effiency", 1)  # type: float
 
     @modifiable_property
     def temperature_efficiency(self):
