@@ -1,0 +1,73 @@
+{
+    "nodes":
+    {
+        "plant_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plants",
+            "amount": 10000
+        },
+
+        "waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "waste",
+            "amount": 4000,
+            "max_storage": 50000
+        },
+
+        "fuel_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "fuel",
+            "amount": 5000
+        },
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+        "plant_oil_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plant_oil",
+            "amount": 0
+        },
+        "fuel_valve":
+        {
+            "type": "Valve",
+            "fluid_per_tick": 5,
+            "resource_type": "fuel"
+        },
+        "fuel_return_valve":
+        {
+            "type": "Valve",
+            "fluid_per_tick": 2.5,
+            "resource_type": "fuel"
+        },
+        "plant_valve":
+        {
+            "type": "Valve",
+            "fluid_per_tick": 10,
+            "resource_type": "plants"
+        },
+        "extractor":
+        {
+            "type": "OilExtractor"
+        }
+    },
+    "connections":
+    [
+        { "from": "plant_storage", "to": "plant_valve", "resource_type": "plants" },
+        { "from": "plant_valve", "to": "extractor", "resource_type": "plants" },
+        { "from": "fuel_storage", "to": "fuel_valve", "resource_type": "fuel" },
+        { "from": "fuel_valve", "to": "extractor", "resource_type": "fuel" },
+        { "from": "extractor", "to": "fuel_return_valve", "resource_type": "fuel" },
+        { "from": "fuel_return_valve", "to": "fuel_storage", "resource_type": "fuel" },
+        { "from": "extractor", "to": "plant_oil_storage", "resource_type": "plant_oil" },
+        { "from": "extractor", "to": "waste_storage", "resource_type": "waste" },
+        { "from": "extractor", "to": "water_storage", "resource_type": "water" },
+        { "from": "water_storage", "to": "extractor", "resource_type": "water" }
+    ]
+}

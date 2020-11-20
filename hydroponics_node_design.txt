@@ -18,6 +18,7 @@ class oxygen_storage
 
 class generator_water_tank
 class generator
+class hydroponics_water_cooler
 
 class generator_cooler
 
@@ -35,7 +36,8 @@ extractor_water_storage --> e_to_h_valve: water
 e_to_h_valve --> hydroponics_water_tank: water
 
 hydroponics_water_tank --> h_to_e_valve:water
-h_to_e_valve --> extractor_water_storage
+h_to_e_valve --> hydroponics_water_cooler: water
+hydroponics_water_cooler --> extractor_water_storage: water
 
 plant_storage --> plant_press: plants
 plant_storage --> extractor: plants
