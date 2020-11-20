@@ -21,6 +21,8 @@ class Valve(ResourceStorage):
         self._performance_change_factor = 1
         self._heat_convection_coefficient = 0.2  # type: float
 
+        self._updateResourceRequiredPerTick()
+
     def _updateResourceRequiredPerTick(self) -> None:
         new_amount_required = self._fluid_per_tick * self._performance
         storage_room_left = cast(float, self._max_storage) - self._amount
