@@ -11,7 +11,7 @@ class OilExtractor(Node):
         self._resources_required_per_tick["water"] = 250
         self._resources_required_per_tick["plants"] = 10
         self._health = 100
-        self._temperature_effiency = 0.5
+        self._temperature_efficiency = 0.5
         self._weight = 1000
         self._surface_area = 8
 
