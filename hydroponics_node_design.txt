@@ -30,12 +30,13 @@ hydroponics_battery --> hydroponics: energy
 battery --> plant_press: energy
 hydroponics_water_tank --> hydroponics_uncooled_water_valve :water
 hydroponics_uncooled_water_valve --> hydroponics : water
-hydroponics_water_tank --> hydroponics_water_cooler: water
-hydroponics_water_cooler --> hydroponics_cooled_water_valve: water
-hydroponics_cooled_water_valve--> hydroponics: water
+hydroponics_water_tank --> hydroponics_cooled_water_valve: water
+hydroponics_water_cooler --> hydroponics: water
+hydroponics_cooled_water_valve--> hydroponics_water_cooler: water
 hydroponics --> plant_storage: plants
 hydroponics --> oxygen_storage: oxygen
 hydroponics --> hydroponics_water_tank: water
+
 
 extractor -> extractor_water_storage: water
 extractor_water_storage --> extractor: water
