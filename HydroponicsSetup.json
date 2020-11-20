@@ -1,0 +1,226 @@
+{
+    "nodes":
+    {
+        "extractor":
+        {
+            "type": "OilExtractor"
+        },
+
+        "fuel_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "fuel",
+            "amount": 4000,
+            "max_storage": 50000
+        },
+
+        "plant_oil_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plant_oil",
+            "amount": 0,
+            "max_storage":1000
+        },
+        "waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "waste",
+            "amount": 0
+        },
+        "extractor_water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+
+        "generator_water_tank":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+        "e_to_h_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+        "h_to_g_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+        "h_to_e_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+
+        "g_to_h_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+
+        "water_cooler":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+
+        "hydroponics_water_cooler":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+        "generator_cooler":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+        "hydroponics_cooled_water_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+
+        "hydroponics_uncooled_water_valve":
+        {
+            "type": "Valve",
+            "resource_type": "water",
+            "fluid_per_tick": 100
+        },
+
+        "plant_press":
+        {
+            "type": "PlantPress"
+        },
+
+        "food_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "food",
+            "amount": 0
+        },
+
+        "plant_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plants",
+            "amount": 0
+        },
+
+        "hydroponics_water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+
+        "oxygen_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "oxygen",
+            "amount": 0
+        },
+
+        "hydroponics_battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 0
+        },
+
+        "plant_press_battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 0
+        },
+
+        "hydroponics":
+        {
+            "type": "HydroponicsBay"
+        },
+        "waste_generator":
+        {
+            "type": "Generator",
+            "fuel_type": "waste",
+            "energy_factor": 0.2
+        },
+        "generator":
+        {
+            "type": "Generator",
+            "fuel_type": "fuel"
+        }
+    },
+    "connections":
+    [
+        { "from": "extractor", "to": "extractor_water_storage", "resource_type": "water" },
+        { "from": "extractor", "to": "fuel_storage", "resource_type": "fuel" },
+        { "from": "extractor", "to": "plant_oil_storage", "resource_type": "plant_oil" },
+        { "from": "extractor", "to": "waste_storage", "resource_type": "waste" },
+
+        { "from": "extractor_water_storage", "to": "extractor", "resource_type": "water" },
+        { "from": "extractor_water_storage", "to": "e_to_h_valve", "resource_type": "water" },
+
+        { "from": "e_to_h_valve", "to": "hydroponics_water_storage", "resource_type": "water" },
+
+        { "from": "fuel_storage", "to": "extractor", "resource_type": "fuel" },
+        { "from": "fuel_storage", "to": "generator", "resource_type": "fuel" },
+
+
+        { "from": "h_to_e_valve", "to": "water_cooler", "resource_type": "water" },
+
+        { "from": "water_cooler", "to": "extractor_water_storage", "resource_type": "water" },
+
+        { "from": "hydroponics_water_storage", "to": "h_to_g_valve", "resource_type": "water" },
+        { "from": "hydroponics_water_storage", "to": "h_to_e_valve", "resource_type": "water" },
+        { "from": "hydroponics_water_storage", "to": "hydroponics_water_cooler", "resource_type": "water" },
+        { "from": "hydroponics_water_storage", "to": "hydroponics_uncooled_water_valve", "resource_type": "water" },
+
+
+        { "from": "hydroponics_water_cooler", "to": "hydroponics_cooled_water_valve", "resource_type": "water" },
+
+        { "from": "hydroponics_cooled_water_valve", "to": "hydroponics", "resource_type": "water" },
+
+        { "from": "hydroponics_uncooled_water_valve", "to": "hydroponics", "resource_type": "water" },
+
+        { "from": "hydroponics_battery", "to": "hydroponics", "resource_type": "energy" },
+
+        { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
+        { "from": "hydroponics", "to": "oxygen_storage", "resource_type": "oxygen" },
+
+        { "from": "plant_storage", "to": "plant_press", "resource_type": "plants" },
+
+        { "from": "plant_press", "to": "food_storage", "resource_type": "food" },
+        { "from": "plant_press", "to": "generator_water_tank", "resource_type": "water" },
+
+        { "from": "generator_cooler", "to": "generator_water_tank", "resource_type": "water" },
+
+        { "from": "generator_water_tank", "to": "generator_cooler", "resource_type": "water" },
+        { "from": "generator_water_tank", "to": "generator", "resource_type": "water" },
+        { "from": "generator_water_tank", "to": "waste_generator", "resource_type": "water" },
+        { "from": "generator_water_tank", "to": "g_to_h_valve", "resource_type": "water" },
+
+        { "from": "waste_generator", "to": "hydroponics_battery", "resource_type": "energy" },
+        { "from": "waste_generator", "to": "plant_press_battery", "resource_type": "energy" },
+        { "from": "waste_generator", "to": "generator_water_tank", "resource_type": "water" },
+
+        { "from": "generator", "to": "hydroponics_battery", "resource_type": "energy" },
+        { "from": "generator", "to": "plant_press_battery", "resource_type": "energy" },
+        { "from": "generator", "to": "generator_water_tank", "resource_type": "water" },
+
+        { "from": "g_to_h_valve", "to": "hydroponics_water_storage", "resource_type": "water" },
+
+        { "from": "h_to_g_valve", "to": "generator_water_tank", "resource_type": "water" }
+    ]
+}
