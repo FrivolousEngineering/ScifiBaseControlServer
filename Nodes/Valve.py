@@ -49,5 +49,8 @@ class Valve(ResourceStorage):
         # Then we try to give as much away as possible.
         self._amount = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute) + resources_left
 
-        # Finally, update how much the cooler should try to pull in.
+    def postUpdate(self) -> None:
+        super().postUpdate()
+        # This is done in the post update to ensure that it also takes resouces taken by other nodes into account.
+        # We can't do this in the update, because other nodes might be updated later.
         self._updateResourceRequiredPerTick()
