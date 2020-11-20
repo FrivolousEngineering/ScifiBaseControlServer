@@ -205,6 +205,7 @@
         { "from": "hydroponics", "to": "hydroponics_water_storage", "resource_type": "water" },
 
         { "from": "plant_storage", "to": "plant_press", "resource_type": "plants" },
+        { "from": "plant_storage", "to": "extractor", "resource_type": "plants" },
 
         { "from": "plant_press", "to": "food_storage", "resource_type": "food" },
         { "from": "plant_press", "to": "generator_water_tank", "resource_type": "water" },
@@ -221,6 +222,8 @@
         { "from": "waste_generator", "to": "hydroponics_battery", "resource_type": "energy" },
         { "from": "waste_generator", "to": "plant_press_battery", "resource_type": "energy" },
         { "from": "waste_generator", "to": "generator_water_tank", "resource_type": "water" },
+
+        { "from": "waste_storage", "to": "waste_generator", "resource_type": "waste" },
 
         { "from": "generator", "to": "hydroponics_battery", "resource_type": "energy" },
         { "from": "generator", "to": "plant_press_battery", "resource_type": "energy" },
