@@ -15,6 +15,8 @@ class ResourceStorage(Node):
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
         self.additional_properties.append("amount_stored")
 
+        self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 350)
+
         self._description = "This device stores {resource_type}, which can be used by any connected device."
         self._description.format(resource_type = resource_type)
 
@@ -56,8 +58,9 @@ class ResourceStorage(Node):
         sorted_reservations = sorted(reservations, key=lambda x: x.reserved_requested_amount, reverse=True)
 
         reserved_amount = 0.
+
         while sorted_reservations:
-            max_resources_to_give = (self._amount - reserved_amount) / len(sorted_reservations)
+            max_resources_to_give = (min(self._amount, self._max_resources_requestable_per_tick) - reserved_amount) / len(sorted_reservations)
             active_reservation = sorted_reservations.pop()
             active_reservation.reserved_available_amount = min(max_resources_to_give,
                                                                active_reservation.reserved_requested_amount)
