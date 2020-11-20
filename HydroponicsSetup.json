@@ -160,7 +160,10 @@
             "fuel_type": "waste",
             "energy_factor": 0.2,
             "temperature_efficiency": 0.8,
-            "optimal_temperature_range": 200
+            "optimal_temperature_range": 200,
+            "min_performance": 0,
+            "performance": 0,
+            "target_performance": 0
         },
         "generator":
         {
