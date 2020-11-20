@@ -128,6 +128,12 @@ class Node:
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
         self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
 
+    def ensureSaneValues(self) -> None:
+        # This is to ensure that when custom performance is set that any updates are done.
+        # Due to child classes changing how this behavior can be, it's hard to get it in the constructor.
+        # As such we just let an external class ensure this bit of bookeeping is done.
+        self._setPerformance(self.performance)
+
     @modifiable_property
     def temperature_efficiency(self):
         return self._temperature_efficiency
