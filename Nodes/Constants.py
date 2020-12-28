@@ -7,6 +7,7 @@ SPECIFIC_HEAT = {"energy": 0,
                  "data": 0,
                  "dirty_water": 1,
                  "waste": 1,
+                 "animal_waste": 1,
                  "plants": 0.39,
                  "plant_oil": 0.5,
                  "food": 0.6
@@ -20,6 +21,7 @@ WEIGHT_PER_UNIT = {"water": 1,
                    "data": 0,
                    "dirty_water": 1.1,
                    "waste": 1.2,
+                   "animal_waste": 1.2,
                    "plants": 0.408,
                    "plant_oil": 0.92,
                    "food": 0.874
@@ -32,7 +34,8 @@ COMBUSTION_HEAT = {"water": 0,
                    "oxygen": 0,
                    "data": 0,
                    "dirty_water": 0,
-                   "waste": 3000
+                   "waste": 3000,
+                   "animal_waste": 3000
                    }
 
 SECONDS_PER_TICK = 60
