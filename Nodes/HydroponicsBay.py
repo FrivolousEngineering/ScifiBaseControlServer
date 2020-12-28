@@ -10,10 +10,12 @@ class HydroponicsBay(Node):
         super().__init__(node_id, **kwargs)
 
         # TODO: This still needs to be tweaked.
-        self._resources_required_per_tick["water"] = 100
+        self._resources_required_per_tick["water"] = 5
         self._resources_required_per_tick["energy"] = 5
 
         self._optional_resources_required_per_tick["animal_waste"] = 5
+        # It doesn't need the extra water, it just uses it for temperature purposes
+        self._optional_resources_required_per_tick["water"] = 95
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._heat_convection_coefficient = 1
