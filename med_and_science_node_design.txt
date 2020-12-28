@@ -43,4 +43,6 @@ package hygene
     water_purifier --> toilet_waste_storage: animal_waste
 }
 
+toilet_waste_storage --> hydroponics: animal_waste
+
 @enduml
