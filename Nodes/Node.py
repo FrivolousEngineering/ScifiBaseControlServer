@@ -136,7 +136,10 @@ class Node:
     def ensureSaneValues(self) -> None:
         # This is to ensure that when custom performance is set that any updates are done.
         # Due to child classes changing how this behavior can be, it's hard to get it in the constructor.
-        # As such we just let an external class ensure this bit of bookeeping is done.
+        # As such we just let an external class ensure this bit of bookkeeping is done.
+        self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
+        self._original_optional_resources_required_per_tick = self._optional_resources_required_per_tick.copy()
+
         self._setPerformance(self.performance)
 
     @modifiable_property
