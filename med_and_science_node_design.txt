@@ -1,48 +1,46 @@
 @startuml
-
-class computer
-
-battery -[#yellow]-> computer: energy
-battery -[#yellow]-> science_scanner: energy
-battery -[#yellow]-> med_scanner: energy
-battery -[#yellow]-> medicine_creator: energy
-
-computer --> database: data
-
-database --> science_scanner: data
-database --> med_scanner: data
-
-
-
-rain_water_collector -[#blue]-> rain_water_tank: water
-
-rain_water_tank -[#blue]->  toilets: water
-toilet_water_tank -[#blue]->  toilets: water
-toilets -[#blue]->  dirty_water_storage: dirty_water
-dirty_water_storage --> water_purifier: dirty_water
-
-water_purifier -[#blue]->  toilet_water_tank: water
-
-water_purifier --> toilet_waste_storage: waste
-
-
-support_battery -[#yellow]-> lights_science: energy
-support_battery -[#yellow]-> lights_med: energy
-support_battery -[#yellow]-> medicine_creator: energy
-support_battery -[#yellow]-> health_scanner: energy
+package medAndScience {
+    class computer
+    
+    battery -[#yellow]-> computer: energy
+    battery -[#yellow]-> science_scanner: energy
+    battery -[#yellow]-> med_scanner: energy
+    battery -[#yellow]-> medicine_creator: energy
+    
+    computer --> database: data
+    
+    database --> science_scanner: data
+    database --> med_scanner: data
+    
+    
+    
+    support_battery -[#yellow]-> lights_science: energy
+    support_battery -[#yellow]-> lights_med: energy
+    support_battery -[#yellow]-> medicine_creator: energy
+    support_battery -[#yellow]-> health_scanner: energy
+    
+    
+    medicine_creator --> medicine_storage: medicine
+    
+    water_storage -[#blue]-> medicine_creator: water
+    medicine_creator -[#blue]-> water_storage: water
+}
 
 
-medicine_creator --> medicine_storage: medicine
-
-
-water_storage -[#blue]-> medicine_creator: water
-medicine_creator -[#blue]-> water_storage: water
-
-toilet_water_tank -[#blue]-> medicine_creator: water
-
-
-toilet_waste_storage --> health_scanner: waste
-
-
+package hygene 
+{
+    toilet_water_tank -[#blue]-> medicine_creator: water
+    toilet_waste_storage --> health_scanner: animal_waste
+    rain_water_collector -[#blue]-> rain_water_tank: water
+    
+    rain_water_tank -[#blue]->  toilets: water
+    toilet_water_tank -[#blue]->  toilets: water
+    toilets -[#blue]->  dirty_water_storage: dirty_water
+    dirty_water_storage --> water_purifier: dirty_water
+    
+    water_purifier -[#blue]->  toilet_water_tank: water
+    
+    water_purifier --> toilet_waste_storage: animal_waste
+}
 
 @enduml
