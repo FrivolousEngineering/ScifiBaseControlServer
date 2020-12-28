@@ -26,6 +26,8 @@ class hydroponics_cooled_water_valve
 class generator_cooler
 
 
+toilet_waste_storage --> hydroponics: animal_waste
+
 hydroponics_battery -[#yellow]-> hydroponics: energy
 battery -[#yellow]-> plant_press: energy
 hydroponics_water_tank -[#blue]-> hydroponics_uncooled_water_valve :water
