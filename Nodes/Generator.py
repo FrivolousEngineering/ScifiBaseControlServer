@@ -35,12 +35,12 @@ class Generator(Node):
         self._fuel_type = fuel_type
         self._energy_factor = energy_factor
         self._resources_required_per_tick[fuel_type] = 10
-        self._resources_required_per_tick["water"] = 250
+        self._optional_resources_required_per_tick["water"] = 250
 
         self._resources_left_over["energy"] = 0
 
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
-
+        self._original_optional_resources_required_per_tick = self._optional_resources_required_per_tick.copy()
         self._max_safe_temperature = 400
 
         self._use_temperature_dependant_effectiveness_factor = True

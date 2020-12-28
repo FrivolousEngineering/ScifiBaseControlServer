@@ -55,8 +55,13 @@ class Node:
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
 
+        # What resources *must* this node get in order to function?
         self._resources_required_per_tick = {}  # type: Dict[str, float]
-        self._original_resources_required_per_tick = {} # type: Dict[str, float]
+        self._original_resources_required_per_tick = {}  # type: Dict[str, float]
+
+        # What resources does this node want in order to function (but it could do without?)
+        self._optional_resources_required_per_tick = {}  # type: Dict[str, float]
+        self._original_optional_resources_required_per_tick = {}  # type: Dict[str, float]
 
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
@@ -186,6 +191,14 @@ class Node:
 
                 self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[
                                                                   resource] * self._performance
+
+            for resource in self._optional_resources_required_per_tick:
+                if resource not in self._original_optional_resources_required_per_tick:
+                    self._original_optional_resources_required_per_tick[resource] = self._optional_resources_required_per_tick[resource]
+
+                self._optional_resources_required_per_tick[resource] = self._original_optional_resources_required_per_tick[
+                                                                  resource] * self._performance
+
     @property
     def target_performance(self) -> float:
         return self._target_performance
@@ -329,8 +342,27 @@ class Node:
     def getId(self) -> str:
         return self._node_id
 
+    #
     def getResourcesRequiredPerTick(self) -> Dict[str, float]:
+        """
+        Get all the resources that are required this tick. Note that this doesn't contain optional requirements!
+        :return:
+        """
         return self._resources_required_per_tick
+
+    def getAllResourcesRequiredPerTick(self) -> Dict[str, float]:
+        """
+        Get all the resources that are required this tick, including the optional ones!
+        :return:
+        """
+        result = self._resources_required_per_tick.copy()
+
+        for resource, value in self._optional_resources_required_per_tick.items():
+            if resource not in result:
+                result[resource] = value
+            else:
+                result[resource] += value
+        return result
 
     def getResourcesReceivedThisTick(self) -> Dict[str, float]:
         return self._resources_received_this_tick
@@ -356,13 +388,13 @@ class Node:
         self.preUpdateCalled.emit(self)
 
         self._updatePerformance()
-
-        for resource_type in self._resources_required_per_tick:
+        all_resources = self.getAllResourcesRequiredPerTick()
+        for resource_type in all_resources:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             if not connections:
                 # Can't get the resource at all!
                 continue
-            total_resource_to_reserve = self._resources_required_per_tick[resource_type] \
+            total_resource_to_reserve = all_resources[resource_type] \
                                         - self._resources_left_over.get(resource_type, 0)
             resource_to_reserve = total_resource_to_reserve / len(connections)
 
@@ -411,7 +443,8 @@ class Node:
         Once the planning is done, this function ensures that all reservations actually get executed.
         The results are places in the _resources_received_this_tick dict.
         """
-        for resource_type in self._resources_required_per_tick:
+        all_resources = self.getAllResourcesRequiredPerTick()
+        for resource_type in all_resources:
             already_received_resources = self._resources_received_this_tick.get(resource_type, 0)
             reserved_resources = self._getReservedResourceByType(resource_type)
             self._resources_received_this_tick[resource_type] = already_received_resources + reserved_resources
@@ -421,7 +454,8 @@ class Node:
         If for whatever reason the initial reservations can not be met, this function will attempt to ask more of the
         connections that did fulfill what was asked for (hoping that those can provide more resources)
         """
-        for resource_type in self._resources_required_per_tick:
+        all_resources = self.getAllResourcesRequiredPerTick()
+        for resource_type in all_resources:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
             num_statisfied_reservations = len(

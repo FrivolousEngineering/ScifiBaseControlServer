@@ -53,9 +53,9 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
     water_purifier._resources_left_over["water"] = water_left
     water_purifier._getHealthEffectivenessFactor = MagicMock(return_value = health_effectiveness_factor)
     water_purifier._updateResourceRequiredPerTick()
-
-    assert math.isclose(water_purifier._resources_required_per_tick["dirty_water"], dirty_water_required)
-    assert math.isclose(water_purifier._resources_required_per_tick["oxygen"], oxygen_required)
+    calculated_resources_required = water_purifier.getAllResourcesRequiredPerTick()
+    assert math.isclose(calculated_resources_required["dirty_water"], dirty_water_required)
+    assert math.isclose(calculated_resources_required["oxygen"], oxygen_required)
 
 
 def test_purifier_resources_left_previous_update():
