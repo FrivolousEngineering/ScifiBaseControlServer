@@ -1,89 +1,96 @@
 @startuml
-class hydroponics
-class plant_storage
-class hydroponics_water_tank
-class extractor_water_storage
-class plant_press
-class food_storage
-class e_to_h_valve
-class h_to_e_valve
 
-class h_to_g_valve
-class g_to_h_valve
-
-class extractor
 class plant_oil_storage
-class waste_storage
-class fuel_storage
-class oxygen_storage
 
-class generator_water_tank
-class generator
-class hydroponics_water_cooler
-class hydroponics_uncooled_water_valve
-class hydroponics_cooled_water_valve
 
-class generator_cooler
+package HydroponicsSetup {
+	class hydroponics
+	class plant_storage
+	class hydroponics_water_tank
+	class extractor_water_storage
+	class plant_press
+	class food_storage
+	class e_to_h_valve
+	class h_to_e_valve
 
+	class h_to_g_valve
+	class g_to_h_valve
+
+	class extractor
+	
+	class waste_storage
+	class fuel_storage
+	class oxygen_storage
+
+	class generator_water_tank
+	class generator
+	class hydroponics_water_cooler
+	class hydroponics_uncooled_water_valve
+	class hydroponics_cooled_water_valve
+
+	class generator_cooler
+
+
+	
+
+	hydroponics_battery -[#yellow]-> hydroponics: energy
+	battery -[#yellow]-> plant_press: energy
+	hydroponics_water_tank -[#blue]-> hydroponics_uncooled_water_valve :water
+	hydroponics_uncooled_water_valve -[#blue]-> hydroponics : water
+	hydroponics_water_tank -[#blue]-> hydroponics_cooled_water_valve: water
+	hydroponics_water_cooler -[#blue]-> hydroponics: water
+	hydroponics_cooled_water_valve -[#blue]-> hydroponics_water_cooler: water
+	hydroponics -[#green]-> plant_storage: plants
+	hydroponics --> oxygen_storage: oxygen
+	hydroponics -[#blue]-> hydroponics_water_tank: water
+
+	extractor -[#blue]-> extractor_water_storage: water
+	extractor_water_storage -[#blue]-> extractor: water
+
+	extractor_water_storage -[#blue]-> e_to_h_valve: water
+	e_to_h_valve -[#blue]-> hydroponics_water_tank: water
+
+	hydroponics_water_tank -[#blue]-> h_to_e_valve: water
+	h_to_e_valve -[#blue]-> water_cooler: water
+	water_cooler -[#blue]-> extractor_water_storage: water
+
+	plant_storage -[#green]-> plant_press: plants
+	plant_storage -[#green]-> extractor: plants
+	plant_press --> food_storage : food
+	plant_press -[#blue]-> generator_water_tank: water
+
+
+	generator_water_tank -[#blue]->  g_to_h_valve: water
+	generator_water_tank -[#blue]-> waste_generator: water
+	generator_water_tank -[#blue]-> generator: water
+	generator_water_tank -[#blue]-> generator_cooler: water
+
+	g_to_h_valve -[#blue]-> hydroponics_water_tank: water
+
+	hydroponics_water_tank -[#blue]->  h_to_g_valve: water
+	h_to_g_valve -[#blue]-> generator_water_tank: water
+
+	extractor --> waste_storage: waste
+	extractor --> plant_oil_storage: plant_oil
+	extractor --> fuel_storage: fuel
+	fuel_storage --> extractor: fuel
+
+	waste_storage --> waste_generator: waste
+
+	waste_generator -[#blue]-> generator_water_tank: water
+	waste_generator -[#yellow]-> battery: energy
+	waste_generator -[#yellow]-> hydroponics_battery: energy
+
+	generator -[#yellow]-> battery: energy
+	generator -[#yellow]-> hydroponics_battery: energy
+	generator -[#blue]-> generator_water_tank: water
+
+
+
+	fuel_storage --> generator: fuel
+
+	generator_cooler -[#blue]-> generator_water_tank: water
+}
 
 toilet_waste_storage --> hydroponics: animal_waste
-
-hydroponics_battery -[#yellow]-> hydroponics: energy
-battery -[#yellow]-> plant_press: energy
-hydroponics_water_tank -[#blue]-> hydroponics_uncooled_water_valve :water
-hydroponics_uncooled_water_valve -[#blue]-> hydroponics : water
-hydroponics_water_tank -[#blue]-> hydroponics_cooled_water_valve: water
-hydroponics_water_cooler -[#blue]-> hydroponics: water
-hydroponics_cooled_water_valve -[#blue]-> hydroponics_water_cooler: water
-hydroponics -[#green]-> plant_storage: plants
-hydroponics --> oxygen_storage: oxygen
-hydroponics -[#blue]-> hydroponics_water_tank: water
-
-extractor -[#blue]-> extractor_water_storage: water
-extractor_water_storage -[#blue]-> extractor: water
-
-extractor_water_storage -[#blue]-> e_to_h_valve: water
-e_to_h_valve -[#blue]-> hydroponics_water_tank: water
-
-hydroponics_water_tank -[#blue]-> h_to_e_valve: water
-h_to_e_valve -[#blue]-> water_cooler: water
-water_cooler -[#blue]-> extractor_water_storage: water
-
-plant_storage -[#green]-> plant_press: plants
-plant_storage -[#green]-> extractor: plants
-plant_press --> food_storage : food
-plant_press -[#blue]-> generator_water_tank: water
-
-
-generator_water_tank -[#blue]->  g_to_h_valve: water
-generator_water_tank -[#blue]-> waste_generator: water
-generator_water_tank -[#blue]-> generator: water
-generator_water_tank -[#blue]-> generator_cooler: water
-
-g_to_h_valve -[#blue]-> hydroponics_water_tank: water
-
-hydroponics_water_tank -[#blue]->  h_to_g_valve: water
-h_to_g_valve -[#blue]-> generator_water_tank: water
-
-extractor --> waste_storage: waste
-extractor --> plant_oil_storage: plant_oil
-extractor --> fuel_storage: fuel
-fuel_storage --> extractor: fuel
-
-waste_storage --> waste_generator: waste
-
-waste_generator -[#blue]-> generator_water_tank: water
-waste_generator -[#yellow]-> battery: energy
-waste_generator -[#yellow]-> hydroponics_battery: energy
-
-generator -[#yellow]-> battery: energy
-generator -[#yellow]-> hydroponics_battery: energy
-generator -[#blue]-> generator_water_tank: water
-
-
-
-fuel_storage --> generator: fuel
-
-generator_cooler -[#blue]-> generator_water_tank: water
-
 @enduml
