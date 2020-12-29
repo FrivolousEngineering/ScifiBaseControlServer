@@ -222,7 +222,7 @@ class AllProperties(Resource):
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
 
         for key in all_property_histories:
-            if show_last is not None and show_last:
+            if show_last is not None and show_last and key != "offset":
                 try:
                     all_property_histories[key] = all_property_histories[key][-int(show_last):]
                 except ValueError:
