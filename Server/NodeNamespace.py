@@ -40,7 +40,9 @@ node = api.model("node", {
     "heat_emissivity": fields.Float,
     "health": fields.Float(description = "How much health does this node have? This usually runs from 0 to 100.",
                            example = 50,
-                           readonly = True)
+                           readonly = True),
+    "is_temperature_dependant": fields.Boolean(description = "Is this node influenced by it's temperature?"),
+    "optimal_temperature": fields.Float(description = "What is the most optimal temperature for this node?")
 })
 
 
@@ -324,6 +326,8 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "max_safe_temperature": nodes.getMaxSafeTemperature(node_id),
             "heat_convection": nodes.getHeatConvectionCoefficient(node_id),
             "heat_emissivity": nodes.getHeatEmissivity(node_id),
-            "health": nodes.getAdditionalPropertyValue(node_id, "health")
+            "health": nodes.getAdditionalPropertyValue(node_id, "health"),
+            "is_temperature_dependant": nodes.getIsTemperatureDependant(node_id),
+            "optimal_temperature": nodes.getOptimalTemperature(node_id)
             }
     return data

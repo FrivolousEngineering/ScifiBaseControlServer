@@ -274,3 +274,17 @@ class DBusService(dbus.service.Object):
         if node:
             return node.max_performance
         return 1.
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
+    def getIsTemperatureDependant(self, node_id: str) -> bool:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.isTemperatureDependant
+        return False
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getOptimalTemperature(self, node_id: str) -> float:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.optimal_temperature
+        return -1

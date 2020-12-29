@@ -13,7 +13,7 @@ from Nodes.TemperatureHandlers.RandomFluctuatingTemperatureHandler import Random
 
 engine = NodeEngine()
 
-with open("HydroponicsSetup.json") as f:
+with open("configuration.json") as f:
     loaded_data = json.loads(f.read())
     engine.deserialize(loaded_data)
 

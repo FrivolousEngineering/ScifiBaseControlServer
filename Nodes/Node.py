@@ -133,6 +133,10 @@ class Node:
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
         self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
 
+    @property
+    def isTemperatureDependant(self):
+        return self._use_temperature_dependant_effectiveness_factor
+
     def ensureSaneValues(self) -> None:
         # This is to ensure that when custom performance is set that any updates are done.
         # Due to child classes changing how this behavior can be, it's hard to get it in the constructor.
