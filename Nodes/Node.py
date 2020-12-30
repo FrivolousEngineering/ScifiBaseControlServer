@@ -349,7 +349,6 @@ class Node:
     def getId(self) -> str:
         return self._node_id
 
-    #
     def getResourcesRequiredPerTick(self) -> Dict[str, float]:
         """
         Get all the resources that are required this tick. Note that this doesn't contain optional requirements!

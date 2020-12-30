@@ -16,6 +16,11 @@ connection = api.model("connection", {
     "resource_type": fields.String
 })
 
+resource_amount = api.model("resource_amount", {
+    "resource_type": fields.String,
+    "value": fields.Float
+})
+
 UNKNOWN_NODE_RESPONSE = Response("Could not find the requested node", status=404)
 
 node = api.model("node", {
@@ -42,7 +47,8 @@ node = api.model("node", {
                            example = 50,
                            readonly = True),
     "is_temperature_dependant": fields.Boolean(description = "Is this node influenced by it's temperature?"),
-    "optimal_temperature": fields.Float(description = "What is the most optimal temperature for this node?")
+    "optimal_temperature": fields.Float(description = "What is the most optimal temperature for this node?"),
+    "resources_required": fields.List(fields.Nested(resource_amount))
 })
 
 
@@ -314,6 +320,12 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
     nodes = app.getDBusObject()
     if node_id not in nodes.getAllNodeIds():
         return None
+
+    required_resources = []
+
+    for key, value in nodes.getResourcesRequired(node_id).items():
+        required_resources.append({"resource_type": key, "value": value})
+
     data = {"node_id": node_id,
             "temperature": nodes.getTemperature(node_id),
             "amount": round(nodes.getAmountStored(node_id), 2),
@@ -328,6 +340,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "heat_emissivity": nodes.getHeatEmissivity(node_id),
             "health": nodes.getAdditionalPropertyValue(node_id, "health"),
             "is_temperature_dependant": nodes.getIsTemperatureDependant(node_id),
-            "optimal_temperature": nodes.getOptimalTemperature(node_id)
+            "optimal_temperature": nodes.getOptimalTemperature(node_id),
+            "resources_required": required_resources
             }
     return data

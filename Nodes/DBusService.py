@@ -288,3 +288,10 @@ class DBusService(dbus.service.Object):
         if node:
             return node.optimal_temperature
         return -1
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesRequired(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.getResourcesRequiredPerTick()
+        return {}
