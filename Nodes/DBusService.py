@@ -302,3 +302,10 @@ class DBusService(dbus.service.Object):
         if node:
             return node.getResourcesReceivedLastTick()
         return {}
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getOptionalResourcesRequired(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.getOptionalResourcesRequiredLastTick()
+        return {}

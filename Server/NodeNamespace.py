@@ -49,7 +49,8 @@ node = api.model("node", {
     "is_temperature_dependant": fields.Boolean(description = "Is this node influenced by it's temperature?"),
     "optimal_temperature": fields.Float(description = "What is the most optimal temperature for this node?"),
     "resources_required": fields.List(fields.Nested(resource_amount)),
-    "resources_received": fields.List(fields.Nested(resource_amount))
+    "resources_received": fields.List(fields.Nested(resource_amount)),
+    "optional_resources_required": fields.List(fields.Nested(resource_amount))
 })
 
 
@@ -331,6 +332,10 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
     for key, value in nodes.getResourcesReceived(node_id).items():
         received_resources.append({"resource_type": key, "value": value})
 
+    optional_required_resources = []
+    for key, value in nodes.getOptionalResourcesRequired(node_id).items():
+        optional_required_resources.append({"resource_type": key, "value": value})
+
     data = {"node_id": node_id,
             "temperature": nodes.getTemperature(node_id),
             "amount": round(nodes.getAmountStored(node_id), 2),
@@ -347,6 +352,8 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "is_temperature_dependant": nodes.getIsTemperatureDependant(node_id),
             "optimal_temperature": nodes.getOptimalTemperature(node_id),
             "resources_required": required_resources,
+            "optional_resources_required": optional_required_resources,
             "resources_received": received_resources
+
             }
     return data
