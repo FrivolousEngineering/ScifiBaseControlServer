@@ -293,5 +293,12 @@ class DBusService(dbus.service.Object):
     def getResourcesRequired(self, node_id: str):
         node = self._node_engine.getNodeById(node_id)
         if node:
-            return node.getResourcesRequiredPerTick()
+            return node.getResourcesRequiredLastTick()
+        return {}
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesReceived(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.getResourcesReceivedLastTick()
         return {}

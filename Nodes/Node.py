@@ -66,6 +66,9 @@ class Node:
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
 
+        self._resources_required_last_tick = {} # type: Dict[str, float]
+        self._resources_received_last_tick = {} # type: Dict[str, float]
+
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
 
@@ -356,6 +359,12 @@ class Node:
         """
         return self._resources_required_per_tick
 
+    def getResourcesRequiredLastTick(self) -> Dict[str, float]:
+        return self._resources_required_last_tick
+
+    def getResourcesRequiredPreviousTick(self):
+        return self._resources_required_last_tick
+
     def getAllResourcesRequiredPerTick(self) -> Dict[str, float]:
         """
         Get all the resources that are required this tick, including the optional ones!
@@ -372,6 +381,9 @@ class Node:
 
     def getResourcesReceivedThisTick(self) -> Dict[str, float]:
         return self._resources_received_this_tick
+
+    def getResourcesReceivedLastTick(self) -> Dict[str, float]:
+        return self._resources_received_last_tick
 
     def getResourcesProducedThisTick(self) -> Dict[str, float]:
         return self._resources_produced_this_tick
@@ -498,6 +510,8 @@ class Node:
         self._emitHeat()
         self._convectiveHeatTransfer()
         self._dealDamageFromHeat()
+        self._resources_required_last_tick = self._resources_required_per_tick.copy()
+        self._resources_received_last_tick = self._resources_received_this_tick.copy()
 
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
