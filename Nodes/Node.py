@@ -147,7 +147,8 @@ class Node:
         # As such we just let an external class ensure this bit of bookkeeping is done.
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
         self._original_optional_resources_required_per_tick = self._optional_resources_required_per_tick.copy()
-
+        self._resources_required_last_tick = self._resources_required_per_tick.copy()
+        self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
         self._setPerformance(self.performance)
 
     @modifiable_property

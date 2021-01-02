@@ -354,6 +354,5 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "resources_required": required_resources,
             "optional_resources_required": optional_required_resources,
             "resources_received": received_resources
-
             }
     return data
