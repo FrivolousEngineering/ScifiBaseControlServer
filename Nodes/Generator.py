@@ -49,7 +49,7 @@ class Generator(Node):
         self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down."
-        self._description.format(fuel_type = fuel_type)
+        self._description = self._description.format(fuel_type = fuel_type)
 
     @modifiable_property
     def temperature_efficiency(self):

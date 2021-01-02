@@ -18,7 +18,7 @@ class ResourceStorage(Node):
         self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 350)
 
         self._description = "This device stores {resource_type}, which can be used by any connected device."
-        self._description.format(resource_type = resource_type)
+        self._description = self._description.format(resource_type = resource_type)
 
     @property
     def max_amount_stored(self) -> float:
