@@ -13,7 +13,7 @@ class Valve(ResourceStorage):
         self.additional_properties.remove("amount_stored")
 
         # Also try to pump up resources!
-        self._resources_required_per_tick[self._resource_type] = fluid_per_tick
+        self._optional_resources_required_per_tick[self._resource_type] = fluid_per_tick
         self._min_performance = 0
         self._description = "This device pumps {resource_type} from all incomming connections and provides them to" \
                             " all of it's outgoing connections."
@@ -28,7 +28,7 @@ class Valve(ResourceStorage):
         storage_room_left = cast(float, self._max_storage) - self._amount
         if storage_room_left < new_amount_required:
             new_amount_required = storage_room_left
-        self._resources_required_per_tick[self._resource_type] = max(0., new_amount_required)
+        self._optional_resources_required_per_tick[self._resource_type] = max(0., new_amount_required)
 
     def _setPerformance(self, new_performance) -> None:
         self._updateResourceRequiredPerTick()
