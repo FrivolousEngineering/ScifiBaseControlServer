@@ -173,10 +173,11 @@ def test_getActiveModifiers(DBus):
 
     modifier = MagicMock(duration = 200)
     modifier.name = "modifier"  # Can't set that directly in constructor, since magicMock uses name itself
+    modifier.abbreviation = "FOO"
     mod_node.getModifiers = MagicMock(return_value=[modifier])
     unmodded_node.getModifiers = MagicMock(return_value = [])
     with patch.dict(node_dict, {"modded_node": mod_node, "unmodded_node": unmodded_node}):
-        assert DBus.getActiveModifiers("modded_node") == [{"name": "modifier", "duration": 200}]
+        assert DBus.getActiveModifiers("modded_node") == [{"name": "modifier", "duration": 200, "abbreviation": "FOO"}]
         assert DBus.getActiveModifiers("unmodded_node") == []
         assert DBus.getActiveModifiers("unknown_node") == []
 

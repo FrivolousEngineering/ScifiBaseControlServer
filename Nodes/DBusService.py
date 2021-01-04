@@ -56,7 +56,7 @@ class DBusService(dbus.service.Object):
         if not node:
             return []
 
-        return [{"name": modifier.name, "duration": modifier.duration} for modifier in node.getModifiers()]
+        return [{"name": modifier.name, "duration": modifier.duration, "abbreviation": modifier.abbreviation} for modifier in node.getModifiers()]
 
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def getTemperature(self, node_id: str) -> float:

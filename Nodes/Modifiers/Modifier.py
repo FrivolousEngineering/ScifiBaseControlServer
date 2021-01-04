@@ -31,6 +31,7 @@ class Modifier:
             self._factors = factors
 
         self._name = "Modifier"
+        self._abbreviation = "UNK"
 
     def __eq__(self, other) -> bool:
         if type(self) != type(other):
@@ -65,6 +66,10 @@ class Modifier:
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def abbreviation(self) -> str:
+        return self._abbreviation
 
     def setNode(self, node: "Node") -> None:
         self._node = node
