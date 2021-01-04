@@ -21,6 +21,13 @@ resource_amount = api.model("resource_amount", {
     "value": fields.Float
 })
 
+modifier = api.model("modifier",
+{
+    "name": fields.String(description = "Human readable name of the modifier"),
+    "duration": fields.Integer(description = "Number of ticks this modifier will remain active"),
+    "abbreviation": fields.String(description = "Three letter abbreviation of this modifier")
+})
+
 UNKNOWN_NODE_RESPONSE = Response("Could not find the requested node", status=404)
 
 node = api.model("node", {
@@ -271,6 +278,7 @@ class OutgoingConnections(Resource):
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Modifiers(Resource):
     @api.response(404, "Unknown Node")
+    @api.response(200, "Success'", [modifier])
     def get(self, node_id):
         nodes = app.getDBusObject()
         if not nodes.doesNodeExist(node_id):
