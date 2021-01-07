@@ -1,6 +1,7 @@
 from typing import Optional
 
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
+from Nodes.Modifiers.JuryRigModifier import JuryRigModifier
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
@@ -15,4 +16,6 @@ def createModifier(modifier: str) -> Optional[Modifier]:
         return OverrideDefaultSafetyControlsModifier(DEFAULT_DURATION)
     if modifier == "RepairOverTimeModifier":
         return RepairOverTimeModifier(2, DEFAULT_DURATION)
+    if modifier == "JuryRigModifier":
+        return JuryRigModifier(25, DEFAULT_DURATION)
     return None
