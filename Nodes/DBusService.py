@@ -319,3 +319,10 @@ class DBusService(dbus.service.Object):
         if node:
             return node.getOptionalResourcesRequiredLastTick()
         return {}
+
+    @dbus.service.method("com.frivengi.nodes", out_signature="as", in_signature="s")
+    def getSupportedModifiers(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return ModifierFactory.getSupportedModifiersForNode(node)
+        return []
