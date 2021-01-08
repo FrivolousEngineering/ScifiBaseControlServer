@@ -1,6 +1,7 @@
 from typing import Optional, TYPE_CHECKING, Dict, List, cast
 
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
+from Nodes.Modifiers.HeatResistantLubricationInjectionModifier import HeatResistantLubricationInjection
 from Nodes.Modifiers.JuryRigModifier import JuryRigModifier
 from Nodes.Modifiers.LargeCoolingPack import LargeCoolingPackModifier
 from Nodes.Modifiers.LargeHeatPackModifier import LargeHeatPackModifier
@@ -24,7 +25,7 @@ class ModifierFactory:
     _all_known_modifiers = ["BoostCoolingModifier", "OverrideDefaultSafetyControlsModifier", "RepairOverTimeModifier", "JuryRigModifier",
                             "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
                             "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier",
-                            "PyrolythicResistantEnzymeInjectorModifier"]
+                            "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjection"]
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
@@ -77,4 +78,7 @@ class ModifierFactory:
 
         if modifier == "PyrolythicResistantEnzymeInjectorModifier":
             return PyrolythicResistantEnzymeInjectorModifier(DEFAULT_DURATION)
+
+        if modifier == "HeatResistantLubricationInjection":
+            return HeatResistantLubricationInjection(DEFAULT_DURATION)
         return None

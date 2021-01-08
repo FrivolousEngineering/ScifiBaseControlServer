@@ -449,7 +449,7 @@ class Node:
         if self.performance == self.target_performance:
             return
 
-        new_performance = self.performance + (self.target_performance - self.performance) / self.performance_change_factor
+        new_performance = self.performance + (self.target_performance - self.performance) / max(self.performance_change_factor, 1)
 
         if abs(new_performance - self.target_performance) < 0.001:
             new_performance = self.target_performance
