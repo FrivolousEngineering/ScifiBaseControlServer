@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING, Dict, Any
+from typing import Optional, TYPE_CHECKING, Dict, Any, Set
 
 if TYPE_CHECKING:
     from Node import Node
@@ -82,6 +82,12 @@ class Modifier:
 
     def getFactorForProperty(self, prop: str) -> float:
         return self._factors.get(prop, 1)
+
+    def getAllInfluencedProperties(self) -> Set[str]:
+        result = set()  # type: Set[str]
+        result.update(self._modifiers.keys())
+        result.update(self._factors.keys())
+        return result
 
     def update(self) -> None:
         self._duration -= 1

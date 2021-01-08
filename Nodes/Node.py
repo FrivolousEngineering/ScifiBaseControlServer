@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 
 from Nodes.Connection import Connection
 from Nodes.Modifiers.Modifier import Modifier
-from Nodes.Modifiers.ModifierFactory import createModifier
+from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Signal import signalemitter, Signal
 
 
@@ -328,7 +328,7 @@ class Node:
         self._setPerformance(data.get("performance", 1.))
 
         for modifier in data.get("modifiers", []):
-            mod = createModifier(modifier["type"])
+            mod = ModifierFactory.createModifier(modifier["type"])
             if mod:
                 mod.deserialize(modifier)
                 self.addModifier(mod)

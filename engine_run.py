@@ -1,4 +1,4 @@
-from Nodes.Modifiers.ModifierFactory import createModifier
+from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.NodeEngine import NodeEngine
 import json
@@ -22,7 +22,7 @@ with open("configuration.json") as f:
     engine.setOutsideTemperatureHandler(PreScriptedTemperatureHandler())
 
 storage = NodeStorage(engine)
-modifier = createModifier("OverrideDefaultSafetyControlsModifier")
+modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
 engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 

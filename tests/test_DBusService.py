@@ -155,13 +155,13 @@ def test_addModifierToNode(DBus):
     mod_node = MagicMock()
     modifier = MagicMock()
     modifier_func = MagicMock(return_value = modifier, name ="mod func")
-    with patch("Nodes.DBusService.createModifier", modifier_func):
+    with patch("Nodes.Modifiers.ModifierFactory.ModifierFactory.createModifier", modifier_func):
         with patch.dict(node_dict, {"to_be_modified_node": mod_node}):
             DBus.addModifierToNode("to_be_modified_node", "yay")
     modifier_func.assert_called_once_with("yay")
     mod_node.addModifier.assert_called_once_with(modifier)
 
-    with patch("Nodes.DBusService.createModifier", modifier_func):
+    with patch("Nodes.Modifiers.ModifierFactory.ModifierFactory.createModifier", modifier_func):
         with patch.dict(node_dict, {"to_be_modified_node": mod_node}):
             DBus.addModifierToNode("nonExistingNode", "yay")
     # It's only added to the node that we requested!

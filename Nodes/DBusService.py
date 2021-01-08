@@ -3,7 +3,7 @@ import dbus
 import dbus.service
 from typing import List, Dict, Optional, Union
 
-from Nodes.Modifiers.ModifierFactory import createModifier
+from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Nodes.NodeEngine import NodeEngine
 
 
@@ -40,7 +40,8 @@ class DBusService(dbus.service.Object):
     @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="b")
     def addModifierToNode(self, node_id: str, modifier_type: str) -> bool:
         node = self._node_engine.getNodeById(node_id)
-        modifier = createModifier(modifier_type)
+        modifier = ModifierFactory.createModifier(modifier_type)
+
         if node and modifier:
             node.addModifier(modifier)
             return True

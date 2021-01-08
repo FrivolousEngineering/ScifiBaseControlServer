@@ -49,14 +49,15 @@ def app():
     mocked_dbus.isNodeActive = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="active"))
     mocked_dbus.getHistoryOffset = MagicMock(return_value = 0)
     mocked_dbus.getTargetPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="target_performance"))
-
+    mocked_dbus.hasSettablePerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="has_settable_performance"))
     return app
 
 
 def test_getStaticProperties(client):
-    with patch.dict(default_property_dict, {"surface_area": 20, "description": 300}):
+    with patch.dict(default_property_dict, {"surface_area": 20, "description": 300, "has_settable_performance": False}):
         response = client.get("/node/default/static_properties/")
-    assert response.data.strip() == b'{"surface_area": 20, "description": 300}'
+
+    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "hasSettablePerformance": false}'
 
 
 def test_getModifiers(client):
