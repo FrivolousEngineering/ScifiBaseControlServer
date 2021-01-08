@@ -285,6 +285,22 @@ class Modifiers(Resource):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getActiveModifiers(node_id)
 
+    @api.response(404, "Unknown Node")
+    @api.response(400, "Bad Request")
+    @api.response(200, "Success'")
+    def post(self, node_id):
+        nodes = app.getDBusObject()
+        if not nodes.doesNodeExist(node_id):
+            return UNKNOWN_NODE_RESPONSE
+
+        try:
+            data = json.loads(request.data)
+        except:
+            return Response("Unable to format the provided data!", status = 400)
+        successfull = nodes.addModifierToNode(node_id, data["modifier_name"])
+        if not successfull:
+            return Response("Unknown modifier", status = 400)
+
 
 @node_namespace.route("/<node_id>/static_properties/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})

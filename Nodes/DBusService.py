@@ -37,12 +37,14 @@ class DBusService(dbus.service.Object):
             object_path=self._object_path
         )
 
-    @dbus.service.method("com.frivengi.nodes", in_signature="ss")
-    def addModifierToNode(self, node_id: str, modifier_type: str) -> None:
+    @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="b")
+    def addModifierToNode(self, node_id: str, modifier_type: str) -> bool:
         node = self._node_engine.getNodeById(node_id)
         modifier = createModifier(modifier_type)
         if node and modifier:
             node.addModifier(modifier)
+            return True
+        return False
 
     @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
     def getActiveModifiers(self, node_id: str) -> List[Dict[str, Union[str, int]]]:
