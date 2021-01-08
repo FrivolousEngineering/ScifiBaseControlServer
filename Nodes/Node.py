@@ -162,6 +162,10 @@ class Node:
         return self._temperature_efficiency
 
     @modifiable_property
+    def temperature_degradation_speed(self):
+        return self._temperature_degradation_speed
+
+    @modifiable_property
     def optimal_temperature(self):
         return self._optimal_temperature
 
@@ -349,6 +353,7 @@ class Node:
         return self._temperature
 
     def addHeat(self, heat_to_add: float, additional_weight: float = 0) -> None:
+        print(self._node_id, heat_to_add)
         self._temperature += heat_to_add / (self.weight - additional_weight)
 
     def __repr__(self):
@@ -562,7 +567,7 @@ class Node:
         delta_temp = self.temperature - self._max_safe_temperature
         if delta_temp <= 0:
             return
-        self._health -= self._temperature_degradation_speed * (delta_temp / self._max_safe_temperature)
+        self._health -= self.temperature_degradation_speed * (delta_temp / self._max_safe_temperature)
         if self._health < 0:
             self._health = 0
 
