@@ -21,6 +21,8 @@ class OilExtractor(Node):
                             "of the fuel provided is used. The contaminated fuel is burned in the process. All fuel that" \
                             "can not be returned is burned as well."
 
+        self._tags.append("mechanical")
+
     @modifiable_property
     def temperature_efficiency(self):
         # A damaged OilExtractor starts burning fuel less efficient (making it run more hot!)

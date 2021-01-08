@@ -27,6 +27,8 @@ class ComputationNode(Node):
                             "Even when this device is not generating any data, it will still consume a bit of " \
                             "energy, albeit way less than it would when it's generating data."
 
+        self._tags.append("electronic")
+
     def update(self) -> None:
         super().update()
 

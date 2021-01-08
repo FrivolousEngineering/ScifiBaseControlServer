@@ -51,6 +51,8 @@ class Generator(Node):
                             "with cooling down."
         self._description = self._description.format(fuel_type = fuel_type)
 
+        self._tags.append("mechanical")
+
     @modifiable_property
     def temperature_efficiency(self):
         # A damaged generator starts burning fuel less efficient (making it run more hot!)

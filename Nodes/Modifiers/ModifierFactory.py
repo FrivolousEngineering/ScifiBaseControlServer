@@ -8,6 +8,7 @@ from Nodes.Modifiers.MediumCoolingPackModifier import MediumCoolingPackModifier
 from Nodes.Modifiers.MediumHeatPack import MediumHeatPackModifier
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
+from Nodes.Modifiers.PyrolythicRestistantEnzymeInjectorModifier import PyrolythicResistantEnzymeInjectorModifier
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
 from Nodes.Modifiers.SmallCoolingPackModifier import SmallCoolingPackModifier
 from Nodes.Modifiers.SmallHeatPackModifier import SmallHeatPackModifier
@@ -22,10 +23,15 @@ class ModifierFactory:
     _supported_modifiers = {}  # type: Dict[str, List[str]]
     _all_known_modifiers = ["BoostCoolingModifier", "OverrideDefaultSafetyControlsModifier", "RepairOverTimeModifier", "JuryRigModifier",
                             "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
-                            "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier"]
+                            "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier",
+                            "PyrolythicResistantEnzymeInjectorModifier"]
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
+        if modifier.required_tag is not None:
+            if modifier.required_tag not in node.tags:
+                return False
+
         all_properties = modifier.getAllInfluencedProperties()
         if not node.hasSettablePerformance:
             # If no performance can be set, the min & max should also not be changable!
@@ -69,4 +75,6 @@ class ModifierFactory:
         if modifier == "LargeCoolingPackModifier":
             return LargeCoolingPackModifier(DEFAULT_DURATION)
 
+        if modifier == "PyrolythicResistantEnzymeInjectorModifier":
+            return PyrolythicResistantEnzymeInjectorModifier(DEFAULT_DURATION)
         return None

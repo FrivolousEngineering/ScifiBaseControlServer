@@ -139,6 +139,15 @@ class Node:
         # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
         self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
 
+        # Tags can be used to label a node as being of a specific type.
+        # Consider options like "mechanical", "electronic", etc.
+        # Certain modifiers require a certain tag to be present before they can be set on a node.
+        self._tags = []  # type: List[str]
+
+    @property
+    def tags(self) -> List[str]:
+        return self._tags
+
     @property
     def hasSettablePerformance(self):
         return self._has_settable_performance

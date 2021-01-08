@@ -33,6 +33,13 @@ class Modifier:
         self._name = "Modifier"
         self._abbreviation = "UNK"
 
+        # If this is set it can only be added to a node that also has this tag.
+        self._required_tag = None
+
+    @property
+    def required_tag(self) -> Optional[str]:
+        return self._required_tag
+
     def __eq__(self, other) -> bool:
         if type(self) != type(other):
             return False

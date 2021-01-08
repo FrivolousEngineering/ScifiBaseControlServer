@@ -22,6 +22,9 @@ class HydroponicsBay(Node):
         self._optimal_temperature = 308.15
         self._optimal_temperature_range = 10
 
+        self._tags.append("plant")
+
+
     def update(self) -> None:
         super().update()
         # Get the resources we asked for!

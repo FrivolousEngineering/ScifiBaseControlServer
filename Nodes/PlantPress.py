@@ -14,6 +14,8 @@ class PlantPress(Node):
 
         self._water_resevoir = 20
 
+        self._tags.append("mechanical")
+
     def _updateResourceRequiredPerTick(self) -> None:
         # max resource that we could produce next tick:
         max_food = min(10 - self._resources_left_over["food"], (self._water_resevoir - self._resources_left_over["water"]) * 2.87)

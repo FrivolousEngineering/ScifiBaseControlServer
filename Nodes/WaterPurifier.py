@@ -19,6 +19,8 @@ class WaterPurifier(Node):
 
         self._waste_oxygen_conversion_rate = 2  # Two oxygen is required to convert one waste
 
+        self._tags.append("mechanical")
+
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
         self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._optional_original_resources_required_per_tick["oxygen"]
