@@ -80,6 +80,7 @@ class Modifier:
 
     def setNode(self, node: "Node") -> None:
         self._node = node
+        self._onModifierAdded()
 
     def getNode(self) -> Optional["Node"]:
         return self._node
@@ -103,4 +104,7 @@ class Modifier:
             self._onModifierRemoved()
 
     def _onModifierRemoved(self) -> None:
+        pass
+
+    def _onModifierAdded(self) -> None:
         pass

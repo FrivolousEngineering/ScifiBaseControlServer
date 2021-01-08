@@ -8,6 +8,7 @@ from Nodes.Modifiers.LargeHeatPackModifier import LargeHeatPackModifier
 from Nodes.Modifiers.MediumCoolingPackModifier import MediumCoolingPackModifier
 from Nodes.Modifiers.MediumHeatPack import MediumHeatPackModifier
 from Nodes.Modifiers.Modifier import Modifier
+from Nodes.Modifiers.OverclockModifier import OverclockModifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.Modifiers.PyrolythicRestistantEnzymeInjectorModifier import PyrolythicResistantEnzymeInjectorModifier
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
@@ -25,7 +26,8 @@ class ModifierFactory:
     _all_known_modifiers = ["BoostCoolingModifier", "OverrideDefaultSafetyControlsModifier", "RepairOverTimeModifier", "JuryRigModifier",
                             "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
                             "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier",
-                            "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjection"]
+                            "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjectionModifier",
+                            "OverclockModifier"]
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
@@ -79,6 +81,9 @@ class ModifierFactory:
         if modifier == "PyrolythicResistantEnzymeInjectorModifier":
             return PyrolythicResistantEnzymeInjectorModifier(DEFAULT_DURATION)
 
-        if modifier == "HeatResistantLubricationInjection":
+        if modifier == "HeatResistantLubricationInjectionModifier":
             return HeatResistantLubricationInjection(DEFAULT_DURATION)
+
+        if modifier == "OverclockModifier":
+            return OverclockModifier(DEFAULT_DURATION)
         return None
