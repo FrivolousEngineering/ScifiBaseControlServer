@@ -22,6 +22,7 @@ class Valve(ResourceStorage):
         self._heat_convection_coefficient = 0.2  # type: float
 
         self._updateResourceRequiredPerTick()
+        self._has_settable_performance = True
 
     def _updateResourceRequiredPerTick(self) -> None:
         new_amount_required = self._fluid_per_tick * self._performance

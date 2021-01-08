@@ -122,6 +122,13 @@ class DBusService(dbus.service.Object):
             return node.target_performance
         return 0.
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
+    def hasSettablePerformance(self, node_id: str) -> bool:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.hasSettablePerformance
+        return False
+
     @dbus.service.method("com.frivengi.nodes", out_signature="d", in_signature="s")
     def isNodeActive(self, node_id: str) -> bool:
         node = self._node_engine.getNodeById(node_id)

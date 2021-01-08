@@ -300,6 +300,7 @@ class Modifiers(Resource):
         successfull = nodes.addModifierToNode(node_id, data["modifier_name"])
         if not successfull:
             return Response("Unknown modifier", status = 400)
+        return nodes.getActiveModifiers(node_id)
 
 
 @node_namespace.route("/<node_id>/static_properties/")
@@ -313,6 +314,7 @@ class StaticProperties(Resource):
         data = {}
         data["surface_area"] = nodes.getSurfaceArea(node_id)
         data["description"] = nodes.getDescription(node_id)
+        data["hasSettablePerformance"] = nodes.hasSettablePerformance(node_id)
         return data
 
 

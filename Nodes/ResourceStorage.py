@@ -19,6 +19,7 @@ class ResourceStorage(Node):
 
         self._description = "This device stores {resource_type}, which can be used by any connected device."
         self._description = self._description.format(resource_type = resource_type)
+        self._has_settable_performance = False
 
     @property
     def max_amount_stored(self) -> float:
