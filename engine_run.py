@@ -22,8 +22,8 @@ with open("configuration.json") as f:
     engine.setOutsideTemperatureHandler(PreScriptedTemperatureHandler())
 
 storage = NodeStorage(engine)
-modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
-engine.getNodeById("generator_1").addModifier(modifier)
+#modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
+#engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 
 #engine.doTick()

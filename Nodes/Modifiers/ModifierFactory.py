@@ -2,9 +2,15 @@ from typing import Optional, TYPE_CHECKING, Dict, List, cast
 
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
 from Nodes.Modifiers.JuryRigModifier import JuryRigModifier
+from Nodes.Modifiers.LargeCoolingPack import LargeCoolingPackModifier
+from Nodes.Modifiers.LargeHeatPackModifier import LargeHeatPackModifier
+from Nodes.Modifiers.MediumCoolingPackModifier import MediumCoolingPackModifier
+from Nodes.Modifiers.MediumHeatPack import MediumHeatPackModifier
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
+from Nodes.Modifiers.SmallCoolingPackModifier import SmallCoolingPackModifier
+from Nodes.Modifiers.SmallHeatPackModifier import SmallHeatPackModifier
 
 DEFAULT_DURATION = 10
 
@@ -14,7 +20,9 @@ if TYPE_CHECKING:
 
 class ModifierFactory:
     _supported_modifiers = {}  # type: Dict[str, List[str]]
-    _all_known_modifiers = ["BoostCoolingModifier", "OverrideDefaultSafetyControlsModifier", "RepairOverTimeModifier", "JuryRigModifier"]
+    _all_known_modifiers = ["BoostCoolingModifier", "OverrideDefaultSafetyControlsModifier", "RepairOverTimeModifier", "JuryRigModifier",
+                            "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
+                            "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier"]
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
@@ -46,4 +54,19 @@ class ModifierFactory:
             return RepairOverTimeModifier(2, DEFAULT_DURATION)
         if modifier == "JuryRigModifier":
             return JuryRigModifier(25, DEFAULT_DURATION)
+
+        if modifier == "SmallHeatPackModifier":
+            return SmallHeatPackModifier(DEFAULT_DURATION)
+        if modifier == "MediumHeatPackModifier":
+            return MediumHeatPackModifier(DEFAULT_DURATION)
+        if modifier == "LargeHeatPackModifier":
+            return LargeHeatPackModifier(DEFAULT_DURATION)
+
+        if modifier == "SmallCoolingPackModifier":
+            return SmallCoolingPackModifier(DEFAULT_DURATION)
+        if modifier == "MediumCoolingPackModifier":
+            return MediumCoolingPackModifier(DEFAULT_DURATION)
+        if modifier == "LargeCoolingPackModifier":
+            return LargeCoolingPackModifier(DEFAULT_DURATION)
+
         return None
