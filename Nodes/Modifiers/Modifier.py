@@ -34,7 +34,7 @@ class Modifier:
         self._abbreviation = "UNK"
 
         # If this is set it can only be added to a node that also has this tag.
-        self._required_tag = None
+        self._required_tag = None  # type: Optional[str]
 
     @property
     def required_tag(self) -> Optional[str]:
