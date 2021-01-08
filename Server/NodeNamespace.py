@@ -314,7 +314,7 @@ class StaticProperties(Resource):
         data = {}
         data["surface_area"] = nodes.getSurfaceArea(node_id)
         data["description"] = nodes.getDescription(node_id)
-        data["hasSettablePerformance"] = nodes.hasSettablePerformance(node_id)
+        data["has_settable_performance"] = nodes.hasSettablePerformance(node_id)
         data["supported_modifiers"] = nodes.getSupportedModifiers(node_id)
         return data
 

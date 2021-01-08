@@ -60,7 +60,7 @@ def test_getStaticProperties(client):
                                             "has_settable_performance": False,
                                             "supported_modifiers": ["whoop"]}):
         response = client.get("/node/default/static_properties/")
-    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "hasSettablePerformance": false, "supported_modifiers": ["whoop"]}'
+    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "has_settable_performance": false, "supported_modifiers": ["whoop"]}'
 
 
 def test_getModifiers(client):
