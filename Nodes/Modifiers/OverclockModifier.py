@@ -7,6 +7,9 @@ class OverclockModifier(Modifier):
         self._name = "Overclock"
         self._abbreviation = "OVC"
 
+        self._optional_tags.append("mechanical")
+        self._optional_tags.append("electronic")
+
     def _onModifierAdded(self) -> None:
         # Set performance ensures that the limits are respected.
         # Once this modifier gets added, we need to ensure that the performance is in range

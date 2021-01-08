@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING, Dict, Any, Set
+from typing import Optional, TYPE_CHECKING, Dict, Any, Set, List
 
 if TYPE_CHECKING:
     from Node import Node
@@ -36,9 +36,15 @@ class Modifier:
         # If this is set it can only be added to a node that also has this tag.
         self._required_tag = None  # type: Optional[str]
 
+        self._optional_tags = []  # type: List[str]
+
     @property
     def required_tag(self) -> Optional[str]:
         return self._required_tag
+
+    @property
+    def optional_tags(self) -> List[str]:
+        return self._optional_tags
 
     def __eq__(self, other) -> bool:
         if type(self) != type(other):

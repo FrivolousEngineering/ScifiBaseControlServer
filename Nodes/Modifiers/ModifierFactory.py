@@ -35,6 +35,16 @@ class ModifierFactory:
             if modifier.required_tag not in node.tags:
                 return False
 
+        if modifier.optional_tags:
+            optional_tag_matched = False
+            for tag in node.tags:
+                if tag in modifier.optional_tags:
+                    optional_tag_matched = True
+                    break
+
+            if not optional_tag_matched:
+                return False
+
         all_properties = modifier.getAllInfluencedProperties()
         if not node.hasSettablePerformance:
             # If no performance can be set, the min & max should also not be changable!
