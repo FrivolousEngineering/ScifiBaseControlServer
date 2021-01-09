@@ -7,3 +7,5 @@ class MediumHeatPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = 750
         self._name = "Medium Heat Pack"
         self._abbreviation = "MHP"
+
+        self._description = "Apply a medium chemical heating pack to add heat to a device."

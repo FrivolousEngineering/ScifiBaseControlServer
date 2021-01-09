@@ -7,3 +7,5 @@ class LargeCoolingPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = -1500
         self._name = "Large Cooling Pack"
         self._abbreviation = "LCP"
+
+        self._description = "Apply a large chemical cooling pack to extract heat from a device."

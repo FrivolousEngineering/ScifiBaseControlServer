@@ -7,3 +7,4 @@ class MediumCoolingPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = -750
         self._name = "Medium Cooling Pack"
         self._abbreviation = "MCP"
+        self._description = "Apply a medium chemical cooling pack to extract heat from a device."

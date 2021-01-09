@@ -7,3 +7,5 @@ class SmallHeatPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = 250
         self._name = "Small Heat Pack"
         self._abbreviation = "SHP"
+
+        self._description = "Apply a small chemical heating pack to add heat to a device."

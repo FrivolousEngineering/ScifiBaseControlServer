@@ -8,6 +8,8 @@ class RepairOverTimeModifier(Modifier):
         self._name = "Careful Repair"
         self._abbreviation = "ROT"
 
+        self._description = "Slowly repair a device without impacting it's operation."
+
     def update(self) -> None:
         super().update()
 

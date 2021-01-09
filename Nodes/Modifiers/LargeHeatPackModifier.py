@@ -7,3 +7,5 @@ class LargeHeatPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = 1500
         self._name = "Large Heat Pack"
         self._abbreviation = "LHP"
+
+        self._description = "Apply a large chemical heating pack to add heat to a device."

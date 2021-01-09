@@ -7,3 +7,5 @@ class SmallCoolingPackModifier(HeatPerTurnModifier):
         self._heat_per_tick = -250
         self._name = "Small Cooling Pack"
         self._abbreviation = "SCP"
+
+        self._description = "Apply a small chemical cooling pack to extract heat from a device."

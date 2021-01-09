@@ -1,5 +1,3 @@
-
-
 from Nodes.Modifiers.Modifier import Modifier
 
 
@@ -11,3 +9,8 @@ class PyrolythicResistantEnzymeInjectorModifier(Modifier):
         self._abbreviation = "PEI"
 
         self._required_tag = "plant"
+
+        self._description = "Plants are fickle, but in the end they are just tiny little machines. Regulations say" \
+                            "that these enzymes shouldn't be used non stop. No-one really knows why. Using them " \
+                            "will make the plants grow better at a lower temperature and it also increases the range" \
+                            "in which they are comfortable."

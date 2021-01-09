@@ -8,7 +8,10 @@ class JuryRigModifier(Modifier):
 
         super().__init__(modifiers={"health": self._temp_health}, duration=duration)
 
-        self._name = "Jury Rigged"
+        self._name = "Jury Rigging"
+
+        self._description = "This is a last ditch attempt to fix a machine. It will work for a bit longer, but once the" \
+                            "temporary fixes give out, it's bound to break all kinds of expensive things."
 
     def _onModifierRemoved(self) -> None:
         if self._node:
