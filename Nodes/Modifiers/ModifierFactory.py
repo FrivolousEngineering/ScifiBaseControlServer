@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING, Dict, List, cast
+from typing import Optional, TYPE_CHECKING, Dict, List, cast, Any
 
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
 from Nodes.Modifiers.HeatResistantLubricationInjectionModifier import HeatResistantLubricationInjection
@@ -46,7 +46,7 @@ class ModifierFactory:
         return cls._modifier_cache[modifier_type]
 
     @classmethod
-    def getModifierInfo(cls, modifier_type: str) -> Optional[Dict[str, any]]:
+    def getModifierInfo(cls, modifier_type: str) -> Optional[Dict[str, Any]]:
         """
         Provide static (eg; class based, not *object* based) information about a modifier.
         :param modifier_type:
