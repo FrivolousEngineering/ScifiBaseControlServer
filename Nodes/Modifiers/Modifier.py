@@ -38,6 +38,12 @@ class Modifier:
 
         self._optional_tags = []  # type: List[str]
 
+        self._description = ""
+
+    @property
+    def description(self) -> str:
+        return self._description
+
     @property
     def required_tag(self) -> Optional[str]:
         return self._required_tag

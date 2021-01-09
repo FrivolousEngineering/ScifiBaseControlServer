@@ -36,3 +36,14 @@ class ModifiersDBusService(dbus.service.Object):
         :return:
         """
         return
+
+    @dbus.service.method("com.frivengi.modifiers", out_signature="as")
+    def getAllKnownModifiers(self):
+        return ModifierFactory.getAllKnownModifiers()
+
+    @dbus.service.method("com.frivengi.modifiers", in_signature = "s", out_signature="a{sv}")
+    def getModifierInformation(self, modifier_type):
+        result = ModifierFactory.getModifierInfo(modifier_type)
+        if result is not None:
+            return result
+        return {}

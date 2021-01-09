@@ -33,6 +33,31 @@ class ModifierFactory:
     _modifier_cache = {}  # type: Dict[str, Modifier]
 
     @classmethod
+    def getAllKnownModifiers(cls) -> List[str]:
+        return cls._all_known_modifiers.copy()
+
+    @classmethod
+    def _getModifierByType(cls, modifier_type: str) -> Optional[Modifier]:
+        if modifier_type not in cls._modifier_cache:
+            modifier = cls.createModifier(modifier_type)
+            if not modifier:
+                return None
+            cls._modifier_cache[modifier_type] = modifier
+        return cls._modifier_cache[modifier_type]
+
+    @classmethod
+    def getModifierInfo(cls, modifier_type: str) -> Optional[Dict[str, any]]:
+        """
+        Provide static (eg; class based, not *object* based) information about a modifier.
+        :param modifier_type:
+        :return:
+        """
+        modifier = cls._getModifierByType(modifier_type)
+        if not modifier:
+            return None
+        return {"name": modifier.name, "type": modifier_type, "description": modifier.description}
+
+    @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
         if modifier.required_tag is not None:
             if modifier.required_tag not in node.tags:
@@ -61,9 +86,7 @@ class ModifierFactory:
         if node_class_name not in cls._supported_modifiers:
             modifiers = []
             for modifier_type in cls._all_known_modifiers:
-                if modifier_type not in cls._modifier_cache:
-                    cls._modifier_cache[modifier_type] = cls.createModifier(modifier_type)
-                if cls.isModifierSupported(node, cast(Modifier, cls._modifier_cache[modifier_type])):
+                if cls.isModifierSupported(node, cast(Modifier, cls._getModifierByType(modifier_type))):
                     modifiers.append(modifier_type)
             cls._supported_modifiers[node_class_name] = modifiers
         return cls._supported_modifiers[node_class_name]
