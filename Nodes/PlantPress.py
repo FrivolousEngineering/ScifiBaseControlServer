@@ -15,6 +15,7 @@ class PlantPress(Node):
         self._water_resevoir = 20
 
         self._tags.append("mechanical")
+        self._tags.append("fuel")
 
     def _updateResourceRequiredPerTick(self) -> None:
         # max resource that we could produce next tick:

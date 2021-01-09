@@ -10,6 +10,7 @@ from Nodes.Modifiers.MediumHeatPack import MediumHeatPackModifier
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.OverclockModifier import OverclockModifier
 from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
+from Nodes.Modifiers.PressureReleaseValveModifier import PressureReleaseValveModifier
 from Nodes.Modifiers.PyrolythicRestistantEnzymeInjectorModifier import PyrolythicResistantEnzymeInjectorModifier
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
 from Nodes.Modifiers.SmallCoolingPackModifier import SmallCoolingPackModifier
@@ -27,7 +28,7 @@ class ModifierFactory:
                             "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
                             "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier",
                             "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjectionModifier",
-                            "OverclockModifier"]
+                            "OverclockModifier", "PressureReleaseValveModifier"]
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
@@ -96,4 +97,7 @@ class ModifierFactory:
 
         if modifier == "OverclockModifier":
             return OverclockModifier(DEFAULT_DURATION)
+
+        if modifier == "PressureReleaseValveModifier":
+            return PressureReleaseValveModifier(DEFAULT_DURATION)
         return None

@@ -52,6 +52,7 @@ class Generator(Node):
         self._description = self._description.format(fuel_type = fuel_type)
 
         self._tags.append("mechanical")
+        self._tags.append("fuel")
 
     @modifiable_property
     def temperature_efficiency(self):
