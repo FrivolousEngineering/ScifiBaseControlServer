@@ -7,4 +7,4 @@ class BoostCoolingModifier(Modifier):
         self._name = "Boost cooling"
         self._abbreviation = "BOC"
         self._description = "Significantly increase the amount of heat that is emitted and greatly increase the amount" \
-                            "of heat that is lost due to convection."
+                            " of heat that is lost due to convection."

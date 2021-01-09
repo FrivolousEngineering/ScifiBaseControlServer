@@ -11,8 +11,8 @@ class OverclockModifier(Modifier):
         self._optional_tags.append("electronic")
 
         self._description = "Sometimes you just have to squeeze every last bit out of a device and damn the" \
-                            "concequences. Just note that this also increases the min performance. After all; Once" \
-                            "it's picking up steam, it's hard to stop."
+                            " concequences. Just note that this also increases the min performance. After all; Once" \
+                            " it's picking up steam, it's hard to stop."
 
     def _onModifierAdded(self) -> None:
         # Set performance ensures that the limits are respected.

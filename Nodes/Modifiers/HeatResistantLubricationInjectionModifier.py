@@ -13,4 +13,4 @@ class HeatResistantLubricationInjection(Modifier):
         self._required_tag = "mechanical"
         self._description = "Inject the device with a more heat resistant lubrication. This will decrease the max perfo" \
                             "rmance as well as making it a bit more sluggish to respond to performance changes. It does" \
-                            "ensure that higher temperatures are needed before it starts getting damage."
+                            " ensure that higher temperatures are needed before it starts getting damage."
