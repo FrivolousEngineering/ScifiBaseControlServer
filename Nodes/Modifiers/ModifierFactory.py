@@ -30,6 +30,8 @@ class ModifierFactory:
                             "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjectionModifier",
                             "OverclockModifier", "PressureReleaseValveModifier"]
 
+    _modifier_cache = {}  # type: Dict[str, Modifier]
+
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
         if modifier.required_tag is not None:
@@ -59,7 +61,9 @@ class ModifierFactory:
         if node_class_name not in cls._supported_modifiers:
             modifiers = []
             for modifier_type in cls._all_known_modifiers:
-                if cls.isModifierSupported(node, cast(Modifier, cls.createModifier(modifier_type))):
+                if modifier_type not in cls._modifier_cache:
+                    cls._modifier_cache[modifier_type] = cls.createModifier(modifier_type)
+                if cls.isModifierSupported(node, cast(Modifier, cls._modifier_cache[modifier_type])):
                     modifiers.append(modifier_type)
             cls._supported_modifiers[node_class_name] = modifiers
         return cls._supported_modifiers[node_class_name]
