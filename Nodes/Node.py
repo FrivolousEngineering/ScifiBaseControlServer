@@ -362,7 +362,6 @@ class Node:
         return self._temperature
 
     def addHeat(self, heat_to_add: float, additional_weight: float = 0) -> None:
-        print(self._node_id, heat_to_add)
         self._temperature += heat_to_add / (self.weight - additional_weight)
 
     def __repr__(self):

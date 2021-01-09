@@ -3,7 +3,7 @@ from Nodes.Modifiers.Modifier import Modifier
 
 class OverclockModifier(Modifier):
     def __init__(self, duration: int) -> None:
-        super().__init__(factors = {"min_performance": 3, "max_performance": 3}, duration = duration)
+        super().__init__(factors = {"min_performance": 3, "max_performance": 2}, duration = duration)
         self._name = "Overclock"
         self._abbreviation = "OVC"
 
