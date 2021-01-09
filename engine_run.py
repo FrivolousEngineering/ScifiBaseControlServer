@@ -1,16 +1,13 @@
-from Nodes.Modifiers.ModifierFactory import ModifierFactory
-from Nodes.Modifiers.OverrideDefaultSafetyControlsModifier import OverrideDefaultSafetyControlsModifier
 from Nodes.NodeEngine import NodeEngine
 import json
 
-from Nodes.DBusService import DBusService
-
+from Nodes.NodesDBusService import NodesDBusService
+from Nodes.Modifiers.ModifiersDBusService import ModifiersDBusService
 import dbus.mainloop.glib
 from gi.repository import GLib
 
 from Nodes.NodeStorage import NodeStorage
 from Nodes.TemperatureHandlers.PreScriptedTemperatureHandler import PreScriptedTemperatureHandler
-from Nodes.TemperatureHandlers.RandomFluctuatingTemperatureHandler import RandomFluctuatingTemperatureHandler
 
 engine = NodeEngine()
 
@@ -34,7 +31,8 @@ storage = NodeStorage(engine)
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
 loop = GLib.MainLoop()
-object = DBusService(engine)
+object = NodesDBusService(engine)
+object_2 = ModifiersDBusService()
 loop.run()
 
 

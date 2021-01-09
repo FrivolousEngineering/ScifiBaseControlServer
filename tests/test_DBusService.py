@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from Nodes.Node import Node
-from Nodes.DBusService import DBusService
+from Nodes.NodesDBusService import NodesDBusService
 from Nodes.NodeEngine import NodeEngine
 
 
@@ -40,7 +40,7 @@ def bus_name():
 
 @pytest.fixture
 def DBus(session_bus, bus_name, node_engine):
-    service = DBusService(node_engine, session_bus = session_bus, bus_name = bus_name)
+    service = NodesDBusService(node_engine, session_bus = session_bus, bus_name = bus_name)
     service.getNodeEngine = MagicMock(return_value = node_engine)
     return service
 

@@ -7,7 +7,7 @@ from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Nodes.NodeEngine import NodeEngine
 
 
-class DBusService(dbus.service.Object):
+class NodesDBusService(dbus.service.Object):
     def __init__(self, engine: NodeEngine, session_bus: Optional[dbus.SessionBus] = None, bus_name: Optional[dbus.service.BusName] = None) -> None:
         """
         The DBUS Service exposes a large number of properties from the NodeEngine to DBUS.

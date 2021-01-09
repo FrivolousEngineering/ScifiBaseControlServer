@@ -92,14 +92,39 @@ class Server(Flask):
         self.teardown_appcontext(self._shutdownSession)
 
         self._nodes = None
+        self._modifiers = None
 
     @staticmethod
     def _shutdownSession(exception):
         db_session.remove()
 
-    def getDBusObject(self):
-        self._setupDBUS()
+    def getNodeDBusObject(self):
+        self._setupNodeDBUS()
         return self._nodes
+
+    def getModifierDBusObject(self):
+        self._setupModifierDBUS()
+        return self._modifiers
+
+    def _setupModifierDBUS(self) -> None:
+        self._initModifierDBUS()
+        try:
+            self._modifiers.checkAlive()  # type: ignore
+        except dbus.exceptions.DBusException:
+            self._modifiers = None
+            # It could be that the service was rebooted, so we should try this again.
+            self._initModifierDBUS()
+
+    def _initModifierDBUS(self) -> None:
+        """
+        Create DBUS object.
+        """
+        if self._modifiers is None:
+            try:
+                self._modifiers = self._bus.get_object('com.frivengi.modifiers', '/com/frivengi/modifiers')
+            except dbus.exceptions.DBusException as exception:
+                self._modifiers = None
+                raise exception
 
     def _dbusExceptionHandler(self, exception: dbus.exceptions.DBusException) -> Response:
         if exception.get_dbus_name() == "org.freedesktop.DBus.Error.ServiceUnknown":
@@ -110,16 +135,16 @@ class Server(Flask):
         return Response(str(exception),
                         status=500)
 
-    def _setupDBUS(self) -> None:
-        self._initDBUS()
+    def _setupNodeDBUS(self) -> None:
+        self._initNodeDBUS()
         try:
             self._nodes.checkAlive()  # type: ignore
         except dbus.exceptions.DBusException:
             self._nodes = None
             # It could be that the service was rebooted, so we should try this again.
-            self._initDBUS()
+            self._initNodeDBUS()
 
-    def _initDBUS(self) -> None:
+    def _initNodeDBUS(self) -> None:
         """
         Create DBUS object.
         """
@@ -140,7 +165,7 @@ class Server(Flask):
 
     @register_route("/")
     def renderStartPage(self):
-        self._setupDBUS()
+        self._setupNodeDBUS()
         display_data = []
         return render_template("index.html", data = display_data)
 
@@ -160,7 +185,7 @@ class Server(Flask):
 
     @register_route("/startTick", ["POST"])
     def startTick(self) -> Response:
-        self._setupDBUS()
+        self._setupNodeDBUS()
         self._nodes.doTick()  # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")

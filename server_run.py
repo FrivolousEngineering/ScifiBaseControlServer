@@ -4,19 +4,18 @@ from Server.Server import Server
 from zeroconf import IPVersion, ServiceInfo, Zeroconf
 from Server.Blueprint import blueprint, api
 from Server.ControllerNamespace import control_namespace
-
-app = Server()
-
-
-api.add_namespace(node_namespace)
-api.add_namespace(control_namespace)
-app.register_blueprint(blueprint)
-
-
+from Server.ModifierNamespace import modifier_namespace
 
 import sys
 import signal
 import socket
+
+
+app = Server()
+api.add_namespace(node_namespace)
+api.add_namespace(control_namespace)
+api.add_namespace(modifier_namespace)
+app.register_blueprint(blueprint)
 
 
 def get_ip():
@@ -37,10 +36,10 @@ desc = {}
 info = ServiceInfo(
   "_ScifiBase._tcp.local.",
   "Base-Control-Server._ScifiBase._tcp.local.",
-  addresses=[socket.inet_aton(get_ip())],
-  port=80,
-  properties=desc,
-  server="",
+  addresses = [socket.inet_aton(get_ip())],
+  port = 80,
+  properties = desc,
+  server = "",
 )
 
 
