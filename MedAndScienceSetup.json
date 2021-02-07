@@ -58,6 +58,17 @@
         {
             "type": "MultiResourceDestroyer",
             "required_resources": {"animal_waste": 5, "energy":  2}
+        },
+        "medicine_creator":
+        {
+            "type": "MedicineCreator"
+        },
+        "medicine_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "medicine",
+            "amount": 0,
+            "max_storage": 250
         }
     },
     "connections": [
@@ -67,12 +78,14 @@
         { "from": "support_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "support_battery", "to": "lights_med", "resource_type": "energy" },
         { "from": "support_battery", "to": "health_scanner", "resource_type": "energy" },
+        { "from": "support_battery", "to": "medicine_creator", "resource_type": "energy" },
 
         { "from": "main_science_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "lights_med", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "computer", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "med_scanner", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "science_scanner", "resource_type": "energy" },
+        { "from": "main_science_battery", "to": "medicine_creator", "resource_type":  "energy"},
 
         { "from": "computer", "to": "database", "resource_type": "data" },
 
