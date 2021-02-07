@@ -111,6 +111,10 @@
             "resource_type": "animal_waste",
             "amount": 0,
             "max_storage": 1000
+        },
+        "toilets":
+        {
+            "type": "Toilets"
         }
     },
     "connections": [
@@ -137,10 +141,13 @@
 
         { "from": "rain_water_collector", "to": "rain_water_tank", "resource_type": "water" },
 
+        { "from": "rain_water_tank", "to": "toilets", "resource_type": "water" },
+
+        { "from": "toilets", "to": "dirty_water_storage", "resource_type": "dirty_water" },
 
         { "from": "dirty_water_storage", "to": "water_purifier", "resource_type": "dirty_water" },
 
-        { "from": "water_purifier", "to": "toilet_waste_storage", "resource_type": "animal_waste" }
-
+        { "from": "water_purifier", "to": "toilet_waste_storage", "resource_type": "animal_waste" },
+        { "from": "water_purifier", "to": "toilet_water_tank", "resource_type": "water" }
     ]
 }
