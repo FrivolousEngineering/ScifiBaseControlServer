@@ -24,7 +24,6 @@ class HydroponicsBay(Node):
 
         self._tags.append("plant")
 
-
     def update(self) -> None:
         super().update()
         # Get the resources we asked for!
