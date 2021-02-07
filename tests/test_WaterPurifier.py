@@ -7,11 +7,11 @@ from Nodes import WaterPurifier
 
 
 @pytest.mark.parametrize("resources_received,                   resources_produced",
-                        [({"dirty_water": 10},                  {"water": 5, "waste": 5}),
-                         ({"dirty_water": 10, "oxygen": 10},    {"water": 10, "waste": 10}),
-                         ({"dirty_water": 10, "oxygen": 5},     {"water": 7.5, "waste": 7.5}),
-                         ({"dirty_water": 7.5, "oxygen": 10},   {"water": 7.5, "waste": 7.5}),
-                         ({"oxygen": 10},                       {"water": 0, "waste": 0})])
+                        [({"dirty_water": 10},                  {"water": 5, "animal_waste": 5}),
+                         ({"dirty_water": 10, "oxygen": 10},    {"water": 10, "animal_waste": 10}),
+                         ({"dirty_water": 10, "oxygen": 5},     {"water": 7.5, "animal_waste": 7.5}),
+                         ({"dirty_water": 7.5, "oxygen": 10},   {"water": 7.5, "animal_waste": 7.5}),
+                         ({"oxygen": 10},                       {"water": 0, "animal_waste": 0})])
 def test_update(resources_received, resources_produced):
     purifier = WaterPurifier.WaterPurifier("omg")
 
@@ -33,8 +33,8 @@ def test_update(resources_received, resources_produced):
     assert math.isclose(purifier._provideResourceToOutgoingConnections.call_args_list[0][0][1], resources_produced["water"])
 
     # Ensure that an attempt was made to provide water (0!)
-    assert purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "waste"
-    assert math.isclose(purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], resources_produced["waste"])
+    assert purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "animal_waste"
+    assert math.isclose(purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], resources_produced["animal_waste"])
 
 
 
@@ -49,7 +49,7 @@ def test_update(resources_received, resources_produced):
                                                                                               ])
 def test__update_resources_required_per_tick(waste_left, water_left, oxygen_required, dirty_water_required, health_effectiveness_factor):
     water_purifier = WaterPurifier.WaterPurifier("omg")
-    water_purifier._resources_left_over["waste"] = waste_left
+    water_purifier._resources_left_over["animal_waste"] = waste_left
     water_purifier._resources_left_over["water"] = water_left
     water_purifier._getHealthEffectivenessFactor = MagicMock(return_value = health_effectiveness_factor)
     water_purifier._updateResourceRequiredPerTick()
@@ -61,7 +61,7 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
 def test_purifier_resources_left_previous_update():
     water_purifier = WaterPurifier.WaterPurifier("omg")
     water_purifier.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
-                      "resources_produced_this_tick": {}, "resources_left_over": {"waste": 5, "water": 3}})
+                      "resources_produced_this_tick": {}, "resources_left_over": {"animal_waste": 5, "water": 3}})
 
     original_resources_available = water_purifier.getResourceAvailableThisTick
     water_purifier.getResourceAvailableThisTick = MagicMock(return_value = 0)
@@ -76,7 +76,7 @@ def test_purifier_resources_left_previous_update():
     assert water_purifier._provideResourceToOutgoingConnections.call_args_list[0][0][1] == 3
 
     # Ensure that an attempt was made to provide waste (3!)
-    assert water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "waste"
+    assert water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "animal_waste"
     assert math.isclose(water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], 5)
 
     # Also ensure that it was unable to provide the 4 of the 5 energy it had!

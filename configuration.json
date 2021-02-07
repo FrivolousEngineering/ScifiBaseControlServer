@@ -394,6 +394,8 @@
 
         { "from": "toilet_waste_storage", "to": "hydroponics", "resource_type": "animal_waste" },
 
-        { "from": "toilet_waste_storage", "to": "health_scanner", "resource_type": "animal_waste" }
+        { "from": "toilet_waste_storage", "to": "health_scanner", "resource_type": "animal_waste" },
+
+        { "from": "oxygen_storage", "to": "water_purifier", "resource_type": "oxygen"}
     ]
 }

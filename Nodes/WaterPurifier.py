@@ -22,7 +22,7 @@ class WaterPurifier(Node):
         self._tags.append("mechanical")
 
     def _updateResourceRequiredPerTick(self) -> None:
-        resources_left = max(self._resources_left_over["waste"], self._resources_left_over["water"])
+        resources_left = max(self._resources_left_over["animal_waste"], self._resources_left_over["water"])
         self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._optional_original_resources_required_per_tick["oxygen"]
                                                           * self.effectiveness_factor - resources_left)
 
@@ -54,21 +54,21 @@ class WaterPurifier(Node):
 
         # Ensure that we also check how much we had left from the last turn
         clean_water_available = dirty_water_converted_total + self._resources_left_over.get("water", 0)
-        waste_available = dirty_water_converted_total + self._resources_left_over.get("waste", 0)
+        waste_available = dirty_water_converted_total + self._resources_left_over.get("animal_waste", 0)
 
         # Attempt to distribute the resources.
         clean_water_left = self._provideResourceToOutgoingConnections("water", clean_water_available)
-        waste_left = self._provideResourceToOutgoingConnections("waste", waste_available)
+        waste_left = self._provideResourceToOutgoingConnections("animal_waste", waste_available)
 
         # Update the data for bookkeeping
         clean_water_provided = enforcePositive(clean_water_available - clean_water_left)
         waste_provided = enforcePositive(waste_available - waste_left)
         self._resources_produced_this_tick["water"] = clean_water_provided
-        self._resources_produced_this_tick["waste"] = waste_provided
+        self._resources_produced_this_tick["animal_waste"] = waste_provided
 
         # Remember how much we couldn't store anywhere.
         self._resources_left_over["water"] = clean_water_left
-        self._resources_left_over["waste"] = waste_left
+        self._resources_left_over["animal_waste"] = waste_left
 
         # Based on what happened last turn, we should potentially ask for a bit less.
         self._updateResourceRequiredPerTick()
