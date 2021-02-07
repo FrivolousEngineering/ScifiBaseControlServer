@@ -69,6 +69,48 @@
             "resource_type": "medicine",
             "amount": 0,
             "max_storage": 250
+        },
+
+        "rain_water_collector":
+        {
+            "type": "FluctuatingResourceGenerator",
+            "resource_type": "water",
+            "amount": 5,
+            "frequency": 0.01,
+            "amplitude": 5
+        },
+
+        "rain_water_tank":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 0,
+            "max_storage": 250
+        },
+        "toilet_water_tank":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 0,
+            "max_storage": 400
+        },
+        "dirty_water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "dirty_water",
+            "amount": 0,
+            "max_storage": 1000
+        },
+        "water_purifier":
+        {
+            "type": "WaterPurifier"
+        },
+        "toilet_waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "animal_waste",
+            "amount": 0,
+            "max_storage": 1000
         }
     },
     "connections": [
@@ -90,6 +132,15 @@
         { "from": "computer", "to": "database", "resource_type": "data" },
 
         { "from": "database", "to": "med_scanner", "resource_type": "data" },
-        { "from": "database", "to": "science_scanner", "resource_type": "data" }
+        { "from": "database", "to": "science_scanner", "resource_type": "data" },
+
+
+        { "from": "rain_water_collector", "to": "rain_water_tank", "resource_type": "water" },
+
+
+        { "from": "dirty_water_storage", "to": "water_purifier", "resource_type": "dirty_water" },
+
+        { "from": "water_purifier", "to": "toilet_waste_storage", "resource_type": "animal_waste" }
+
     ]
 }
