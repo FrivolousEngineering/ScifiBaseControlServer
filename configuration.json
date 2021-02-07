@@ -248,8 +248,8 @@
             "type": "FluctuatingResourceGenerator",
             "resource_type": "water",
             "amount": 5,
-            "frequency": 0.01,
-            "amplitude": 5
+            "frequencies": [0.01, 0.05, 0.1, 0.009],
+            "amplitudes": [5, 1, 0.2, 1.2]
         },
 
         "rain_water_tank":
@@ -257,7 +257,7 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 0,
-            "max_storage": 250
+            "max_storage": 2000
         },
         "toilet_water_tank":
         {
