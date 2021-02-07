@@ -2,11 +2,13 @@
 package medAndScience {
     class computer
     
-    battery -[#yellow]-> computer: energy
-    battery -[#yellow]-> science_scanner: energy
-    battery -[#yellow]-> med_scanner: energy
-    battery -[#yellow]-> medicine_creator: energy
-    
+    main_science_battery -[#yellow]-> computer: energy
+    main_science_battery -[#yellow]-> science_scanner: energy
+    main_science_battery -[#yellow]-> med_scanner: energy
+    main_science_battery -[#yellow]-> medicine_creator: energy
+
+    solar_panel -[#yellow]-> main_science_battery: energy
+
     computer --> database: data
     
     database --> science_scanner: data
@@ -22,12 +24,14 @@ package medAndScience {
     
     medicine_creator --> medicine_storage: medicine
     
-    water_storage -[#blue]-> medicine_creator: water
-    medicine_creator -[#blue]-> water_storage: water
+    medicine_water_storage -[#blue]-> medicine_creator: water
+    medicine_creator -[#blue]-> medicine_water_storage: water
+
+    plant_oil_storage --> medicine_creator: plant_oil
 }
 
 
-package hygene 
+package hygiene
 {
     toilet_water_tank -[#blue]-> medicine_creator: water
     toilet_waste_storage --> health_scanner: animal_waste
@@ -42,7 +46,5 @@ package hygene
     
     water_purifier --> toilet_waste_storage: animal_waste
 }
-
-toilet_waste_storage --> hydroponics: animal_waste
 
 @enduml

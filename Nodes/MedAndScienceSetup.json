@@ -1,0 +1,60 @@
+{
+    "nodes": {
+        "solar_panel":
+        {
+            "type": "ResourceGenerator",
+            "resource_type": "energy",
+            "amount": 10
+        },
+        "main_science_battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 200,
+            "max_storage": 1000
+        },
+        "support_battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 200,
+            "max_storage": 1000
+        },
+        "computer":
+        {
+            "type": "ComputationNode"
+        },
+        "database":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "data",
+            "amount": 0
+        },
+
+        "lights_med":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "energy",
+            "amount": 2
+        },
+        "lights_science":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "energy",
+            "amount": 3
+        }
+    },
+    "connections": [
+        { "from": "solar_panel", "to": "main_science_battery", "resource_type": "energy" },
+
+
+        { "from": "support_battery", "to": "lights_science", "resource_type": "energy" },
+        { "from": "support_battery", "to": "lights_med", "resource_type": "energy" },
+
+        { "from": "main_science_battery", "to": "lights_science", "resource_type": "energy" },
+        { "from": "main_science_battery", "to": "lights_med", "resource_type": "energy" },
+        { "from": "main_science_battery", "to": "computer", "resource_type": "energy" },
+
+        { "from": "computer", "to": "database", "resource_type": "data" }
+    ]
+}
