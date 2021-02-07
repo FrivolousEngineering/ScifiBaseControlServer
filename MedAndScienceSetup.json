@@ -42,6 +42,22 @@
             "type": "ResourceDestroyer",
             "resource_type": "energy",
             "amount": 3
+        },
+
+        "science_scanner":
+        {
+            "type": "MultiResourceDestroyer",
+            "required_resources": {"data": 5, "energy":  1}
+        },
+        "med_scanner":
+        {
+            "type": "MultiResourceDestroyer",
+            "required_resources": {"data": 5, "energy":  1}
+        },
+        "health_scanner":
+        {
+            "type": "MultiResourceDestroyer",
+            "required_resources": {"animal_waste": 5, "energy":  2}
         }
     },
     "connections": [
@@ -50,11 +66,17 @@
 
         { "from": "support_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "support_battery", "to": "lights_med", "resource_type": "energy" },
+        { "from": "support_battery", "to": "health_scanner", "resource_type": "energy" },
 
         { "from": "main_science_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "lights_med", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "computer", "resource_type": "energy" },
+        { "from": "main_science_battery", "to": "med_scanner", "resource_type": "energy" },
+        { "from": "main_science_battery", "to": "science_scanner", "resource_type": "energy" },
 
-        { "from": "computer", "to": "database", "resource_type": "data" }
+        { "from": "computer", "to": "database", "resource_type": "data" },
+
+        { "from": "database", "to": "med_scanner", "resource_type": "data" },
+        { "from": "database", "to": "science_scanner", "resource_type": "data" }
     ]
 }
