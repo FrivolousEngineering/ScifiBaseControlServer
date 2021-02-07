@@ -3,7 +3,7 @@ from Nodes.Node import Node
 
 class ResourceDestroyer(Node):
     """
-    A Resource generator is, as the name implies, a node that accepts (and destroys) a given resource every tick.
+    A Resource Destroyer is, as the name implies, a node that accepts (and destroys) a given resource every tick.
     """
     def __init__(self, node_id: str, resource_type: str, amount: float, **kwargs) -> None:
         """
