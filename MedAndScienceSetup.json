@@ -47,17 +47,17 @@
         "science_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "required_resources": {"data": 5, "energy":  1}
+            "resources_required": {"data": 5, "energy":  1}
         },
         "med_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "required_resources": {"data": 5, "energy":  1}
+            "resources_required": {"data": 5, "energy":  1}
         },
         "health_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "required_resources": {"animal_waste": 5, "energy":  2}
+            "resources_required": {"animal_waste": 5, "energy":  2}
         },
         "medicine_creator":
         {
@@ -91,7 +91,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 0,
+            "amount": 100,
             "max_storage": 400
         },
         "dirty_water_storage":
@@ -142,6 +142,8 @@
         { "from": "rain_water_collector", "to": "rain_water_tank", "resource_type": "water" },
 
         { "from": "rain_water_tank", "to": "toilets", "resource_type": "water" },
+
+        { "from": "toilet_water_tank", "to": "toilets", "resource_type": "water" },
 
         { "from": "toilets", "to": "dirty_water_storage", "resource_type": "dirty_water" },
 
