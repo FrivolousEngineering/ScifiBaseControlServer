@@ -23,7 +23,7 @@ storage = NodeStorage(engine)
 #engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 
-#engine.doTick()
+engine.doTick()
 
 
 #engine.start()
