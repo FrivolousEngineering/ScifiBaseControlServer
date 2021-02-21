@@ -192,6 +192,16 @@ class Node:
     def addModifier(self, modifier: Modifier) -> None:
         if not self._can_be_modified:
             return
+
+        existing_modifier = None
+        for mod in self._modifiers:
+            if mod.name == modifier.name:
+                existing_modifier = mod
+                break
+
+        if existing_modifier:
+            self._modifiers.remove(existing_modifier)
+
         self._modifiers.append(modifier)
         modifier.setNode(self)
 

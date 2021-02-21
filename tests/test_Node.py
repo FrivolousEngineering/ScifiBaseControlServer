@@ -358,11 +358,24 @@ def test_modifier():
     node.removeModifier(modifier)
 
 
+def test_addSameModifierTwice():
+    node = Node.Node("ModifiedNode")
+    modifier1 = MagicMock(spec = Modifier.Modifier)
+    modifier1.name = "zomg"
+
+    modifier2 = MagicMock(spec = Modifier.Modifier)
+    modifier2.name = "zomg"
+
+    node.addModifier(modifier1)
+    node.addModifier(modifier2)
+    assert len(node.getModifiers()) == 1
+
+
 def test_unmodifiableNodeWithModifier():
     node = Node.Node("ModifiedNode", can_be_modified = False)
     assert node.can_be_modified == False
 
-    modifier = MagicMock(spec=Modifier.Modifier)
+    modifier = MagicMock(spec = Modifier.Modifier)
 
     node.addModifier(modifier)
     assert modifier not in node.getModifiers()

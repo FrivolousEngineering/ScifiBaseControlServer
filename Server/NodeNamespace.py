@@ -297,8 +297,8 @@ class Modifiers(Resource):
             data = json.loads(request.data)
         except:
             return Response("Unable to format the provided data!", status = 400)
-        successfull = nodes.addModifierToNode(node_id, data["modifier_name"])
-        if not successfull:
+        successful = nodes.addModifierToNode(node_id, data["modifier_name"])
+        if not successful:
             return Response("Unknown modifier", status = 400)
         return nodes.getActiveModifiers(node_id)
 

@@ -17,6 +17,7 @@ def test_compare(mod_1, mod_2, result):
 def test_name():
     assert Modifier.Modifier().name == "Modifier"
 
+
 def test_getSetNode():
     mod = Modifier.Modifier()
     mock_node = MagicMock(spec = Node.Node)
