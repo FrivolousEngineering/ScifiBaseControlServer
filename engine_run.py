@@ -18,6 +18,8 @@ with open("configuration.json") as f:
     # Add a random temperature fluctuation
     engine.setOutsideTemperatureHandler(PreScriptedTemperatureHandler())
 
+    #print(engine.generatePlantUMLGraph())
+
 storage = NodeStorage(engine)
 #modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
 #engine.getNodeById("generator_1").addModifier(modifier)
