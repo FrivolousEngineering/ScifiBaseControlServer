@@ -7,6 +7,13 @@ Each of these nodes will attempt to get the resources it requires and provide wh
 
 For stability sake, the system is subdivided into two processes, the Server and the simulation engine.
 
+## How to run
+Ensure that both the server and the simulation engine are running. This can be done by executing both commands
+```python3
+python3 run_engine.py
+python3 server_run.py
+```
+
 ## Server
 The server is the system which provides the connection to the outside world. The most notable clients of this data are the Engineering consoles, these are places where engineers (the players) can view the state of the larger system and influence it. The level of influence they have depends on the rights that they have. A better / higher level  / clearance engineer will be able to do and control more.
 
