@@ -180,10 +180,15 @@ class NodeEngine:
         return ""
 
     def generatePlantUMLGraph(self) -> str:
-        result = "@startuml\n skinparam linetype ortho\n"
+        result = "@startuml\nskinparam linetype ortho\n"
 
         for node_id in self._nodes:
-            result += "class {node_id}\n".format(node_id = node_id)
+            result += "map {node_id}".format(node_id = node_id)
+            result += "{\n"
+            result += "    Weight => {weight}\n".format(weight = self._nodes[node_id].weight)
+            result += "    Max temp => {max_safe_temperature}\n".format(max_safe_temperature=self._nodes[node_id].max_safe_temperature)
+            result += "}\n"
+
 
         for node in self._nodes.values():
             for connection in node.getAllOutgoingConnections():
