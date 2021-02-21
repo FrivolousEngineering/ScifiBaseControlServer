@@ -12,7 +12,7 @@ UNKNOWN_CARD_RESPONSE = Response("Unknown Card", status=404)
 
 
 @RFID_namespace.route("/<string:card_id>/")
-@RFID_namespace.doc(description ="Get all modifier types")
+@RFID_namespace.doc(description ="Get RFID card data")
 class RFID(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Card")
