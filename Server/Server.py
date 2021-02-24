@@ -7,7 +7,7 @@ from typing import Optional, cast, Any, List, Dict, Union
 from functools import wraps, partial
 from flask import Flask, Response, render_template, request
 
-from Server.Database import db_session
+from Server.Database import db_session, init_db
 from Server.models import User, Ability
 from werkzeug.exceptions import Forbidden, Unauthorized
 
@@ -32,9 +32,9 @@ def register_route(route: Optional[str] = None, accepted_methods: Optional[List[
     return inner
 
 
-def requires_user_ability(abilities: Union[str, List[str]]):
+def requires_user_ability(ability: str):
     """
-    Decorator that marks a given endpoint as needing an ability (A certain right, which a user gets from a role!)
+    Decorator that marks a given endpoint as needing an ability
     :param abilities:
     :return:
     """
@@ -44,22 +44,14 @@ def requires_user_ability(abilities: Union[str, List[str]]):
             user_id = request.args.get("userID")
             if not user_id:
                 raise Unauthorized("You need to provide some credentials first!")
-            user = User.query.filter_by(id = user_id).first()
+            user = User.query.filter_by(card_id = user_id).first()
             if not user:
                 raise Forbidden("User is unknown")
 
-            if isinstance(abilities, str):
-                desired_abilities = [Ability.query.filter_by(name = abilities).first()]
-            else:
-                desired_abilities = Ability.query.filter(Ability.name.in_(abilities)).all()
+            desired_ability = Ability.query.filter_by(name = ability).first()
 
-            user_abilities = []
-            for role in user.roles:
-                user_abilities += role.abilities
-
-            for desired_ability in desired_abilities:
-                if desired_ability in user_abilities:
-                    return func(*args, **kwargs)
+            if desired_ability in user.abilities:
+                return func(*args, **kwargs)
 
             raise Forbidden("User is not allowed to do this!")
 
@@ -93,6 +85,7 @@ class Server(Flask):
 
         self._nodes = None
         self._modifiers = None
+        init_db()
 
     @staticmethod
     def _shutdownSession(exception):

@@ -3,30 +3,23 @@ from sqlalchemy.orm import relationship
 from Server.Database import Base
 
 
-user_role_table = Table('user_role', Base.metadata,
-    Column('user_id', Integer, ForeignKey('user.id')),
-    Column('role_id', Integer, ForeignKey('role.id'))
-)
-
-
-role_ability_table = Table('role_ability', Base.metadata,
-    Column('role_id', Integer, ForeignKey('role.id')),
+user_ability_table = Table('user_ability', Base.metadata,
+    Column('user_id', Integer, ForeignKey('user.card_id')),
     Column('ability_id', Integer, ForeignKey('ability.id'))
 )
 
 
 class User(Base):  # type: ignore
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    card_id = Column(String(50), primary_key=True)
 
     name = Column(String(50), unique=True)
     email = Column(String(120), unique=True)
 
-    roles = relationship("Role", secondary = user_role_table, backref = "users")
-    #role = relationship("Role")
-    #roles = relationship("Role", back_populates='user', cascade = "all, delete, delete-orphan")
+    abilities = relationship("Ability", secondary = user_ability_table, backref = "users")
 
-    def __init__(self, name=None, email=None):
+    def __init__(self, card_id=None, name=None, email=None):
+        self.card_id = card_id
         self.name = name
         self.email = email
 
@@ -47,23 +40,5 @@ class Ability(Base): # type: ignore
 
     def __str__(self):
       return self.name
-
-
-class Role(Base): # type: ignore
-    __tablename__ = 'role'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
-
-    abilities = relationship("Ability", secondary = role_ability_table, backref = "roles")
-
-    #user_id = Column(Integer, ForeignKey('users.id'))
-    #user = relationship("User", back_populates = "roles")
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return "<ROLE %s>" %self.name
 
 

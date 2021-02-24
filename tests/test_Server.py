@@ -6,6 +6,9 @@ from Server.Blueprint import blueprint, api
 from Server.NodeNamespace import node_namespace
 from Server.Server import Server
 from Server.ControllerNamespace import control_namespace
+from Server.RFIDNamespace import RFID_namespace
+from Server.Database import db_session
+from Server.models import User, Ability
 
 default_property_dict = {}
 
@@ -22,6 +25,7 @@ def app():
         app = Server()
         api.add_namespace(node_namespace)
         api.add_namespace(control_namespace)
+        api.add_namespace(RFID_namespace)
         app.register_blueprint(blueprint)
     mocked_dbus = MagicMock()
     app._nodes = mocked_dbus
@@ -51,7 +55,22 @@ def app():
     mocked_dbus.getTargetPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="target_performance"))
     mocked_dbus.hasSettablePerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="has_settable_performance"))
     mocked_dbus.getSupportedModifiers = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="supported_modifiers"))
-    return app
+    
+    admin_user = User('123', 'admin', 'admin@localhost')
+    normal_user = User('234', 'normal', 'normal@localhost')
+    see_user_ability = Ability("see_users")
+    admin_user.abilities = [see_user_ability]
+    db_session.add_all([admin_user, normal_user])
+    db_session.commit()
+    
+    yield app
+    
+    # This is inefficient, but db_session.query(User).delete() does not properly cascade deletions
+    for user in db_session.query(User).all():
+        db_session.delete(user)
+    for ability in db_session.query(Ability).all():
+        db_session.delete(ability)
+    db_session.commit()
 
 
 def test_getStaticProperties(client):
@@ -69,13 +88,41 @@ def test_getModifiers(client):
     assert response.data.strip() == b'90001'
 
 
+def test_getUser(client):
+    known_response = client.get("/RFID/123/")
+    assert known_response.data.strip() == b'"Welcome back!"'
+    unknown_response = client.get("/RFID/123c/")
+    assert unknown_response.data.strip() == b'Unknown Card'
+
+
+def test_getUsers(client):
+    response = client.get("/users/?userID=123")
+    assert response.data.strip() == b'["admin", "normal"]'
+    forbidden_response = client.get("/users/?userID=234")
+    assert forbidden_response.status_code == 403
+    unknown_response = client.get("/users/?userID=456")
+    assert forbidden_response.status_code == 403
+
+    
+def test_updateUser(client):
+    response = client.get("/RFID/update/456/?name=new&email=new@localhost.com")
+    new_user = User.query.filter_by(card_id = "456").first()
+    assert response.data.strip() == b'User updated'
+    assert new_user.name == "new" and new_user.email == "new@localhost.com"
+    assert len(new_user.abilities) == 0
+    
+    response = client.get("/RFID/update/456/?ability=see_users&ability=new_ability")
+    assert response.data.strip() == b'User updated'
+    assert len(new_user.abilities) == 1
+
+
 def test_temperature(client):
     with patch.dict(default_property_dict, {"temperature": 9001}):
         response = client.get("/node/default/temperature/")
     assert response.data.strip() == b'9001'
 
 
-def test_getIncommingConnections(client):
+def test_getIncomingConnections(client):
     with patch.dict(default_property_dict, {"incoming_connections": ["100", 300]}):
         response = client.get("/node/default/connections/incoming/")
     assert response.data.strip() == b'["100", 300]'

@@ -2,26 +2,59 @@ from Server.Blueprint import api
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 from flask import current_app as app
 from Server.Blueprint import api
+from Server.models import User, Ability
+from Server.Database import db_session
+from sqlalchemy import exc
 
-from flask import Response
+from flask import Response, request
 
 RFID_namespace = Namespace("RFID", description = "Users can authenticate themselves with RFID.")
 
 
 UNKNOWN_CARD_RESPONSE = Response("Unknown Card", status=404)
+CARD_UPDATE_FAILED = Response("User update failed", status=500)
+CARD_UPDATE_SUCCEEDED = Response("User updated", status=200)
 
 
 @RFID_namespace.route("/<string:card_id>/")
-@RFID_namespace.doc(description ="Get all modifier types")
+@RFID_namespace.doc(description ="Handle requests from an RFID reader")
 class RFID(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Card")
     def get(self, card_id):
-        # TODO: Actually check a database for the known cards.
-        if card_id != "8666529cc":
+        user = User.query.filter_by(card_id = card_id).first()
+        if not user:
             return UNKNOWN_CARD_RESPONSE
         else:
             return "Welcome back!"
 
-
+# name, email are required for new users. Ability can be passed multiple times.
+# Only adds abilities; does not remove them.
+@RFID_namespace.route("/update/<string:card_id>/")
+@RFID_namespace.doc(description ="Update a user's information")
+class RFID(Resource):
+    @api.response(200, "User updated")
+    @api.response(500, "User update failed")
+    def get(self, card_id):
+        user = User.query.filter_by(card_id = card_id).first()
+        ability_list = request.args.getlist("ability")
+        abilities = []
+        for a in ability_list:
+            ability = Ability.query.filter_by(name = a).first()
+            abilities += [ability] if ability is not None else []
+        if not user:
+            name = request.args.get("name")
+            email = request.args.get("email")
+            user = User(card_id, name, email)
+            user.abilities = abilities
+            try:
+                db_session.add(user)
+                db_session.commit()
+                return CARD_UPDATE_SUCCEEDED
+            except exc.SQLAlchemyError:
+                return CARD_UPDATE_FAILED
+        else:
+            user.abilities += abilities
+            db_session.commit()
+            return CARD_UPDATE_SUCCEEDED
 
