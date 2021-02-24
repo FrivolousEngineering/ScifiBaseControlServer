@@ -17,7 +17,7 @@ CARD_UPDATE_SUCCEEDED = Response("User updated", status=200)
 
 
 @RFID_namespace.route("/<string:card_id>/")
-@RFID_namespace.doc(description ="Handle requests from an RFID reader")
+@RFID_namespace.doc(description ="Get RFID card data")
 class RFID(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Card")
