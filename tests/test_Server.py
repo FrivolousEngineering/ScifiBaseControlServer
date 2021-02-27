@@ -105,13 +105,13 @@ def test_getUsers(client):
 
     
 def test_updateUser(client):
-    response = client.get("/RFID/update/456/?name=new&email=new@localhost.com")
+    response = client.post("/RFID/update/456/?name=new&email=new@localhost.com")
     new_user = User.query.filter_by(card_id = "456").first()
     assert response.data.strip() == b'User updated'
     assert new_user.name == "new" and new_user.email == "new@localhost.com"
     assert len(new_user.abilities) == 0
     
-    response = client.get("/RFID/update/456/?ability=see_users&ability=new_ability")
+    response = client.post("/RFID/update/456/?ability=see_users&ability=new_ability")
     assert response.data.strip() == b'User updated'
     assert len(new_user.abilities) == 1
 

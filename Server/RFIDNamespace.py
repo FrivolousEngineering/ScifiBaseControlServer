@@ -32,10 +32,10 @@ class RFID(Resource):
 # Only adds abilities; does not remove them.
 @RFID_namespace.route("/update/<string:card_id>/")
 @RFID_namespace.doc(description ="Update a user's information")
-class RFID(Resource):
+class RFIDUpdate(Resource):
     @api.response(200, "User updated")
     @api.response(500, "User update failed")
-    def get(self, card_id):
+    def post(self, card_id):
         user = User.query.filter_by(card_id = card_id).first()
         ability_list = request.args.getlist("ability")
         abilities = []
