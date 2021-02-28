@@ -15,3 +15,5 @@ class ResourceDestroyer(Node):
         """
         super().__init__(node_id, **kwargs)
         self._resources_required_per_tick[resource_type.lower()] = amount
+
+        self._has_settable_performance = False

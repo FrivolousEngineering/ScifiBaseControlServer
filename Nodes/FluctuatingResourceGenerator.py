@@ -15,6 +15,8 @@ class FluctuatingResourceGenerator(ResourceGenerator):
         assert len(self._amplitudes) == len(self._frequencies)
         self._offset = offset
 
+        self._has_settable_performance = False
+
     def serialize(self) -> Dict[str, Any]:
         result = super().serialize()
         result["original_amount"] = self._original_amount

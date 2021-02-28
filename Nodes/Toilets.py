@@ -16,6 +16,8 @@ class Toilets(Node):
         self._min_performance = 1
         self._max_performance = 1
 
+        self._has_settable_performance = False
+
     def update(self) -> None:
         super().update()
 
