@@ -57,7 +57,6 @@ def test_getUnknownNodeTemperature(DBus):
                                               ("max_safe_temperature", 2000),
                                               ("performance", 2),
                                               ("additional_properties", ["omg", "woah!", "panda"]),
-                                              ("amount_stored", 17),
                                               ("min_performance", 0.2),
                                               ("max_performance", 1.3),
                                               ("target_performance", 0.2)])
@@ -80,7 +79,6 @@ def test_getAttributeValue(DBus, node, attribute, value):
                                               ("max_safe_temperature", 0),
                                               ("performance", 0),
                                               ("additional_properties", []),
-                                              ("amount_stored", -1),
                                               ("min_performance", 1),
                                               ("max_performance", 1),
                                               ("target_performance", 0)])

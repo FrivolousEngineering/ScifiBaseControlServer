@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union, List
 
 from flask import Blueprint, request, Response
 from flask import current_app as app
@@ -14,6 +14,13 @@ connection = api.model("connection", {
     "target": fields.String,
     "origin": fields.String,
     "resource_type": fields.String
+})
+
+addit_property = api.model("addit_property",
+{
+    "key": fields.String,
+    "value": fields.Float,
+    "max_value": fields.Float
 })
 
 resource_amount = api.model("resource_amount", {
@@ -36,8 +43,6 @@ node = api.model("node", {
                              readonly = True),
     "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin",
                                 example = 273.3),
-    "amount": fields.Float(description = "How much has this node stored. If the node has no storage, the value will be -1",
-                           example = -1),
     "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance",
                                 example = 1),
     "target_performance": fields.Float(description = "What performance / capacity level is this node trying to reach? Note that not all nodes have an instant change, so it's target can be different from it's actual performance ",
@@ -57,7 +62,8 @@ node = api.model("node", {
     "optimal_temperature": fields.Float(description = "What is the most optimal temperature for this node?"),
     "resources_required": fields.List(fields.Nested(resource_amount)),
     "resources_received": fields.List(fields.Nested(resource_amount)),
-    "optional_resources_required": fields.List(fields.Nested(resource_amount))
+    "optional_resources_required": fields.List(fields.Nested(resource_amount)),
+    "additional_properties": fields.List(fields.Nested(addit_property))
 })
 
 
@@ -194,22 +200,31 @@ class AdditionalPropertyHistory(Resource):
         return nodes.getAdditionalPropertyHistory(node_id, prop)
 
 
+def getAdditionalPropertiesForNode(node_id: str) -> Optional[List[Dict[str, Union[str, float]]]]:
+    nodes = app.getNodeDBusObject()
+    if not nodes.doesNodeExist(node_id):
+        return None
+    additional_properties = nodes.getAdditionalProperties(node_id)
+    result = []
+    for prop in additional_properties:
+        item = {}
+        item["key"] = prop
+        item["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
+        item["max_value"] = nodes.getMaxAdditionalPropertyValue(node_id, prop)
+        result.append(item)
+    return result
+
+
 @node_namespace.route("/<node_id>/additional_properties/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get the value of all extra attributes")
 class AdditionalProperties(Resource):
-    @api.response(200, "success", fields.List(fields.Float))
+    @api.response(200, "success", [addit_property])
     @api.response(404, "Unknown Node")
     def get(self, node_id):
-        nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        result = getAdditionalPropertiesForNode(node_id)
+        if result is None:
             return UNKNOWN_NODE_RESPONSE
-        additional_properties = nodes.getAdditionalProperties(node_id)
-        result = {}
-        for prop in additional_properties:
-            result[prop] = {}
-            result[prop]["max_value"] = nodes.getMaxAdditionalPropertyValue(node_id, prop)
-            result[prop]["value"] = nodes.getAdditionalPropertyValue(node_id, prop)
         return result
 
 
@@ -365,7 +380,6 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
 
     data = {"node_id": node_id,
             "temperature": nodes.getTemperature(node_id),
-            "amount": round(nodes.getAmountStored(node_id), 2),
             "enabled": nodes.isNodeEnabled(node_id),
             "active": nodes.isNodeActive(node_id),
             "performance": nodes.getPerformance(node_id),
@@ -380,6 +394,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "optimal_temperature": nodes.getOptimalTemperature(node_id),
             "resources_required": required_resources,
             "optional_resources_required": optional_required_resources,
-            "resources_received": received_resources
+            "resources_received": received_resources,
+            "additional_properties": getAdditionalPropertiesForNode(node_id)
             }
     return data

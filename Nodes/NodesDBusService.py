@@ -217,16 +217,6 @@ class NodesDBusService(dbus.service.Object):
     def doTick(self) -> None:
         self._node_engine.doTick()
 
-    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
-    def getAmountStored(self, node_id: str) -> float:
-        node = self._node_engine.getNodeById(node_id)
-        if not node:
-            return -1
-        try:
-            return node.amount_stored  # type: ignore
-        except AttributeError:
-            return -1
-
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
     def isNodeEnabled(self, node_id: str) -> bool:
         node = self._node_engine.getNodeById(node_id)

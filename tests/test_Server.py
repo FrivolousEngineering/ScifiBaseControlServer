@@ -46,7 +46,6 @@ def app():
     mocked_dbus.getAllNodeIds = MagicMock(return_value = known_ids)
     mocked_dbus.getMinPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="min_performance"))
     mocked_dbus.getMaxPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="max_performance"))
-    mocked_dbus.getAmountStored = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="amount"))
     mocked_dbus.getMaxSafeTemperature = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="max_safe_temperature"))
     mocked_dbus.getHeatEmissivity = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_emissivity"))
     mocked_dbus.getHeatConvectionCoefficient = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="heat_convection"))
@@ -186,10 +185,10 @@ def test_getEnabled(client):
 
 
 def test_getAdditionalProperties(client):
-    with patch.dict(default_property_dict, {"additional_properties": ["zomg", "omg"], "additional_property_max": {"zomg": 20, "omg": 200}, "additional_property_value": {"omg": 300, "zomg": 1}}):
+    with patch.dict(default_property_dict, {"additional_properties": ["zomg", "omg"], "additional_property_max": {"zomg": 20, "omg": 300}, "additional_property_value": {"omg": 200, "zomg": 1}}):
         response = client.get("/node/default/additional_properties/")
     assert response.status_code == 200
-    assert response.data.strip() == b'{"zomg": {"max_value": 20, "value": 1}, "omg": {"max_value": 200, "value": 300}}'
+    assert response.data.strip() == b'[{"key": "zomg", "value": 1, "max_value": 20}, {"key": "omg", "value": 200, "max_value": 300}]'
 
 
 def test_getUnknownNode(client):
@@ -214,11 +213,11 @@ def test_getAdditionalPropertyValue(client):
 
 @pytest.mark.skip()
 def test_getNodeDataRequest(client):
-    data = {"temperature": 200, "amount": 201, "enabled": True, "active": True, "performance": 1, "min_performance": 0.5, "max_performance": 1.5, "max_safe_temperature": 900, "heat_convection": 0.5, "heat_emissivity": 200, "surface_area": 200, "description": "THE BEST NODE"}
+    data = {"temperature": 200, "enabled": True, "active": True, "performance": 1, "min_performance": 0.5, "max_performance": 1.5, "max_safe_temperature": 900, "heat_convection": 0.5, "heat_emissivity": 200, "surface_area": 200, "description": "THE BEST NODE"}
     with patch.dict(default_property_dict, data):
         response = client.get("/node/default/")
 
-    assert response.data.strip() == b'{"active": true, "amount": 201, "description": "THE BEST NODE", "enabled": true, "heat_convection": 0.5, "heat_emissivity": 200, "max_performance": 1.5, "max_safe_temperature": 900, "min_performance": 0.5, "node_id": "default", "performance": 1, "surface_area": 200, "temperature": 200}'
+    assert response.data.strip() == b'{"active": true, "description": "THE BEST NODE", "enabled": true, "heat_convection": 0.5, "heat_emissivity": 200, "max_performance": 1.5, "max_safe_temperature": 900, "min_performance": 0.5, "node_id": "default", "performance": 1, "surface_area": 200, "temperature": 200}'
 
 
 def test_getAllProperties(client):
