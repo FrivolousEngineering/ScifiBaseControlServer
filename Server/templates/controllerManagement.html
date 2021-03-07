@@ -81,11 +81,11 @@ th {
                 $('<td>').text(item.version)
             ).appendTo('#records_table');
 
-            if(item.time_since_last_update > 2)
+            if(item.time_since_last_update > 4)
             {
                 $("#last_time_" + item.id).css("background-color", "yellow");
             }
-            if(item.time_since_last_update > 10)
+            if(item.time_since_last_update > 20)
             {
                 $("#last_time_" + item.id).css("background-color", "red");
             }
