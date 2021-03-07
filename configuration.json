@@ -317,7 +317,7 @@
 
         { "from": "hydroponics_cooled_water_valve", "to": "hydroponics_water_cooler", "resource_type": "water" },
 
-        { "from": "hydroponics_cooled_water_valve", "to": "hydroponics", "resource_type": "water" },
+        { "from": "hydroponics_water_cooler", "to": "hydroponics", "resource_type": "water" },
 
         { "from": "hydroponics_uncooled_water_valve", "to": "hydroponics", "resource_type": "water" },
 
