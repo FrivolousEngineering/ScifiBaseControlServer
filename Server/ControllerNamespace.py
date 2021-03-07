@@ -27,7 +27,8 @@ def getControllerData(controller_id):
         return None
     result = {"id": controller_id,
             "time_since_last_update": round(controller.time_since_last_update, 2),
-            "sensors": []}
+            "sensors": [],
+            "version": controller.version_string}
 
     for key in controller.getAllSensorNames():
         result["sensors"].append({"name": key, "value": controller.getSensorValue(key), "target": manager.getMappedIdFromSensor(controller_id, key)})
@@ -60,4 +61,6 @@ class Controller(Resource):
     @api.response(200, "success")
     def put(self, controller_id):
         manager = ControllerManager.getInstance()
+
         manager.updateController(controller_id, json.loads(request.data))
+        manager.getController(controller_id).version_string = request.user_agent.string

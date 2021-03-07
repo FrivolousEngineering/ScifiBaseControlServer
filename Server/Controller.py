@@ -10,6 +10,9 @@ class Controller:
         self._id = controller_id
         self._sensors_values = {}
 
+        # Since the controllers are remote devices, it could be that they have different versions.
+        self.version_string = "Unknown"
+
         self.time_last_seen = time.time()
 
     def getSensorValue(self, sensor_id):

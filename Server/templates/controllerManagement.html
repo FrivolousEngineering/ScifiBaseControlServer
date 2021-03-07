@@ -50,6 +50,7 @@ th {
             <th>Name</th>
             <th style="width:300px">Time since last update</th>
             <th>Sensors</th>
+            <th>Version</th>
         </tr>
     </thead>
     <tbody>
@@ -76,7 +77,8 @@ th {
             $('<tr>').append(
                 $('<td>').append(item.id),
                 $('<td>').text(item.time_since_last_update).attr('id', "last_time_" + item.id),
-                $('<td>').attr('id', item.id)
+                $('<td>').attr('id', item.id),
+                $('<td>').text(item.version)
             ).appendTo('#records_table');
 
             if(item.time_since_last_update > 2)

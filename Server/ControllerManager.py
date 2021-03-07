@@ -11,7 +11,10 @@ class ControllerManager:
     def __init__(self) -> None:
         self._controllers = {}  # type: Dict[str, Controller]
 
-        self._mapping = {"Base-Control-C64AF4": {"sensor_value": "generator"}}
+        self._mapping = {"Base-Control-C64AF4": {"sensor_value": "e_to_h_valve"},
+                         "Base-Control-5F7023": {"sensor_value": "h_to_g_valve"},
+                         "Base-Control-941965": {"sensor_value": "h_to_e_valve"},
+                         "Base-Control-5F70D9": {"sensor_value": "g_to_h_valve"}}
         self._bus = dbus.SessionBus()
         self._dbus = None
 
