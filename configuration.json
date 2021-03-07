@@ -38,7 +38,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 3000
         },
         "e_to_h_valve":
         {
@@ -87,7 +87,7 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 130
         },
         "hydroponics_cooled_water_valve":
         {
@@ -140,14 +140,16 @@
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
-            "amount": 0
+            "amount": 0,
+            "max_storage": 150
         },
 
         "plant_press_battery":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
-            "amount": 0
+            "amount": 0,
+            "max_storage": 150
         },
 
         "hydroponics":

@@ -69,6 +69,7 @@ class Node:
 
         self._resources_required_last_tick = {}  # type: Dict[str, float]
         self._resources_received_last_tick = {}  # type: Dict[str, float]
+        self._resources_produced_last_tick = {}  # type: Dict[str, float]
 
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
@@ -422,6 +423,9 @@ class Node:
     def getResourcesProducedThisTick(self) -> Dict[str, float]:
         return self._resources_produced_this_tick
 
+    def getResourcesProducedLastTick(self) -> Dict[str, float]:
+        return self._resources_produced_last_tick
+
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
         """
         Convenience function that combines the resources that this node got this tick and whatever was left over.
@@ -547,12 +551,14 @@ class Node:
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
         self._resources_received_last_tick = self._resources_received_this_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
+        self._resources_produced_last_tick = self._resources_produced_this_tick.copy()
 
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
+
 
     def updateModifiers(self) -> None:
         # Update the timers of the modifiers (and remove them if they have expired)

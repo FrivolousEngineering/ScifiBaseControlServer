@@ -310,6 +310,13 @@ class NodesDBusService(dbus.service.Object):
             return node.getOptionalResourcesRequiredLastTick()
         return {}
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesProduced(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.getResourcesProducedLastTick()
+        return {}
+
     @dbus.service.method("com.frivengi.nodes", out_signature="as", in_signature="s")
     def getSupportedModifiers(self, node_id: str):
         node = self._node_engine.getNodeById(node_id)
