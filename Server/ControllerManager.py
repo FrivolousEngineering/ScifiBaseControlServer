@@ -14,7 +14,10 @@ class ControllerManager:
         self._mapping = {"Base-Control-C64AF4": {"sensor_value": "e_to_h_valve"},
                          "Base-Control-5F7023": {"sensor_value": "h_to_g_valve"},
                          "Base-Control-941965": {"sensor_value": "h_to_e_valve"},
-                         "Base-Control-5F70D9": {"sensor_value": "g_to_h_valve"}}
+                         "Base-Control-5F70D9": {"sensor_value": "g_to_h_valve"},
+                         "Base-Control-942AF2": {"sensor_value": "hydroponics_uncooled_water_valve"},
+                         "Base-Control-C62B7E": {"sensor_value": "hydroponics_cooled_water_valve"}}
+
         self._bus = dbus.SessionBus()
         self._dbus = None
 
