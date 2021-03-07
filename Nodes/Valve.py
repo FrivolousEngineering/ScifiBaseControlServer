@@ -21,7 +21,6 @@ class Valve(ResourceStorage):
         self._performance_change_factor = 1
         self._heat_convection_coefficient = 0.2  # type: float
 
-        self._updateResourceRequiredPerTick()
         self._has_settable_performance = True
 
     def _updateResourceRequiredPerTick(self) -> None:

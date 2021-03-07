@@ -158,7 +158,7 @@ class NodeEngine:
         """
         Handle a single tick.
         """
-        print("TICK STARTED")
+        print("TICK STARTED", self._tick_count + 1)
         with self._update_lock:
             self._updateOutsideTemperature()
             self._preUpdate()
