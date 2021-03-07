@@ -8,7 +8,7 @@ from Nodes.TemperatureHandlers.TemperatureHandler import TemperatureHandler
 from Nodes.PerpetualTimer import PerpetualTimer
 from Signal import signalemitter, Signal
 
-TICK_INTERVAL = 1
+TICK_INTERVAL = 15
 
 
 @signalemitter

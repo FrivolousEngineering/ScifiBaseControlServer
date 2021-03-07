@@ -63,7 +63,8 @@ node = api.model("node", {
     "resources_required": fields.List(fields.Nested(resource_amount)),
     "resources_received": fields.List(fields.Nested(resource_amount)),
     "optional_resources_required": fields.List(fields.Nested(resource_amount)),
-    "additional_properties": fields.List(fields.Nested(addit_property))
+    "additional_properties": fields.List(fields.Nested(addit_property)),
+    "effectiveness_factor": fields.Float(description = "How well is this node performing? This factor can be influenced by it's health and the temperature of the node")
 })
 
 
@@ -395,6 +396,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "resources_required": required_resources,
             "optional_resources_required": optional_required_resources,
             "resources_received": received_resources,
-            "additional_properties": getAdditionalPropertiesForNode(node_id)
+            "additional_properties": getAdditionalPropertiesForNode(node_id),
+            "effectiveness_factor": nodes.getEffectivenessFactor(node_id)
             }
     return data

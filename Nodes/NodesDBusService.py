@@ -316,3 +316,11 @@ class NodesDBusService(dbus.service.Object):
         if node:
             return ModifierFactory.getSupportedModifiersForNode(node)
         return []
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
+    def getEffectivenessFactor(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.effectiveness_factor
+        else:
+            return 1
