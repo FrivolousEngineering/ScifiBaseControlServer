@@ -15,7 +15,7 @@ class Toilets(Node):
         # console). I don't want to code in "burrito night" to increase the effect of the toilets.
         self._min_performance = 1
         self._max_performance = 1
-
+        self._resources_required_per_tick["water"] = 10
         self._has_settable_performance = False
 
     def update(self) -> None:
