@@ -87,7 +87,7 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 130
+            "fluid_per_tick": 180
         },
         "hydroponics_cooled_water_valve":
         {

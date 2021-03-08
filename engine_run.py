@@ -28,7 +28,7 @@ storage = NodeStorage(engine)
 engine.doTick()
 
 
-#engine.start()
+engine.start()
 
 dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
 
