@@ -5,6 +5,10 @@ from Nodes.ResourceStorage import ResourceStorage
 
 class Valve(ResourceStorage):
     def __init__(self, node_id: str, resource_type: str, fluid_per_tick: float, **kwargs) -> None:
+        # Update the defaults like this so that the actual property can be set by base class
+        defaults = {"heat_convection_coefficient": 0.2}
+        defaults.update(kwargs)
+
         super().__init__(node_id, resource_type, 0, 2 * fluid_per_tick, **kwargs)
         self._fluid_per_tick = fluid_per_tick
         self._max_resources_requestables_per_tick = fluid_per_tick
@@ -19,7 +23,6 @@ class Valve(ResourceStorage):
                             " all of it's outgoing connections."
         self._description = self._description.format(resource_type = resource_type)
         self._performance_change_factor = 1
-        self._heat_convection_coefficient = 0.2  # type: float
 
         self._has_settable_performance = True
 
