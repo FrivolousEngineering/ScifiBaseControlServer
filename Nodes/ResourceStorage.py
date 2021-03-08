@@ -15,7 +15,7 @@ class ResourceStorage(Node):
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
         self.additional_properties.append("amount_stored")
 
-        self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 350)
+        self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 1000)
 
         self._description = "This device stores {resource_type}, which can be used by any connected device."
         self._description = self._description.format(resource_type = resource_type)
@@ -70,6 +70,9 @@ class ResourceStorage(Node):
     def getResource(self, resource_type: str, amount: float) -> float:
         resources_requestable = self.preGetResource(resource_type, amount)
         self._amount -= resources_requestable
+        if self._resource_type not in self._resources_produced_this_tick:
+            self._resources_produced_this_tick[self._resource_type] = 0.
+        self._resources_produced_this_tick[self._resource_type] += resources_requestable
         return resources_requestable
 
     def preGiveResource(self, resource_type: str, amount: float) -> float:
