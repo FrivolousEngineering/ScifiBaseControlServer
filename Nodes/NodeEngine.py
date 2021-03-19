@@ -189,7 +189,6 @@ class NodeEngine:
             result += "    Max temp => {max_safe_temperature}\n".format(max_safe_temperature=self._nodes[node_id].max_safe_temperature)
             result += "}\n"
 
-
         for node in self._nodes.values():
             for connection in node.getAllOutgoingConnections():
                 color = self._getResourceColor(connection.resource_type)
