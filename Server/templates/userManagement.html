@@ -9,6 +9,8 @@ th {
 
 </style>
 
+<h1>User management</h1>
+<h2>Current users</h2>
 <table id = "records_table">
     <thead>
         <tr>
@@ -18,6 +20,23 @@ th {
     <tbody>
     </tbody>
 </table>
+
+<h2>Add users</h2>
+
+<form id="update">
+  <label for="card">RFID card id:</label>
+  <input id="card" name="card"><br>
+  <label for="name">Name:</label>
+  <input id="name" name="name"><br>
+  <label for="email">Email:</label>
+  <input id="email" name="email"><br>
+  
+  <p>User capabilities:</p>
+  <input type="checkbox" id="see_users" class="capability"  name="see_users">
+  <label for="see_users">See users</label><br>
+  
+  <input type="submit" value="Create user">
+</form>
 
 <script>
 
@@ -44,6 +63,42 @@ th {
         });
     }
 
+    function sendData() {
+      const XHR = new XMLHttpRequest();
+      const FD  = new FormData();
+
+      // Define what happens on successful data submission
+      XHR.addEventListener( "load", function(event) {
+        alert( event.target.responseText );
+        updateAllUsers();
+      } );
+
+      // Define what happens in case of error
+      XHR.addEventListener( "error", function( event ) {
+        alert( 'Oops! Something went wrong.' );
+      } );
+
+      // Set up request
+      let card = $("input[name=card]").val();
+      let name = $("input[name=name]").val();
+      let email = $("input[name=email]").val();
+      let capabilities = "&";
+      $(".capability").each((i, el) => {
+        if (el.checked) {
+          capabilities += "ability=" + el.name;
+        }
+      });
+    
+      XHR.open( "POST", "RFID/update/" + card + "/?name=" + name + "&email=" + email + capabilities);
+      XHR.send( FD );
+    } 
+
     updateAllUsers();
+
+    let form = document.getElementById( "update" );
+    form.addEventListener( "submit", function ( event ) {
+      event.preventDefault();
+      sendData();
+    } );
 
 </script>
