@@ -65,8 +65,4 @@ class Valve(ResourceStorage):
         super().postUpdate()
         # This is done in the post update to ensure that it also takes resources taken by other nodes into account.
         # We can't do this in the update, because other nodes might be updated later.
-        if self._node_id == "water_cooler":
-            print("before", self._optional_resources_required_per_tick)
         self._updateResourceRequiredPerTick()
-        if self._node_id == "water_cooler":
-            print("after", self._optional_resources_required_per_tick)
