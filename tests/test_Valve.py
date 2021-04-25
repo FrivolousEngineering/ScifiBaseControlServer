@@ -9,7 +9,7 @@ def test_setPerformance():
     valve.getResourceAvailableThisTick = MagicMock(return_value = 10)
 
     valve._provideResourceToOutgoingConnections = MagicMock(return_value=5)
-    assert valve.max_amount_stored == 20
+    assert valve.max_amount_stored == 25
 
     # Ensure that the _updatePerformance is actually called by having the performance *slightly* different from target
     valve._performance = 0.5001
@@ -20,5 +20,5 @@ def test_setPerformance():
 
     valve._provideResourceToOutgoingConnections.assert_called_with("fuel", 5)
 
-    assert valve.max_amount_stored == 10
+    assert valve.max_amount_stored == 12.5
 

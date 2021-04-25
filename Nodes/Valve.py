@@ -10,7 +10,7 @@ class Valve(ResourceStorage):
         defaults = {"heat_convection_coefficient": 0.2}
         defaults.update(kwargs)
 
-        super().__init__(node_id, resource_type, 0, 2 * fluid_per_tick, **kwargs)
+        super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **kwargs)
         self._fluid_per_tick = fluid_per_tick
         self._max_resources_requestables_per_tick = fluid_per_tick
 
@@ -38,7 +38,8 @@ class Valve(ResourceStorage):
         self._updateResourceRequiredPerTick()
         super()._setPerformance(new_performance)
 
-        self._max_storage = 2 * self._performance * self._fluid_per_tick
+        # HACK: Make it a bit bigger than it should be. This prevents weird fluctuations if you put two valves in a row.
+        self._max_storage = 2.5 * self._performance * self._fluid_per_tick
 
     def update(self) -> None:
         # First, we store the resources other nodes *gave* us (these are already added!)
@@ -64,4 +65,8 @@ class Valve(ResourceStorage):
         super().postUpdate()
         # This is done in the post update to ensure that it also takes resources taken by other nodes into account.
         # We can't do this in the update, because other nodes might be updated later.
+        if self._node_id == "water_cooler":
+            print("before", self._optional_resources_required_per_tick)
         self._updateResourceRequiredPerTick()
+        if self._node_id == "water_cooler":
+            print("after", self._optional_resources_required_per_tick)
