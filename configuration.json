@@ -261,7 +261,7 @@
             "amount": 0,
             "max_storage": 2000
         },
-        "toilet_water_tank":
+        "purified_water_tank":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
@@ -382,15 +382,15 @@
 
         { "from": "rain_water_tank", "to": "toilets", "resource_type": "water" },
 
-        { "from": "toilet_water_tank", "to": "toilets", "resource_type": "water" },
-        { "from": "toilet_water_tank", "to": "medicine_creator", "resource_type": "water" },
+        { "from": "purified_water_tank", "to": "toilets", "resource_type": "water" },
+        { "from": "purified_water_tank", "to": "medicine_creator", "resource_type": "water" },
 
         { "from": "toilets", "to": "dirty_water_storage", "resource_type": "dirty_water" },
 
         { "from": "dirty_water_storage", "to": "water_purifier", "resource_type": "dirty_water" },
 
         { "from": "water_purifier", "to": "toilet_waste_storage", "resource_type": "animal_waste" },
-        { "from": "water_purifier", "to": "toilet_water_tank", "resource_type": "water" },
+        { "from": "water_purifier", "to": "purified_water_tank", "resource_type": "water" },
 
         { "from": "plant_oil_storage", "to": "medicine_creator", "resource_type": "plant_oil"},
 
