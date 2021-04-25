@@ -121,7 +121,7 @@ class Node:
         self._has_settable_performance = True
 
         # How fast should this node degrade if it's above a certain temperature?
-        self._temperature_degradation_speed = 1.  # type: float
+        self._temperature_degradation_speed = 10.  # type: float
 
         self._description = ""  # type: str
         self._custom_description = ""  # type: str

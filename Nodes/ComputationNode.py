@@ -21,7 +21,7 @@ class ComputationNode(Node):
         self._max_safe_temperature = 353.15  # 80 Degree celcius.
 
         # It's going to break down pretty darn fast!
-        self._temperature_degradation_speed = 3
+        self._temperature_degradation_speed = 30
         self._description = "This device requires energy to run, which it requires to generate data. It is <i>very" \
                             "</i> sensitive to heat and will break down very rapidly if reaches higher temperatures." \
                             "Even when this device is not generating any data, it will still consume a bit of " \
