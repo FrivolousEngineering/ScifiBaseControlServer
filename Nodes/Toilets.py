@@ -27,6 +27,8 @@ class Toilets(Node):
         # when they are broken in game, I'm not going to model that in here.
         dirty_water_left = self._provideResourceToOutgoingConnections("dirty_water", water_available)
 
+        self._resources_produced_this_tick["dirty_water"] = water_available
+
         dirty_water_provided = enforcePositive(water_available - dirty_water_left)
 
-        self._resources_produced_this_tick["dirty_water"] = dirty_water_provided
+        self._resources_provided_this_tick["dirty_water"] = dirty_water_provided

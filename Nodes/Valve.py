@@ -1,6 +1,7 @@
 from typing import cast
 
 from Nodes.ResourceStorage import ResourceStorage
+from Nodes.Util import enforcePositive
 
 
 class Valve(ResourceStorage):
@@ -54,7 +55,10 @@ class Valve(ResourceStorage):
         resources_left = self._amount - resources_to_distribute
 
         # Then we try to give as much away as possible.
-        self._amount = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute) + resources_left
+        resources_left_after_distribution = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute)
+        self._resources_provided_this_tick[self._resource_type] = enforcePositive(resources_to_distribute - resources_left_after_distribution)
+
+        self._amount = resources_left_after_distribution + resources_left
 
     def postUpdate(self) -> None:
         super().postUpdate()

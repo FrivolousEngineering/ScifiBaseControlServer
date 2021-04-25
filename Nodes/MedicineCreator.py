@@ -38,8 +38,9 @@ class MedicineCreator(Node):
         self._resources_left_over["plant_oil"] = plant_oil_available - medicine_produced
 
         medicine_produced *= self.effectiveness_factor
+        self._resources_produced_this_tick["medicine"] = medicine_produced
 
-        # Attmept to get rid of the medicine
+        # Attempt to get rid of the medicine
         medicine_left = self._provideResourceToOutgoingConnections("medicine", medicine_produced)
 
         # if that failed, we didn't use some of the resources we got
@@ -48,7 +49,7 @@ class MedicineCreator(Node):
         self._resources_left_over["plant_oil"] = medicine_left * self.inverted_effectiveness_factor
 
         medicine_provided = enforcePositive(medicine_produced - medicine_left)
-        self._resources_produced_this_tick["medicine"] = medicine_provided
+        self._resources_provided_this_tick["medicine"] = medicine_provided
 
         heat_produced = medicine_provided * self._heat_per_medicine_created * self.temperature_efficiency
         self.addHeat(heat_produced)
