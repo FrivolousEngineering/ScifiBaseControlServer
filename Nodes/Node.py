@@ -66,10 +66,12 @@ class Node:
 
         self._resources_received_this_tick = {}  # type: Dict[str, float]
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
+        self._resources_provided_this_tick = {}  # type: Dict[str, float]
 
         self._resources_required_last_tick = {}  # type: Dict[str, float]
         self._resources_received_last_tick = {}  # type: Dict[str, float]
         self._resources_produced_last_tick = {}  # type: Dict[str, float]
+        self._resources_provided_last_tick = {}  # type: Dict[str, float]
 
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
@@ -329,6 +331,7 @@ class Node:
         result["node_id"] = self._node_id
         result["resources_received_this_tick"] = self._resources_received_this_tick
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
+        result["resources_provided_this_tick"] = self._resources_provided_this_tick
         result["resources_left_over"] = self._resources_left_over
         result["temperature"] = self._temperature
         result["custom_description"] = self._custom_description
@@ -346,6 +349,7 @@ class Node:
         self._node_id = data["node_id"]
         self._resources_received_this_tick = data["resources_received_this_tick"]
         self._resources_produced_this_tick = data["resources_produced_this_tick"]
+        self._resources_provided_this_tick = data["resources_provided_this_tick"]
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
@@ -425,6 +429,12 @@ class Node:
 
     def getResourcesProducedLastTick(self) -> Dict[str, float]:
         return self._resources_produced_last_tick
+
+    def getResourcesProvidedThisTick(self) -> Dict[str, float]:
+        return self._resources_provided_this_tick
+
+    def getResourcesProvidedLastTick(self) -> Dict[str, float]:
+        return self._resources_provided_this_tick
 
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
         """
@@ -552,13 +562,14 @@ class Node:
         self._resources_received_last_tick = self._resources_received_this_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
         self._resources_produced_last_tick = self._resources_produced_this_tick.copy()
+        self._resources_provided_last_tick = self._resources_provided_this_tick.copy()
 
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
         self._resources_produced_this_tick = {}
-
+        self._resources_provided_this_tick = {}
 
     def updateModifiers(self) -> None:
         # Update the timers of the modifiers (and remove them if they have expired)

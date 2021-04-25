@@ -286,7 +286,7 @@ def test_serialize():
 def test_deserialize():
     node = Node.Node("BLOOORPP")
 
-    node.deserialize({"node_id": "omgzomg", "temperature": 200, "resources_received_this_tick": {}, "resources_produced_this_tick": {}, "resources_left_over": {}})
+    node.deserialize({"node_id": "omgzomg", "temperature": 200, "resources_received_this_tick": {}, "resources_produced_this_tick": {}, "resources_left_over": {}, "resources_provided_this_tick": {}})
 
     assert node.getId() == "omgzomg"
     assert node.temperature == 200

@@ -79,7 +79,7 @@ def test_deserialize():
     storage = ResourceStorage.ResourceStorage("", "energy", 20)
     assert storage.amount_stored == 20
 
-    storage.deserialize({'node_id': '', 'resources_received_this_tick': {}, 'resources_produced_this_tick': {}, 'resources_left_over': {}, 'temperature': 293.15, 'amount_stored': 120})
+    storage.deserialize({'node_id': '', 'resources_received_this_tick': {}, 'resources_produced_this_tick': {}, "resources_provided_this_tick": {}, 'resources_left_over': {}, 'temperature': 293.15, 'amount_stored': 120})
     assert storage.amount_stored == 120
 
 

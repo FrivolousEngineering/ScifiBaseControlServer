@@ -70,9 +70,9 @@ class ResourceStorage(Node):
     def getResource(self, resource_type: str, amount: float) -> float:
         resources_requestable = self.preGetResource(resource_type, amount)
         self._amount -= resources_requestable
-        if self._resource_type not in self._resources_produced_this_tick:
-            self._resources_produced_this_tick[self._resource_type] = 0.
-        self._resources_produced_this_tick[self._resource_type] += resources_requestable
+        if self._resource_type not in self._resources_provided_this_tick:
+            self._resources_provided_this_tick[self._resource_type] = 0.
+        self._resources_provided_this_tick[self._resource_type] += resources_requestable
         return resources_requestable
 
     def preGiveResource(self, resource_type: str, amount: float) -> float:

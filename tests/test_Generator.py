@@ -21,8 +21,10 @@ def test_update():
 
     generator.addHeat.assert_called_once()
     resources_produced_this_tick = generator.getResourcesProducedThisTick()
-    assert math.isclose(resources_produced_this_tick["energy"], 15) # 20 fuel, 5 energy was provided, so 15 left
-    assert math.isclose(resources_produced_this_tick["water"], 0)
+    resources_provided_this_tick = generator.getResourcesProvidedThisTick()
+    assert math.isclose(resources_produced_this_tick["energy"], 20)  # It got 20 fuel, so it created 20 energy
+    assert math.isclose(resources_provided_this_tick["energy"], 15)  #  The connection reports that it couldn't dump 5, so 15 was provided
+    assert math.isclose(resources_provided_this_tick["water"], 0)
 
 
     # Ensure that the an attempt was made to provide energy (20!)
@@ -39,7 +41,7 @@ def test_update():
 def test_generator_resources_left_previous_update():
     generator = Generator.Generator("omg")
     generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
-                      "resources_produced_this_tick": {}, "resources_left_over": {"energy": 5}})
+                      "resources_produced_this_tick": {}, "resources_left_over": {"energy": 5}, "resources_provided_this_tick": {}})
 
     original_resources_available = generator.getResourceAvailableThisTick
     generator.getResourceAvailableThisTick = MagicMock(return_value = 0)
@@ -73,8 +75,9 @@ def test_update_with_different_energy_factor():
 
     generator.addHeat.assert_called_once()
     resources_produced_this_tick = generator.getResourcesProducedThisTick()
+    resources_provided_this_tick = generator.getResourcesProvidedThisTick()
     assert math.isclose(resources_produced_this_tick["energy"], 5) # 25% of how much fuel was obtained
-    assert math.isclose(resources_produced_this_tick["water"], 0)
+    assert math.isclose(resources_provided_this_tick["water"], 0)
 
 
 def test_waterGenerator():

@@ -70,14 +70,18 @@ class Generator(Node):
 
         fuel_gained = self.getResourceAvailableThisTick(self._fuel_type)
 
-        energy_available = fuel_gained * self.effectiveness_factor * self._energy_factor + self._resources_left_over["energy"]
+        energy_produced = fuel_gained * self.effectiveness_factor * self._energy_factor
+
+        self._resources_produced_this_tick["energy"] = energy_produced
+
+        energy_available = energy_produced + self._resources_left_over["energy"]
 
         # Attempt to "get rid" of the energy by offering it to connected sources.
         energy_left = self._provideResourceToOutgoingConnections("energy", energy_available)
 
-        # We specifically use what is in the received dict (instead of the energy_available), because we want to
-        # know how much was generated (and the resources available also takes leftovers into account)
-        self._resources_produced_this_tick["energy"] = enforcePositive(energy_available - energy_left)
+        # It's entirely possible that no energy was generated this turn, but a bunch of energy was provided (since there
+        # was some energy left over from the last tick!)
+        self._resources_provided_this_tick["energy"] = enforcePositive(energy_available - energy_left)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
         heat_produced = fuel_gained * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
@@ -91,7 +95,7 @@ class Generator(Node):
 
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left
-        self._resources_produced_this_tick["water"] = enforcePositive(self._resources_received_this_tick["water"] - water_left)
+        self._resources_provided_this_tick["water"] = enforcePositive(self._resources_received_this_tick["water"] - water_left)
 
         self._resources_left_over["energy"] = energy_left
 
