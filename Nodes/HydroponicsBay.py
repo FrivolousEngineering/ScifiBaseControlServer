@@ -18,9 +18,11 @@ class HydroponicsBay(Node):
         self._optional_resources_required_per_tick["water"] = 95
 
         self._use_temperature_dependant_effectiveness_factor = True
-        self._heat_convection_coefficient = 1
-        self._optimal_temperature = 308.15
-        self._optimal_temperature_range = 10
+        self._heat_convection_coefficient = kwargs.get("heat_convection_coefficient", 1.)  # type: float
+        self._optimal_temperature = kwargs.get("optimal_temperature", 308.15)  # type: float
+        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 10) # type: float
+
+        self._weight = kwargs.get("weight", 2000)  # type: float
 
         self._tags.append("plant")
 
