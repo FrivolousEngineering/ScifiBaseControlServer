@@ -255,6 +255,10 @@ class AllProperties(Resource):
         for key in resources_produced:
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
 
+        resources_provided = nodes.getResourcesProvidedHistory(node_id)
+        for key in resources_provided:
+            all_property_histories["%s provided" % key] = resources_provided[str(key)]
+
         for key in all_property_histories:
             if show_last is not None and show_last and key != "offset":
                 try:

@@ -158,6 +158,13 @@ class NodesDBusService(dbus.service.Object):
             return dbus.Dictionary(history.getResourcesProducedHistory(), signature='sv')
         return {}
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="a{sv}", in_signature="s")
+    def getResourcesProvidedHistory(self, node_id: str) -> Dict:
+        history = self._node_engine.getNodeHistoryById(node_id)
+        if history:
+            return dbus.Dictionary(history.getResourcesProvidedHistory(), signature='sv')
+        return {}
+
     @dbus.service.method("com.frivengi.nodes", out_signature="ad", in_signature="ss")
     def getAdditionalPropertyHistory(self, node_id: str, prop: str) -> List[float]:
         history = self._node_engine.getNodeHistoryById(node_id)
