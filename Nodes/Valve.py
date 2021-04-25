@@ -62,6 +62,6 @@ class Valve(ResourceStorage):
 
     def postUpdate(self) -> None:
         super().postUpdate()
-        # This is done in the post update to ensure that it also takes resouces taken by other nodes into account.
+        # This is done in the post update to ensure that it also takes resources taken by other nodes into account.
         # We can't do this in the update, because other nodes might be updated later.
         self._updateResourceRequiredPerTick()
