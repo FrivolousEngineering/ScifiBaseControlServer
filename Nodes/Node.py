@@ -68,6 +68,8 @@ class Node:
         self._resources_produced_this_tick = {}  # type: Dict[str, float]
         self._resources_provided_this_tick = {}  # type: Dict[str, float]
 
+        self._resources_received_this_sub_tick = {} # type: Dict[str, float]
+
         self._resources_required_last_tick = {}  # type: Dict[str, float]
         self._resources_received_last_tick = {}  # type: Dict[str, float]
         self._resources_produced_last_tick = {}  # type: Dict[str, float]
@@ -436,7 +438,7 @@ class Node:
     def getResourcesProvidedLastTick(self) -> Dict[str, float]:
         return self._resources_provided_this_tick
 
-    def getResourceAvailableThisTick(self, resource_type: str) -> float:
+    def getResourceAvailableThisTick(self, resource_type: str, sub_tick_modifer: float) -> float:
         """
         Convenience function that combines the resources that this node got this tick and whatever was left over.
         It can happen that resources were requested in a previous tick, that could not be used (because of various
@@ -447,8 +449,9 @@ class Node:
         :param resource_type: Type of the resource to check for
         :return: Amount of resources of the given type that can be used this tick.
         """
-        return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
-            resource_type.lower(), 0.)
+        return self._resources_received_this_sub_tick.get(resource_type.lower(), 0.) + sub_tick_modifer * self._resources_left_over.get(resource_type.lower(), 0.)
+        #return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
+        #    resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
         self.preUpdateCalled.emit(self)
@@ -479,10 +482,10 @@ class Node:
 
         self._setPerformance(new_performance)
 
-    def _getReservedResourceByType(self, resource_type: str) -> float:
+    def _getReservedResourceByType(self, resource_type: str, sub_tick_modifer: float) -> float:
         result = 0.
         for connection in self.getAllIncomingConnectionsByType(resource_type):
-            result += connection.getReservedResource()
+            result += connection.getReservedResource(sub_tick_modifer)
         return result
 
     def _provideResourceToOutgoingConnections(self, resource_type: str, amount: float) -> float:
@@ -504,16 +507,21 @@ class Node:
             amount -= resources_stored
         return amount
 
-    def _getAllReservedResources(self) -> None:
+    def _getAllReservedResources(self, sub_tick_modifer: float) -> None:
         """
         Once the planning is done, this function ensures that all reservations actually get executed.
         The results are places in the _resources_received_this_tick dict.
         """
         all_resources = self.getAllResourcesRequiredPerTick()
         for resource_type in all_resources:
+
             already_received_resources = self._resources_received_this_tick.get(resource_type, 0)
-            reserved_resources = self._getReservedResourceByType(resource_type)
-            self._resources_received_this_tick[resource_type] = already_received_resources + reserved_resources
+            reserved_resources = self._getReservedResourceByType(resource_type, sub_tick_modifer)
+            self._resources_received_this_sub_tick[resource_type] = reserved_resources
+            if resource_type not in self._resources_received_this_tick:
+                self._resources_received_this_tick[resource_type] = 0
+
+            self._resources_received_this_tick[resource_type] += reserved_resources
 
     def replanReservations(self) -> None:
         """
@@ -543,9 +551,9 @@ class Node:
                     connection.reserveResource(
                         connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
-    def update(self) -> None:
+    def update(self, sub_tick_modifer: float = 1) -> None:
         self.updateCalled.emit(self)
-        self._getAllReservedResources()
+        self._getAllReservedResources(sub_tick_modifer)
 
     def _reEvaluateIsActive(self) -> bool:
         for resource_required, amount_needed in self._resources_required_per_tick.items():

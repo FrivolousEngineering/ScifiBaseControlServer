@@ -8,12 +8,16 @@ class ConverterNode(Node):
         self._resources_required_per_tick[input_resource] = 10
         self._output_resource = output_resource
 
-    def update(self) -> None:
-        super().update()
-
-        resource_received = self.getResourceAvailableThisTick(self._input_resource)
-
+    def update(self, sub_tick_modifer: float = 1) -> None:
+        super().update(sub_tick_modifer)
+        resource_received = self.getResourceAvailableThisTick(self._input_resource, sub_tick_modifer)
         resources_left = self._provideResourceToOutgoingConnections(self._output_resource, resource_received)
-        self._resources_produced_this_tick[self._output_resource] = resource_received
-        self._resources_provided_this_tick[self._output_resource] = resource_received - resources_left
+
+        print(self.getId(), "resources left", resources_left)
+        if self._output_resource not in self._resources_produced_this_tick:
+            self._resources_produced_this_tick[self._output_resource] = 0
+        self._resources_produced_this_tick[self._output_resource] += resource_received
+        if self._output_resource not in self._resources_provided_this_tick:
+            self._resources_provided_this_tick[self._output_resource] = 0
+        self._resources_provided_this_tick[self._output_resource] += resource_received - resources_left
 

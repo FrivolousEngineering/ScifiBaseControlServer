@@ -35,6 +35,9 @@ class NodeEngine:
         self._outside_temperature_handler = None  # type: Optional[TemperatureHandler]
         self._tick_count = 0
 
+        # WIP: How many "in between" updates per tick should be done?
+        self._sub_ticks = 10
+
     @property
     def tick_count(self):
         return self._tick_count
@@ -142,9 +145,12 @@ class NodeEngine:
 
     def _update(self) -> None:
         self.updateCalled.emit()
-        for node in self._nodes.values():
-            if node.enabled:
-                node.update()
+        sub_tick_modifier = 1 / self._sub_ticks
+        for _ in range(0, self._sub_ticks):
+            for node in self._nodes.values():
+                if node.enabled:
+                    node.update(sub_tick_modifier)
+            print("SUBTICK END")
         for node in self._nodes.values():
             node.updateModifiers()
 
