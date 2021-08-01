@@ -14,6 +14,12 @@
             "input_resource": "water",
             "output_resource": "fuel"
         },
+        "converter_3":
+        {
+            "type": "ConverterNode",
+            "input_resource": "water",
+            "output_resource": "fuel"
+        },
 
         "fuel_storage":
         {
@@ -43,8 +49,10 @@
     [
         { "from": "water_storage", "to": "converter_1", "resource_type": "water" },
         { "from": "water_storage", "to": "converter_2", "resource_type": "water" },
+        { "from": "water_storage", "to": "converter_3", "resource_type": "water" },
         { "from": "converter_1", "to": "valve", "resource_type": "fuel" },
         { "from": "converter_2", "to": "valve", "resource_type": "fuel" },
+        { "from": "converter_3", "to": "valve", "resource_type": "fuel" },
         { "from": "valve", "to": "fuel_storage", "resource_type": "fuel" }
     ]
 }

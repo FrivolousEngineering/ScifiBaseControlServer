@@ -485,7 +485,6 @@ class Node:
     def _getReservedResourceByType(self, resource_type: str, sub_tick_modifer: float) -> float:
         result = 0.
         num_sources = len(self.getAllIncomingConnectionsByType(resource_type))
-        print(self._resources_left_over)
         for connection in self.getAllIncomingConnectionsByType(resource_type):
             result += connection.getReservedResource(sub_tick_modifer, self._resources_left_over.get(resource_type, 0) / num_sources)
         return result

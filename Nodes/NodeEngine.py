@@ -7,7 +7,7 @@ from Nodes.NodeHistory import NodeHistory
 from Nodes.TemperatureHandlers.TemperatureHandler import TemperatureHandler
 from Nodes.PerpetualTimer import PerpetualTimer
 from Signal import signalemitter, Signal
-
+import random
 TICK_INTERVAL = 15
 
 
@@ -36,7 +36,10 @@ class NodeEngine:
         self._tick_count = 0
 
         # WIP: How many "in between" updates per tick should be done?
-        self._sub_ticks = 10
+        self._sub_ticks = 30
+
+    def resetSeed(self):
+        random.seed(self._tick_count)
 
     @property
     def tick_count(self):
@@ -146,8 +149,14 @@ class NodeEngine:
     def _update(self) -> None:
         self.updateCalled.emit()
         sub_tick_modifier = 1 / self._sub_ticks
-        for _ in range(0, self._sub_ticks):
-            for node in self._nodes.values():
+        for i in range(0, self._sub_ticks):
+            keys = list(self._nodes.keys())
+            # Yeah. Randomness. I know. But combined with the sub ticks, it's the only way to make sure
+            # that the oder is no longer a factor. To at least make it reproducable, we use the tick count
+            # as the seed for the randomness
+            random.shuffle(keys)
+            for node_id in keys:
+                node = self._nodes[node_id]
                 if node.enabled:
                     node.update(sub_tick_modifier)
             print("SUBTICK END")
@@ -174,6 +183,8 @@ class NodeEngine:
             self._postUpdate()
             self._tick_count += 1
             self.tickCompleted.emit()
+
+        self.resetSeed()
         print("TICK ENDED!")
 
     def _getResourceColor(self, resource_type: str) -> str:
