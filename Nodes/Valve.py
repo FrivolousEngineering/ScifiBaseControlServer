@@ -41,6 +41,21 @@ class Valve(ResourceStorage):
         # HACK: Make it a bit bigger than it should be. This prevents weird fluctuations if you put two valves in a row.
         self._max_storage = 2.5 * self._performance * self._fluid_per_tick
 
+    def preGiveResource(self, resource_type: str, amount: float) -> float:
+        if resource_type != self._resource_type:
+            return 0.
+        if amount < 0:
+            return 0.
+
+        # The closer you get to the max, the less it will accept.
+        if self._max_storage * 0.5 < self._amount + amount:
+            return amount - 1 / (self._max_storage - self._amount)
+            pass
+        #if self._max_storage is not None and self._max_storage <= self._amount + amount:
+        #    return enforcePositive(self._max_storage - self._amount)
+        return amount
+
+
     def update(self, sub_tick_modifer: float = 1) -> None:
         # First, we store the resources other nodes *gave* us (these are already added!)
         #resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
