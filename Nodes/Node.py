@@ -449,7 +449,7 @@ class Node:
         :param resource_type: Type of the resource to check for
         :return: Amount of resources of the given type that can be used this tick.
         """
-        return self._resources_received_this_sub_tick.get(resource_type.lower(), 0.) + sub_tick_modifer * self._resources_left_over.get(resource_type.lower(), 0.)
+        return self._resources_received_this_sub_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(resource_type.lower(), 0.)
         #return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
         #    resource_type.lower(), 0.)
 
@@ -484,8 +484,10 @@ class Node:
 
     def _getReservedResourceByType(self, resource_type: str, sub_tick_modifer: float) -> float:
         result = 0.
+        num_sources = len(self.getAllIncomingConnectionsByType(resource_type))
+        print(self._resources_left_over)
         for connection in self.getAllIncomingConnectionsByType(resource_type):
-            result += connection.getReservedResource(sub_tick_modifer)
+            result += connection.getReservedResource(sub_tick_modifer, self._resources_left_over.get(resource_type, 0) / num_sources)
         return result
 
     def _provideResourceToOutgoingConnections(self, resource_type: str, amount: float) -> float:

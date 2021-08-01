@@ -56,7 +56,7 @@ class Connection:
         self.reserved_requested_amount = amount
         self.reserved_available_amount = 0
 
-    def getReservedResource(self, sub_tick_modifer: float) -> float:
+    def getReservedResource(self, sub_tick_modifer: float, resource_modifier: float = 0) -> float:
         """
         Convenience function to actually get (eg; subtract) the amount from the origin.
 

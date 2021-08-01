@@ -10,7 +10,7 @@ class Valve(ResourceStorage):
         defaults = {"heat_convection_coefficient": 0.2}
         defaults.update(kwargs)
 
-        super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **kwargs)
+        super().__init__(node_id, resource_type, 0, 2 * fluid_per_tick, **kwargs)
         self._fluid_per_tick = fluid_per_tick
         self._max_resources_requestables_per_tick = fluid_per_tick
 
@@ -49,10 +49,11 @@ class Valve(ResourceStorage):
 
         # The closer you get to the max, the less it will accept.
         if self._max_storage * 0.5 < self._amount + amount:
-            return amount - 1 / (self._max_storage - self._amount)
-            pass
-        #if self._max_storage is not None and self._max_storage <= self._amount + amount:
-        #    return enforcePositive(self._max_storage - self._amount)
+            storage_left = self._max_storage - self._amount
+            factor = storage_left / (0.5 * self._max_storage)
+            result = enforcePositive(amount * factor)
+            return min(amount, result)
+
         return amount
 
 
