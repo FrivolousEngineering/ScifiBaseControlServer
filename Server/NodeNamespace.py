@@ -1,12 +1,16 @@
-from typing import Optional, Dict, Any, Union, List
+from typing import Optional, Dict, Any, Union, List, TYPE_CHECKING, cast
 
 from flask import Blueprint, request, Response
-from flask import current_app as app
+from flask import current_app
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
+
+from Server.Server import Server
+from Server.Blueprint import api
+
 import json
 
-
-from Server.Blueprint import api
+# Workaround so that mypy understands that the app is of type "Server" and not "Flask"
+app = cast(Server, current_app)
 
 node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
