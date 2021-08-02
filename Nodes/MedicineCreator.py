@@ -24,8 +24,8 @@ class MedicineCreator(Node):
 
         self._heat_per_medicine_created = 100
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
         # Get the resources we asked for!
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")
@@ -38,7 +38,7 @@ class MedicineCreator(Node):
         self._resources_left_over["plant_oil"] = plant_oil_available - medicine_produced
 
         medicine_produced *= self.effectiveness_factor
-        self._resources_produced_this_tick["medicine"] = medicine_produced
+        self._resources_produced_this_tick["medicine"] += medicine_produced
 
         # Attempt to get rid of the medicine
         medicine_left = self._provideResourceToOutgoingConnections("medicine", medicine_produced)
@@ -49,7 +49,7 @@ class MedicineCreator(Node):
         self._resources_left_over["plant_oil"] = medicine_left * self.inverted_effectiveness_factor
 
         medicine_provided = enforcePositive(medicine_produced - medicine_left)
-        self._resources_provided_this_tick["medicine"] = medicine_provided
+        self._resources_provided_this_tick["medicine"] += medicine_provided
 
         heat_produced = medicine_provided * self._heat_per_medicine_created * self.temperature_efficiency
         self.addHeat(heat_produced)

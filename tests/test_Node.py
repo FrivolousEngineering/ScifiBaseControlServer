@@ -148,7 +148,7 @@ def test_getResourceAvailableThisTick(node_energy_left):
     # The node had 10 resources left over. So even though nothing was requested, it should report 10.
     assert node_energy_left.getResourceAvailableThisTick("energy") == 10
 
-    node_energy_left.getResourcesReceivedThisTick()["energy"] = 50
+    node_energy_left._resources_received_this_sub_tick["energy"] = 50
 
     assert node_energy_left.getResourceAvailableThisTick("energy") == 60
 
@@ -172,8 +172,8 @@ def test__getAllReservedResources():
     node = Node.Node("")
     node.getResourcesRequiredPerTick()["water"] = 10
     node._getReservedResourceByType = MagicMock()
-    node._getAllReservedResources()
-    node._getReservedResourceByType.assert_called_once_with("water")
+    node._getAllReservedResources(sub_tick_modifier = 1)
+    node._getReservedResourceByType.assert_called_once_with("water", 1)
 
 
 def test__getReservedResourceByType():
@@ -182,7 +182,7 @@ def test__getReservedResourceByType():
     connection.getReservedResource = MagicMock(return_value = 209)
     node.getAllIncomingConnectionsByType = MagicMock(return_value = [connection])
 
-    assert node._getReservedResourceByType("zomg") == 209
+    assert node._getReservedResourceByType("zomg", 1) == 209
 
 
 def test_replanReservations():

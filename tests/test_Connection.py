@@ -71,7 +71,7 @@ def test_reserveResource(energy_connection: Connection.Connection):
 def test_getReserveResource(energy_connection: Connection.Connection):
     energy_connection.getResource = MagicMock(return_value = 200)
     energy_connection.reserveResource(300)
-    energy_gained = energy_connection.getReservedResource()
+    energy_gained = energy_connection.getReservedResource(sub_tick_modifier = 1)
 
     assert energy_gained == 200  # The get resource returned 200
 

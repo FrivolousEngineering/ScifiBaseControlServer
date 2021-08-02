@@ -27,8 +27,8 @@ class PlantPress(Node):
 
         #self._resources_required_per_tick["energy"] = enforcePositive(self._original_resources_required_per_tick["plants"] * self.effectiveness_factor - max_food)
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
 
         # Get all the resources that we want
         energy_available = self.getResourceAvailableThisTick("energy")
@@ -57,12 +57,12 @@ class PlantPress(Node):
         self._resources_left_over["water"] = water_left_from_production + water_left_from_storage
 
         food_provided = enforcePositive(food_produced - food_left_from_production)
-        self._resources_provided_this_tick["food"] = food_provided
-        self._resources_produced_this_tick["food"] = food_produced
+        self._resources_provided_this_tick["food"] += food_provided
+        self._resources_produced_this_tick["food"] += food_produced
 
         water_provided = enforcePositive(water_produced - water_left_from_production)
-        self._resources_provided_this_tick["water"] = water_provided
-        self._resources_produced_this_tick["water"] = water_produced
+        self._resources_provided_this_tick["water"] += water_provided
+        self._resources_produced_this_tick["water"] += water_produced
 
         # Based on what happened last turn, we should potentially ask for a bit less.
         self._updateResourceRequiredPerTick()

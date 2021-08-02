@@ -15,7 +15,7 @@ class Valve(ResourceStorage):
         self._max_resources_requestables_per_tick = fluid_per_tick
 
         # A valve cooler pretends to be a resource storage, but it shouldn't display this.
-        self.additional_properties.remove("amount_stored")
+        #self.additional_properties.remove("amount_stored")
 
         # Also try to pump up resources!
         self._optional_resources_required_per_tick[self._resource_type] = fluid_per_tick
@@ -41,23 +41,39 @@ class Valve(ResourceStorage):
         # HACK: Make it a bit bigger than it should be. This prevents weird fluctuations if you put two valves in a row.
         self._max_storage = 2.5 * self._performance * self._fluid_per_tick
 
-    def update(self) -> None:
+    def preGiveResource(self, resource_type: str, amount: float) -> float:
+        if resource_type != self._resource_type:
+            return 0.
+        if amount < 0:
+            return 0.
+
+        # The closer you get to the max, the less it will accept.
+        if self._max_storage is not None and self._max_storage * 0.5 <= self._amount + amount:
+            storage_left = self._max_storage - self._amount
+            factor = storage_left / (0.5 * self._max_storage)
+            result = enforcePositive(amount * factor)
+            return min(amount, result, storage_left)
+
+        return amount
+
+
+    def update(self, sub_tick_modifier: float = 1) -> None:
         # First, we store the resources other nodes *gave* us (these are already added!)
-        resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
+        #resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
 
         # Then we check how much resources in total we got this turn (aka; how much after we also requested resources)
-        super().update()
+        super().update(sub_tick_modifier)
         resource_available = self.getResourceAvailableThisTick(self._resource_type)
 
         # Now we can figure out how much we really have right now.
-        self._amount = self._amount - resource_already_added + resource_available
-
-        resources_to_distribute = min(self._fluid_per_tick * self.performance, self._amount)
+        self._amount = self._amount + resource_available
+        resources_to_distribute = min(self._fluid_per_tick * self.performance * sub_tick_modifier, self._amount)
         resources_left = self._amount - resources_to_distribute
 
         # Then we try to give as much away as possible.
         resources_left_after_distribution = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute)
-        self._resources_provided_this_tick[self._resource_type] = enforcePositive(resources_to_distribute - resources_left_after_distribution)
+
+        self._resources_provided_this_tick[self._resource_type] += enforcePositive(resources_to_distribute - resources_left_after_distribution)
 
         self._amount = resources_left_after_distribution + resources_left
 

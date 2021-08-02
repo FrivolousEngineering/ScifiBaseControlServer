@@ -1,15 +1,17 @@
 from unittest.mock import MagicMock
-import math
 
+from collections import defaultdict
+from Nodes import Generator
+
+import math
 import pytest
 
-from Nodes import Generator
 
 
 def test_update():
     generator = Generator.Generator("omg")
 
-    generator._resources_received_this_tick = {"fuel": 20, "water": 0}
+    generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
     generator._provideResourceToOutgoingConnections = MagicMock(return_value = 5)
     generator._getAllReservedResources = MagicMock()
     generator.addHeat = MagicMock()
@@ -26,7 +28,6 @@ def test_update():
     assert math.isclose(resources_provided_this_tick["energy"], 15)  #  The connection reports that it couldn't dump 5, so 15 was provided
     assert math.isclose(resources_provided_this_tick["water"], 0)
 
-
     # Ensure that the an attempt was made to provide energy (20!)
     assert generator._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "energy"
     assert math.isclose(generator._provideResourceToOutgoingConnections.call_args_list[0][0][1], 20)
@@ -40,8 +41,8 @@ def test_update():
 
 def test_generator_resources_left_previous_update():
     generator = Generator.Generator("omg")
-    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
-                      "resources_produced_this_tick": {}, "resources_left_over": {"energy": 5}, "resources_provided_this_tick": {}})
+    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
+                      "resources_produced_this_tick": defaultdict(float), "resources_left_over": {"energy": 5}, "resources_provided_this_tick": defaultdict(float)})
 
     original_resources_available = generator.getResourceAvailableThisTick
     generator.getResourceAvailableThisTick = MagicMock(return_value = 0)
@@ -62,7 +63,7 @@ def test_generator_resources_left_previous_update():
 def test_update_with_different_energy_factor():
     generator = Generator.Generator("omg", energy_factor=0.25)
 
-    generator._resources_received_this_tick = {"fuel": 20, "water": 0}
+    generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
 
     generator._provideResourceToOutgoingConnections = MagicMock(return_value=0)
     generator._getAllReservedResources = MagicMock()

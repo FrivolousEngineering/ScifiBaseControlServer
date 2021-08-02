@@ -20,7 +20,7 @@ with open("configuration.json") as f:
 
     print(engine.generatePlantUMLGraph())
 
-storage = NodeStorage(engine)
+#storage = NodeStorage(engine)
 #modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
 #engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()

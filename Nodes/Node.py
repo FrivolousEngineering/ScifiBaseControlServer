@@ -1,6 +1,7 @@
 from threading import RLock
 from typing import List, Dict, Any
 
+from collections import defaultdict
 from Nodes.Connection import Connection
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.ModifierFactory import ModifierFactory
@@ -50,6 +51,7 @@ class Node:
     def __init__(self, node_id: str, temperature: float = 293.15, **kwargs) -> None:
         """
         :param node_id: Unique identifier of the node.
+        :param temperature: The starting temperature of the node
         """
         self._node_id = node_id
         self._incoming_connections = []  # type: List[Connection]
@@ -64,9 +66,11 @@ class Node:
         self._original_optional_resources_required_per_tick = {}  # type: Dict[str, float]
         self._optional_resources_required_last_tick = {}  # type: Dict[str, float]
 
-        self._resources_received_this_tick = {}  # type: Dict[str, float]
-        self._resources_produced_this_tick = {}  # type: Dict[str, float]
-        self._resources_provided_this_tick = {}  # type: Dict[str, float]
+        self._resources_received_this_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_produced_this_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_provided_this_tick = defaultdict(float)  # type: Dict[str, float]
+
+        self._resources_received_this_sub_tick = defaultdict(float)  # type: Dict[str, float]
 
         self._resources_required_last_tick = {}  # type: Dict[str, float]
         self._resources_received_last_tick = {}  # type: Dict[str, float]
@@ -160,9 +164,11 @@ class Node:
         return self._use_temperature_dependant_effectiveness_factor
 
     def ensureSaneValues(self) -> None:
-        # This is to ensure that when custom performance is set that any updates are done.
-        # Due to child classes changing how this behavior can be, it's hard to get it in the constructor.
-        # As such we just let an external class ensure this bit of bookkeeping is done.
+        """
+        This is to ensure that when custom performance is set that any updates are done.
+        Due to child classes changing how this behavior can be, it's hard to get it in the constructor.
+        As such we just let an external class ensure this bit of bookkeeping is done.
+        """
         self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
         self._original_optional_resources_required_per_tick = self._optional_resources_required_per_tick.copy()
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
@@ -190,9 +196,17 @@ class Node:
         return self._can_be_modified
 
     def getModifiers(self) -> List[Modifier]:
+        """
+        Get all the modifiers on this node.
+        :return: List of modifiers
+        """
         return self._modifiers
 
     def addModifier(self, modifier: Modifier) -> None:
+        """
+        Add a Modifier to the node. Modifiers can be used to (temporarily) change behaviors / stats of a node
+        :param modifier:  The modifier to add
+        """
         if not self._can_be_modified:
             return
 
@@ -209,6 +223,10 @@ class Node:
         modifier.setNode(self)
 
     def removeModifier(self, modifier: Modifier) -> None:
+        """
+        Remove a modifier from the node. If it's not found, nothing happens.
+        :param modifier: The modifier to remove.
+        """
         try:
             self._modifiers.remove(modifier)
         except ValueError:
@@ -227,6 +245,11 @@ class Node:
         return self._performance
 
     def _setPerformance(self, new_performance: float) -> None:
+        """
+        Set the performance of a node and do a bunch of bookkeeping to make sure that the resources it wants next tick
+        is updated
+        :param new_performance: New performance to be used
+        """
         with self._update_lock:
             self._performance = new_performance
             for resource in self._resources_required_per_tick:
@@ -289,6 +312,10 @@ class Node:
         return self._max_health
 
     def repair(self, amount: float) -> None:
+        """
+        Repair the node
+        :param amount: Amount to repair
+        """
         if amount < 0.:
             amount = 0.
         self._health += amount
@@ -296,6 +323,10 @@ class Node:
             self._health = self.max_health
 
     def damage(self, amount: float) -> None:
+        """
+        Deal a certain amount of damage to this node.
+        :param amount: Amount of damage to deal
+        """
         self._health -= amount
         if self._health < 0:
             self._health = 0
@@ -313,10 +344,20 @@ class Node:
     def active(self):
         return self._active
 
-    def acquireUpdateLock(self):
+    def acquireUpdateLock(self) -> None:
+        """
+        When an update is active, requests for info should wait until the update is done. This ensure that.
+        .. seealso:: :meth:`Nodes.Node.Node.releaseUpdateLock` on how to release the lock
+        """
         self._update_lock.acquire()
 
-    def releaseUpdateLock(self):
+    def releaseUpdateLock(self) -> None:
+        """
+        Release the update lock.
+
+        .. seealso:: :meth:`Nodes.Node.Node.acquireUpdateLock` on how to acquire a lock
+
+        """
         try:
             self._update_lock.release()
         except RuntimeError:
@@ -377,15 +418,27 @@ class Node:
         return self._temperature
 
     def addHeat(self, heat_to_add: float, additional_weight: float = 0) -> None:
+        """
+        Add an amount of heat to this node. Can be negative or positive.
+        :param heat_to_add: The amount of heat to add (or subtract)
+        :param additional_weight: Used to compensate for resource transfers that are still in progress.
+        """
         self._temperature += heat_to_add / (self.weight - additional_weight)
 
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
 
     def updateReservations(self) -> None:
+        """
+        Update the reservations of a node. By default, this does nothing. It's up to sublcasses to implement
+        """
         pass
 
     def getId(self) -> str:
+        """
+        Get unique identifier of this node.
+        :return: The unique ID
+        """
         return self._node_id
 
     def getResourcesRequiredPerTick(self) -> Dict[str, float]:
@@ -396,9 +449,19 @@ class Node:
         return self._resources_required_per_tick
 
     def getResourcesRequiredLastTick(self) -> Dict[str, float]:
+        """
+        Get all the resources that are required last tick. Note that this doesn't contain optional requirements!
+        This can be used to display information since this is the most up to date info that there is
+        :return:
+        """
         return self._resources_required_last_tick
 
     def getResourcesRequiredPreviousTick(self):
+        """
+        Get all the resources that are required previous tick. Note that this doesn't contain optional requirements!
+        This can be used to display information since this is the most up to date info that there is
+        :return:
+        """
         return self._resources_required_last_tick
 
     def getAllResourcesRequiredPerTick(self) -> Dict[str, float]:
@@ -416,24 +479,59 @@ class Node:
         return result
 
     def getOptionalResourcesRequiredLastTick(self) -> Dict[str, float]:
+        """
+        Get the list of optional resources that this node needed last tick. This can be used to display information
+        what the node 'currently' needs (since this is the most up to date info that there is).
+        :return:
+        """
         return self._optional_resources_required_last_tick
 
     def getResourcesReceivedThisTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node get this tick?
+        :return:
+        """
         return self._resources_received_this_tick
 
     def getResourcesReceivedLastTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node get last tick?  This can be used to display information
+        what the node 'currently' received (since this is the most up to date info that there is).
+        :return:
+        """
         return self._resources_received_last_tick
 
     def getResourcesProducedThisTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node produce this tick. Note that this is not the same as how much it actually
+        provided other nodes!
+        :return:
+        """
         return self._resources_produced_this_tick
 
     def getResourcesProducedLastTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node produce last tick. Note that this is not the same as how much it actually
+        provided other nodes!  This can be used to display information, since this is the most up to date info.
+        :return:
+        """
         return self._resources_produced_last_tick
 
     def getResourcesProvidedThisTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node provide this tick. Note that this is not the same as how much it actually
+        produced! It can provide *more* resources than it produced if it had something left from previous updates.
+        :return:
+        """
         return self._resources_provided_this_tick
 
     def getResourcesProvidedLastTick(self) -> Dict[str, float]:
+        """
+        How much resources did this node provide this tick. Note that this is not the same as how much it actually
+        produced! It can provide *more* resources than it produced if it had something left from previous updates.
+        This can be used to display information, since this is the most up to date info.
+        :return:
+        """
         return self._resources_provided_this_tick
 
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
@@ -447,10 +545,15 @@ class Node:
         :param resource_type: Type of the resource to check for
         :return: Amount of resources of the given type that can be used this tick.
         """
-        return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
-            resource_type.lower(), 0.)
+        return self._resources_received_this_sub_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(resource_type.lower(), 0.)
+        #return self._resources_received_this_tick.get(resource_type.lower(), 0.) + self._resources_left_over.get(
+        #    resource_type.lower(), 0.)
 
     def preUpdate(self) -> None:
+        """
+        Ensure that everything is set up so that the actual work can be done. This includes ensuring that the
+        correct resource reservations are made
+        """
         self.preUpdateCalled.emit(self)
 
         self._updatePerformance()
@@ -468,6 +571,10 @@ class Node:
                 connection.reserveResource(resource_to_reserve)
 
     def _updatePerformance(self) -> None:
+        """
+        Since we have a target performance and an actual performance, this function needs to be regulary called to
+        make sure that the actual performance moves toward the target performance
+        """
         # Performance works with a target and an actual performance.
         if self.performance == self.target_performance:
             return
@@ -479,10 +586,16 @@ class Node:
 
         self._setPerformance(new_performance)
 
-    def _getReservedResourceByType(self, resource_type: str) -> float:
+    def _getReservedResourceByType(self, resource_type: str, sub_tick_modifier: float) -> float:
+        """
+        Get a given resource, provided it was reserved, from all connections that can give it.
+        :param resource_type: The type of the resource to get
+        :param sub_tick_modifier: Number between 0 and 1. One being a "full" tick, and 0.1 being 1/10th of a tick.
+        :return: Amount of the resource obtained
+        """
         result = 0.
         for connection in self.getAllIncomingConnectionsByType(resource_type):
-            result += connection.getReservedResource()
+            result += connection.getReservedResource(sub_tick_modifier)
         return result
 
     def _provideResourceToOutgoingConnections(self, resource_type: str, amount: float) -> float:
@@ -504,16 +617,21 @@ class Node:
             amount -= resources_stored
         return amount
 
-    def _getAllReservedResources(self) -> None:
+    def _getAllReservedResources(self, sub_tick_modifier: float) -> None:
         """
         Once the planning is done, this function ensures that all reservations actually get executed.
         The results are places in the _resources_received_this_tick dict.
+        :param sub_tick_modifier: Number between 0 and 1. One being a "full" tick, and 0.1 being 1/10th of a tick.
         """
         all_resources = self.getAllResourcesRequiredPerTick()
         for resource_type in all_resources:
-            already_received_resources = self._resources_received_this_tick.get(resource_type, 0)
-            reserved_resources = self._getReservedResourceByType(resource_type)
-            self._resources_received_this_tick[resource_type] = already_received_resources + reserved_resources
+            already_received_resources = self._resources_received_this_sub_tick.get(resource_type, 0)
+            reserved_resources = self._getReservedResourceByType(resource_type, sub_tick_modifier)
+            self._resources_received_this_sub_tick[resource_type] = reserved_resources + already_received_resources
+            if resource_type not in self._resources_received_this_tick:
+                self._resources_received_this_tick[resource_type] = 0
+
+            self._resources_received_this_tick[resource_type] += reserved_resources + already_received_resources
 
     def replanReservations(self) -> None:
         """
@@ -543,17 +661,29 @@ class Node:
                     connection.reserveResource(
                         connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
-    def update(self) -> None:
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        """
+        Do the actual update for this node. Use sub_tick_modifier for "micro" updates
+        :param sub_tick_modifier:  Number between 0 and 1. One being a "full" tick, and 0.1 being 1/10th of a tick.
+        """
         self.updateCalled.emit(self)
-        self._getAllReservedResources()
+        self._getAllReservedResources(sub_tick_modifier)
 
     def _reEvaluateIsActive(self) -> bool:
+        """
+        Reevaluate if this node should be considered to be active.
+        This is done by checking if it received all the resources it needed to do it's thing.
+        :return: True if it's active, false otherwise.
+        """
         for resource_required, amount_needed in self._resources_required_per_tick.items():
             if self._resources_received_this_tick.get(resource_required, 0) != amount_needed:
                 return False
         return True
 
     def postUpdate(self) -> None:
+        """
+        Cleanup after all the updating is done. This mostly does a bunch of bookkeeping (damage, heat, etc)
+        """
         self._active = self._reEvaluateIsActive()
         self._emitHeat()
         self._convectiveHeatTransfer()
@@ -567,14 +697,25 @@ class Node:
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
-        self._resources_received_this_tick = {}
-        self._resources_produced_this_tick = {}
-        self._resources_provided_this_tick = {}
+        self._resources_received_this_tick.clear()
+        self._resources_received_this_sub_tick.clear()
+        self._resources_produced_this_tick.clear()
+        self._resources_provided_this_tick.clear()
 
     def updateModifiers(self) -> None:
-        # Update the timers of the modifiers (and remove them if they have expired)
+        """
+        Update the timers of the modifiers (and remove them if they have expired)
+        """
         for modifier in self._modifiers:
             modifier.update()
+
+    def cleanupAfterUpdate(self) -> None:
+        """
+        Due to the sub ticks, this needs to be done after every update (whereas postUpdate is only done after all
+        updates are done)
+        :return:
+        """
+        self._resources_received_this_sub_tick.clear()
 
     def _emitHeat(self) -> None:
         """
@@ -590,15 +731,22 @@ class Node:
                 self._temperature = self.outside_temp
 
     def _convectiveHeatTransfer(self) -> None:
+        """
+        Handle the convective heat transfer.
+        This uses a simplified formula, which depends on surface area, temp difference and heat_convection_coefficient
+        """
         delta_temp = self.outside_temp - self.temperature
         heat_convection = self.heat_convection_coefficient * self._surface_area * delta_temp
         self.addHeat(heat_convection)
-        if heat_convection < 0: # Cooling down happend.
+        if heat_convection < 0:  # Cooling down happened.
             if self._temperature < self.outside_temp:
                 # We were warmer than the outside before, but no amount of convection can make us go lower!
                 self._temperature = self.outside_temp
 
     def _dealDamageFromHeat(self) -> None:
+        """
+        If nodes get too hot (above the max safe temperature) they are damaged
+        """
         delta_temp = self.temperature - self._max_safe_temperature
         if delta_temp <= 0:
             return
@@ -607,6 +755,10 @@ class Node:
             self._health = 0
 
     def _getHealthEffectivenessFactor(self) -> float:
+        """
+        Calculate how much efficiency is left due to the heath of this node.
+        :return: The factor (between 0 and 1)
+        """
         health_factor = self._health / 100.
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
@@ -695,19 +847,42 @@ class Node:
             target.addConnection(new_connection)
 
     def addConnection(self, connection: Connection) -> None:
+        """
+        Add a connection to this Node.
+        :param connection: The connection to add
+        :return:
+        """
         with self._update_lock:
             self._incoming_connections.append(connection)
 
     def getAllOutgoingConnections(self) -> List[Connection]:
+        """
+        Get all the connections that the node can move resources from itself to somewhere else
+        :return: The list of connections
+        """
         return self._outgoing_connections
 
     def getAllIncomingConnections(self) -> List[Connection]:
+        """
+        Get all the connections that can provide resources to this node
+        :return: The list of connections
+        """
         return self._incoming_connections
 
     def getAllIncomingConnectionsByType(self, resource_type: str) -> List[Connection]:
+        """
+        Get all the connections that can provide resources to this node but filtered by resource_type
+        :param resource_type: The resource type to filter by
+        :return:The list of connections
+        """
         return [connection for connection in self._incoming_connections if connection.resource_type == resource_type]
 
     def getAllOutgoingConnectionsByType(self, resource_type: str) -> List[Connection]:
+        """
+        Get all the connections that the node can move resources from itself to somewhere else but filtered by resource_type
+        :param resource_type: The resource type to filter by
+        :return:The list of connections
+        """
         return [connection for connection in self._outgoing_connections if connection.resource_type == resource_type]
 
     def preGetResource(self, resource_type: str, amount: float) -> float:
@@ -717,6 +892,8 @@ class Node:
         :param resource_type: Type of resource that is requested
         :param amount: Amount of resources needed
         :return: Amount of resources available
+
+        .. seealso:: :py:meth:`Nodes.Node.Node.getResource` to actually request the resources
         """
         return 0
 
@@ -727,11 +904,31 @@ class Node:
         :param resource_type: Type of resource that is provided
         :param amount: Amount of resources that are provided
         :return: Amount of resources that could be accepted
+
+        .. seealso:: :py:meth:`Nodes.Node.Node.giveResource` to actually provide the resources to this node
         """
         return 0
 
     def getResource(self, resource_type: str, amount: float) -> float:
+        """
+        Ask this node to provide the requested resource.
+
+        :param resource_type: Type of resource that is requested
+        :param amount: Amount of resources needed
+        :return: Amount of resources available
+
+        .. seealso:: :py:meth:`Nodes.Node.Node.preGetResource` for a way to ask how much a node could give without actually requesting it.
+        """
         return 0  # By default, we don't have the resource. Go home.
 
     def giveResource(self, resource_type: str, amount: float) -> float:
+        """
+        Give resources of a certain type to this node.
+
+        :param resource_type: Type of resource that is provided
+        :param amount: Amount of resources that are provided
+        :return: Amount of resources that could be accepted
+
+        .. seealso:: :py:meth:`Nodes.Node.Node.preGiveResource` to check how much this node could accept without actually giving it.
+        """
         return 0

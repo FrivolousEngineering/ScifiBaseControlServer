@@ -1,6 +1,7 @@
 mypy>=0.720
 flask>=1.0.2
 atomicwrites
+types-atomicwrites
 dbus-python
 pylint
 pylint-quotes

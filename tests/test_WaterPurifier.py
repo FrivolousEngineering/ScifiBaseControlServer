@@ -4,7 +4,7 @@ import math
 import pytest
 
 from Nodes import WaterPurifier
-
+from collections import defaultdict
 
 @pytest.mark.parametrize("resources_received,                   resources_produced",
                         [({"dirty_water": 10},                  {"water": 5, "animal_waste": 5}),
@@ -15,7 +15,7 @@ from Nodes import WaterPurifier
 def test_update(resources_received, resources_produced):
     purifier = WaterPurifier.WaterPurifier("omg")
 
-    purifier._resources_received_this_tick = resources_received
+    purifier._resources_received_this_sub_tick = resources_received
     purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
     purifier._getAllReservedResources = MagicMock()
 
@@ -60,8 +60,8 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
 
 def test_purifier_resources_left_previous_update():
     water_purifier = WaterPurifier.WaterPurifier("omg")
-    water_purifier.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
-                      "resources_produced_this_tick": {}, "resources_provided_this_tick": {}, "resources_left_over": {"animal_waste": 5, "water": 3}})
+    water_purifier.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
+                      "resources_produced_this_tick": defaultdict(float), "resources_provided_this_tick": defaultdict(float), "resources_left_over": {"animal_waste": 5, "water": 3}})
 
     original_resources_available = water_purifier.getResourceAvailableThisTick
     water_purifier.getResourceAvailableThisTick = MagicMock(return_value = 0)

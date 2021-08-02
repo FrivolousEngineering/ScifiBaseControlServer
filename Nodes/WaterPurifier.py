@@ -29,8 +29,8 @@ class WaterPurifier(Node):
         self._resources_required_per_tick["dirty_water"] = enforcePositive(
             self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left)
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
 
         oxygen_available = self.getResourceAvailableThisTick("oxygen")
 
@@ -63,8 +63,11 @@ class WaterPurifier(Node):
         # Update the data for bookkeeping
         clean_water_provided = enforcePositive(clean_water_available - clean_water_left)
         waste_provided = enforcePositive(waste_available - waste_left)
-        self._resources_produced_this_tick["water"] = clean_water_provided
-        self._resources_produced_this_tick["animal_waste"] = waste_provided
+        self._resources_produced_this_tick["water"] += dirty_water_converted_total
+        self._resources_produced_this_tick["animal_waste"] += dirty_water_converted_total
+
+        self._resources_provided_this_tick["water"] += clean_water_provided
+        self._resources_provided_this_tick["animal_waste"] += waste_provided
 
         # Remember how much we couldn't store anywhere.
         self._resources_left_over["water"] = clean_water_left
