@@ -627,10 +627,10 @@ class Node:
             already_received_resources = self._resources_received_this_sub_tick.get(resource_type, 0)
             reserved_resources = self._getReservedResourceByType(resource_type, sub_tick_modifier)
             self._resources_received_this_sub_tick[resource_type] = reserved_resources + already_received_resources
-            #if resource_type not in self._resources_received_this_tick:
-            #    self._resources_received_this_tick[resource_type] = 0
+            if resource_type not in self._resources_received_this_tick:
+                self._resources_received_this_tick[resource_type] = 0
 
-            #self._resources_received_this_tick[resource_type] += reserved_resources + already_received_resources
+            self._resources_received_this_tick[resource_type] += reserved_resources + already_received_resources
 
     def replanReservations(self) -> None:
         """

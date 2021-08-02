@@ -30,7 +30,7 @@ class ComputationNode(Node):
         self._tags.append("electronic")
 
     def update(self, sub_tick_modifier: float = 1) -> None:
-        super().update()
+        super().update(sub_tick_modifier)
 
         energy_gained = self.getResourceAvailableThisTick("energy")
         # A Computation node creates 1 energy per energy that it gets. Yay!

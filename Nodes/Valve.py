@@ -57,17 +57,17 @@ class Valve(ResourceStorage):
         return amount
 
 
-    def update(self, sub_tick_modifer: float = 1) -> None:
+    def update(self, sub_tick_modifier: float = 1) -> None:
         # First, we store the resources other nodes *gave* us (these are already added!)
         #resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
 
         # Then we check how much resources in total we got this turn (aka; how much after we also requested resources)
-        super().update(sub_tick_modifer)
+        super().update(sub_tick_modifier)
         resource_available = self.getResourceAvailableThisTick(self._resource_type)
 
         # Now we can figure out how much we really have right now.
         self._amount = self._amount + resource_available
-        resources_to_distribute = min(self._fluid_per_tick * self.performance * sub_tick_modifer, self._amount)
+        resources_to_distribute = min(self._fluid_per_tick * self.performance * sub_tick_modifier, self._amount)
         resources_left = self._amount - resources_to_distribute
 
         # Then we try to give as much away as possible.
