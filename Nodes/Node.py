@@ -223,9 +223,8 @@ class Node:
 
     def removeModifier(self, modifier: Modifier) -> None:
         """
-        Remove a modifier from the node. If it's not found, nothing happens. 
+        Remove a modifier from the node. If it's not found, nothing happens.
         :param modifier: The modifier to remove.
-        :return:
         """
         try:
             self._modifiers.remove(modifier)
@@ -422,7 +421,6 @@ class Node:
         Add an amount of heat to this node. Can be negative or positive.
         :param heat_to_add: The amount of heat to add (or subtract)
         :param additional_weight: Used to compensate for resource transfers that are still in progress.
-        :return:
         """
         self._temperature += heat_to_add / (self.weight - additional_weight)
 
@@ -758,7 +756,7 @@ class Node:
     def _getHealthEffectivenessFactor(self) -> float:
         """
         Calculate how much efficiency is left due to the heath of this node.
-        :return:
+        :return: The factor (between 0 and 1)
         """
         health_factor = self._health / 100.
         # This makes the effectiveness a bit less punishing.
