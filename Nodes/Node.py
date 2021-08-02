@@ -458,8 +458,6 @@ class Node:
 
         self._updatePerformance()
         all_resources = self.getAllResourcesRequiredPerTick()
-        if self.getId() == "generator":
-            print("preUpdate", all_resources)
         for resource_type in all_resources:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             if not connections:
@@ -585,6 +583,9 @@ class Node:
         # Update the timers of the modifiers (and remove them if they have expired)
         for modifier in self._modifiers:
             modifier.update()
+
+    def cleanupAfterUpdate(self) -> None:
+        self._resources_received_this_sub_tick = {}
 
     def _emitHeat(self) -> None:
         """
