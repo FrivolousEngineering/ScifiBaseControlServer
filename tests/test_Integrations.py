@@ -6,16 +6,17 @@ import pytest
 
 from Nodes.NodeStorage import NodeStorage
 import os
-
+import math
 
 @pytest.mark.integration
-def test_MultiWaterCooler():
+@pytest.mark.parametrize("sub_ticks", [1, 5, 10])
+def test_MultiWaterCooler(sub_ticks):
     engine = NodeEngine()
     # Load a nice complex setup.
     with open("tests/configurations/MultiWaterTankConfig.json") as f:
         loaded_data = json.loads(f.read())
         engine.deserialize(loaded_data)
-        engine._sub_ticks = 1
+        engine._sub_ticks = sub_ticks  # And test it with the various sub ticks!
 
     starting_water = engine.getNodeById("water_tank_1").amount_stored
     starting_water += engine.getNodeById("water_tank_2").amount_stored
@@ -23,7 +24,7 @@ def test_MultiWaterCooler():
     starting_water += engine.getNodeById("fluid_cooler_1").amount_stored
     starting_water += engine.getNodeById("fluid_cooler_2").amount_stored
 
-    for _ in range(0, 25):  # TODO: set it back to higher numbers.
+    for _ in range(0, 100):
         engine.doTick()
         total_water = engine.getNodeById("water_tank_1").amount_stored
         total_water += engine.getNodeById("water_tank_2").amount_stored
@@ -32,7 +33,7 @@ def test_MultiWaterCooler():
         total_water += engine.getNodeById("fluid_cooler_2").amount_stored
         # The generator can also have some water stored. Soo yay!
         total_water += engine.getNodeById("generator")._resources_left_over["water"]
-        assert total_water == starting_water
+        assert math.isclose(total_water, starting_water)
 
 
 @pytest.mark.parametrize("ticks_to_run", [10, 20, 30])
