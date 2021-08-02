@@ -438,7 +438,7 @@ class Node:
     def getResourcesProvidedLastTick(self) -> Dict[str, float]:
         return self._resources_provided_this_tick
 
-    def getResourceAvailableThisTick(self, resource_type: str, sub_tick_modifer: float) -> float:
+    def getResourceAvailableThisTick(self, resource_type: str) -> float:
         """
         Convenience function that combines the resources that this node got this tick and whatever was left over.
         It can happen that resources were requested in a previous tick, that could not be used (because of various
@@ -458,6 +458,8 @@ class Node:
 
         self._updatePerformance()
         all_resources = self.getAllResourcesRequiredPerTick()
+        if self.getId() == "generator":
+            print("preUpdate", all_resources)
         for resource_type in all_resources:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             if not connections:
@@ -482,11 +484,10 @@ class Node:
 
         self._setPerformance(new_performance)
 
-    def _getReservedResourceByType(self, resource_type: str, sub_tick_modifer: float) -> float:
+    def _getReservedResourceByType(self, resource_type: str, sub_tick_modifier: float) -> float:
         result = 0.
-        num_sources = len(self.getAllIncomingConnectionsByType(resource_type))
         for connection in self.getAllIncomingConnectionsByType(resource_type):
-            result += connection.getReservedResource(sub_tick_modifer, self._resources_left_over.get(resource_type, 0) / num_sources)
+            result += connection.getReservedResource(sub_tick_modifier)
         return result
 
     def _provideResourceToOutgoingConnections(self, resource_type: str, amount: float) -> float:
@@ -508,21 +509,20 @@ class Node:
             amount -= resources_stored
         return amount
 
-    def _getAllReservedResources(self, sub_tick_modifer: float) -> None:
+    def _getAllReservedResources(self, sub_tick_modifier: float) -> None:
         """
         Once the planning is done, this function ensures that all reservations actually get executed.
         The results are places in the _resources_received_this_tick dict.
         """
         all_resources = self.getAllResourcesRequiredPerTick()
         for resource_type in all_resources:
+            already_received_resources = self._resources_received_this_sub_tick.get(resource_type, 0)
+            reserved_resources = self._getReservedResourceByType(resource_type, sub_tick_modifier)
+            self._resources_received_this_sub_tick[resource_type] = reserved_resources + already_received_resources
+            #if resource_type not in self._resources_received_this_tick:
+            #    self._resources_received_this_tick[resource_type] = 0
 
-            already_received_resources = self._resources_received_this_tick.get(resource_type, 0)
-            reserved_resources = self._getReservedResourceByType(resource_type, sub_tick_modifer)
-            self._resources_received_this_sub_tick[resource_type] = reserved_resources
-            if resource_type not in self._resources_received_this_tick:
-                self._resources_received_this_tick[resource_type] = 0
-
-            self._resources_received_this_tick[resource_type] += reserved_resources
+            #self._resources_received_this_tick[resource_type] += reserved_resources + already_received_resources
 
     def replanReservations(self) -> None:
         """
@@ -552,9 +552,9 @@ class Node:
                     connection.reserveResource(
                         connection.reserved_requested_amount + extra_resource_to_ask_per_connection)
 
-    def update(self, sub_tick_modifer: float = 1) -> None:
+    def update(self, sub_tick_modifier: float = 1) -> None:
         self.updateCalled.emit(self)
-        self._getAllReservedResources(sub_tick_modifer)
+        self._getAllReservedResources(sub_tick_modifier)
 
     def _reEvaluateIsActive(self) -> bool:
         for resource_required, amount_needed in self._resources_required_per_tick.items():
@@ -577,6 +577,7 @@ class Node:
         for connection in self._outgoing_connections:
             connection.reset()
         self._resources_received_this_tick = {}
+        self._resources_received_this_sub_tick = {}
         self._resources_produced_this_tick = {}
         self._resources_provided_this_tick = {}
 

@@ -41,6 +41,7 @@ def test_replanReservations():
 
 def test_doTick():
     engine = NodeEngine.NodeEngine()
+    engine._sub_ticks = 1
     node = createNode("test")
     node.requiresReplanning = MagicMock(return_value = False)
 

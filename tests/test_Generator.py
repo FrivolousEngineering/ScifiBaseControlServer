@@ -9,7 +9,7 @@ from Nodes import Generator
 def test_update():
     generator = Generator.Generator("omg")
 
-    generator._resources_received_this_tick = {"fuel": 20, "water": 0}
+    generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
     generator._provideResourceToOutgoingConnections = MagicMock(return_value = 5)
     generator._getAllReservedResources = MagicMock()
     generator.addHeat = MagicMock()
@@ -25,7 +25,6 @@ def test_update():
     assert math.isclose(resources_produced_this_tick["energy"], 20)  # It got 20 fuel, so it created 20 energy
     assert math.isclose(resources_provided_this_tick["energy"], 15)  #  The connection reports that it couldn't dump 5, so 15 was provided
     assert math.isclose(resources_provided_this_tick["water"], 0)
-
 
     # Ensure that the an attempt was made to provide energy (20!)
     assert generator._provideResourceToOutgoingConnections.call_args_list[0][0][0] == "energy"
@@ -62,7 +61,7 @@ def test_generator_resources_left_previous_update():
 def test_update_with_different_energy_factor():
     generator = Generator.Generator("omg", energy_factor=0.25)
 
-    generator._resources_received_this_tick = {"fuel": 20, "water": 0}
+    generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
 
     generator._provideResourceToOutgoingConnections = MagicMock(return_value=0)
     generator._getAllReservedResources = MagicMock()

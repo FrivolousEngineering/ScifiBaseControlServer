@@ -62,10 +62,15 @@ class Generator(Node):
         return result
 
     def _updateResourceRequiredPerTick(self) -> None:
-        resources_left = self._resources_left_over["energy"]
-        self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - resources_left)
+        energy_left = self._resources_left_over["energy"]
+        self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - energy_left)
 
-    def update(self) -> None:
+        water_left = self._resources_left_over.get("water", 0)
+        print("water left after update", water_left, self._original_optional_resources_required_per_tick["water"])
+        self._optional_resources_required_per_tick["water"] = self._performance * enforcePositive(self._original_optional_resources_required_per_tick["water"] * self.health_effectiveness_factor - water_left)
+        print("req per tick", self._optional_resources_required_per_tick)
+
+    def update(self, sub_tick_modifer: float = 1) -> None:
         super().update()
 
         fuel_gained = self.getResourceAvailableThisTick(self._fuel_type)
@@ -89,14 +94,15 @@ class Generator(Node):
 
         # Same thing for the water. Check how much water we have.
         water_available = self.getResourceAvailableThisTick("water")
-
+        print("waterrr", self._resources_received_this_sub_tick, self._resources_left_over)
         # And try to get rid of some water
         water_left = self._provideResourceToOutgoingConnections("water", water_available)
-
+        print("water left generator", water_left, water_available)
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left
-        self._resources_provided_this_tick["water"] = enforcePositive(self._resources_received_this_tick["water"] - water_left)
 
+        self._resources_provided_this_tick["water"] = enforcePositive(water_available - water_left)
+        print("resources_provided", self._resources_provided_this_tick)
         self._resources_left_over["energy"] = energy_left
 
         # Based on what happened last turn, we should potentially ask for a bit less.

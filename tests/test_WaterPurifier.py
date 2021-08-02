@@ -15,7 +15,7 @@ from Nodes import WaterPurifier
 def test_update(resources_received, resources_produced):
     purifier = WaterPurifier.WaterPurifier("omg")
 
-    purifier._resources_received_this_tick = resources_received
+    purifier._resources_received_this_sub_tick = resources_received
     purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
     purifier._getAllReservedResources = MagicMock()
 

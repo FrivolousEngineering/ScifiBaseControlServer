@@ -56,14 +56,14 @@ class Connection:
         self.reserved_requested_amount = amount
         self.reserved_available_amount = 0
 
-    def getReservedResource(self, sub_tick_modifer: float, resource_modifier: float = 0) -> float:
+    def getReservedResource(self, sub_tick_modifier: float) -> float:
         """
         Convenience function to actually get (eg; subtract) the amount from the origin.
 
         :return: The amount it was actually able to get. If the planning was correct, it should be the same as what was
                  reserved.
         """
-        return self.getResource(self.reserved_available_amount * sub_tick_modifer)
+        return self.getResource(self.reserved_available_amount * sub_tick_modifier)
 
     def isReservationStatisfied(self) -> bool:
         """

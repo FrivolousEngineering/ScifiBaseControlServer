@@ -17,7 +17,7 @@ from Nodes import HydroponicsBay
 def test_update(resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped):
     hydroponics = HydroponicsBay.HydroponicsBay("omg")
 
-    hydroponics._resources_received_this_tick = resources_received
+    hydroponics._resources_received_this_sub_tick = resources_received
     hydroponics._provideResourceToOutgoingConnections = MagicMock(return_value = oxygen_not_dumped)
     hydroponics._getAllReservedResources = MagicMock()
     hydroponics._getHealthEffectivenessFactor = MagicMock(return_value=effectiveness)
@@ -31,4 +31,4 @@ def test_update(resources_received, resources_provided, resources_left_over, eff
         assert math.isclose(resources_provided_this_tick[key], resources_provided[key]), "%s doesn't match %s: %s" % (key, resources_provided_this_tick[key], resources_provided[key])
 
     for key in resources_left_over:
-        assert math.isclose(hydroponics._resources_left_over[key], resources_left_over[key]), "%s doesn't match %s: %s" % (key, hdydroponics._resources_left_over[key], resources_left_over[key])
+        assert math.isclose(hydroponics._resources_left_over[key], resources_left_over[key]), "%s doesn't match %s: %s" % (key, hydroponics._resources_left_over[key], resources_left_over[key])

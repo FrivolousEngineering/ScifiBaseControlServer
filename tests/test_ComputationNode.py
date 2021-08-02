@@ -12,7 +12,7 @@ from Nodes import ComputationNode
 def test_update(resources_received, resources_produced):
     computation_node = ComputationNode.ComputationNode("omg")
 
-    computation_node._resources_received_this_tick = resources_received
+    computation_node._resources_received_this_sub_tick = resources_received
     computation_node._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
     computation_node._getAllReservedResources = MagicMock()
 
@@ -31,22 +31,20 @@ def test_updateDataNotUsed():
     computation_node_data_used = ComputationNode.ComputationNode("used")
     computation_node_data_used._provideResourceToOutgoingConnections = MagicMock(return_value=0)
     computation_node_data_used._temperature = computation_node_data_used._optimal_temperature
-    computation_node_data_used._resources_received_this_tick = {"energy": 10}
+    computation_node_data_used._resources_received_this_sub_tick = {"energy": 10}
 
     computation_node_data_not_used = ComputationNode.ComputationNode("notUsed")
     computation_node_data_not_used._provideResourceToOutgoingConnections = MagicMock(return_value=10)
     computation_node_data_not_used._temperature = computation_node_data_not_used._optimal_temperature
-    computation_node_data_not_used._resources_received_this_tick = {"energy": 10}
-
+    computation_node_data_not_used._resources_received_this_sub_tick = {"energy": 10}
     computation_node_data_not_used.update()
-
     computation_node_data_used.update()
 
     assert computation_node_data_not_used.temperature < computation_node_data_used.temperature
 
 def test_couldntStoreALlData():
     computation_node = ComputationNode.ComputationNode("omg")
-    computation_node._resources_received_this_tick = {"energy": 10}
+    computation_node._resources_received_this_sub_tick = {"energy": 10}
     computation_node._getAllReservedResources = MagicMock()
     computation_node._temperature = computation_node._optimal_temperature
     computation_node._provideResourceToOutgoingConnections = MagicMock(return_value=1)
@@ -59,7 +57,7 @@ def test_couldntStoreALlData():
 
 def test_effectivenessFactor():
     computation_node = ComputationNode.ComputationNode("omg")
-    computation_node._resources_received_this_tick = {"energy": 10}
+    computation_node._resources_received_this_sub_tick = {"energy": 10}
     computation_node._getAllReservedResources = MagicMock()
     computation_node._temperature = computation_node._optimal_temperature
     computation_node._provideResourceToOutgoingConnections = MagicMock(return_value=0)

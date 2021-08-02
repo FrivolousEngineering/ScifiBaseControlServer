@@ -7,6 +7,7 @@ import pytest
 from Nodes.NodeStorage import NodeStorage
 import os
 
+
 @pytest.mark.integration
 def test_MultiWaterCooler():
     engine = NodeEngine()
@@ -14,8 +15,15 @@ def test_MultiWaterCooler():
     with open("tests/configurations/MultiWaterTankConfig.json") as f:
         loaded_data = json.loads(f.read())
         engine.deserialize(loaded_data)
+        engine._sub_ticks = 1
 
-    for _ in range(0, 200):
+    starting_water = engine.getNodeById("water_tank_1").amount_stored
+    starting_water += engine.getNodeById("water_tank_2").amount_stored
+    starting_water += engine.getNodeById("water_tank_3").amount_stored
+    starting_water += engine.getNodeById("fluid_cooler_1").amount_stored
+    starting_water += engine.getNodeById("fluid_cooler_2").amount_stored
+
+    for _ in range(0, 25):  # TODO: set it back to higher numbers.
         engine.doTick()
         total_water = engine.getNodeById("water_tank_1").amount_stored
         total_water += engine.getNodeById("water_tank_2").amount_stored
@@ -23,8 +31,10 @@ def test_MultiWaterCooler():
         total_water += engine.getNodeById("fluid_cooler_1").amount_stored
         total_water += engine.getNodeById("fluid_cooler_2").amount_stored
         # The generator can also have some water stored. Soo yay!
-        total_water += engine.getNodeById("generator").getResourceAvailableThisTick("water")
-        assert total_water == 2000  # We start with 2000 water, so during all ticks, this *must* remain the same!
+        print(total_water, engine.getNodeById("generator")._resources_left_over["water"])
+        total_water += engine.getNodeById("generator")._resources_left_over["water"]
+        assert total_water == starting_water
+
 
 @pytest.mark.parametrize("ticks_to_run", [10, 20, 30])
 @pytest.mark.parametrize("config_file", ["MultiWaterTankConfig.json", "WaterTanksWithPumps.json", "GeneratorWaterCoolerConfiguration.json"])
