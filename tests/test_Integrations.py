@@ -31,7 +31,6 @@ def test_MultiWaterCooler():
         total_water += engine.getNodeById("fluid_cooler_1").amount_stored
         total_water += engine.getNodeById("fluid_cooler_2").amount_stored
         # The generator can also have some water stored. Soo yay!
-        print(total_water, engine.getNodeById("generator")._resources_left_over["water"])
         total_water += engine.getNodeById("generator")._resources_left_over["water"]
         assert total_water == starting_water
 
