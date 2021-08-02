@@ -52,7 +52,7 @@ class Valve(ResourceStorage):
             storage_left = self._max_storage - self._amount
             factor = storage_left / (0.5 * self._max_storage)
             result = enforcePositive(amount * factor)
-            return min(amount, result)
+            return min(amount, result, storage_left)
 
         return amount
 
@@ -63,7 +63,7 @@ class Valve(ResourceStorage):
 
         # Then we check how much resources in total we got this turn (aka; how much after we also requested resources)
         super().update(sub_tick_modifer)
-        resource_available = self.getResourceAvailableThisTick(self._resource_type, sub_tick_modifer)
+        resource_available = self.getResourceAvailableThisTick(self._resource_type)
 
         # Now we can figure out how much we really have right now.
         self._amount = self._amount + resource_available
