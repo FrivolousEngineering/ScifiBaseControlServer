@@ -1,9 +1,11 @@
 from unittest.mock import MagicMock
-import math
 
+from collections import defaultdict
+from Nodes import Generator
+
+import math
 import pytest
 
-from Nodes import Generator
 
 
 def test_update():
@@ -39,8 +41,8 @@ def test_update():
 
 def test_generator_resources_left_previous_update():
     generator = Generator.Generator("omg")
-    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": {},
-                      "resources_produced_this_tick": {}, "resources_left_over": {"energy": 5}, "resources_provided_this_tick": {}})
+    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
+                      "resources_produced_this_tick": defaultdict(float), "resources_left_over": {"energy": 5}, "resources_provided_this_tick": defaultdict(float)})
 
     original_resources_available = generator.getResourceAvailableThisTick
     generator.getResourceAvailableThisTick = MagicMock(return_value = 0)

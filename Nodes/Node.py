@@ -1,6 +1,7 @@
 from threading import RLock
 from typing import List, Dict, Any
 
+from collections import defaultdict
 from Nodes.Connection import Connection
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.ModifierFactory import ModifierFactory
@@ -65,11 +66,11 @@ class Node:
         self._original_optional_resources_required_per_tick = {}  # type: Dict[str, float]
         self._optional_resources_required_last_tick = {}  # type: Dict[str, float]
 
-        self._resources_received_this_tick = {}  # type: Dict[str, float]
-        self._resources_produced_this_tick = {}  # type: Dict[str, float]
-        self._resources_provided_this_tick = {}  # type: Dict[str, float]
+        self._resources_received_this_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_produced_this_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_provided_this_tick = defaultdict(float)  # type: Dict[str, float]
 
-        self._resources_received_this_sub_tick = {} # type: Dict[str, float]
+        self._resources_received_this_sub_tick = defaultdict(float)  # type: Dict[str, float]
 
         self._resources_required_last_tick = {}  # type: Dict[str, float]
         self._resources_received_last_tick = {}  # type: Dict[str, float]
@@ -696,10 +697,10 @@ class Node:
         self.postUpdateCalled.emit(self)
         for connection in self._outgoing_connections:
             connection.reset()
-        self._resources_received_this_tick = {}
-        self._resources_received_this_sub_tick = {}
-        self._resources_produced_this_tick = {}
-        self._resources_provided_this_tick = {}
+        self._resources_received_this_tick.clear()
+        self._resources_received_this_sub_tick.clear()
+        self._resources_produced_this_tick.clear()
+        self._resources_provided_this_tick.clear()
 
     def updateModifiers(self) -> None:
         """
@@ -714,7 +715,7 @@ class Node:
         updates are done)
         :return:
         """
-        self._resources_received_this_sub_tick = {}
+        self._resources_received_this_sub_tick.clear()
 
     def _emitHeat(self) -> None:
         """

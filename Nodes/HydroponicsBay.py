@@ -41,8 +41,6 @@ class HydroponicsBay(Node):
         self._resources_left_over["energy"] = energy_available - oxygen_produced
         oxygen_produced *= self.effectiveness_factor
 
-        if "oxygen" not in self._resources_produced_this_tick["oxygen"]:
-            self._resources_produced_this_tick["oxygen"] = 0
         self._resources_produced_this_tick["oxygen"] += oxygen_produced
 
         oxygen_left = self._provideResourceToOutgoingConnections("oxygen", oxygen_produced)
@@ -51,13 +49,11 @@ class HydroponicsBay(Node):
         self._resources_left_over["energy"] += oxygen_left * self.inverted_effectiveness_factor
 
         oxygen_provided = enforcePositive(oxygen_produced - oxygen_left)
-        if "oxygen" not in self._resources_provided_this_tick["oxygen"]:
-            self._resources_provided_this_tick["oxygen"] = 0
+
         self._resources_provided_this_tick["oxygen"] += oxygen_provided
 
         water_left = self._provideResourceToOutgoingConnections("water", self._resources_left_over["water"])
-        if "water" not in self._resources_provided_this_tick["water"]:
-            self._resources_provided_this_tick["water"] = 0
+
         self._resources_provided_this_tick["water"] += enforcePositive(self._resources_left_over["water"] - water_left)
         self._resources_left_over["water"] = water_left
 
@@ -65,6 +61,6 @@ class HydroponicsBay(Node):
         # Getting enough waste means that it produces twice as much. Boom.
         # TODO: Hacked this in for a bit.
         plants_produced = oxygen_produced * (1 + animal_waste_available / self._optional_resources_required_per_tick["animal_waste"])
-        self._resources_produced_this_tick["plants"] = plants_produced
-        self._resources_provided_this_tick["plants"] = plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)
+        self._resources_produced_this_tick["plants"] += plants_produced
+        self._resources_provided_this_tick["plants"] += plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)
 

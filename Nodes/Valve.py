@@ -73,7 +73,7 @@ class Valve(ResourceStorage):
         # Then we try to give as much away as possible.
         resources_left_after_distribution = self._provideResourceToOutgoingConnections(self._resource_type, resources_to_distribute)
 
-        self._resources_provided_this_tick[self._resource_type] = enforcePositive(resources_to_distribute - resources_left_after_distribution)
+        self._resources_provided_this_tick[self._resource_type] += enforcePositive(resources_to_distribute - resources_left_after_distribution)
 
         self._amount = resources_left_after_distribution + resources_left
 

@@ -74,8 +74,7 @@ class Generator(Node):
         fuel_gained = self.getResourceAvailableThisTick(self._fuel_type)
 
         energy_produced = fuel_gained * self.effectiveness_factor * self._energy_factor
-        if "energy" not in self._resources_produced_this_tick:
-            self._resources_produced_this_tick["energy"] = 0
+
         self._resources_produced_this_tick["energy"] += energy_produced
 
         energy_available = energy_produced + self._resources_left_over["energy"]
@@ -85,8 +84,6 @@ class Generator(Node):
 
         # It's entirely possible that no energy was generated this turn, but a bunch of energy was provided (since there
         # was some energy left over from the last tick!)
-        if "energy" not in self._resources_provided_this_tick:
-            self._resources_provided_this_tick["energy"] = 0
         self._resources_provided_this_tick["energy"] += enforcePositive(energy_available - energy_left)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
@@ -101,8 +98,6 @@ class Generator(Node):
         # Some amount could not be dumped, so this means we will just request less next tick.
         self._resources_left_over["water"] = water_left
 
-        if "water" not in self._resources_provided_this_tick:
-            self._resources_provided_this_tick["water"] = 0
         self._resources_provided_this_tick["water"] += enforcePositive(water_available - water_left)
 
         self._resources_left_over["energy"] = energy_left

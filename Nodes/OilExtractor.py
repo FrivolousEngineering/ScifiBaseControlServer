@@ -47,10 +47,10 @@ class OilExtractor(Node):
         # For every oil that isn't produced, we generate an extra waste.
         # So, if it's running at 75% effiency, we will generate 0.75 oil and 1.25 waste
         waste_produced = oil_produced + (oil_produced - oil_produced * self.effectiveness_factor)
-        self._resources_produced_this_tick["waste"] = waste_produced
+        self._resources_produced_this_tick["waste"] += waste_produced
 
         oil_produced *= self.effectiveness_factor
-        self._resources_produced_this_tick["plant_oil"] = oil_produced
+        self._resources_produced_this_tick["plant_oil"] += oil_produced
 
         # Dump the resources produced
         oil_left = self._provideResourceToOutgoingConnections("plant_oil", oil_produced)
@@ -82,8 +82,8 @@ class OilExtractor(Node):
         self._resources_left_over["water"] = water_left
 
         oil_provided = enforcePositive(oil_produced - oil_left)
-        self._resources_provided_this_tick["plant_oil"] = oil_provided
+        self._resources_provided_this_tick["plant_oil"] += oil_provided
 
         waste_provided = enforcePositive(waste_produced - waste_left)
-        self._resources_provided_this_tick["waste"] = waste_provided
+        self._resources_provided_this_tick["waste"] += waste_provided
 
