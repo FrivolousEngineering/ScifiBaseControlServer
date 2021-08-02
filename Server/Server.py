@@ -2,14 +2,19 @@ import dbus
 import dbus.exceptions
 import flask
 
-from typing import Optional, cast, Any, List, Dict, Union
+from typing import Optional, cast, Any, List, Dict, TYPE_CHECKING
 
 from functools import wraps, partial
 from flask import Flask, Response, render_template, request
 
+
 from Server.Database import db_session, init_db
 from Server.models import User, Ability
 from werkzeug.exceptions import Forbidden, Unauthorized
+
+
+if TYPE_CHECKING:
+    from Nodes.NodesDBusService import NodesDBusService
 
 _REGISTERED_ROUTES = {}  # type: Dict[str, Dict[str, Any]]
 
@@ -83,7 +88,7 @@ class Server(Flask):
         # This is needed for the sqlalchemy database
         self.teardown_appcontext(self._shutdownSession)
 
-        self._nodes = None
+        self._nodes = None  # type: Optional["NodesDBusService"]
         self._modifiers = None
         init_db()
 
@@ -91,9 +96,9 @@ class Server(Flask):
     def _shutdownSession(exception):
         db_session.remove()
 
-    def getNodeDBusObject(self):
+    def getNodeDBusObject(self) -> "NodesDBusService":
         self._setupNodeDBUS()
-        return self._nodes
+        return cast("NodesDBusService", self._nodes)
 
     def getModifierDBusObject(self):
         self._setupModifierDBUS()
