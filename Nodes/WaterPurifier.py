@@ -29,8 +29,8 @@ class WaterPurifier(Node):
         self._resources_required_per_tick["dirty_water"] = enforcePositive(
             self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor - resources_left)
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
 
         oxygen_available = self.getResourceAvailableThisTick("oxygen")
 

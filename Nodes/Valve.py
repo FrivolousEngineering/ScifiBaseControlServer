@@ -48,7 +48,7 @@ class Valve(ResourceStorage):
             return 0.
 
         # The closer you get to the max, the less it will accept.
-        if self._max_storage * 0.5 <= self._amount + amount:
+        if self._max_storage is not None and self._max_storage * 0.5 <= self._amount + amount:
             storage_left = self._max_storage - self._amount
             factor = storage_left / (0.5 * self._max_storage)
             result = enforcePositive(amount * factor)

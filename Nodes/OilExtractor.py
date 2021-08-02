@@ -30,7 +30,7 @@ class OilExtractor(Node):
         result = self._temperature_efficiency * (1.5 - health_factor)
         return result
 
-    def update(self) -> None:
+    def update(self, sub_tick_modifier: float = 1) -> None:
         super().update()
         # Get all the resources that we want
         fuel_available = self.getResourceAvailableThisTick("fuel")

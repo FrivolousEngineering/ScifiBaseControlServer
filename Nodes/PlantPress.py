@@ -27,8 +27,8 @@ class PlantPress(Node):
 
         #self._resources_required_per_tick["energy"] = enforcePositive(self._original_resources_required_per_tick["plants"] * self.effectiveness_factor - max_food)
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
 
         # Get all the resources that we want
         energy_available = self.getResourceAvailableThisTick("energy")

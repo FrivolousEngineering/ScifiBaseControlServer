@@ -24,8 +24,8 @@ class MedicineCreator(Node):
 
         self._heat_per_medicine_created = 100
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
         # Get the resources we asked for!
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")

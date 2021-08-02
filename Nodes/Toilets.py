@@ -18,8 +18,8 @@ class Toilets(Node):
         self._resources_required_per_tick["water"] = 10
         self._has_settable_performance = False
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
 
         water_available = self.getResourceAvailableThisTick("water")
 

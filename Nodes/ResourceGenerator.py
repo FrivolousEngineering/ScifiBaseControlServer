@@ -18,8 +18,8 @@ class ResourceGenerator(Node):
         self._resource_type = resource_type.lower()
         self._amount = amount
 
-    def update(self) -> None:
-        super().update()
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
         resources_left = self._provideResourceToOutgoingConnections(self._resource_type, self._amount)
 
         self._resources_produced_this_tick[self._resource_type] = enforcePositive(self._amount - resources_left)

@@ -9,8 +9,8 @@ class ConverterNode(Node):
         self._resources_required_per_tick[input_resource] = 10
         self._output_resource = output_resource
 
-    def update(self, sub_tick_modifer: float = 1) -> None:
-        super().update(sub_tick_modifer)
+    def update(self, sub_tick_modifier: float = 1) -> None:
+        super().update(sub_tick_modifier)
         resource_received = self.getResourceAvailableThisTick(self._input_resource)
 
         # Since it's a 1 on 1 conversion, check what we had left from last time

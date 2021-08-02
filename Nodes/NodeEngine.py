@@ -38,7 +38,7 @@ class NodeEngine:
         # WIP: How many "in between" updates per tick should be done?
         self._sub_ticks = 30
 
-    def resetSeed(self):
+    def resetSeed(self) -> None:
         random.seed(self._tick_count)
 
     @property
