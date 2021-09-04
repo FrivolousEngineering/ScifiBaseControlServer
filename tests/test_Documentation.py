@@ -1,5 +1,6 @@
 import pytest
 
+from Nodes.Connection import Connection
 from Nodes.Node import Node
 import inspect
 import typing
@@ -10,7 +11,9 @@ function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
 
 
-objects_to_check_for_documentation = [Node("whatever"), NodeEngine()]
+objects_to_check_for_documentation = [Node("whatever"),
+                                      NodeEngine(),
+                                      Connection(Node("whatever"), Node("whatever2"), "water")]
 
 
 @pytest.mark.parametrize("object", objects_to_check_for_documentation)
@@ -35,7 +38,12 @@ def test_hasDocumentation(object):
 
             assert f":param {param}:" in function_documentation, f"Parameter [{param}] of function [{func_name}] of {object.__class__} is not documented"
 
-        type_hints = typing.get_type_hints(function)
+        try:
+            type_hints = typing.get_type_hints(function)
+        except NameError:
+            # The forward declaration doesn't work quite well for get_type_hints. There is a solution for python 3.7
+            # (from __future__ import annotations), but right now this is made for python 3.6
+            type_hints = function.__annotations__
         if "return" in type_hints and type_hints["return"] != type(None) and func_name != "__init__":
             assert ":return:" in function_documentation, f"Function function [{func_name}] of {object.__class__} returns something, but this is not documented"
 

@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 from Nodes.Constants import SPECIFIC_HEAT, WEIGHT_PER_UNIT
+
 if TYPE_CHECKING:
     from Nodes.Node import Node
 
@@ -60,6 +61,7 @@ class Connection:
         """
         Convenience function to actually get (eg; subtract) the amount from the origin.
 
+        :param sub_tick_modifier: The factor of the subtick. Should be below 1 and must be above 0
         :return: The amount it was actually able to get. If the planning was correct, it should be the same as what was
                  reserved.
         """
@@ -83,6 +85,11 @@ class Connection:
         return self.reserved_requested_amount - self.reserved_available_amount
 
     def getResource(self, amount: float) -> float:
+        """
+        Attempt to get the resources from the origin of this connection
+        :param amount: The amount of resources desired.
+        :return: The amount of resources that are actually provided.
+        """
         if not self.origin.enabled or not self.target.enabled:
             return 0
         result = self.origin.getResource(self.resource_type, amount)
@@ -93,11 +100,22 @@ class Connection:
         return result
 
     def preGetResource(self, amount: float) -> float:
+        """
+        Check how much resources would be provided when a getResource is done.
+        Note that this doesn't actually provide the resources!
+        :param amount: The amount of resources to request.
+        :return: How much resources would be provided if a getResource would be called.
+        """
         if not self.origin.enabled or not self.target.enabled:
             return 0
         return self.origin.preGetResource(self.resource_type, amount)
 
     def giveResource(self, amount: float) -> float:
+        """
+        Attempt to give resources to the target of this conneciton
+        :param amount: The amount of resources to give
+        :return: How much resources would the target was able to accept.
+        """
         if not self.origin.enabled or not self.target.enabled:
             return 0
         result = self.target.giveResource(self.resource_type, amount)
@@ -108,6 +126,12 @@ class Connection:
         return result
 
     def preGiveResource(self, amount: float) -> float:
+        """
+        Check how much resources would be given when a giveResource is done.
+        Note that this doesn't actually give the resources!
+        :param amount: The amount of resources to give
+        :return: How much resources would the target be able to accept.
+        """
         if not self.origin.enabled or not self.target.enabled:
             return 0
         return self.target.preGiveResource(self.resource_type, amount)
