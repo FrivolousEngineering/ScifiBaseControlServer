@@ -65,6 +65,20 @@ def requires_user_ability(ability: str):
 
 
 class Server(Flask):
+    """
+    The server provides the REST API for the engine. It connects to the engine via DBUS. This might be seen as a bit
+    of overkill, but previous projects have shown that it's good to seperate interface and business logic from oneother.
+
+    Since the connection is via DBUS, it also means that the server and the engine can (and even need) to run in their
+    own python instance. This has the added benefit that each of them has their own GIL. It should be noted that DBUS
+    itself can cause calls to be blocked, so there is some waiting that can occur.
+
+    In the future it might be needed to cache results if it turns out that the many DBUS calls cause delays, but this
+    seems to not have been an issue so far.
+
+    The server itself uses various blueprints to actually create the various API's and document them.
+    """
+
     STATIC_LOCATION = ""
     
     def __init__(self, *args, **kwargs) -> None:
@@ -97,6 +111,12 @@ class Server(Flask):
         db_session.remove()
 
     def getNodeDBusObject(self) -> "NodesDBusService":
+        """
+        Convenience function that ensures that the dbus connection is setup.
+
+        It can raise dbus.exceptions.DBusException if it was not able to set it up.
+        :return:
+        """
         self._setupNodeDBUS()
         return cast("NodesDBusService", self._nodes)
 
@@ -115,7 +135,7 @@ class Server(Flask):
 
     def _initModifierDBUS(self) -> None:
         """
-        Create DBUS object.
+        Create DBUS object for the nodes.
         """
         if self._modifiers is None:
             try:
@@ -144,7 +164,7 @@ class Server(Flask):
 
     def _initNodeDBUS(self) -> None:
         """
-        Create DBUS object.
+        Create DBUS object for the nodes.
         """
         if self._nodes is None:
             try:

@@ -4,11 +4,13 @@ from Nodes.Node import Node
 import inspect
 import typing
 
+from Nodes.NodeEngine import NodeEngine
+
 function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
 
 
-objects_to_check_for_documentation = [Node("whatever")]
+objects_to_check_for_documentation = [Node("whatever"), NodeEngine()]
 
 
 @pytest.mark.parametrize("object", objects_to_check_for_documentation)

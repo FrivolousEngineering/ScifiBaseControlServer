@@ -25,6 +25,9 @@ class NodeEngine:
     tickCompleted = Signal()
 
     def __init__(self) -> None:
+        """
+        Create a node Engine which controls a set of Nodes.
+        """
         self._nodes = {}  # type: Dict[str, Node]
         self._node_histories = {}  # type: Dict[str, NodeHistory]
 
@@ -35,10 +38,19 @@ class NodeEngine:
         self._outside_temperature_handler = None  # type: Optional[TemperatureHandler]
         self._tick_count = 0
 
-        # WIP: How many "in between" updates per tick should be done?
+        # How many "in between" updates per tick should be done? This should be seen as "micro" ticks. Instead of doing
+        # the update of a tick in one go, it will be cut up in smaller chunks (so with 30 sub ticks, there will be 30
+        # calls to update, but in each of these only 1/30th of the production is done.
+        # We also randomise the order of the nodes in between these steps (although we use a seed for this to make it
+        # deterministic. The randomisation ensures that the order in which the update of each node is done is much less
+        # of a factor. If you see weird fluctuating behavior, increase the amount of subticks. Do note that this does
+        # mean that more calculations are done, which might negatively impact larger systems.
         self._sub_ticks = 30
 
     def resetSeed(self) -> None:
+        """
+        When using 'sub tick updates' we randomize the order in which we handle the updates
+        """
         random.seed(self._tick_count)
 
     @property
@@ -46,9 +58,18 @@ class NodeEngine:
         return self._tick_count
 
     def setOutsideTemperatureHandler(self, temp_handler: TemperatureHandler) -> None:
+        """
+        Set a handler that controls the outside temperature (which can vary over time)
+        :param temp_handler:
+        :return:
+        """
         self._outside_temperature_handler = temp_handler
 
     def _updateOutsideTemperature(self) -> None:
+        """
+        Update the ambient temperature by using the outside temp handler (if any)
+        :return:
+        """
         new_temperature = 293.15
         if self._outside_temperature_handler is not None:
             new_temperature = self._outside_temperature_handler.getTemperatureForTick(self._tick_count)
@@ -57,12 +78,22 @@ class NodeEngine:
             node.outside_temp = new_temperature
 
     def start(self) -> None:
+        """
+        Start the automatic run of the node engine (do a tick per time passed)
+        """
         self._tick_timer.start()
 
     def stop(self) -> None:
+        """
+        Stop the automatic run of the node engine (do a tick per time passed)
+        """
         self._tick_timer.cancel()
 
     def registerNode(self, node: Node) -> None:
+        """
+        Add a node to be tracked / updated by the node engine.
+        :param node: the node to be added.
+        """
         if node.getId() not in self._nodes:
             self._nodes[node.getId()] = node
             self.preUpdateCalled.connect(node.acquireUpdateLock)
@@ -73,12 +104,28 @@ class NodeEngine:
             raise KeyError("Node must have an unique ID!")
 
     def getAllNodes(self) -> Dict[str, Node]:
+        """
+        Get all nodes known by the engine.
+
+        TODO: It might not be the smartest move to return this by reference.
+        :return: The nodes in a dict with their Id's as keys
+        """
         return self._nodes
 
     def getNodeById(self, node_id: str) -> Optional[Node]:
+        """
+        Get a specific node by providing it's id
+        :param node_id: ID of the node
+        :return: The node (if found)
+        """
         return self._nodes.get(node_id)
 
     def getNodeHistoryById(self, node_id: str) -> Optional[NodeHistory]:
+        """
+        Get the history object of a specific node
+        :param node_id: The ID of the node
+        :return: The history (if any)
+        """
         return self._node_histories.get(node_id)
 
     def deserialize(self, serialized: Dict[str, Any]) -> None:
@@ -91,18 +138,37 @@ class NodeEngine:
         self._registerConnectionsFromConfigurationData(serialized["connections"])
 
     def _registerNodesFromConfigurationData(self, serialized: Dict[str, Any]) -> None:
+        """
+        The NodeEngine can be filled by config data. This function makes sure that the nodes are created
+        :param serialized: Dict that describes the nodes to be created
+        """
         for key, data in serialized.items():
             self.registerNode(NodeFactory.createNode(key, data))
 
     def _registerConnectionsFromConfigurationData(self, serialized: List[Dict[str, str]]) -> None:
+        """
+        The NodeEngine can be filled by config data. This function makes sure that the connections are created.
+
+        This function *MUST* be called after :py:meth:Nodes.nodeEngine.NodeEngine._registerNodesFromConfigurationData
+        since it needs nodes to actually create the connections
+        :param serialized: Dict that describes the connections to be created
+        """
         for connection_dict in serialized:
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
 
     def getAllNodeIds(self) -> List[str]:
+        """
+        Get a list of all Node ID's
+        :return: The list (much suprise!)
+        """
         return [node.getId() for node in self._nodes.values()]
 
     def _preUpdate(self) -> None:
+        """
+        Handle the pre-update of the Node engine.
+        This basicly calls the pre-update for all nodes.
+        """
         self.preUpdateCalled.emit()
         for node in self._nodes.values():
             if node.enabled:
@@ -147,13 +213,16 @@ class NodeEngine:
             self._updateReservations()
 
     def _update(self) -> None:
+        """
+        Handle the actual update.
+        """
         self.updateCalled.emit()
         sub_tick_modifier = 1 / self._sub_ticks
         for i in range(0, self._sub_ticks):
             keys = list(self._nodes.keys())
-            # Yeah. Randomness. I know. But combined with the sub ticks, it's the only way to make sure
-            # that the oder is no longer a factor. To at least make it reproducable, we use the tick count
-            # as the seed for the randomness
+            # Yeah. Randomness. I know. But combined with the sub ticks, it's the only way to make sure that the order
+            # in which the nodes are updated is no longer a factor. To at least make its reproducible, we use the tick
+            # count as the seed for the randomness.
             random.shuffle(keys)
             for node_id in keys:
                 node = self._nodes[node_id]
@@ -165,6 +234,11 @@ class NodeEngine:
             node.updateModifiers()
 
     def _postUpdate(self) -> None:
+        """
+        Handle everything that needs to be done after all the updating has been done.
+        For more info what happens during the post update, check the Node documentation.
+        :return:
+        """
         self.postUpdateCalled.emit()
         for node in self._nodes.values():
             if node.enabled:
@@ -188,16 +262,21 @@ class NodeEngine:
         self.resetSeed()
         print("TICK ENDED!")
 
-    def _getResourceColor(self, resource_type: str) -> str:
-        if resource_type == "energy":
-            return "yellow"
-        if resource_type == "water":
-            return "blue"
-        if resource_type == "plants":
-            return "green"
-        return ""
-
     def generatePlantUMLGraph(self) -> str:
+        """
+        Convenience function that generates UMLLet data of all the nodes & connections.
+        :return:
+        """
+
+        def getResourceColor(resource_type: str) -> str:
+            if resource_type == "energy":
+                return "yellow"
+            if resource_type == "water":
+                return "blue"
+            if resource_type == "plants":
+                return "green"
+            return ""
+
         result = "@startuml\nskinparam linetype ortho\n"
 
         for node_id in self._nodes:
@@ -209,12 +288,11 @@ class NodeEngine:
 
         for node in self._nodes.values():
             for connection in node.getAllOutgoingConnections():
-                color = self._getResourceColor(connection.resource_type)
+                color = getResourceColor(connection.resource_type)
                 color_string = "[#{color}]".format(color = color) if color else ""
                 result += "{origin} -{color}-> {target}\n".format(origin = connection.origin.getId(),
                                                                   target = connection.target.getId(),
                                                                   color = color_string)
 
         result += "@enduml"
-
         return result
