@@ -6,8 +6,19 @@ from Nodes.Util import enforcePositive
 
 
 class ResourceStorage(Node):
+    """
+    A node that can store a single resource.
+    """
     def __init__(self, node_id: str, resource_type: str, amount: float, max_storage: Optional[float] = None, **kwargs) \
             -> None:
+        """
+        A node that can store a single resource.
+        :param node_id: id of this node.
+        :param resource_type: The resource that this node stores
+        :param amount: How much resources does it have at the moment?
+        :param max_storage: How much units of resource can it store
+        :param kwargs:
+        """
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount

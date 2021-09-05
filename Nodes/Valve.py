@@ -5,7 +5,19 @@ from Nodes.Util import enforcePositive
 
 
 class Valve(ResourceStorage):
+    """
+    A valve is a special kind of resource storage; it does have a performance and it can also request resources from
+    other resource providers that it's connected to.
+    """
     def __init__(self, node_id: str, resource_type: str, fluid_per_tick: float, **kwargs) -> None:
+        """
+
+        :param node_id: unique id of the node
+        :param resource_type: The resource type that this valve accepts
+        :param fluid_per_tick: units of resource that this valve can handle per tick. It will request this amount from
+        connected nodes.
+        :param kwargs:
+        """
         # Update the defaults like this so that the actual property can be set by base class
         defaults = {"heat_convection_coefficient": 0.2}
         defaults.update(kwargs)
@@ -28,6 +40,9 @@ class Valve(ResourceStorage):
         self._has_settable_performance = True
 
     def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
         new_amount_required = self._fluid_per_tick * self._performance
         storage_room_left = cast(float, self._max_storage) - self._amount
         if storage_room_left < new_amount_required:

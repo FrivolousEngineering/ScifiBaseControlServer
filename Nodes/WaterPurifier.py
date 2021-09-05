@@ -22,6 +22,9 @@ class WaterPurifier(Node):
         self._tags.append("mechanical")
 
     def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
         resources_left = max(self._resources_left_over["animal_waste"], self._resources_left_over["water"])
         self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._optional_original_resources_required_per_tick["oxygen"]
                                                           * self.effectiveness_factor - resources_left)

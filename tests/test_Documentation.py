@@ -1,13 +1,21 @@
 import pytest
 
 from Nodes.Connection import Connection
+from Nodes.FluidCooler import FluidCooler
 from Nodes.Generator import Generator
+from Nodes.HydroponicsBay import HydroponicsBay
+from Nodes.MedicineCreator import MedicineCreator
 from Nodes.Node import Node
 import inspect
 import typing
 
 from Nodes.NodeEngine import NodeEngine
 from Nodes.NodeHistory import NodeHistory
+from Nodes.OilExtractor import OilExtractor
+from Nodes.PlantPress import PlantPress
+from Nodes.ResourceStorage import ResourceStorage
+from Nodes.Valve import Valve
+from Nodes.WaterPurifier import WaterPurifier
 
 function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
@@ -17,7 +25,15 @@ objects_to_check_for_documentation = [Node("whatever"),
                                       NodeEngine(),
                                       Connection(Node("whatever"), Node("whatever2"), "water"),
                                       NodeHistory(Node("NodeHistory")),
-                                      Generator("generator")]
+                                      Generator("generator"),
+                                      FluidCooler("fluid_cooler", "water", 10),
+                                      HydroponicsBay("hydroponics_bay"),
+                                      MedicineCreator("medicine_creator"),
+                                      OilExtractor("oil_extractor"),
+                                      PlantPress("plant_press"),
+                                      ResourceStorage("resource_storage", "waste", 10),
+                                      Valve("valve", "fuel", 50),
+                                      WaterPurifier("water_purifier")]
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure
 # that multiple functions that are missing documentation will result in multiple failed tests.

@@ -62,6 +62,9 @@ class Generator(Node):
         return result
 
     def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
         energy_left = self._resources_left_over["energy"]
         self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - energy_left)
 

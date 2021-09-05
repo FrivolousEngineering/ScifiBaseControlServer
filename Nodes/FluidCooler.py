@@ -10,6 +10,14 @@ class FluidCooler(Valve):
     It can accept a certain resource, which it cools down (because of it's large surface and heat emissivity)
     """
     def __init__(self, node_id: str, resource_type: str, fluid_per_tick: float, **kwargs) -> None:
+        """
+        A fairly simple node that has a high surface area and heat emissivity.
+        It can accept a certain resource, which it cools down (because of it's large surface and heat emissivity)
+        :param node_id: unique id of the node
+        :param resource_type: The resource type that this fluidcooler passes through
+        :param fluid_per_tick: units of resource that this fluidcooler can handle per tick
+        :param kwargs:
+        """
         # Update the defaults like this so that the actual property can be set by base class
         defaults = {"weight": 5000,
                     "surface_area": 10,

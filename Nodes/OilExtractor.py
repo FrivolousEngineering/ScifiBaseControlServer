@@ -4,12 +4,15 @@ from Nodes.Util import enforcePositive
 
 
 class OilExtractor(Node):
+    """
+    The Oil extractor is a node that creates plant_oil from plants and fuel. It can also accept water for cooling
+    """
     def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id, **kwargs)
 
         self._resources_required_per_tick["fuel"] = 2.5
-        self._resources_required_per_tick["water"] = 250
         self._resources_required_per_tick["plants"] = 10
+        self._optional_resources_required_per_tick["water"] = 250
         self._health = 100
         self._temperature_efficiency = 0.5
         self._weight = 1000

@@ -4,6 +4,10 @@ from Nodes.Util import enforcePositive
 
 
 class PlantPress(Node):
+    """
+    The plant press converts plants and energy into food (by squeezing the water out). As such, it also produces a
+    tiny bit of water.
+    """
     def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id, **kwargs)
 
@@ -18,14 +22,14 @@ class PlantPress(Node):
         self._tags.append("fuel")
 
     def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
         # max resource that we could produce next tick:
         max_food = min(10 - self._resources_left_over["food"], (self._water_resevoir - self._resources_left_over["water"]) * 2.87)
         max_food = enforcePositive(max_food)
         self._resources_required_per_tick["plants"] = max_food * 3 * self.effectiveness_factor
         self._resources_required_per_tick["energy"] = max_food * self.effectiveness_factor
-        #self._resources_required_per_tick["plants"] = enforcePositive(self._original_resources_required_per_tick["plants"] * self.effectiveness_factor - max_food * 3)
-
-        #self._resources_required_per_tick["energy"] = enforcePositive(self._original_resources_required_per_tick["plants"] * self.effectiveness_factor - max_food)
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
