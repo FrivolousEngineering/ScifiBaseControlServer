@@ -1,6 +1,7 @@
 import pytest
 
 from Nodes.Connection import Connection
+from Nodes.Generator import Generator
 from Nodes.Node import Node
 import inspect
 import typing
@@ -29,17 +30,18 @@ for obj in objects_to_check_for_documentation:
 
 @pytest.mark.parametrize("object", objects_to_check_for_documentation)
 def test_objectHasDocumentation(object):
-    # Make sure that generic documentation exists
+    # Make sure that generic documentation exists.
+    # Also note that this is an *explicit* check for the __doc__ and not the inspect.getdoc. This is on purpose; sub
+    # classes should at least have a base documentation that isn't inherited from its parent class.
     assert object.__doc__
 
 
 @pytest.mark.parametrize("class_name, func_name, function", functions_to_check_for_documentation)
 def test_functionHasDocumentation(class_name, func_name, function):
-    assert function.__doc__, f"Function [{func_name}] of {object.__class__} is not documented at all"
+    function_documentation = inspect.getdoc(function)
+    assert function_documentation, f"Function [{func_name}] of {object.__class__} is not documented at all"
 
     sig = inspect.signature(function)
-
-    function_documentation = inspect.getdoc(function)
 
     for param in sig.parameters:
         if param in exclude_signatures:
