@@ -16,7 +16,8 @@ exclude_signatures = ["kwargs", "args"]
 objects_to_check_for_documentation = [Node("whatever"),
                                       NodeEngine(),
                                       Connection(Node("whatever"), Node("whatever2"), "water"),
-                                      NodeHistory(Node("NodeHistory"))]
+                                      NodeHistory(Node("NodeHistory")),
+                                      Generator("generator")]
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure
 # that multiple functions that are missing documentation will result in multiple failed tests.
@@ -39,7 +40,7 @@ def test_objectHasDocumentation(object):
 @pytest.mark.parametrize("class_name, func_name, function", functions_to_check_for_documentation)
 def test_functionHasDocumentation(class_name, func_name, function):
     function_documentation = inspect.getdoc(function)
-    assert function_documentation, f"Function [{func_name}] of {object.__class__} is not documented at all"
+    assert function_documentation, f"Function [{func_name}] of {class_name} is not documented at all"
 
     sig = inspect.signature(function)
 
@@ -47,7 +48,7 @@ def test_functionHasDocumentation(class_name, func_name, function):
         if param in exclude_signatures:
             continue
 
-        assert f":param {param}:" in function_documentation, f"Parameter [{param}] of function [{func_name}] of {object.__class__} is not documented"
+        assert f":param {param}:" in function_documentation, f"Parameter [{param}] of function [{func_name}] of {class_name} is not documented"
 
     try:
         type_hints = typing.get_type_hints(function)
