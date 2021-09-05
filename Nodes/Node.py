@@ -104,10 +104,8 @@ class Node:
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8  # type: float
 
-        # A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
-        # This is to notify the other observers that the property exists (for example, the NodeHistory uses this).
-        # If the max value a property can take should also be communicated, the max_{property_name} is also requested
-        self.additional_properties = ["health"]  # type: List[str]
+
+        self._additional_properties = ["health"]  # type: List[str]
 
         # How healthy is the node?
         self._health = 100.  # type: float
@@ -150,6 +148,16 @@ class Node:
         # Consider options like "mechanical", "electronic", etc.
         # Certain modifiers require a certain tag to be present before they can be set on a node.
         self._tags = []  # type: List[str]
+
+    @property
+    def additional_properties(self):
+        """
+        A list of additional properties that can be retrieved (for example, the ResourceStorage has "amount")
+        This is to notify the other observers that the property exists (for example, the NodeHistory uses this).
+        If the max value a property can take should also be communicated, the max_{property_name} is also requested
+        :return:
+        """
+        return self._additional_properties
 
     @property
     def tags(self) -> List[str]:
