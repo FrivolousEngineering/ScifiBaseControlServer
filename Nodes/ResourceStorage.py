@@ -13,7 +13,7 @@ class ResourceStorage(Node):
         self._amount = amount
         self._max_storage = max_storage
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
-        self.additional_properties.append("amount_stored")
+        self._additional_properties.append("amount_stored")
 
         self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 1000)
 

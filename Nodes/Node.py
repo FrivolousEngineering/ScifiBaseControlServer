@@ -104,7 +104,6 @@ class Node:
         # A constant for heat.
         self.__stefan_boltzmann_constant = 5.67e-8  # type: float
 
-
         self._additional_properties = ["health"]  # type: List[str]
 
         # How healthy is the node?

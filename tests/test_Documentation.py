@@ -6,6 +6,7 @@ import inspect
 import typing
 
 from Nodes.NodeEngine import NodeEngine
+from Nodes.NodeHistory import NodeHistory
 
 function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
@@ -13,7 +14,8 @@ exclude_signatures = ["kwargs", "args"]
 
 objects_to_check_for_documentation = [Node("whatever"),
                                       NodeEngine(),
-                                      Connection(Node("whatever"), Node("whatever2"), "water")]
+                                      Connection(Node("whatever"), Node("whatever2"), "water"),
+                                      NodeHistory(Node("NodeHistory"))]
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure
 # that multiple functions that are missing documentation will result in multiple failed tests.
