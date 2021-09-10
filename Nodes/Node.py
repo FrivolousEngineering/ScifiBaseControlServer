@@ -57,12 +57,14 @@ class Node:
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
 
-        # What resources *must* this node get in order to function?
         self._resources_required_per_tick = {}  # type: Dict[str, float]
-        self._original_resources_required_per_tick = {}  # type: Dict[str, float]
+        """ What resources must this node get in order to function? """
 
-        # What resources does this node want in order to function (but it could do without?)
+        self._original_resources_required_per_tick = {}  # type: Dict[str, float]
+        """Resources required per tick holds the current (modified) amount. This holds the unmodified amounts"""
+
         self._optional_resources_required_per_tick = {}  # type: Dict[str, float]
+        """What resources does this node want in order to function, but it could do without?"""
         self._original_optional_resources_required_per_tick = {}  # type: Dict[str, float]
         self._optional_resources_required_last_tick = {}  # type: Dict[str, float]
 
@@ -99,14 +101,15 @@ class Node:
         # Stainless steel: 16-24
         # Aluminum: 205 - 250
         self._heat_convection_coefficient = kwargs.get("heat_convection_coefficient", 10.)  # type: float
-        # How large is the surface of this object (in M2)
+
         self._surface_area = kwargs.get("surface_area", 1)  # type: float
-        # A constant for heat.
+        """How large is the surface of this object (in M2)"""
+
         self.__stefan_boltzmann_constant = 5.67e-8  # type: float
+        """A constant for heat."""
 
         self._additional_properties = ["health"]  # type: List[str]
 
-        # How healthy is the node?
         self._health = 100.  # type: float
         self._max_health = 100  # type: float
         self._active = False  # type: bool
@@ -121,9 +124,8 @@ class Node:
 
         self._has_settable_performance = True
 
-        # How fast should this node degrade if it's above a certain temperature?
         self._temperature_degradation_speed = 10.  # type: float
-
+        """How fast should this node degrade if it's above a certain temperature?"""
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
 
@@ -138,14 +140,11 @@ class Node:
         self._optimal_temperature = kwargs.get("optimal_temperature", 375) # type: float
         self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75) # type: float
 
-        # How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
-        # An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
-        # transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat
         self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
+        """How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
+        An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
+        transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat"""
 
-        # Tags can be used to label a node as being of a specific type.
-        # Consider options like "mechanical", "electronic", etc.
-        # Certain modifiers require a certain tag to be present before they can be set on a node.
         self._tags = []  # type: List[str]
 
     @property
@@ -160,6 +159,11 @@ class Node:
 
     @property
     def tags(self) -> List[str]:
+        """
+        Tags can be used to label a node as being of a specific type.
+        Consider options like "mechanical", "electronic", etc.
+        Certain modifiers require a certain tag to be present before they can be set on a node.
+        """
         return self._tags
 
     @property
