@@ -14,6 +14,15 @@ SPECIFIC_HEAT = {"energy": 0,
                  "medicine": 0.3
                  }
 
+GAS_PHASE_CHANGE_TEMPERATURE = {
+    "water": 373.15
+}
+
+GAS_PHASE_SPECIFIC_HEAT = {
+    "water": 540
+}
+
+
 # 1 liter of this unit is how much kg?
 WEIGHT_PER_UNIT = {"water": 1,
                    "fuel": 0.7,

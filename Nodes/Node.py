@@ -192,7 +192,7 @@ class Node:
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
         self._setPerformance(self.performance)
-        self._stored_heat = self.weight * self._temperature * self._specific_heat
+        self._stored_heat = self.weight / self._specific_heat * self._temperature
 
     @modifiable_property
     def temperature_efficiency(self):
@@ -436,7 +436,7 @@ class Node:
         """
         The temperature of this node in Kelvin
         """
-        return self._stored_heat / self.weight / self._specific_heat
+        return self._stored_heat / self.weight * self._specific_heat
 
     def addHeat(self, heat_to_add: float) -> None:
         """
