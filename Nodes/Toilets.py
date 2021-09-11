@@ -19,16 +19,21 @@ class Toilets(Node):
         self._has_settable_performance = False
 
     def update(self, sub_tick_modifier: float = 1) -> None:
+        original_heat = self._stored_heat
         super().update(sub_tick_modifier)
 
         water_available = self.getResourceAvailableThisTick("water")
-
+        dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
         # Technically the toilets could get damaged, but since we won't actually block players from using the toilets
         # when they are broken in game, I'm not going to model that in here.
-        dirty_water_left = self._provideResourceToOutgoingConnections("dirty_water", water_available)
 
+        dirty_water_left = self._provideResourceToOutgoingConnections("dirty_water", water_available + dirty_water_available)
+        if original_heat > self._stored_heat:
+            # Since dirty_water is heavier than normal water, we need to make sure we don't lose energy (assume that
+            # the shit people do adds heat here...)
+            self._stored_heat = original_heat
         self._resources_produced_this_tick["dirty_water"] = water_available
 
         dirty_water_provided = enforcePositive(water_available - dirty_water_left)
-
+        self._resources_left_over["dirty_water"] = dirty_water_left
         self._resources_provided_this_tick["dirty_water"] = dirty_water_provided
