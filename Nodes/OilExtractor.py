@@ -1,4 +1,4 @@
-from Nodes.Constants import COMBUSTION_HEAT, WEIGHT_PER_UNIT
+from Nodes.Constants import COMBUSTION_HEAT, WEIGHT_PER_UNIT, SPECIFIC_HEAT
 from Nodes.Node import Node, modifiable_property
 from Nodes.Util import enforcePositive
 
@@ -42,6 +42,7 @@ class OilExtractor(Node):
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
+
         # Get all the resources that we want
         fuel_available = self.getResourceAvailableThisTick("fuel")
         plants_available = self.getResourceAvailableThisTick("plants")
@@ -71,6 +72,7 @@ class OilExtractor(Node):
 
         # If a part of the resources (oil or waste) could not be dumped, we have more plants/fuel left.
         self._resources_left_over["plants"] += max_resource_left * self.inverted_effectiveness_factor
+
         self._resources_left_over["fuel"] += max_resource_left / self._fuel_per_plant_ratio * self.inverted_effectiveness_factor
 
         fuel_used = fuel_available - self._resources_left_over["fuel"]

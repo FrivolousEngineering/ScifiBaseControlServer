@@ -11,7 +11,7 @@ from Nodes.TemperatureHandlers.PreScriptedTemperatureHandler import PreScriptedT
 
 engine = NodeEngine()
 
-with open("heat_setup.json") as f:
+with open("ExtractorSetup.json") as f:
     loaded_data = json.loads(f.read())
     engine.deserialize(loaded_data)
 

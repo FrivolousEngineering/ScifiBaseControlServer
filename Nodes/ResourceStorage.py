@@ -84,7 +84,6 @@ class ResourceStorage(Node):
 
         return gas_phase_temperature + energy_left / self.weight / self._specific_heat
 
-
     @property
     def weight(self) -> float:
         return self._weight + self._resource_weight_per_unit * self.amount_stored
