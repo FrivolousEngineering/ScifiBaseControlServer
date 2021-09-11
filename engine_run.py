@@ -11,7 +11,7 @@ from Nodes.TemperatureHandlers.PreScriptedTemperatureHandler import PreScriptedT
 
 engine = NodeEngine()
 
-with open("configuration.json") as f:
+with open("heat_setup.json") as f:
     loaded_data = json.loads(f.read())
     engine.deserialize(loaded_data)
 
@@ -25,7 +25,7 @@ with open("configuration.json") as f:
 #engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 
-engine.doTick()
+#engine.doTick()
 
 
 #engine.start()

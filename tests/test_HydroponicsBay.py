@@ -22,7 +22,7 @@ def test_update(resources_received, resources_provided, resources_left_over, eff
     hydroponics._getAllReservedResources = MagicMock()
     hydroponics._getHealthEffectivenessFactor = MagicMock(return_value=effectiveness)
     hydroponics._temperature = hydroponics._optimal_temperature
-
+    hydroponics.ensureSaneValues()
     hydroponics.update()
 
     resources_provided_this_tick = hydroponics.getResourcesProvidedThisTick()
