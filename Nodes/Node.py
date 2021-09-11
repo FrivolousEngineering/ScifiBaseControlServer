@@ -82,9 +82,16 @@ class Node:
         # Any resources that were left from previous (ticks) that could not be left anywhere.
         self._resources_left_over = {}  # type: Dict[str, float]
 
+        self._weight = kwargs.get("weight", 300)  # type: float
+
+        self._specific_heat = 1 # type: float
+        """ How much energy is needed to increase 1kg of this node by one degree"""
+
+        self._stored_heat = self._weight * temperature * self._specific_heat  # type: float
+        """How much heat is stored inside this object. This is used to calculate the energy"""
+
         # Temperature is in kelvin
         self._temperature = temperature
-        self._weight = kwargs.get("weight", 300)   # type: float
 
         # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
         self._heat_emissivity = kwargs.get("heat_emissivity", 0.5)  # type: float
@@ -185,6 +192,7 @@ class Node:
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
         self._setPerformance(self.performance)
+        self._stored_heat = self.weight * self._temperature * self._specific_heat
 
     @modifiable_property
     def temperature_efficiency(self):
@@ -426,15 +434,14 @@ class Node:
         """
         The temperature of this node in Kelvin
         """
-        return self._temperature
+        return self._stored_heat / self.weight / self._specific_heat
 
-    def addHeat(self, heat_to_add: float, additional_weight: float = 0) -> None:
+    def addHeat(self, heat_to_add: float) -> None:
         """
         Add an amount of heat to this node. Can be negative or positive.
         :param heat_to_add: The amount of heat to add (or subtract)
-        :param additional_weight: Used to compensate for resource transfers that are still in progress.
         """
-        self._temperature += heat_to_add / (self.weight - additional_weight)
+        self._stored_heat += heat_to_add
 
     def __repr__(self):
         return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
