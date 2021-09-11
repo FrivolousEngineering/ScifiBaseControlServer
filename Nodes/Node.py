@@ -451,7 +451,12 @@ class Node:
         """
         return self._temperature
 
-    def _recalculateTemperature(self):
+    def _recalculateTemperature(self) -> None:
+        """
+        Update the temperature of this node. This isn't done every time the temperature is requested to prevent
+        issues with nodes that pass through resources.
+        :return:
+        """
         self._temperature = self._stored_heat / self.combined_specific_heat
 
     def addHeat(self, heat_to_add: float) -> None:

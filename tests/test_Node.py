@@ -71,6 +71,7 @@ def test_addHeat():
 
     starting_temp = node.temperature
     node.addHeat(300 * 420)
+    node._recalculateTemperature()
     assert node.temperature == starting_temp + 1
 
 
@@ -399,7 +400,7 @@ def test_connectNodes():
 def test_massiveHeatDamage():
     node = Node.Node("SuchNode!")
     node._stored_heat = 9000000000000000000000000000000000000000000000000000
-
+    node._recalculateTemperature()
     node._dealDamageFromHeat()
 
     assert node.health == 0  # No amount of damage should ever let the health go below 0

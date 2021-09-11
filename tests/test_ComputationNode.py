@@ -39,8 +39,10 @@ def test_updateDataNotUsed():
     computation_node_data_not_used._resources_received_this_sub_tick = {"energy": 10}
     computation_node_data_not_used.update()
     computation_node_data_used.update()
-
+    computation_node_data_used.cleanupAfterUpdate()
+    computation_node_data_not_used.cleanupAfterUpdate()
     assert computation_node_data_not_used.temperature < computation_node_data_used.temperature
+
 
 def test_couldntStoreALlData():
     computation_node = ComputationNode.ComputationNode("omg")
