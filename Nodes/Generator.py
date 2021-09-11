@@ -1,7 +1,7 @@
 from math import sqrt
 
 from Nodes.Node import Node, modifiable_property
-from Nodes.Constants import COMBUSTION_HEAT
+from Nodes.Constants import COMBUSTION_HEAT, WEIGHT_PER_UNIT
 from Nodes.Util import enforcePositive
 
 
@@ -11,7 +11,7 @@ class Generator(Node):
     Since it burns the fuel, a fair amount of heat is produced in this process. In order to cool it, it can also accept
     water, which it will use to transfer heat into.
     """
-    def __init__(self, node_id: str, fuel_type: str = "fuel", energy_factor: float = 1.0, **kwargs) -> None:
+    def __init__(self, node_id: str, fuel_type: str = "fuel", energy_factor: float = 10.0, **kwargs) -> None:
         """
         :param node_id:
         :param fuel_type: What resource should it use as fuel?
@@ -34,7 +34,7 @@ class Generator(Node):
 
         self._fuel_type = fuel_type
         self._energy_factor = energy_factor
-        self._resources_required_per_tick[fuel_type] = 10
+        self._resources_required_per_tick[fuel_type] = 1
         self._optional_resources_required_per_tick["water"] = 250
 
         self._resources_left_over["energy"] = 0
@@ -66,7 +66,7 @@ class Generator(Node):
         If there were resources left over, we should request less resources next time round.
         """
         energy_left = self._resources_left_over["energy"]
-        self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - energy_left)
+        self._resources_required_per_tick[self._fuel_type] = self._performance * enforcePositive(self._original_resources_required_per_tick[self._fuel_type] * self.health_effectiveness_factor - (energy_left / self._energy_factor))
 
         water_left = self._resources_left_over.get("water", 0)
         self._optional_resources_required_per_tick["water"] = self._performance * enforcePositive(self._original_optional_resources_required_per_tick["water"] * self.health_effectiveness_factor - water_left)
@@ -90,7 +90,7 @@ class Generator(Node):
         self._resources_provided_this_tick["energy"] += enforcePositive(energy_available - energy_left)
 
         # The amount of fuel we used is equal to the energy we produced. Depending on that, the generator produces heat
-        heat_produced = fuel_gained * COMBUSTION_HEAT[self._fuel_type] * self.temperature_efficiency
+        heat_produced = fuel_gained * COMBUSTION_HEAT[self._fuel_type] * WEIGHT_PER_UNIT[self._fuel_type] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
         # Same thing for the water. Check how much water we have.

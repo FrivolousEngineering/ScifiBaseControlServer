@@ -1,4 +1,4 @@
-from Nodes.Constants import COMBUSTION_HEAT
+from Nodes.Constants import COMBUSTION_HEAT, WEIGHT_PER_UNIT
 from Nodes.Node import Node, modifiable_property
 from Nodes.Util import enforcePositive
 
@@ -69,14 +69,14 @@ class OilExtractor(Node):
         fuel_used = fuel_available - self._resources_left_over["fuel"]
 
         # Burn half of the fuel used to acutaly produce something
-        heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
         # Then try to dump half of the fuel that we received back again
         self._resources_left_over["fuel"] += self._provideResourceToOutgoingConnections("fuel", 0.5 * fuel_used)
 
         # Burn *all* of the fuel that was not used to produce something (or could not be dumped!)
-        heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
         self.addHeat(heat_produced)
         self._resources_left_over["fuel"] = 0
 
