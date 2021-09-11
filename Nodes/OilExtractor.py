@@ -33,8 +33,15 @@ class OilExtractor(Node):
         result = self._temperature_efficiency * (1.5 - health_factor)
         return result
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
+        water_left = self._resources_left_over.get("water", 0)
+        self._optional_resources_required_per_tick["water"] = self._performance * enforcePositive(self._original_optional_resources_required_per_tick["water"] * self.health_effectiveness_factor - water_left)
+
     def update(self, sub_tick_modifier: float = 1) -> None:
-        super().update()
+        super().update(sub_tick_modifier)
         # Get all the resources that we want
         fuel_available = self.getResourceAvailableThisTick("fuel")
         plants_available = self.getResourceAvailableThisTick("plants")
@@ -82,6 +89,8 @@ class OilExtractor(Node):
 
         # And try to get rid of some water
         water_left = self._provideResourceToOutgoingConnections("water", water_available)
+        water_provided = enforcePositive(water_available - water_left)
+        self._resources_provided_this_tick["water"] += water_provided
         self._resources_left_over["water"] = water_left
 
         oil_provided = enforcePositive(oil_produced - oil_left)
@@ -89,4 +98,6 @@ class OilExtractor(Node):
 
         waste_provided = enforcePositive(waste_produced - waste_left)
         self._resources_provided_this_tick["waste"] += waste_provided
+
+        self._updateResourceRequiredPerTick()
 
