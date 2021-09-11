@@ -58,6 +58,7 @@ def test_damage():
     node.damage(20)
     assert node.health == 80
 
+
 def test_massiveDamage():
     node = Node.Node("zomg")
 
@@ -69,7 +70,8 @@ def test_addHeat():
     node = Node.Node("yay")
 
     starting_temp = node.temperature
-    node.addHeat(300)
+    node.addHeat(300 * 420)
+    node._recalculateTemperature()
     assert node.temperature == starting_temp + 1
 
 
@@ -85,9 +87,9 @@ def test_connect():
 
 @pytest.mark.parametrize("starting_temperature, outside_temperature, heat_emitted", [(0, 0, 0),
                                                                                      (200, 200, 0),
-                                                                                     (201, 200, -0.91402670835),
-                                                                                     (200, 201, 0.91402670835),
-                                                                                     (200, 202, 1.8417978936)])
+                                                                                     (201, 200, -54.841602501),
+                                                                                     (200, 201, 54.841602501),
+                                                                                     (200, 202, 110.507873616)])
 def test__emitHeat(starting_temperature, outside_temperature, heat_emitted):
     node = Node.Node("")
     node.addHeat = MagicMock()
@@ -103,9 +105,9 @@ def test__emitHeat(starting_temperature, outside_temperature, heat_emitted):
 
 @pytest.mark.parametrize("starting_temperature, outside_temperature, heat_emitted", [(0, 0, 0),
                                                                                      (200, 200, 0),
-                                                                                     (201, 200, -10),
-                                                                                     (200, 201, 10),
-                                                                                     (200, 202, 20)])
+                                                                                     (201, 200, -600),
+                                                                                     (200, 201, 600),
+                                                                                     (200, 202, 1200)])
 def test__convectiveHeatTransfer(starting_temperature, outside_temperature, heat_emitted):
     node = Node.Node("")
     node.addHeat = MagicMock()
@@ -398,7 +400,7 @@ def test_connectNodes():
 def test_massiveHeatDamage():
     node = Node.Node("SuchNode!")
     node._stored_heat = 9000000000000000000000000000000000000000000000000000
-
+    node._recalculateTemperature()
     node._dealDamageFromHeat()
 
     assert node.health == 0  # No amount of damage should ever let the health go below 0

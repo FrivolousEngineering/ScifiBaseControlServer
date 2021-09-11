@@ -1,16 +1,16 @@
 
-# The specific heat is just a ratio. It is loosly based on real values (hence fuel being 0.5 and water being 1).
+# How much joule does it take to increase the temperature by 1 kelvin of 1 kg of material?
 SPECIFIC_HEAT = {"energy": 0,
-                 "fuel": 0.5,
-                 "water": 1,
-                 "oxygen": 0.25,
+                 "fuel": 2220,
+                 "water": 4190,
+                 "oxygen": 919,
                  "data": 0,
-                 "dirty_water": 1,
-                 "waste": 1,
-                 "animal_waste": 1,
-                 "plants": 0.39,
-                 "plant_oil": 0.5,
-                 "food": 0.6,
+                 "dirty_water": 4179,
+                 "waste": 800,  # Based on dry soil
+                 "animal_waste": 800,  # Also based on dry soil
+                 "plants": 1480,  # Based on wet soil
+                 "plant_oil": 1970,  # Based on Olive oil
+                 "food": 2489,  # Specific heat of bread
                  "medicine": 0.3
                  }
 
@@ -19,7 +19,7 @@ GAS_PHASE_CHANGE_TEMPERATURE = {
 }
 
 GAS_PHASE_SPECIFIC_HEAT = {
-    "water": 540
+    "water": 2262600
 }
 
 
@@ -40,13 +40,13 @@ WEIGHT_PER_UNIT = {"water": 1,
 
 
 COMBUSTION_HEAT = {"water": 0,
-                   "fuel": 7500,
+                   "fuel": 42000000,  # Based on Diesel
                    "energy": 0,
                    "oxygen": 0,
                    "data": 0,
                    "dirty_water": 0,
-                   "waste": 3000,
-                   "animal_waste": 3000,
+                   "waste": 16000000,  # Based on wood
+                   "animal_waste": 16000000,
                    "medicine": 0
                    }
 

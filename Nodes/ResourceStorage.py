@@ -56,14 +56,14 @@ class ResourceStorage(Node):
 
         combined_specific_heat = self._weight * self._specific_heat
         if SPECIFIC_HEAT[self._resource_type] > 0:
-            combined_specific_heat += self._amount * SPECIFIC_HEAT[self._resource_type]
+            combined_specific_heat += self._amount * SPECIFIC_HEAT[self._resource_type] * self._resource_weight_per_unit
         self._stored_heat = combined_specific_heat * self._temperature
 
     @property
     def temperature(self):
         resource_specific_heat = SPECIFIC_HEAT[self._resource_type]
         if self._resource_type not in GAS_PHASE_CHANGE_TEMPERATURE:
-            return self._stored_heat / (self._weight * self._specific_heat + self._amount * resource_specific_heat)
+            return self._stored_heat / (self._weight * self._specific_heat + self._amount * self._resource_weight_per_unit * resource_specific_heat)
 
         gas_phase_temperature = GAS_PHASE_CHANGE_TEMPERATURE[self._resource_type]
 
@@ -73,7 +73,7 @@ class ResourceStorage(Node):
         energy_above_gas_transition = self._stored_heat - energy_required_to_reach_transition_temp
         if energy_above_gas_transition < 0:
             # We're below gas transition. Just do whatever the regular is:
-            return self._stored_heat / (self._weight * self._specific_heat + self._amount * resource_specific_heat)
+            return self._stored_heat / (self._weight * self._specific_heat + self._amount * self._resource_weight_per_unit * resource_specific_heat)
 
         energy_needed_to_convert_all_into_gas = self._amount * GAS_PHASE_SPECIFIC_HEAT[self._resource_type]
 
@@ -83,7 +83,6 @@ class ResourceStorage(Node):
         energy_left = energy_above_gas_transition - energy_needed_to_convert_all_into_gas
 
         return gas_phase_temperature + energy_left / self.weight / self._specific_heat
-
 
     @property
     def weight(self) -> float:

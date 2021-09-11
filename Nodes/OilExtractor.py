@@ -1,4 +1,4 @@
-from Nodes.Constants import COMBUSTION_HEAT
+from Nodes.Constants import COMBUSTION_HEAT, WEIGHT_PER_UNIT, SPECIFIC_HEAT
 from Nodes.Node import Node, modifiable_property
 from Nodes.Util import enforcePositive
 
@@ -33,8 +33,16 @@ class OilExtractor(Node):
         result = self._temperature_efficiency * (1.5 - health_factor)
         return result
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
+        water_left = self._resources_left_over.get("water", 0)
+        self._optional_resources_required_per_tick["water"] = self._performance * enforcePositive(self._original_optional_resources_required_per_tick["water"] * self.health_effectiveness_factor - water_left)
+
     def update(self, sub_tick_modifier: float = 1) -> None:
-        super().update()
+        super().update(sub_tick_modifier)
+
         # Get all the resources that we want
         fuel_available = self.getResourceAvailableThisTick("fuel")
         plants_available = self.getResourceAvailableThisTick("plants")
@@ -64,24 +72,27 @@ class OilExtractor(Node):
 
         # If a part of the resources (oil or waste) could not be dumped, we have more plants/fuel left.
         self._resources_left_over["plants"] += max_resource_left * self.inverted_effectiveness_factor
+
         self._resources_left_over["fuel"] += max_resource_left / self._fuel_per_plant_ratio * self.inverted_effectiveness_factor
 
         fuel_used = fuel_available - self._resources_left_over["fuel"]
 
         # Burn half of the fuel used to acutaly produce something
-        heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
         # Then try to dump half of the fuel that we received back again
         self._resources_left_over["fuel"] += self._provideResourceToOutgoingConnections("fuel", 0.5 * fuel_used)
 
         # Burn *all* of the fuel that was not used to produce something (or could not be dumped!)
-        heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * self.temperature_efficiency
+        heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
         self.addHeat(heat_produced)
         self._resources_left_over["fuel"] = 0
 
         # And try to get rid of some water
         water_left = self._provideResourceToOutgoingConnections("water", water_available)
+        water_provided = enforcePositive(water_available - water_left)
+        self._resources_provided_this_tick["water"] += water_provided
         self._resources_left_over["water"] = water_left
 
         oil_provided = enforcePositive(oil_produced - oil_left)
@@ -89,4 +100,6 @@ class OilExtractor(Node):
 
         waste_provided = enforcePositive(waste_produced - waste_left)
         self._resources_provided_this_tick["waste"] += waste_provided
+
+        self._updateResourceRequiredPerTick()
 

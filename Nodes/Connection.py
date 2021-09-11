@@ -92,11 +92,14 @@ class Connection:
         """
         if not self.origin.enabled or not self.target.enabled:
             return 0
+        current_temperature = self.origin.temperature
         result = self.origin.getResource(self.resource_type, amount)
 
-        heat_transferred = result * self.origin.temperature * self._specific_heat
+        heat_transferred = result * current_temperature * self._specific_heat * self._weight_per_unit
+
         self.target.addHeat(heat_transferred)
         self.origin.addHeat(-heat_transferred)
+
         return result
 
     def preGetResource(self, amount: float) -> float:
@@ -118,9 +121,12 @@ class Connection:
         """
         if not self.origin.enabled or not self.target.enabled:
             return 0
+
+        current_temperature = self.origin.temperature
         result = self.target.giveResource(self.resource_type, amount)
 
-        heat_transferred = result * self.origin.temperature * self._specific_heat
+        heat_transferred = result * current_temperature * self._specific_heat * self._weight_per_unit
+
         self.target.addHeat(heat_transferred)
         self.origin.addHeat(-heat_transferred)
         return result

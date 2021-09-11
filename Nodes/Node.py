@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 
 from collections import defaultdict
 from Nodes.Connection import Connection
+from Nodes.Constants import SPECIFIC_HEAT, WEIGHT_PER_UNIT
 from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Signal import signalemitter, Signal
@@ -84,7 +85,7 @@ class Node:
 
         self._weight = kwargs.get("weight", 300)  # type: float
 
-        self._specific_heat = 1 # type: float
+        self._specific_heat = 420  # type: float
         """ How much energy is needed to increase 1kg of this node by one degree"""
 
         self._stored_heat = self._weight * temperature * self._specific_heat  # type: float
@@ -154,6 +155,17 @@ class Node:
 
         self._tags = []  # type: List[str]
 
+        self._seconds_per_tick = 60
+
+    @property
+    def combined_specific_heat(self):
+        total_specific_heat = self._weight * self._specific_heat
+
+        for resource_type, amount in self._resources_left_over.items():
+            total_specific_heat += SPECIFIC_HEAT[resource_type] * amount * WEIGHT_PER_UNIT[resource_type]
+
+        return total_specific_heat
+
     @property
     def additional_properties(self):
         """
@@ -192,7 +204,8 @@ class Node:
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
         self._setPerformance(self.performance)
-        self._stored_heat = self.weight / self._specific_heat * self._temperature
+
+        self._stored_heat = self.weight * self._specific_heat * self._temperature
 
     @modifiable_property
     def temperature_efficiency(self):
@@ -436,7 +449,15 @@ class Node:
         """
         The temperature of this node in Kelvin
         """
-        return self._stored_heat / self.weight * self._specific_heat
+        return self._temperature
+
+    def _recalculateTemperature(self) -> None:
+        """
+        Update the temperature of this node. This isn't done every time the temperature is requested to prevent
+        issues with nodes that pass through resources.
+        :return:
+        """
+        self._temperature = self._stored_heat / self.combined_specific_heat
 
     def addHeat(self, heat_to_add: float) -> None:
         """
@@ -736,6 +757,7 @@ class Node:
         :return:
         """
         self._resources_received_this_sub_tick.clear()
+        self._recalculateTemperature()
 
     def _emitHeat(self) -> None:
         """
@@ -743,7 +765,7 @@ class Node:
         """
         temp_diff = pow(self.outside_temp, 4) - pow(self.temperature, 4)
         heat_radiation = self.__stefan_boltzmann_constant * self.heat_emissivity * self._surface_area * temp_diff
-        self.addHeat(heat_radiation)
+        self.addHeat(heat_radiation * self._seconds_per_tick)
 
         if heat_radiation < 0:
             if self.temperature < self.outside_temp:
@@ -757,7 +779,7 @@ class Node:
         """
         delta_temp = self.outside_temp - self.temperature
         heat_convection = self.heat_convection_coefficient * self._surface_area * delta_temp
-        self.addHeat(heat_convection)
+        self.addHeat(heat_convection * self._seconds_per_tick)
         if heat_convection < 0:  # Cooling down happened.
             if self.temperature < self.outside_temp:
                 # We were warmer than the outside before, but no amount of convection can make us go lower!
