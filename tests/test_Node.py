@@ -95,7 +95,7 @@ def test__emitHeat(starting_temperature, outside_temperature, heat_emitted):
 
     # Force the starting temperature
     node._temperature = starting_temperature
-
+    node.ensureSaneValues()
     node._emitHeat()
 
     node.addHeat.assert_called_with(heat_emitted)
@@ -112,6 +112,7 @@ def test__convectiveHeatTransfer(starting_temperature, outside_temperature, heat
     node.outside_temp = outside_temperature
     # Force the starting temperature
     node._temperature = starting_temperature
+    node.ensureSaneValues()
 
     node._convectiveHeatTransfer()
     node.addHeat.assert_called_with(heat_emitted)
@@ -385,7 +386,7 @@ def test_connectNodes():
     node = Node.Node("SuchNode!")
     node_2 = Node.Node("anotherNode")
 
-    node.connectWith("energy",node_2)
+    node.connectWith("energy", node_2)
 
     assert len(node.getAllOutgoingConnections()) == 1
     assert len(node.getAllIncomingConnections()) == 0
@@ -396,7 +397,7 @@ def test_connectNodes():
 
 def test_massiveHeatDamage():
     node = Node.Node("SuchNode!")
-    node._temperature = 900000000000000
+    node._stored_heat = 9000000000000000000000000000000000000000000000000000
 
     node._dealDamageFromHeat()
 

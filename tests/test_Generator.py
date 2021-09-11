@@ -7,7 +7,6 @@ import math
 import pytest
 
 
-
 def test_update():
     generator = Generator.Generator("omg")
 
@@ -18,7 +17,7 @@ def test_update():
 
     # Set the generator at the perfect temperature
     generator._temperature = generator._optimal_temperature
-
+    generator.ensureSaneValues()
     generator.update()
 
     generator.addHeat.assert_called_once()
@@ -71,7 +70,7 @@ def test_update_with_different_energy_factor():
 
     # Set the generator at the perfect temperature
     generator._temperature = generator._optimal_temperature
-
+    generator.ensureSaneValues()
     generator.update()
 
     generator.addHeat.assert_called_once()

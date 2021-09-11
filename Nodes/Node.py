@@ -420,6 +420,8 @@ class Node:
             if mod:
                 mod.deserialize(modifier)
                 self.addModifier(mod)
+        # TODO: Not sure if this should stay in.
+        self.ensureSaneValues()
 
     @property
     def weight(self):
