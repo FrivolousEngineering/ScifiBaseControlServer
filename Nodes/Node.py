@@ -385,7 +385,7 @@ class Node:
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
         result["resources_provided_this_tick"] = self._resources_provided_this_tick
         result["resources_left_over"] = self._resources_left_over
-        result["temperature"] = self._temperature
+        result["temperature"] = self.temperature
         result["custom_description"] = self._custom_description
         result["performace"] = self._performance
         result["modifiers"] = []
@@ -737,7 +737,7 @@ class Node:
         self.addHeat(heat_radiation)
 
         if heat_radiation < 0:
-            if self._temperature < self.outside_temp:
+            if self.temperature < self.outside_temp:
                 # We were warmer than the outside before, but no amount of radiation can make us go lower!
                 self._temperature = self.outside_temp
 
@@ -750,7 +750,7 @@ class Node:
         heat_convection = self.heat_convection_coefficient * self._surface_area * delta_temp
         self.addHeat(heat_convection)
         if heat_convection < 0:  # Cooling down happened.
-            if self._temperature < self.outside_temp:
+            if self.temperature < self.outside_temp:
                 # We were warmer than the outside before, but no amount of convection can make us go lower!
                 self._temperature = self.outside_temp
 
@@ -806,7 +806,7 @@ class Node:
             return factor
 
         # Now to compensate a bit for temperature
-        temperature_difference = abs(self._temperature - self.optimal_temperature)
+        temperature_difference = abs(self.temperature - self.optimal_temperature)
         temperature_difference = min(self.optimal_temperature_range, temperature_difference)
 
         # This factor runs from 0 to 1
