@@ -5,9 +5,9 @@ SPECIFIC_HEAT = {"energy": 0,
                  "water": 4190,
                  "oxygen": 919,
                  "data": 0,
-                 "dirty_water": 4179,
+                 "dirty_water": 3905,
                  "waste": 800,  # Based on dry soil
-                 "animal_waste": 800,  # Also based on dry soil
+                 "animal_waste": 1000,  # A bit different from dry soil
                  "plants": 1480,  # Based on wet soil
                  "plant_oil": 1970,  # Based on Olive oil
                  "food": 2489,  # Specific heat of bread
