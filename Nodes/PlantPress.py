@@ -14,8 +14,6 @@ class PlantPress(Node):
         self._resources_required_per_tick["plants"] = 30
         self._resources_required_per_tick["energy"] = 10
 
-        self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
-
         self._water_resevoir = 20
 
         self._tags.append("mechanical")

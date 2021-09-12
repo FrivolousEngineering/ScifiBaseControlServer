@@ -14,9 +14,6 @@ class WaterPurifier(Node):
         self._optional_resources_required_per_tick["oxygen"] = 10
         self._resources_required_per_tick["dirty_water"] = 10
 
-        self._original_resources_required_per_tick = self._resources_required_per_tick.copy()
-        self._optional_original_resources_required_per_tick = self._optional_resources_required_per_tick.copy()
-
         self._waste_oxygen_conversion_rate = 2  # Two oxygen is required to convert one waste
 
         self._tags.append("mechanical")
@@ -26,7 +23,7 @@ class WaterPurifier(Node):
         If there were resources left over, we should request less resources next time round.
         """
         resources_left = max(self._resources_left_over["animal_waste"], self._resources_left_over["water"])
-        self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._optional_original_resources_required_per_tick["oxygen"]
+        self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._original_optional_resources_required_per_tick["oxygen"]
                                                           * self.effectiveness_factor - resources_left)
 
         self._resources_required_per_tick["dirty_water"] = enforcePositive(

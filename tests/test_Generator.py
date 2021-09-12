@@ -9,8 +9,14 @@ import pytest
 #TODO add test for different energy factors
 
 
-def test_update():
+@pytest.fixture
+def generator():
     generator = Generator.Generator("omg")
+    generator.ensureSaneValues()
+    return generator
+
+
+def test_update(generator):
 
     generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
     generator._provideResourceToOutgoingConnections = MagicMock(return_value = 5)
@@ -39,8 +45,7 @@ def test_update():
 
 
 
-def test_generator_resources_left_previous_update():
-    generator = Generator.Generator("omg")
+def test_generator_resources_left_previous_update(generator):
     generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
                       "resources_produced_this_tick": defaultdict(float), "resources_left_over": {"energy": 5}, "resources_provided_this_tick": defaultdict(float)})
 
@@ -107,8 +112,7 @@ def test_temperature_efficiency(effectiveness_factor, efficiency):
                                                                                               (1, 0.4, 0.5),  # 1 energy left over, but we were running at 50%,
                                                                                               (11, 0, 1),  # Shouldn't happen; more energy was left than possible. Don't request anything!
                                                                                               ])
-def test__update_resources_required_per_tick(energy_left, fuel_per_tick_required, health_effectiveness_factor):
-    generator = Generator.Generator("omg")
+def test__update_resources_required_per_tick(energy_left, fuel_per_tick_required, health_effectiveness_factor, generator):
     generator._resources_left_over["energy"] = energy_left
     generator._getHealthEffectivenessFactor = MagicMock(return_value = health_effectiveness_factor)
     generator._updateResourceRequiredPerTick()
@@ -116,9 +120,7 @@ def test__update_resources_required_per_tick(energy_left, fuel_per_tick_required
     assert math.isclose(generator._resources_required_per_tick["fuel"], fuel_per_tick_required)
 
 
-def test_setPerformance():
-    generator = Generator.Generator("omg")
-
+def test_setPerformance(generator):
     generator._resources_received_this_tick = {"fuel": 10, "water": 0}
     generator._provideResourceToOutgoingConnections = MagicMock(return_value=0)
     generator._getAllReservedResources = MagicMock()
