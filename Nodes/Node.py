@@ -363,6 +363,14 @@ class Node:
         if self._health < 0:
             self._health = 0
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        """
+        Depending on what happend the last update, it might be needed to update the required resources for the next
+        tick.
+        :return:
+        """
+        pass
+
     @property
     def enabled(self) -> bool:
         return self._enabled
@@ -756,6 +764,7 @@ class Node:
         updates are done)
         :return:
         """
+        self._updateResourceRequiredPerTick()
         self._resources_received_this_sub_tick.clear()
         self._recalculateTemperature()
 

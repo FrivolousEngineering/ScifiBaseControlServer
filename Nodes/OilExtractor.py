@@ -100,6 +100,3 @@ class OilExtractor(Node):
 
         waste_provided = enforcePositive(waste_produced - waste_left)
         self._resources_provided_this_tick["waste"] += waste_provided
-
-        self._updateResourceRequiredPerTick()
-

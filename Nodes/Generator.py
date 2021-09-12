@@ -104,6 +104,3 @@ class Generator(Node):
         self._resources_provided_this_tick["water"] += enforcePositive(water_available - water_left)
 
         self._resources_left_over["energy"] = energy_left
-
-        # Based on what happened last turn, we should potentially ask for a bit less.
-        self._updateResourceRequiredPerTick()

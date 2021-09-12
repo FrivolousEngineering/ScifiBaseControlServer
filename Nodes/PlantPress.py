@@ -67,6 +67,3 @@ class PlantPress(Node):
         water_provided = enforcePositive(water_produced - water_left_from_production)
         self._resources_provided_this_tick["water"] += water_provided
         self._resources_produced_this_tick["water"] += water_produced
-
-        # Based on what happened last turn, we should potentially ask for a bit less.
-        self._updateResourceRequiredPerTick()

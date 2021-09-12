@@ -27,7 +27,6 @@ class ConverterNode(Node):
         self._resources_provided_this_tick[self._output_resource] += resources_available - resources_left
 
         self._resources_left_over[self._output_resource] = resources_left
-        self._updateResourceRequiredPerTick()
 
     def _updateResourceRequiredPerTick(self) -> None:
         resources_left = self._resources_left_over[self._output_resource]

@@ -75,6 +75,3 @@ class WaterPurifier(Node):
         # Remember how much we couldn't store anywhere.
         self._resources_left_over["water"] = clean_water_left
         self._resources_left_over["animal_waste"] = waste_left
-
-        # Based on what happened last turn, we should potentially ask for a bit less.
-        self._updateResourceRequiredPerTick()
