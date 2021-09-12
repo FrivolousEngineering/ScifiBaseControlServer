@@ -15,11 +15,12 @@ def water_purifier():
 
 
 @pytest.mark.parametrize("resources_received,                   resources_produced",
-                        [({"dirty_water": 10},                  {"water": 5, "animal_waste": 5}),
-                         ({"dirty_water": 10, "oxygen": 10},    {"water": 10, "animal_waste": 10}),
-                         ({"dirty_water": 10, "oxygen": 5},     {"water": 7.5, "animal_waste": 7.5}),
-                         ({"dirty_water": 7.5, "oxygen": 10},   {"water": 7.5, "animal_waste": 7.5}),
-                         ({"oxygen": 10},                       {"water": 0, "animal_waste": 0})])
+                        [({"dirty_water": 10},                  {"water": 5, "animal_waste": 0.5}),
+                         ({"dirty_water": 10, "oxygen": 140},    {"water": 10, "animal_waste": 1}),
+                         ({"dirty_water": 10, "oxygen": 70},     {"water": 7.5, "animal_waste": 0.75}),
+                         ({"dirty_water": 7.5, "oxygen": 140},   {"water": 7.5, "animal_waste": 0.75}),
+                         ({"oxygen": 140},                       {"water": 0, "animal_waste": 0}),
+                         ({"oxygen": 20},                       {"water": 0, "animal_waste": 0})])
 def test_update(resources_received, resources_produced, water_purifier):
     water_purifier._resources_received_this_sub_tick = resources_received
     water_purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
@@ -44,15 +45,15 @@ def test_update(resources_received, resources_produced, water_purifier):
 
 
 
-@pytest.mark.parametrize("waste_left,   water_left, oxygen_required,    dirty_water_required,   health_effectiveness_factor",
-                         [(1,           9,          1,                  1,                      1),
-                          (9,           1,          1,                  1,                      1),
-                          (0,           0,          10,                 10,                     1),
-                          (0,           0,          5,                  5,                      0.5),
-                          (3,           3,          2,                  2,                      0.5),
-                          (8,           2,          0,                  0,                      0.5),  # More left than needed!
-                          (1,           1,          1,                  1,                      0.2)
-                                                                                              ])
+@pytest.mark.parametrize("""
+    waste_left,   water_left, oxygen_required,  dirty_water_required,   health_effectiveness_factor""", [
+    (0.1,         9,          14,               1,                      1),
+    (0.9,         1,          14,               1,                      1),
+    (0,           0,          140,              10,                     1),
+    (0,           0,          70,               5,                      0.5),
+    (0.3,         3,          28,               2,                      0.5),
+    (0.8,         2,          0,                0,                      0.5),  # More left than needed!
+    (0.1,         1,          14,               1,                      0.2)])
 def test__update_resources_required_per_tick(waste_left, water_left, oxygen_required, dirty_water_required,
                                              health_effectiveness_factor, water_purifier):
     water_purifier._resources_left_over["animal_waste"] = waste_left

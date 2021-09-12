@@ -133,7 +133,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "oxygen",
-            "amount": 0
+            "amount": 10000
         },
 
         "hydroponics_battery":
