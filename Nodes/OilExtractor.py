@@ -10,7 +10,7 @@ class OilExtractor(Node):
     def __init__(self, node_id: str, **kwargs) -> None:
         super().__init__(node_id, **kwargs)
 
-        self._resources_required_per_tick["fuel"] = 2.5
+        self._resources_required_per_tick["fuel"] = 1
         self._resources_required_per_tick["plants"] = 10
         self._optional_resources_required_per_tick["water"] = 250
         self._health = 100
@@ -49,7 +49,7 @@ class OilExtractor(Node):
 
         water_available = self.getResourceAvailableThisTick("water")
 
-        oil_produced = min(2 * fuel_available, plants_available)
+        oil_produced = min(5 * fuel_available, plants_available)
 
         self._resources_left_over["plants"] = plants_available - oil_produced
         self._resources_left_over["fuel"] = fuel_available - oil_produced / self._fuel_per_plant_ratio
@@ -77,7 +77,7 @@ class OilExtractor(Node):
 
         fuel_used = fuel_available - self._resources_left_over["fuel"]
 
-        # Burn half of the fuel used to acutaly produce something
+        # Burn half of the fuel used to actually produce something
         heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
         self.addHeat(heat_produced)
 
