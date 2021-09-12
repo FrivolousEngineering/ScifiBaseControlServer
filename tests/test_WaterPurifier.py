@@ -13,14 +13,14 @@ def water_purifier():
     return purifier
 
 
-
-@pytest.mark.parametrize("resources_received,                   resources_produced",
-                        [({"dirty_water": 10},                  {"water": 5, "animal_waste": 0.5}),
-                         ({"dirty_water": 10, "oxygen": 140},    {"water": 10, "animal_waste": 1}),
-                         ({"dirty_water": 10, "oxygen": 70},     {"water": 7.5, "animal_waste": 0.75}),
-                         ({"dirty_water": 7.5, "oxygen": 140},   {"water": 7.5, "animal_waste": 0.75}),
-                         ({"oxygen": 140},                       {"water": 0, "animal_waste": 0}),
-                         ({"oxygen": 20},                       {"water": 0, "animal_waste": 0})])
+@pytest.mark.parametrize(
+"""resources_received,                  resources_produced""",
+[({"dirty_water": 10},                  {"water": 5, "animal_waste": 0.5}),
+ ({"dirty_water": 10, "oxygen": 140},   {"water": 10, "animal_waste": 1}),
+ ({"dirty_water": 10, "oxygen": 70},    {"water": 7.5, "animal_waste": 0.75}),
+ ({"dirty_water": 7.5, "oxygen": 140},  {"water": 7.5, "animal_waste": 0.75}),
+ ({"oxygen": 140},                      {"water": 0, "animal_waste": 0}),
+ ({"oxygen": 20},                       {"water": 0, "animal_waste": 0})])
 def test_update(resources_received, resources_produced, water_purifier):
     water_purifier._resources_received_this_sub_tick = resources_received
     water_purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
@@ -44,9 +44,8 @@ def test_update(resources_received, resources_produced, water_purifier):
     assert math.isclose(water_purifier._provideResourceToOutgoingConnections.call_args_list[1][0][1], resources_produced["animal_waste"])
 
 
-
-@pytest.mark.parametrize("""
-    waste_left,   water_left, oxygen_required,  dirty_water_required,   health_effectiveness_factor""", [
+@pytest.mark.parametrize(
+""" waste_left,   water_left, oxygen_required,  dirty_water_required,   health_effectiveness_factor""", [
     (0.1,         9,          14,               1,                      1),
     (0.9,         1,          14,               1,                      1),
     (0,           0,          140,              10,                     1),
@@ -66,8 +65,18 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
 
 
 def test_purifier_resources_left_previous_update(water_purifier):
-    water_purifier.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
-                      "resources_produced_this_tick": defaultdict(float), "resources_provided_this_tick": defaultdict(float), "resources_left_over": {"animal_waste": 5, "water": 3}})
+    water_purifier.deserialize({
+                                    "node_id": "omg",
+                                    "temperature": 200,
+                                    "resources_received_this_tick": defaultdict(float),
+                                    "resources_produced_this_tick": defaultdict(float),
+                                    "resources_provided_this_tick": defaultdict(float),
+                                    "resources_left_over":
+                                    {
+                                        "animal_waste": 5,
+                                        "water": 3
+                                    }
+                                })
 
     original_resources_available = water_purifier.getResourceAvailableThisTick
     water_purifier.getResourceAvailableThisTick = MagicMock(return_value = 0)
