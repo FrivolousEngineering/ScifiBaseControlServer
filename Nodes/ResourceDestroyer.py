@@ -23,10 +23,4 @@ class ResourceDestroyer(Node):
         super().update(sub_tick_modifier)
 
         for resource_type, amount in self._resources_received_this_sub_tick.items():
-            dumped_resources = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
-
-            # Since this destroys resources, we also need to remove the heat again. Note that this does mean that
-            # if this node receives hot resources, it will increase in temperature. This is because it gets energy
-            # based on the temperature of the node it received it from and destroys the resources based on its own
-            # temperature (which hasn't updated yet)
-            self.addHeat(-dumped_resources)
+            self._markResourceAsDestroyed(resource_type, amount)

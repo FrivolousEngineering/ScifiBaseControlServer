@@ -1,0 +1,43 @@
+{
+    "nodes":
+    {
+
+        "plant_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plants",
+            "amount": 0
+        },
+
+        "oxygen_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "oxygen",
+            "amount": 0
+        },
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+
+        "hydroponics_battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 100000000
+        },
+        "hydroponics":
+        {
+            "type": "HydroponicsBay"
+        }
+    },
+    "connections":
+    [
+        { "from": "water_storage", "to": "hydroponics", "resource_type": "water" },
+        { "from": "hydroponics_battery", "to": "hydroponics", "resource_type": "energy" },
+        { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
+        { "from": "hydroponics", "to": "water_storage", "resource_type": "water" }
+    ]
+}
