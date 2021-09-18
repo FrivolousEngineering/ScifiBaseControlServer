@@ -69,8 +69,8 @@ class HydroponicsBay(Node):
                                                                                     0) - water_provided_this_tick
         self._markResourceAsDestroyed("water", amount_of_water_used_this_tick)
         self._markResourceAsDestroyed("animal_waste", animal_waste_available)
-        self._markResourceAsCrated("oxygen", oxygen_produced)
-        self._markResourceAsCrated("plants", plants_produced)
+        self._markResourceAsCreated("oxygen", oxygen_produced)
+        self._markResourceAsCreated("plants", plants_produced)
 
         self._resources_produced_this_tick["plants"] += plants_produced
         self._resources_provided_this_tick["plants"] += plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)

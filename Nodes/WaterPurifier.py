@@ -36,10 +36,11 @@ class WaterPurifier(Node):
         oxygen_available = self.getResourceAvailableThisTick("oxygen")
 
         dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
+        self._markResourceAsDestroyed("dirty_water", dirty_water_available)
+        self._markResourceAsDestroyed("oxygen", oxygen_available)
 
         # Half of the production can be done without using oxygen.
-        dirty_water_converted_for_free = enforcePositive(dirty_water_available - self._original_resources_required_per_tick["dirty_water"] * sub_tick_modifier / 2)
-
+        dirty_water_converted_for_free = min(dirty_water_available, self._original_resources_required_per_tick["dirty_water"] * sub_tick_modifier / 2)
         # Now we know how much dirty water we can convert as a bonus
         dirty_water_converted_oxygen = enforcePositive(dirty_water_available - dirty_water_converted_for_free)
 
@@ -51,9 +52,13 @@ class WaterPurifier(Node):
         dirty_water_converted_total = dirty_water_converted_for_free + dirty_water_converted_oxygen
 
         total_waste_converted = dirty_water_converted_total * self._animal_waste_per_liter_dirty_water
+        self._markResourceAsCreated("water", dirty_water_converted_total)
+        self._markResourceAsCreated("animal_waste", total_waste_converted)
 
         self._resources_left_over["oxygen"] = oxygen_available - oxygen_required
         self._resources_left_over["dirty_water"] = dirty_water_available - dirty_water_converted_total
+        self._markResourceAsCreated("dirty_water", self._resources_left_over["dirty_water"])
+        self._markResourceAsCreated("oxygen", self._resources_left_over["oxygen"])
 
         # Ensure that we also check how much we had left from the last turn
         clean_water_available = dirty_water_converted_total + self._resources_left_over.get("water", 0)

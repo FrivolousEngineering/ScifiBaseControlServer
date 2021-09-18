@@ -6,6 +6,8 @@ import pytest
 from Nodes import WaterPurifier
 from collections import defaultdict
 
+from tests.testHelpers import createEngineFromConfig
+
 
 @pytest.fixture
 def water_purifier():
@@ -97,3 +99,25 @@ def test_purifier_resources_left_previous_update(water_purifier):
 
     # Also ensure that it was unable to provide the 4 of the 5 energy it had!
     assert original_resources_available("water") == 4
+
+
+@pytest.mark.parametrize("config_file", ["WaterPurifierSetup.json", "WaterPurifierWithOxygenSetup.json"])
+def test_sameTemperature(config_file):
+    engine = createEngineFromConfig(config_file)
+    engine._sub_ticks = 1
+    purifier = engine.getNodeById("purifier")
+    begin_temp = purifier.temperature
+    engine.doTick()
+    assert math.isclose(purifier.temperature, begin_temp)
+
+
+@pytest.mark.parametrize("sub_ticks", [1, 10, 30])
+@pytest.mark.parametrize('ticks', [1, 10, 20])
+@pytest.mark.parametrize("config_file, clean_water_produced_per_tick", [("WaterPurifierSetup.json", 5), ("WaterPurifierWithOxygenSetup.json", 10)])
+def test_plantsProduced(config_file, clean_water_produced_per_tick, sub_ticks, ticks):
+    engine = createEngineFromConfig(config_file)
+    engine._sub_ticks = sub_ticks
+    for _ in range(ticks):
+        engine.doTick()
+
+    assert math.isclose(engine.getNodeById("water_storage").amount_stored, clean_water_produced_per_tick * ticks)

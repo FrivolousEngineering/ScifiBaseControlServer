@@ -1,0 +1,40 @@
+{
+    "nodes":
+    {
+        "purifier":
+        {
+            "type": "WaterPurifier"
+        },
+        "dirty_water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "dirty_water",
+            "amount": 1000
+        },
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 0
+        },
+        "animal_waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "animal_waste",
+            "amount": 0
+        },
+        "oxygen_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "oxygen",
+            "amount": 100000
+        }
+    },
+    "connections":
+    [
+        { "from": "dirty_water_storage", "to": "purifier" , "resource_type": "dirty_water"},
+        { "from": "purifier", "to": "water_storage" , "resource_type": "water"},
+        { "from": "purifier", "to": "animal_waste_storage" , "resource_type": "animal_waste"},
+        { "from": "oxygen_storage", "to": "purifier" , "resource_type": "oxygen"}
+    ]
+}

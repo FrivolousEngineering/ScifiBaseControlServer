@@ -272,7 +272,7 @@ class Node:
         energy_lost = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
         self.addHeat(-energy_lost)
 
-    def _markResourceAsCrated(self, resource_type:str, amount:float) -> None:
+    def _markResourceAsCreated(self, resource_type:str, amount:float) -> None:
         """
         If a resource is created, extra energy needs to be added.
 
