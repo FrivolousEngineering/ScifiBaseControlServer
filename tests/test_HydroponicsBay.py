@@ -53,8 +53,9 @@ def test_temperatureRemainTheSameOptimalTemperature():
     # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
     engine = createEngineFromConfig("HydroponicsSetup.json")
     engine._sub_ticks = 1
-    hydroponics = engine.getNodeById("hydroponics")
 
+    hydroponics = engine.getNodeById("hydroponics")
+    engine._default_outside_temperature = hydroponics._optimal_temperature
     # Ensure that all nodes are at the perfect temperature
     for node in engine.getAllNodes().values():
         node._temperature = hydroponics._optimal_temperature
@@ -62,6 +63,7 @@ def test_temperatureRemainTheSameOptimalTemperature():
         node.ensureSaneValues()
 
     temperature_before = hydroponics.temperature
-    engine.doTick()
-    assert math.isclose(temperature_before, hydroponics.temperature)
+    for _ in range(0, 10):
+        engine.doTick()
+        assert math.isclose(temperature_before, hydroponics.temperature)
 

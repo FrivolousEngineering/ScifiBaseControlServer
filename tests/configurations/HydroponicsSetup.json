@@ -36,7 +36,8 @@
         {
             "type": "ResourceStorage",
             "resource_type": "oxygen",
-            "amount": 0
+            "amount": 0,
+            "max_amount": 5
         }
     },
     "connections":

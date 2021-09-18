@@ -47,6 +47,8 @@ class NodeEngine:
         # mean that more calculations are done, which might negatively impact larger systems.
         self._sub_ticks = 30
 
+        self._default_outside_temperature = 293.15
+
     def resetSeed(self) -> None:
         """
         When using 'sub tick updates' we randomize the order in which we handle the updates
@@ -70,7 +72,7 @@ class NodeEngine:
         Update the ambient temperature by using the outside temp handler (if any)
         :return:
         """
-        new_temperature = 293.15
+        new_temperature = self._default_outside_temperature
         if self._outside_temperature_handler is not None:
             new_temperature = self._outside_temperature_handler.getTemperatureForTick(self._tick_count)
 
