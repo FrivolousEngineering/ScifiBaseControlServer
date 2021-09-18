@@ -40,6 +40,7 @@ def test_durationRemoved():
     modifier.update()
 
     mock_node.removeModifier.assert_called_with(modifier)
+    assert modifier.duration == 0
 
 
 def test_durationNotRemoved():
@@ -51,6 +52,19 @@ def test_durationNotRemoved():
     modifier.update()
 
     mock_node.removeModifier.assert_not_called()
+    assert modifier.duration == 1
+
+
+def test_getModifierForProperty():
+    mod = Modifier.Modifier(modifiers={"omg": 12})
+    assert mod.getModifierForProperty("omg") == 12
+    assert mod.getModifierForProperty("lol") == 0
+
+
+def test_getFactorForProperty():
+    mod = Modifier.Modifier(factors={"whoo": 12})
+    assert mod.getFactorForProperty("whoo") == 12
+    assert mod.getFactorForProperty("lol") == 1
 
 
 @pytest.mark.parametrize("""
@@ -66,3 +80,18 @@ modifiers, factors, all_properties""", [
 def test_getModifiedProperties(modifiers, factors, all_properties):
     modifier = Modifier.Modifier(modifiers = modifiers, factors = factors)
     assert modifier.getAllInfluencedProperties() == all_properties
+
+
+def test_serialiseDeserialize():
+    mod = Modifier.Modifier(factors={"blorp": 1000})
+    second_mod = Modifier.Modifier()
+
+    # The modifiers start off as different
+    assert mod != second_mod
+
+    data = mod.serialize()
+    second_mod.deserialize(data)
+
+    assert mod == second_mod
+
+
