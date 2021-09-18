@@ -282,8 +282,8 @@ class Node:
         :param amount:
         :return:
         """
-        energy_lost = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
-        self.addHeat(energy_lost)
+        energy_added = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
+        self.addHeat(energy_added)
 
     def removeModifier(self, modifier: Modifier) -> None:
         """

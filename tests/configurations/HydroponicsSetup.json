@@ -31,6 +31,12 @@
         "hydroponics":
         {
             "type": "HydroponicsBay"
+        },
+        "oxygen_tank":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "oxygen",
+            "amount": 0
         }
     },
     "connections":
@@ -38,6 +44,7 @@
         { "from": "water_storage", "to": "hydroponics", "resource_type": "water" },
         { "from": "hydroponics_battery", "to": "hydroponics", "resource_type": "energy" },
         { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
-        { "from": "hydroponics", "to": "water_storage", "resource_type": "water" }
+        { "from": "hydroponics", "to": "water_storage", "resource_type": "water" },
+        { "from": "hydroponics", "to": "oxygen_tank", "resource_type": "oxygen" }
     ]
 }

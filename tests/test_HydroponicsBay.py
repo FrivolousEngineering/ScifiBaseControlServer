@@ -47,3 +47,21 @@ def test_temperatureRemainTheSame():
     assert math.isclose(temperature_before, hydroponics.temperature)
 
 
+def test_temperatureRemainTheSameOptimalTemperature():
+    # Not quite a unit test; But create a simple setup.
+    # Since the hydroponics does not create energy, it should just stay the same temperature.
+    # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
+    engine = createEngineFromConfig("HydroponicsSetup.json")
+    engine._sub_ticks = 1
+    hydroponics = engine.getNodeById("hydroponics")
+
+    # Ensure that all nodes are at the perfect temperature
+    for node in engine.getAllNodes().values():
+        node._temperature = hydroponics._optimal_temperature
+        node.outside_temp = hydroponics._optimal_temperature
+        node.ensureSaneValues()
+
+    temperature_before = hydroponics.temperature
+    engine.doTick()
+    assert math.isclose(temperature_before, hydroponics.temperature)
+
