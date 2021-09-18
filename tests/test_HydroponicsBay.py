@@ -48,11 +48,7 @@ def test_temperatureRemainTheSame(config_file):
     assert math.isclose(temperature_before, hydroponics.temperature)
 
 
-@pytest.mark.parametrize("config_file", ["HydroponicsSetup.json", "HydroponicsSetupWithAnimalWaste.json"])
-def test_temperatureRemainTheSameOptimalTemperature(config_file):
-    # Not quite a unit test; But create a simple setup.
-    # Since the hydroponics does not create energy, it should just stay the same temperature.
-    # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
+def setupForIdealState(config_file):
     engine = createEngineFromConfig(config_file)
 
     hydroponics = engine.getNodeById("hydroponics")
@@ -62,8 +58,25 @@ def test_temperatureRemainTheSameOptimalTemperature(config_file):
         node._temperature = hydroponics._optimal_temperature
         node.outside_temp = hydroponics._optimal_temperature
         node.ensureSaneValues()
+    return engine
 
+@pytest.mark.parametrize("config_file", ["HydroponicsSetup.json", "HydroponicsSetupWithAnimalWaste.json"])
+def test_temperatureRemainTheSameOptimalTemperature(config_file):
+    # Not quite a unit test; But create a simple setup.
+    # Since the hydroponics does not create energy, it should just stay the same temperature.
+    # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
+    engine = setupForIdealState(config_file)
+    hydroponics = engine.getNodeById("hydroponics")
     temperature_before = hydroponics.temperature
     for _ in range(0, 10):
         engine.doTick()
         assert math.isclose(temperature_before, hydroponics.temperature)
+
+
+@pytest.mark.parametrize("config_file, plants_created", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
+def test_plantsProduced(config_file, plants_created):
+    engine = setupForIdealState(config_file)
+    engine._sub_ticks = 1
+    engine.doTick()
+
+    assert math.isclose(engine.getNodeById("plant_storage").amount_stored, plants_created)
