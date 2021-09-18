@@ -449,7 +449,10 @@ class Node:
 
     @property
     def weight(self):
-        return self._weight
+        extra_weight = 0
+        for resource, amount in self._resources_left_over.items():
+            extra_weight += WEIGHT_PER_UNIT[resource] * amount
+        return self._weight + extra_weight
 
     @modifiable_property
     def performance_change_factor(self):
