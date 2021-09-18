@@ -587,7 +587,7 @@ class Node:
         This can be used to display information, since this is the most up to date info.
         :return:
         """
-        return self._resources_provided_this_tick
+        return self._resources_provided_last_tick
 
     def getResourceAvailableThisTick(self, resource_type: str) -> float:
         """
