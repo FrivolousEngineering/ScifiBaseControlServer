@@ -384,6 +384,55 @@ def test_unmodifiableNodeWithModifier():
     assert modifier not in node.getModifiers()
 
 
+@pytest.mark.parametrize("property_to_modify", ["temperature_efficiency",
+                                                "temperature_degradation_speed",
+                                                "optimal_temperature",
+                                                "optimal_temperature_range",
+                                                "min_performance",
+                                                "max_performance",
+                                                "heat_emissivity",
+                                                "heat_convection_coefficient",
+                                                "max_safe_temperature",
+                                                "health",
+                                                "performance_change_factor",
+                                                ])
+@pytest.mark.parametrize("""
+modifier_value, factor_value,   result""", [
+(10,            None,           11),
+(19,            None,           20),
+(5,             0,              5),
+(0,             0,              0),
+(10,            0,              10),
+(10,            1,              11),
+(None,          10,             10),
+(0,             10,             10),
+(None,          23,             23),
+(1,             10,             11),
+(2,             12,             14)])
+def test_modifiedProperty(modifier_value, factor_value, result, property_to_modify):
+    # Not quite a unit test, since it tests behavior that combines node and modifier, it's still good to test it!
+    # It also makes sure that these properties are settable by means of kwargs, which further makes it less of a unit
+    # test.
+    # The double pytest.mark.parametrize basically ensures that this is called in a grid. So it goes through the second
+    # list once for every property it checks.
+    node = Node.Node("ModifiedNode", **{property_to_modify: 1})
+    node_property = getattr(node, property_to_modify)
+    assert node_property == 1
+
+    mod_dict = {}
+    if modifier_value is not None:
+        mod_dict[property_to_modify] = modifier_value
+
+    factor_dict = {}
+    if factor_value is not None:
+        factor_dict[property_to_modify] = factor_value
+
+    modifier = Modifier.Modifier(modifiers=mod_dict, factors = factor_dict)
+    node.addModifier(modifier)
+    node_property = getattr(node, property_to_modify)
+    assert node_property == result
+
+
 def test_connectNodes():
     node = Node.Node("SuchNode!")
     node_2 = Node.Node("anotherNode")

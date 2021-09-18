@@ -121,10 +121,10 @@ class Node:
 
         self._additional_properties = ["health"]  # type: List[str]
 
-        self._health = 100.  # type: float
+        self._health = kwargs.get("health", 100)   # type: float
         self._max_health = 100  # type: float
         self._active = False  # type: bool
-        self._max_safe_temperature = 400  # type: float
+        self._max_safe_temperature = kwargs.get("max_safe_temperature", 400)  # type: float
 
         # At what level should this node perform?
         self._performance = kwargs.get("performance", 1)  # type: float
@@ -135,7 +135,7 @@ class Node:
 
         self._has_settable_performance = True
 
-        self._temperature_degradation_speed = 10.  # type: float
+        self._temperature_degradation_speed = kwargs.get("temperature_degradation_speed", 1)  # type: float
         """How fast should this node degrade if it's above a certain temperature?"""
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
@@ -146,7 +146,7 @@ class Node:
 
         # Does this node change it's performance instantly?
         # a value of 1 means it changes instantly, higher values means it changes slower.
-        self._performance_change_factor = 2  # type: float
+        self._performance_change_factor = kwargs.get("performance_change_factor", 2)  # type: float
 
         self._optimal_temperature = kwargs.get("optimal_temperature", 375) # type: float
         self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75) # type: float
