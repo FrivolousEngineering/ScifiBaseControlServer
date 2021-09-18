@@ -68,18 +68,26 @@ def test_temperatureRemainTheSameOptimalTemperature(config_file):
     engine = setupForIdealState(config_file)
     hydroponics = engine.getNodeById("hydroponics")
     temperature_before = hydroponics.temperature
+
     for _ in range(0, 10):
         engine.doTick()
         assert math.isclose(temperature_before, hydroponics.temperature)
 
 
+@pytest.mark.parametrize("performance", [0.5, 1.2, 1])
 @pytest.mark.parametrize("sub_ticks", [1, 10, 30])
 @pytest.mark.parametrize('ticks', [1, 10, 20])
 @pytest.mark.parametrize("config_file, plants_created_per_tick", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
-def test_plantsProduced(config_file, plants_created_per_tick, sub_ticks, ticks):
+def test_plantsProduced(config_file, plants_created_per_tick, sub_ticks, ticks, performance):
     engine = setupForIdealState(config_file)
     engine._sub_ticks = sub_ticks
+    hydroponics = engine.getNodeById("hydroponics")
+    hydroponics._min_performance = performance
+    hydroponics._max_performance = performance
+
+    hydroponics._setPerformance(performance)
+    hydroponics.target_performance = performance
     for _ in range(ticks):
         engine.doTick()
 
-    assert math.isclose(engine.getNodeById("plant_storage").amount_stored, plants_created_per_tick * ticks)
+    assert math.isclose(engine.getNodeById("plant_storage").amount_stored, plants_created_per_tick * ticks * performance)
