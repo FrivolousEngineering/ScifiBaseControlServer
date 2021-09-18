@@ -8,6 +8,8 @@ from Nodes.Modifiers.Modifier import Modifier
 from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Signal import signalemitter, Signal
 
+from functools import wraps
+
 
 def modifiable_property(f):
     """
@@ -17,7 +19,8 @@ def modifiable_property(f):
     :param f:
     :return:
     """
-    @property
+
+    @wraps(f)
     def wrapper(self, *args, **kwargs):
         modifier_value = 0
         factor_value = 1.0
@@ -32,7 +35,7 @@ def modifiable_property(f):
             return min(getattr(self, "max_" + property_name), final_value)
         except AttributeError:
             return final_value
-    return wrapper
+    return property(wrapper)
 
 
 @signalemitter
