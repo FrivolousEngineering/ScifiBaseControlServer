@@ -6,6 +6,7 @@ import pytest
 from Nodes import WaterPurifier
 from collections import defaultdict
 
+
 @pytest.fixture
 def water_purifier():
     purifier = WaterPurifier.WaterPurifier("omg")
@@ -14,13 +15,13 @@ def water_purifier():
 
 
 @pytest.mark.parametrize(
-"""resources_received,                  resources_produced""",
-[({"dirty_water": 10},                  {"water": 5, "animal_waste": 0.5}),
- ({"dirty_water": 10, "oxygen": 140},   {"water": 10, "animal_waste": 1}),
- ({"dirty_water": 10, "oxygen": 70},    {"water": 7.5, "animal_waste": 0.75}),
- ({"dirty_water": 7.5, "oxygen": 140},  {"water": 7.5, "animal_waste": 0.75}),
- ({"oxygen": 140},                      {"water": 0, "animal_waste": 0}),
- ({"oxygen": 20},                       {"water": 0, "animal_waste": 0})])
+"""resources_received,                    resources_produced""",[
+   ({"dirty_water": 10},                  {"water": 5, "animal_waste": 0.5}),
+   ({"dirty_water": 10, "oxygen": 140},   {"water": 10, "animal_waste": 1}),
+   ({"dirty_water": 10, "oxygen": 70},    {"water": 7.5, "animal_waste": 0.75}),
+   ({"dirty_water": 7.5, "oxygen": 140},  {"water": 7.5, "animal_waste": 0.75}),
+   ({"oxygen": 140},                      {"water": 0, "animal_waste": 0}),
+   ({"oxygen": 20},                       {"water": 0, "animal_waste": 0})])
 def test_update(resources_received, resources_produced, water_purifier):
     water_purifier._resources_received_this_sub_tick = resources_received
     water_purifier._provideResourceToOutgoingConnections = MagicMock(return_value = 0)
