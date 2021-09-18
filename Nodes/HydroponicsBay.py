@@ -62,7 +62,7 @@ class HydroponicsBay(Node):
         # All the animal_waste we get is consumed (also makes it a bit more simple...)
         # Getting enough waste means that it produces twice as much. Boom.
         # TODO: Hacked this in for a bit.
-        plants_produced = oxygen_produced * (1 + animal_waste_available / self._optional_resources_required_per_tick["animal_waste"])
+        plants_produced = oxygen_produced * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 
         # Some water was destroyed:
         amount_of_water_used_this_tick = self._resources_received_this_sub_tick.get("water",
@@ -74,5 +74,3 @@ class HydroponicsBay(Node):
 
         self._resources_produced_this_tick["plants"] += plants_produced
         self._resources_provided_this_tick["plants"] += plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)
-
-

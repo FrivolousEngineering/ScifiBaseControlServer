@@ -73,10 +73,13 @@ def test_temperatureRemainTheSameOptimalTemperature(config_file):
         assert math.isclose(temperature_before, hydroponics.temperature)
 
 
-@pytest.mark.parametrize("config_file, plants_created", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
-def test_plantsProduced(config_file, plants_created):
+@pytest.mark.parametrize("sub_ticks", [1, 10, 30])
+@pytest.mark.parametrize('ticks', [1, 10, 20])
+@pytest.mark.parametrize("config_file, plants_created_per_tick", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
+def test_plantsProduced(config_file, plants_created_per_tick, sub_ticks, ticks):
     engine = setupForIdealState(config_file)
-    engine._sub_ticks = 1
-    engine.doTick()
+    engine._sub_ticks = sub_ticks
+    for _ in range(ticks):
+        engine.doTick()
 
-    assert math.isclose(engine.getNodeById("plant_storage").amount_stored, plants_created)
+    assert math.isclose(engine.getNodeById("plant_storage").amount_stored, plants_created_per_tick * ticks)
