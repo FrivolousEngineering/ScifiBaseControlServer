@@ -1,3 +1,4 @@
+from Nodes.Constants import SPECIFIC_HEAT, WEIGHT_PER_UNIT
 from Nodes.Node import Node
 from Nodes.Util import enforcePositive
 
@@ -53,14 +54,25 @@ class HydroponicsBay(Node):
         self._resources_provided_this_tick["oxygen"] += oxygen_provided
 
         water_left = self._provideResourceToOutgoingConnections("water", self._resources_left_over["water"])
-
-        self._resources_provided_this_tick["water"] += enforcePositive(self._resources_left_over["water"] - water_left)
+        water_provided_this_tick = enforcePositive(self._resources_left_over["water"] - water_left)
+        self._resources_provided_this_tick["water"] += water_provided_this_tick
         self._resources_left_over["water"] = water_left
+
 
         # All the animal_waste we get is consumed (also makes it a bit more simple...)
         # Getting enough waste means that it produces twice as much. Boom.
         # TODO: Hacked this in for a bit.
         plants_produced = oxygen_produced * (1 + animal_waste_available / self._optional_resources_required_per_tick["animal_waste"])
+
+        # Some water was destroyed:
+        amount_of_water_used_this_tick = self._resources_received_this_sub_tick.get("water",
+                                                                                    0) - water_provided_this_tick
+        self._markResourceAsDestroyed("water", amount_of_water_used_this_tick)
+        self._markResourceAsDestroyed("animal_waste", animal_waste_available)
+        self._markResourceAsCrated("oxygen", oxygen_produced)
+        self._markResourceAsCrated("plants", plants_produced)
+
         self._resources_produced_this_tick["plants"] += plants_produced
         self._resources_provided_this_tick["plants"] += plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)
+
 

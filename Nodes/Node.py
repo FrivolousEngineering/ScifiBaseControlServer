@@ -257,6 +257,34 @@ class Node:
         self._modifiers.append(modifier)
         modifier.setNode(self)
 
+    def _markResourceAsDestroyed(self, resource_type: str, amount: float) -> None:
+        """
+        If a resource is used up somehow, the node still got extra energy for receiving it in the first place!
+        If it were to just disappear, this would cause the node to heat up (it got the energy, but the mass is suddenly
+        gone!). This function makes sure that the heat bookkeeping is updated.
+
+        Yes; This breaks all kinds of physics rules. But its a big hassle to ensure that all the inputs & outputs
+        of each node are 100% correct
+        :param resource_type:
+        :param amount:
+        :return:
+        """
+        energy_lost = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
+        self.addHeat(-energy_lost)
+
+    def _markResourceAsCrated(self, resource_type:str, amount:float) -> None:
+        """
+        If a resource is created, extra energy needs to be added.
+
+        Yes; This breaks all kinds of physics rules. But its a big hassle to ensure that all the inputs & outputs
+        of each node are 100% correct
+        :param resource_type:
+        :param amount:
+        :return:
+        """
+        energy_lost = amount * self.temperature * SPECIFIC_HEAT[resource_type] * WEIGHT_PER_UNIT[resource_type]
+        self.addHeat(energy_lost)
+
     def removeModifier(self, modifier: Modifier) -> None:
         """
         Remove a modifier from the node. If it's not found, nothing happens.
