@@ -26,7 +26,7 @@ class HydroponicsBay(Node):
         self._weight = kwargs.get("weight", 2000)  # type: float
 
         self._tags.append("plant")
-        
+
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
         # Get the resources we asked for!

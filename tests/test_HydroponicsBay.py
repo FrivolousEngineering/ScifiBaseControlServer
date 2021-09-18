@@ -35,10 +35,11 @@ def test_update(resources_received, resources_provided, resources_left_over, eff
         assert math.isclose(hydroponics._resources_left_over[key], resources_left_over[key]), "%s doesn't match %s: %s" % (key, hydroponics._resources_left_over[key], resources_left_over[key])
 
 
-def test_temperatureRemainTheSame():
+@pytest.mark.parametrize("config_file", ["HydroponicsSetup.json", "HydroponicsSetupWithAnimalWaste.json"])
+def test_temperatureRemainTheSame(config_file):
     # Not quite a unit test; But create a simple setup.
     # Since the hydroponics does not create energy, it should just stay the same temperature
-    engine = createEngineFromConfig("HydroponicsSetup.json")
+    engine = createEngineFromConfig(config_file)
     hydroponics = engine.getNodeById("hydroponics")
     temperature_before = hydroponics.temperature
     engine.doTick()
@@ -47,12 +48,12 @@ def test_temperatureRemainTheSame():
     assert math.isclose(temperature_before, hydroponics.temperature)
 
 
-def test_temperatureRemainTheSameOptimalTemperature():
+@pytest.mark.parametrize("config_file", ["HydroponicsSetup.json", "HydroponicsSetupWithAnimalWaste.json"])
+def test_temperatureRemainTheSameOptimalTemperature(config_file):
     # Not quite a unit test; But create a simple setup.
     # Since the hydroponics does not create energy, it should just stay the same temperature.
     # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
-    engine = createEngineFromConfig("HydroponicsSetup.json")
-    engine._sub_ticks = 1
+    engine = createEngineFromConfig(config_file)
 
     hydroponics = engine.getNodeById("hydroponics")
     engine._default_outside_temperature = hydroponics._optimal_temperature
@@ -66,4 +67,3 @@ def test_temperatureRemainTheSameOptimalTemperature():
     for _ in range(0, 10):
         engine.doTick()
         assert math.isclose(temperature_before, hydroponics.temperature)
-
