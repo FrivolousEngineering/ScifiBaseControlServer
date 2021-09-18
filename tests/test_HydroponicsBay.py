@@ -1,12 +1,10 @@
-import json
 from unittest.mock import MagicMock
 import math
 
 import pytest
 
 from Nodes import HydroponicsBay
-from Nodes.NodeEngine import NodeEngine
-from Nodes.NodeStorage import NodeStorage
+from tests.testHelpers import createEngineFromConfig
 
 
 @pytest.mark.parametrize("resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped",
@@ -40,16 +38,7 @@ def test_update(resources_received, resources_provided, resources_left_over, eff
 def test_temperatureRemainTheSame():
     # Not quite a unit test; But create a simple setup.
     # Since the hydroponics does not create energy, it should just stay the same temperature
-    engine_with_storage = NodeEngine()
-    storage = NodeStorage(engine_with_storage)
-    storage.storage_name = "test_storage"
-
-    engine = NodeEngine()
-    engine._sub_ticks = 2
-    with open("tests/configurations/HydroponicsSetup.json") as f:
-        loaded_data = json.loads(f.read())
-        engine_with_storage.deserialize(loaded_data)
-        engine.deserialize(loaded_data)
+    engine = createEngineFromConfig("HydroponicsSetup.json")
     hydroponics = engine.getNodeById("hydroponics")
     temperature_before = hydroponics.temperature
     engine.doTick()
