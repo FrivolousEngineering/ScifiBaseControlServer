@@ -111,13 +111,20 @@ def test_sameTemperature(config_file):
     assert math.isclose(purifier.temperature, begin_temp)
 
 
-@pytest.mark.parametrize("sub_ticks", [1, 10, 30])
-@pytest.mark.parametrize('ticks', [1, 10, 20])
+@pytest.mark.parametrize("performance", [0.5, 1, 0.8])
+@pytest.mark.parametrize("sub_ticks", [1, 20, 30])
+@pytest.mark.parametrize('ticks', [1, 5, 10])
 @pytest.mark.parametrize("config_file, clean_water_produced_per_tick", [("WaterPurifierSetup.json", 5), ("WaterPurifierWithOxygenSetup.json", 10)])
-def test_plantsProduced(config_file, clean_water_produced_per_tick, sub_ticks, ticks):
+def test_waterCleaned(config_file, clean_water_produced_per_tick, sub_ticks, ticks, performance):
     engine = createEngineFromConfig(config_file)
     engine._sub_ticks = sub_ticks
+    purifier = engine.getNodeById("purifier")
+    purifier._min_performance = performance
+    purifier._max_performance = performance
+
+    purifier._setPerformance(performance)
+    purifier.target_performance = performance
+
     for _ in range(ticks):
         engine.doTick()
-
-    assert math.isclose(engine.getNodeById("water_storage").amount_stored, clean_water_produced_per_tick * ticks)
+    assert math.isclose(engine.getNodeById("water_storage").amount_stored, clean_water_produced_per_tick * ticks * performance)

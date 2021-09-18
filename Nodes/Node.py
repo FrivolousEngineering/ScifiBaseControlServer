@@ -329,6 +329,7 @@ class Node:
                 self._optional_resources_required_per_tick[resource] = self._original_optional_resources_required_per_tick[
                                                                   resource] * self._performance
 
+
     @property
     def target_performance(self) -> float:
         return self._target_performance

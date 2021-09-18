@@ -25,10 +25,10 @@ class WaterPurifier(Node):
         resources_left_factor = 1 - max(self._resources_left_over["animal_waste"] * 10, self._resources_left_over["water"]) / (10 * self.effectiveness_factor)
 
         self._optional_resources_required_per_tick["oxygen"] = enforcePositive(self._original_optional_resources_required_per_tick["oxygen"]
-                                                          * self.effectiveness_factor * resources_left_factor)
+                                                          * self.effectiveness_factor * resources_left_factor) * self.performance
 
         self._resources_required_per_tick["dirty_water"] = enforcePositive(
-            self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor * resources_left_factor)
+            self._original_resources_required_per_tick["dirty_water"] * self.effectiveness_factor * resources_left_factor)  * self.performance
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
@@ -36,11 +36,12 @@ class WaterPurifier(Node):
         oxygen_available = self.getResourceAvailableThisTick("oxygen")
 
         dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
+        print(self._resources_received_this_sub_tick, self._resources_required_per_tick, self._performance)
         self._markResourceAsDestroyed("dirty_water", dirty_water_available)
         self._markResourceAsDestroyed("oxygen", oxygen_available)
 
         # Half of the production can be done without using oxygen.
-        dirty_water_converted_for_free = min(dirty_water_available, self._original_resources_required_per_tick["dirty_water"] * sub_tick_modifier / 2)
+        dirty_water_converted_for_free = min(dirty_water_available, self._original_resources_required_per_tick["dirty_water"] * sub_tick_modifier * self.performance * self.effectiveness_factor / 2)
         # Now we know how much dirty water we can convert as a bonus
         dirty_water_converted_oxygen = enforcePositive(dirty_water_available - dirty_water_converted_for_free)
 
