@@ -36,12 +36,17 @@ class PlantPress(Node):
         energy_available = self.getResourceAvailableThisTick("energy")
         plants_available = self.getResourceAvailableThisTick("plants")
 
+        self._markResourceAsDestroyed("plants", plants_available)
+
         # Three plants are needed to create one food. Every 10 foods create 3.5 water, so we need to be able to store
         # 1 water per 2.87 food we produce
         food_produced = min(energy_available, plants_available / 3)
 
         self._resources_left_over["plants"] = plants_available - food_produced * 3
         self._resources_left_over["energy"] = energy_available - food_produced
+
+        self._markResourceAsCreated("plants", self._resources_left_over["plants"])
+
         food_produced *= self.effectiveness_factor
 
         food_left_from_production = self._provideResourceToOutgoingConnections("food", food_produced)
@@ -49,6 +54,9 @@ class PlantPress(Node):
 
         # Every 10 food units creates 3.5 water
         water_produced = food_produced / 2.87
+
+        self._markResourceAsCreated("water", water_produced)
+        self._markResourceAsCreated("food", food_produced)
 
         water_left_from_production = self._provideResourceToOutgoingConnections("water", water_produced)
         water_left_from_storage = self._provideResourceToOutgoingConnections("water", self.getResourceAvailableThisTick("water"))

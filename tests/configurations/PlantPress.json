@@ -1,0 +1,45 @@
+{
+    "nodes":
+    {
+
+        "plant_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plants",
+            "amount": 5000
+        },
+
+        "energy_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 25
+        },
+
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 0
+        },
+        "food_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "food",
+            "amount": 0
+        },
+
+        "plant_press":
+        {
+            "type": "PlantPress"
+        }
+
+    },
+    "connections":
+    [
+        { "from": "plant_storage", "to": "plant_press", "resource_type": "plants" },
+        { "from": "energy_storage", "to": "plant_press", "resource_type": "energy" },
+        { "from": "plant_press", "to": "water_storage", "resource_type": "water" },
+        { "from": "plant_press", "to": "food_storage", "resource_type": "food" }
+    ]
+}
