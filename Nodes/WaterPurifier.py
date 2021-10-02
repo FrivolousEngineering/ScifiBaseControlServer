@@ -36,7 +36,6 @@ class WaterPurifier(Node):
         oxygen_available = self.getResourceAvailableThisTick("oxygen")
 
         dirty_water_available = self.getResourceAvailableThisTick("dirty_water")
-        print(self._resources_received_this_sub_tick, self._resources_required_per_tick, self._performance)
         self._markResourceAsDestroyed("dirty_water", dirty_water_available)
         self._markResourceAsDestroyed("oxygen", oxygen_available)
 
