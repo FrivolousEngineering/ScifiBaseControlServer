@@ -100,11 +100,11 @@ def test_purifier_resources_left_previous_update(water_purifier):
     # Also ensure that it was unable to provide the 4 of the 5 energy it had!
     assert original_resources_available("water") == 4
 
-
+@pytest.mark.parametrize("sub_ticks", [1, 20, 30])
 @pytest.mark.parametrize("config_file", ["WaterPurifierSetup.json", "WaterPurifierWithOxygenSetup.json"])
-def test_sameTemperature(config_file):
+def test_sameTemperature(config_file, sub_ticks):
     engine = createEngineFromConfig(config_file)
-    engine._sub_ticks = 1
+    engine._sub_ticks = sub_ticks
     purifier = engine.getNodeById("purifier")
     begin_temp = purifier.temperature
     engine.doTick()
