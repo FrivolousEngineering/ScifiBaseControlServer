@@ -1,12 +1,9 @@
-from unittest.mock import MagicMock
 import math
 
 import pytest
 
-from Nodes import WaterPurifier
-from collections import defaultdict
-
 from tests.testHelpers import createEngineFromConfig
+
 
 @pytest.mark.parametrize("sub_ticks", [1, 10, 30])
 @pytest.mark.parametrize("config_file", ["PlantPress.json"])
@@ -18,3 +15,5 @@ def test_sameTemperature(config_file, sub_ticks):
     begin_temp = plant_press.temperature
     engine.doTick()
     assert math.isclose(plant_press.temperature, begin_temp)
+
+
