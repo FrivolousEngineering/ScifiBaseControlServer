@@ -97,7 +97,7 @@ class Server(Flask):
 
         self._bus = dbus.SessionBus()
 
-        self.register_error_handler(dbus.exceptions.DBusException, self._dbusExceptionHandler)
+        self.register_error_handler(dbus.exceptions.DBusException, self._dbusExceptionHandler) # type: ignore
 
         # This is needed for the sqlalchemy database
         self.teardown_appcontext(self._shutdownSession)
