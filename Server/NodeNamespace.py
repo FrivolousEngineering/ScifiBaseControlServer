@@ -106,6 +106,7 @@ class Enabled(Resource):
             return UNKNOWN_NODE_RESPONSE
         return nodes.isNodeEnabled(node_id)
 
+    @api.response(404, "Unknown Node")
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
