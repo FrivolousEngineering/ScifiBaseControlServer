@@ -19,15 +19,15 @@ def setupForIdealState(config_file):
     return engine
 
 
-@pytest.mark.parametrize("performance", [1])
-@pytest.mark.parametrize("sub_ticks", [1])
-@pytest.mark.parametrize('ticks', [1])
+@pytest.mark.parametrize("performance", [1, 1.5, 0.8])
+@pytest.mark.parametrize("sub_ticks", [1, 10, 30])
+@pytest.mark.parametrize('ticks', [1, 10, 20])
 @pytest.mark.parametrize("config_file, medicine_created_per_tick", [("MedicineCreator.json", 5)])
-def test_medicineProduced(config_file, medicine_created_per_tick, sub_ticks, ticks, performance):
+def test_medicineProduced_noHeat(config_file, medicine_created_per_tick, sub_ticks, ticks, performance):
     engine = setupForIdealState(config_file)
     engine._sub_ticks = sub_ticks
     medicine_creator = engine.getNodeById("medicine_creator")
-
+    medicine_creator._heat_per_medicine_created = 0
     medicine_creator._min_performance = performance
     medicine_creator._max_performance = performance
 
