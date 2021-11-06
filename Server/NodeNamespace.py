@@ -412,7 +412,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "heat_convection": nodes.getHeatConvectionCoefficient(node_id),
             "heat_emissivity": nodes.getHeatEmissivity(node_id),
             "health": nodes.getAdditionalPropertyValue(node_id, "health"),
-            "is_temperature_dependant": nodes.getIsTemperatureDependant(node_id),
+            "is_temperature_dependant": bool(nodes.getIsTemperatureDependant(node_id)),
             "optimal_temperature": nodes.getOptimalTemperature(node_id),
             "resources_required": required_resources,
             "optional_resources_required": optional_required_resources,
