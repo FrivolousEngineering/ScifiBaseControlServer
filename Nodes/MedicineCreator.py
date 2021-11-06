@@ -15,7 +15,7 @@ class MedicineCreator(Node):
         self._resources_required_per_tick["plant_oil"] = 5
 
         # It doesn't need the extra water, it just uses it for temperature purposes
-        self._optional_resources_required_per_tick["water"] = 0
+        self._optional_resources_required_per_tick["water"] = 25
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._heat_convection_coefficient = 1
@@ -55,8 +55,9 @@ class MedicineCreator(Node):
         self._resources_provided_this_tick["medicine"] += medicine_provided
 
         # Heat bookkeeping
-        water_used_in_production = enforcePositive(water_available - water_left)
-        plant_oil_used_in_production = enforcePositive(plant_oil_available - plant_oil_left)
+        water_used_in_production = enforcePositive(water_available - self._resources_left_over["water"])
+
+        plant_oil_used_in_production = enforcePositive(plant_oil_available - self._resources_left_over["plant_oil"])
         self._markResourceAsDestroyed("water", water_used_in_production)
         self._markResourceAsDestroyed("plant_oil", plant_oil_used_in_production)
         self._markResourceAsCreated("medicine", medicine_produced)
