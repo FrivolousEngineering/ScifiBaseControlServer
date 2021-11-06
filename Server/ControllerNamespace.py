@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields, Namespace
 import json
 from Server.Blueprint import api
@@ -18,7 +18,7 @@ controller = api.model("controller", {
     "sensors": fields.List(fields.Nested(sensor))
 })
 
-
+UNKNOWN_CONTROLLER_RESPONSE = Response("Could not find the requested controller", status=404)
 
 def getControllerData(controller_id):
     manager = ControllerManager.getInstance()
@@ -38,7 +38,7 @@ def getControllerData(controller_id):
 @control_namespace.route("/")
 @control_namespace.doc(description ="Get all the known controllers.")
 class Controllers(Resource):
-    @api.response(200, "Sucess", fields.List(fields.Nested(controller)))
+    @api.response(200, "Sucsess", fields.List(fields.Nested(controller)))
     def get(self):
         result = []
         manager = ControllerManager.getInstance()
@@ -53,10 +53,13 @@ class Controllers(Resource):
 @control_namespace.doc(params={'controller_id': 'Identifier of the controller'})
 class Controller(Resource):
     @api.response(200, "success", controller)
-    @api.response(404, "Unknown Node")
+    @api.response(404, "Unknown Controller")
     def get(self, controller_id):
         manager = ControllerManager.getInstance()
-        return getControllerData(controller_id)
+        result = getControllerData(controller_id)
+        if result is None:
+            return UNKNOWN_CONTROLLER_RESPONSE
+        return result
 
     @api.response(200, "success")
     @api.expect(api.model('Controller', {'sensor_value': fields.Float}), code=201)
