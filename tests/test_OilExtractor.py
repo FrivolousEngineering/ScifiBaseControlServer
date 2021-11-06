@@ -23,7 +23,7 @@ def setupForIdealState(config_file):
 @pytest.mark.parametrize("sub_ticks", [1, 10, 30])
 @pytest.mark.parametrize('ticks', [1, 10, 20])
 @pytest.mark.parametrize("config_file, oil_created_per_tick", [("OilExtractor.json", 5)])
-def test_medicineProduced_noHeat(config_file, oil_created_per_tick, sub_ticks, ticks, performance):
+def test_oilProduced_noHeat(config_file, oil_created_per_tick, sub_ticks, ticks, performance):
     engine = setupForIdealState(config_file)
     engine._sub_ticks = sub_ticks
     oil_extractor = engine.getNodeById("oil_extractor")
