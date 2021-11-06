@@ -29,7 +29,7 @@ class MedicineCreator(Node):
         # Get the resources we asked for!
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")
-        plant_oil_available = self.getResourceAvailableThisTick("animal_waste")
+        plant_oil_available = self.getResourceAvailableThisTick("plant_oil_available")
 
         medicine_produced = min(water_available, energy_available, plant_oil_available)
 
