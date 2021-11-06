@@ -56,6 +56,7 @@ def test_giveResourceTwice():
 
     assert storage.getResourcesReceivedThisTick() == {"water": 30}
 
+
 @pytest.mark.parametrize("requested, received", [([20, 21], [10, 10]),
                                                  ([5, 9],   [5, 9]),
                                                  ([6, 6, 8], [6, 6, 8]),
