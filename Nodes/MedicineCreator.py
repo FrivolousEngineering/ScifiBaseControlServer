@@ -56,7 +56,6 @@ class MedicineCreator(Node):
 
         # Heat bookkeeping
         water_used_in_production = enforcePositive(water_available - self._resources_left_over["water"])
-
         plant_oil_used_in_production = enforcePositive(plant_oil_available - self._resources_left_over["plant_oil"])
         self._markResourceAsDestroyed("water", water_used_in_production)
         self._markResourceAsDestroyed("plant_oil", plant_oil_used_in_production)
@@ -65,4 +64,9 @@ class MedicineCreator(Node):
         # Add extra heat for production
         heat_produced = medicine_provided * self._heat_per_medicine_created * self.temperature_efficiency
         self.addHeat(heat_produced)
+
+        # Attempt to get rid of remaining water
+        self._resources_left_over["water"] = self._provideResourceToOutgoingConnections("water",
+                                                                                        self._resources_left_over[
+                                                                                            "water"])
 
