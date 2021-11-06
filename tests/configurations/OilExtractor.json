@@ -1,0 +1,43 @@
+{
+    "nodes":
+    {
+
+        "plant_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plants",
+            "amount": 1000
+        },
+
+        "fuel_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "fuel",
+            "amount": 1000
+        },
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+        "plant_oil_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plant_oil",
+            "amount": 0
+        },
+
+        "oil_extractor":
+        {
+            "type": "OilExtractor"
+        }
+    },
+    "connections":
+    [
+        { "from": "water_storage", "to": "oil_extractor", "resource_type": "water" },
+        { "from": "fuel_storage", "to": "oil_extractor", "resource_type": "fuel" },
+        { "from": "plant_storage", "to": "oil_extractor", "resource_type": "plants" },
+        { "from": "oil_extractor", "to": "plant_oil_storage", "resource_type": "plant_oil" }
+    ]
+}
