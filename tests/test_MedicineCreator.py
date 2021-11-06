@@ -18,6 +18,22 @@ def setupForIdealState(config_file):
         node.ensureSaneValues()
     return engine
 
+@pytest.mark.parametrize("config_file", ["MedicineCreator.json"])
+def test_temperatureIncrease(config_file):
+    engine = setupForIdealState(config_file)
+    temp_before = engine.getNodeById("medicine_creator").temperature
+    engine.doTick()
+    temp_after =  engine.getNodeById("medicine_creator").temperature
+    # Resources were produced, so temperature should be higher!
+    assert temp_before < temp_after
+
+    engine = setupForIdealState(config_file)
+    engine.getNodeById("medicine_creator")._heat_per_medicine_created = engine.getNodeById("medicine_creator")._heat_per_medicine_created * 10
+    temp_before = engine.getNodeById("medicine_creator").temperature
+    engine.doTick()
+    # Since we told it to create more heat per medicine, it should be higher
+    assert temp_after < engine.getNodeById("medicine_creator").temperature
+
 
 @pytest.mark.parametrize("performance", [1, 1.5, 0.8])
 @pytest.mark.parametrize("sub_ticks", [1, 10, 30])
