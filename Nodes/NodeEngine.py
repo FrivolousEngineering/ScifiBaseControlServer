@@ -156,6 +156,10 @@ class NodeEngine:
         :param serialized: Dict that describes the connections to be created
         """
         for connection_dict in serialized:
+            if connection_dict["from"] not in self._nodes:
+                raise KeyError(f"Could not find node with id {connection_dict['from']} to connect from")
+            if connection_dict["to"] not in self._nodes:
+                raise KeyError(f"Could not find node with id '{connection_dict['to']}' to connect to")
             self._nodes[connection_dict["from"]].connectWith(connection_dict["resource_type"],
                                                              self._nodes[connection_dict["to"]])
 

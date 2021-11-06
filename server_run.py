@@ -53,7 +53,8 @@ def handler(signal, frame):
 
 
 zeroconf = Zeroconf(ip_version=IPVersion.All)
-zeroconf.register_service(info)
+
+zeroconf.register_service(info, allow_name_change= True)
 
 signal.signal(signal.SIGINT, handler)
 app.run(debug=True, host="0.0.0.0")

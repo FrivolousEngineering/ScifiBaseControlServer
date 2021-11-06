@@ -143,6 +143,4 @@ class Connection:
         return self.target.preGiveResource(self.resource_type, amount)
 
     def __repr__(self) -> str:
-        return "{resource_type} connection between {origin} and {target}".format(origin = self.origin,
-                                                                                 target = self.target,
-                                                                                 resource_type = self.resource_type)
+        return f"{self.resource_type} connection between {self.origin} and {self.target}"

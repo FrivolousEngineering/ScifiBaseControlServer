@@ -73,6 +73,13 @@ node = api.model("node", {
 })
 
 
+def checkIfNodeExists(nodes, node_id):
+    try:
+        return nodes.doesNodeExist(node_id)
+    except:
+        return False
+
+
 @node_namespace.route("/<string:node_id>/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Node(Resource):
@@ -95,13 +102,13 @@ class Enabled(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.isNodeEnabled(node_id)
 
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
 
@@ -117,7 +124,7 @@ class Performance(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return float(nodes.getPerformance(node_id))
 
@@ -126,7 +133,7 @@ class Performance(Resource):
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         if "performance" in request.form:
             new_performance = request.form["performance"]
@@ -143,7 +150,7 @@ class TargetPerformance(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getTargetPerformance(node_id)
 
@@ -152,7 +159,7 @@ class TargetPerformance(Resource):
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         if "performance" in request.form:
             new_performance = request.form["performance"]
@@ -169,7 +176,7 @@ class TemperatureHistory(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         result = nodes.getTemperatureHistory(node_id)  # type: ignore
         show_last = request.args.get("showLast")
@@ -189,7 +196,7 @@ class Temperature(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getTemperature(node_id)
 
@@ -201,14 +208,14 @@ class AdditionalPropertyHistory(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id, prop):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getAdditionalPropertyHistory(node_id, prop)
 
 
 def getAdditionalPropertiesForNode(node_id: str) -> Optional[List[Dict[str, Union[str, float]]]]:
     nodes = app.getNodeDBusObject()
-    if not nodes.doesNodeExist(node_id):
+    if not checkIfNodeExists(nodes, node_id):
         return None
     additional_properties = nodes.getAdditionalProperties(node_id)
     result = []
@@ -240,7 +247,7 @@ class AllProperties(Resource):
     def get(self, node_id):
         show_last = request.args.get("showLast")
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
 
         all_property_histories = {}
@@ -280,7 +287,7 @@ class IncomingConnections(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getIncomingConnections(node_id)
 
@@ -293,7 +300,7 @@ class OutgoingConnections(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
 
         return nodes.getOutgoingConnections(node_id)
@@ -306,7 +313,7 @@ class Modifiers(Resource):
     @api.response(200, "Success'", [modifier])
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         return nodes.getActiveModifiers(node_id)
 
@@ -315,7 +322,7 @@ class Modifiers(Resource):
     @api.response(200, "Success'")
     def post(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
 
         try:
@@ -334,7 +341,7 @@ class StaticProperties(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         data = {}
         data["surface_area"] = nodes.getSurfaceArea(node_id)
@@ -351,7 +358,7 @@ class AdditionalProperty(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id, additional_property):
         nodes = app.getNodeDBusObject()
-        if not nodes.doesNodeExist(node_id):
+        if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         data = nodes.getAdditionalPropertyValue(node_id, additional_property)
         return data

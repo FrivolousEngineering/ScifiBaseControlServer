@@ -79,6 +79,7 @@ class OilExtractor(Node):
 
         # Burn half of the fuel used to actually produce something
         heat_produced = 0.5 * fuel_used * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
+
         self.addHeat(heat_produced)
 
         # Then try to dump half of the fuel that we received back again

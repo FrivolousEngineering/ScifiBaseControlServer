@@ -509,7 +509,7 @@ class Node:
         self._stored_heat += heat_to_add
 
     def __repr__(self):
-        return "Node ('{node_id}', a {class_name})".format(node_id = self._node_id, class_name = type(self).__name__)
+        return f"Node ('{self._node_id}', a {type(self).__name__})"
 
     def updateReservations(self) -> None:
         """
