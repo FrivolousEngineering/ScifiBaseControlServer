@@ -1,5 +1,4 @@
-from Nodes.Constants import COMBUSTION_HEAT
-from Nodes.Node import Node, modifiable_property
+from Nodes.Node import Node
 from Nodes.Util import enforcePositive
 
 
