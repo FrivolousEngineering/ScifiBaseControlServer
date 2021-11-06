@@ -29,7 +29,7 @@ class MedicineCreator(Node):
         # Get the resources we asked for!
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")
-        plant_oil_available = self.getResourceAvailableThisTick("plant_oil_available")
+        plant_oil_available = self.getResourceAvailableThisTick("plant_oil")
 
         medicine_produced = min(water_available, energy_available, plant_oil_available)
 
@@ -38,6 +38,7 @@ class MedicineCreator(Node):
         self._resources_left_over["plant_oil"] = plant_oil_available - medicine_produced
 
         medicine_produced *= self.effectiveness_factor
+
         self._resources_produced_this_tick["medicine"] += medicine_produced
 
         # Attempt to get rid of the medicine

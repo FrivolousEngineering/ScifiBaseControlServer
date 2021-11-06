@@ -1,0 +1,44 @@
+{
+    "nodes":
+    {
+
+        "plant_oil_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "plant_oil",
+            "amount": 1000
+        },
+
+        "energy_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 1000
+        },
+        "water_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "water",
+            "amount": 1000
+        },
+        "medicine_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "medicine",
+            "amount": 0
+        },
+
+        "medicine_creator":
+        {
+            "type": "MedicineCreator"
+        }
+    },
+    "connections":
+    [
+        { "from": "water_storage", "to": "medicine_creator", "resource_type": "water" },
+        { "from": "energy_storage", "to": "medicine_creator", "resource_type": "energy" },
+        { "from": "plant_oil_storage", "to": "medicine_creator", "resource_type": "plant_oil" },
+        { "from": "medicine_creator", "to": "medicine_storage", "resource_type": "medicine" },
+        { "from": "medicine_creator", "to": "water_storage", "resource_type": "water" }
+    ]
+}
