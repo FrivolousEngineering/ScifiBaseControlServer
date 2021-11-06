@@ -107,3 +107,21 @@ def test_max_storage():
 
     storage_with_max = ResourceStorage.ResourceStorage("", "energy", 20, max_storage= 200)
     assert storage_with_max.max_amount_stored == 200
+
+
+def test_overheatedTemperature():
+    storage = ResourceStorage.ResourceStorage("", "water", 200)
+    storage.ensureSaneValues()
+
+    assert storage.temperature == 293.15 # Default is 20 deg
+    storage.addHeat(2000000)
+    # Check that it heated up a bit
+    assert storage.temperature == 295.2246887966805
+
+    storage.addHeat(100000000)
+
+    assert storage.temperature == 373.15 # 100 deg c (max temp of water)
+
+    storage.addHeat(500000000)
+    # If you add enough heat, it will go past the knee point again!
+    assert storage.temperature == 717.7214285714285
