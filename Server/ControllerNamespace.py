@@ -59,6 +59,7 @@ class Controller(Resource):
         return getControllerData(controller_id)
 
     @api.response(200, "success")
+    @api.expect(api.model('Controller', {'sensor_value': fields.Float}), code=201)
     def put(self, controller_id):
         manager = ControllerManager.getInstance()
 
