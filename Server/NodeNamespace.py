@@ -174,7 +174,7 @@ class TargetPerformance(Resource):
         return nodes.getPerformance(node_id)
 
 
-@node_namespace.route("/<node_id>/temperature/history/")
+@node_namespace.route("/<string:node_id>/temperature/history/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class TemperatureHistory(Resource):
     @api.response(200, "success", fields.List(fields.Float))
@@ -193,7 +193,7 @@ class TemperatureHistory(Resource):
         return result
 
 
-@node_namespace.route("/<node_id>/temperature/")
+@node_namespace.route("/<string:node_id>/temperature/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get the temperature of the node in deg Kelvin")
 class Temperature(Resource):
@@ -206,7 +206,7 @@ class Temperature(Resource):
         return nodes.getTemperature(node_id)
 
 
-@node_namespace.route("/<node_id>/<prop>/history/")
+@node_namespace.route("/<string:node_id>/<string:prop>/history/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get the history of a certain attribute")
 class AdditionalPropertyHistory(Resource):
@@ -233,7 +233,7 @@ def getAdditionalPropertiesForNode(node_id: str) -> Optional[List[Dict[str, Unio
     return result
 
 
-@node_namespace.route("/<node_id>/additional_properties/")
+@node_namespace.route("/<string:node_id>/additional_properties/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get the value of all extra attributes")
 class AdditionalProperties(Resource):
@@ -246,7 +246,7 @@ class AdditionalProperties(Resource):
         return result
 
 
-@node_namespace.route("/<node_id>/all_property_chart_data/")
+@node_namespace.route("/<string:node_id>/all_property_chart_data/")
 class AllProperties(Resource):
     @api.response(404, "Unknown Node")
     def get(self, node_id):
@@ -284,7 +284,7 @@ class AllProperties(Resource):
         return all_property_histories
 
 
-@node_namespace.route("/<node_id>/connections/incoming/")
+@node_namespace.route("/<string:node_id>/connections/incoming/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get a list of all connections that connect to this node")
 class IncomingConnections(Resource):
@@ -297,7 +297,7 @@ class IncomingConnections(Resource):
         return nodes.getIncomingConnections(node_id)
 
 
-@node_namespace.route("/<node_id>/connections/outgoing/")
+@node_namespace.route("/<string:node_id>/connections/outgoing/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'},
                     description = "Get a list of all connections that connect from this node")
 class OutgoingConnections(Resource):
@@ -311,7 +311,7 @@ class OutgoingConnections(Resource):
         return nodes.getOutgoingConnections(node_id)
 
 
-@node_namespace.route("/<node_id>/modifiers/")
+@node_namespace.route("/<string:node_id>/modifiers/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Modifiers(Resource):
     @api.response(404, "Unknown Node")
@@ -340,7 +340,7 @@ class Modifiers(Resource):
         return nodes.getActiveModifiers(node_id)
 
 
-@node_namespace.route("/<node_id>/static_properties/")
+@node_namespace.route("/<string:node_id>/static_properties/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class StaticProperties(Resource):
     @api.response(404, "Unknown Node")
