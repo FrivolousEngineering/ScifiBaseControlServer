@@ -4,6 +4,7 @@ from flask import request, Response
 from flask import current_app
 from flask_restx import Resource,fields, Namespace
 
+from Nodes.Constants import SPECIFIC_HEAT
 from Nodes.NodesDBusService import NodesDBusService
 from Server.Server import Server
 from Server.Blueprint import api
@@ -15,10 +16,12 @@ app = cast(Server, current_app)
 
 node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
+resource_type_field = fields.String(description = "The type of resource for this connection", enum = list(SPECIFIC_HEAT.keys()))
+
 connection = api.model("connection", {
-    "target": fields.String,
-    "origin": fields.String,
-    "resource_type": fields.String
+    "target": fields.String(description = "Node that receives resources from this connection"),
+    "origin": fields.String(description = "Node that provides resources for this connection"),
+    "resource_type": resource_type_field
 })
 
 addit_property = api.model("addit_property",
@@ -29,7 +32,7 @@ addit_property = api.model("addit_property",
 })
 
 resource_amount = api.model("resource_amount", {
-    "resource_type": fields.String,
+    "resource_type": resource_type_field,
     "value": fields.Float
 })
 
