@@ -11,9 +11,9 @@ from flask import Response, request
 RFID_namespace = Namespace("RFID", description = "Users can authenticate themselves with RFID.")
 
 
-UNKNOWN_CARD_RESPONSE = Response("Unknown Card", status=404)
-CARD_UPDATE_FAILED = Response("User update failed", status=500)
-CARD_UPDATE_SUCCEEDED = Response("User updated", status=200)
+UNKNOWN_CARD_RESPONSE = Response('{"message": "Unknown Card"}', status=404, mimetype='application/json')
+CARD_UPDATE_FAILED = Response('{"message": "User update failed"}', status=500, mimetype='application/json')
+CARD_UPDATE_SUCCEEDED = Response('{"message": "User updated"}', status=200, mimetype='application/json')
 
 
 @RFID_namespace.route("/<string:card_id>/")
@@ -36,7 +36,6 @@ class RFID(Resource):
 class RFIDUpdate(Resource):
     @api.response(200, "User updated")
     @api.response(500, "User update failed")
-    @api.representation("text/html")
     def post(self, card_id):
         user = User.query.filter_by(card_id = card_id).first()
         ability_list = request.args.getlist("ability")

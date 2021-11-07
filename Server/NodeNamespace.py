@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any, Union, List, cast
 
-from flask import request, Response
+from flask import request, Response, make_response
 from flask import current_app
 from flask_restx import Resource,fields, Namespace
 
@@ -43,7 +43,7 @@ modifier = api.model("modifier",
     "abbreviation": fields.String(description = "Three letter abbreviation of this modifier")
 })
 
-UNKNOWN_NODE_RESPONSE = Response("Could not find the requested node", status=404)
+UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested node\"}", status=404, mimetype='application/json')
 
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",

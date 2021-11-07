@@ -18,7 +18,8 @@ controller = api.model("controller", {
     "sensors": fields.List(fields.Nested(sensor))
 })
 
-UNKNOWN_CONTROLLER_RESPONSE = Response("Could not find the requested controller", status=404)
+UNKNOWN_CONTROLLER_RESPONSE = Response("{\"message\": \"Could not find the requested controller\"}", status=404, mimetype='application/json')
+
 
 def getControllerData(controller_id):
     manager = ControllerManager.getInstance()
