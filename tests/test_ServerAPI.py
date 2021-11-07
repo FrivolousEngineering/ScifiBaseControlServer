@@ -36,11 +36,12 @@ def before_generate_case(context, strategy):
     op = context.operation
 
     def tune_case(case):
-        if op.path.find("<string:node_id>"):
+        if "<string:node_id>" in op.path:
             # Super hacky i know, but I can't be bothered to check the actual solution here...
             if random.randint(0, 1):
+                print(op.path, op.path.find("<string:node_id>"))
                 case.path_parameters["node_id"] = random.choice(all_node_ids)
-        if op.path.find("<string:additional_property>"):
+        if "<string:additional_property>" in op.path:
             if random.randint(0, 1):
                 case.path_parameters["node_id"] = random.choice(["health", "amount_stored"])
         return case

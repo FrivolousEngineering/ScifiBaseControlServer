@@ -43,7 +43,17 @@ modifier = api.model("modifier",
     "abbreviation": fields.String(description = "Three letter abbreviation of this modifier")
 })
 
+static_properties = api.model("static_properties",
+{
+    "surface_area": fields.Float,
+    "description": fields.String,
+    "has_settable_performance": fields.Boolean,
+    "supported_modifiers": fields.List(fields.String)
+})
+
 UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested node\"}", status=404, mimetype='application/json')
+
+UNKNOWN_PROPERTY_RESPONSE = Response("Could not find the requested property", status=404, mimetype='application/json')
 
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
@@ -108,7 +118,7 @@ class Enabled(Resource):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
-        return nodes.isNodeEnabled(node_id)
+        return bool(nodes.isNodeEnabled(node_id))
 
     @api.response(404, "Unknown Node")
     def put(self, node_id):
@@ -135,15 +145,27 @@ class Performance(Resource):
 
     @api.response(200, 'Success', fields.Float)
     @api.response(404, "Unknown Node")
+    @api.response(400, "malformed request")
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
+
+        performance_set = False
         if "performance" in request.form:
             new_performance = request.form["performance"]
+            performance_set = True
         else:
-            new_performance = json.loads(request.data)["performance"]
+            try:
+                new_performance = json.loads(request.data)["performance"]
+                performance_set = True
+            except:
+                pass
+        if not performance_set:
+            return Response("Performance must be set", status=400,
+                            mimetype='application/json')
+
         nodes.setTargetPerformance(node_id, float(new_performance))
         return nodes.getPerformance(node_id)
 
@@ -161,15 +183,25 @@ class TargetPerformance(Resource):
 
     @api.response(200, 'Success', fields.Float)
     @api.response(404, "Unknown Node")
+    @api.response(400, "malformed request")
     @api.expect(performance_parser)
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
+        performance_set = False
         if "performance" in request.form:
             new_performance = request.form["performance"]
+            performance_set = True
         else:
-            new_performance = json.loads(request.data)["performance"]
+            try:
+                new_performance = json.loads(request.data)["performance"]
+                performance_set = True
+            except:
+                pass
+        if not performance_set:
+            return Response("Performance must be set", status=400,
+                            mimetype='application/json')
         nodes.setTargetPerformance(node_id, float(new_performance))
         return nodes.getPerformance(node_id)
 
@@ -216,7 +248,10 @@ class AdditionalPropertyHistory(Resource):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
-        return nodes.getAdditionalPropertyHistory(node_id, prop)
+        try:
+            return nodes.getAdditionalPropertyHistory(node_id, prop)
+        except:
+            return UNKNOWN_PROPERTY_RESPONSE
 
 
 def getAdditionalPropertiesForNode(node_id: str) -> Optional[List[Dict[str, Union[str, float]]]]:
@@ -334,10 +369,10 @@ class Modifiers(Resource):
         try:
             data = json.loads(request.data)
         except:
-            return Response("Unable to format the provided data!", status = 400)
+            return Response("Unable to format the provided data!", status = 400, mimetype='application/json')
         successful = nodes.addModifierToNode(node_id, data["modifier_name"])
         if not successful:
-            return Response("Unknown modifier", status = 400)
+            return Response("Unknown modifier", status = 400, mimetype='application/json')
         return nodes.getActiveModifiers(node_id)
 
 
@@ -345,6 +380,7 @@ class Modifiers(Resource):
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class StaticProperties(Resource):
     @api.response(404, "Unknown Node")
+    @api.response(200, "Success", static_properties)
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
@@ -352,7 +388,7 @@ class StaticProperties(Resource):
         data = {}
         data["surface_area"] = nodes.getSurfaceArea(node_id)
         data["description"] = nodes.getDescription(node_id)
-        data["has_settable_performance"] = nodes.hasSettablePerformance(node_id)
+        data["has_settable_performance"] = bool(nodes.hasSettablePerformance(node_id))
         data["supported_modifiers"] = nodes.getSupportedModifiers(node_id)
         return data
 
@@ -367,7 +403,10 @@ class AdditionalProperty(Resource):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
-        data = nodes.getAdditionalPropertyValue(node_id, additional_property)
+        try:
+            data = nodes.getAdditionalPropertyValue(node_id, additional_property)
+        except:
+            return UNKNOWN_PROPERTY_RESPONSE
         return data
 
 
