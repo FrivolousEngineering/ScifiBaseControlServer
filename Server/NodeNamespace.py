@@ -295,21 +295,25 @@ class AllProperties(Resource):
             return UNKNOWN_NODE_RESPONSE
 
         all_property_histories = {}
-
         all_property_histories["offset"] = nodes.getHistoryOffset(node_id)
         for prop in nodes.getAdditionalProperties(node_id):
-            all_property_histories[prop] = nodes.getAdditionalPropertyHistory(node_id, prop)
+            try:
+                all_property_histories[prop] = nodes.getAdditionalPropertyHistory(node_id, prop)
+            except ValueError:
+                pass
 
         all_property_histories["temperature"] = nodes.getTemperatureHistory(node_id)
+        try:
+            resources_gained = nodes.getResourcesGainedHistory(node_id)
+        except:
+            resources_gained = {}
 
-        resources_gained = nodes.getResourcesGainedHistory(node_id)
         for key in resources_gained:
             all_property_histories["%s received" % key] = resources_gained[key]
 
         resources_produced = nodes.getResourcesProducedHistory(node_id)
         for key in resources_produced:
             all_property_histories["%s produced" % key] = resources_produced[str(key)]
-
         resources_provided = nodes.getResourcesProvidedHistory(node_id)
         for key in resources_provided:
             all_property_histories["%s provided" % key] = resources_provided[str(key)]
