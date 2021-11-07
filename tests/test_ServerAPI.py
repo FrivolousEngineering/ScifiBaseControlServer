@@ -39,7 +39,6 @@ def before_generate_case(context, strategy):
         if "<string:node_id>" in op.path:
             # Super hacky i know, but I can't be bothered to check the actual solution here...
             if random.randint(0, 1):
-                print(op.path, op.path.find("<string:node_id>"))
                 case.path_parameters["node_id"] = random.choice(all_node_ids)
         if "<string:additional_property>" in op.path:
             if random.randint(0, 1):
