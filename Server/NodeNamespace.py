@@ -4,6 +4,7 @@ from flask import request, Response
 from flask import current_app
 from flask_restx import Resource,fields, Namespace
 
+from Nodes.NodesDBusService import NodesDBusService
 from Server.Server import Server
 from Server.Blueprint import api
 
@@ -73,7 +74,7 @@ node = api.model("node", {
 })
 
 
-def checkIfNodeExists(nodes, node_id):
+def checkIfNodeExists(nodes: "NodesDBusService", node_id: str) -> bool:
     try:
         return nodes.doesNodeExist(node_id)
     except:
