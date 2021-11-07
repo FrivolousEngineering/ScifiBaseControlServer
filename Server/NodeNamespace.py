@@ -211,6 +211,7 @@ class Temperature(Resource):
                     description = "Get the history of a certain attribute")
 class AdditionalPropertyHistory(Resource):
     @api.response(404, "Unknown Node")
+    @api.response(200, "success", fields.List(fields.Float))
     def get(self, node_id, prop):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
@@ -361,6 +362,7 @@ class StaticProperties(Resource):
                             "additional_property": "The name of the attribute to request"})
 class AdditionalProperty(Resource):
     @api.response(404, "Unknown Node")
+    @api.response(200, "success", fields.Float)
     def get(self, node_id, additional_property):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
