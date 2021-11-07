@@ -1,6 +1,6 @@
 import graphviz
 
-dot = graphviz.Digraph(graph_attr={'splines': 'ortho', "overlap": "false", "mode":"ipsep", "sep": "+25", "esep": "+20"}, node_attr={'shape': 'box', 'fixedsize': 'true', 'width': '3.5',
+dot = graphviz.Digraph(graph_attr={'splines': 'polyline', "overlap": "false", "mode": "ipsep", "sep": "+25", "esep": "+20"}, node_attr={'shape': 'box', 'fixedsize': 'true', 'width': '3.5',
            'height': '3'}, engine = "neato")
 
 format = "plain"
@@ -121,7 +121,7 @@ dot.edge("toilets", "dirty_water_storage")
 dot.edge("medicine_creator", "medicine_storage")
 
 
-dot.edge("waste_generator", "generator", style= "invis")
+#dot.edge("waste_generator", "generator", style= "invis")
 #dot.edges(['AB', 'AL'])
 
 #dot.edge('B', 'L', constraint='false')

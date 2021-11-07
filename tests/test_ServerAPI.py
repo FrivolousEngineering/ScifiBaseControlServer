@@ -5,11 +5,12 @@ import subprocess
 import time
 import schemathesis
 import os
-server_process = subprocess.Popen(["python3", "server_run.py"], stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-engine_process = subprocess.Popen(["python3", "engine_run.py"], stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-time.sleep(1)
+server_process = subprocess.Popen(["python3", "server_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
+engine_process = subprocess.Popen(["python3", "engine_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
+
 
 try:
+    time.sleep(2)
     schema = schemathesis.from_uri("http://localhost:5000/swagger.json")
 except:
     # Create a fake schema
