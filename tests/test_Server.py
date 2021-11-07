@@ -91,7 +91,7 @@ def test_getUser(client):
     known_response = client.get("/RFID/123/")
     assert known_response.data.strip() == b'"Welcome back!"'
     unknown_response = client.get("/RFID/123c/")
-    assert unknown_response.data.strip() == b'Unknown Card'
+    assert unknown_response.data.strip() == b'{"message": "Unknown Card"}'
 
 
 def test_getUsers(client):
@@ -106,12 +106,12 @@ def test_getUsers(client):
 def test_updateUser(client):
     response = client.post("/RFID/update/456/?name=new&email=new@localhost.com")
     new_user = User.query.filter_by(card_id = "456").first()
-    assert response.data.strip() == b'User updated'
+    assert response.data.strip() == b'{"message": "User updated"}'
     assert new_user.name == "new" and new_user.email == "new@localhost.com"
     assert len(new_user.abilities) == 0
     
     response = client.post("/RFID/update/456/?ability=see_users&ability=new_ability")
-    assert response.data.strip() == b'User updated'
+    assert response.data.strip() == b'{"message": "User updated"}'
     assert len(new_user.abilities) == 1
 
 
