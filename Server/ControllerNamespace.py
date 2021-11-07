@@ -38,7 +38,7 @@ def getControllerData(controller_id):
 @control_namespace.route("/")
 @control_namespace.doc(description ="Get all the known controllers.")
 class Controllers(Resource):
-    @api.response(200, "Sucsess", fields.List(fields.Nested(controller)))
+    @api.response(200, "success", fields.List(fields.Nested(controller)))
     def get(self):
         result = []
         manager = ControllerManager.getInstance()
@@ -62,9 +62,12 @@ class Controller(Resource):
         return result
 
     @api.response(200, "success")
+    @api.response(404, "Unknown Controller")
     @api.expect(api.model('Controller', {'sensor_value': fields.Float}), code=201)
     def put(self, controller_id):
         manager = ControllerManager.getInstance()
-
+        result = getControllerData(controller_id)
+        if result is None:
+            return UNKNOWN_CONTROLLER_RESPONSE
         manager.updateController(controller_id, json.loads(request.data))
         manager.getController(controller_id).version_string = request.user_agent.string
