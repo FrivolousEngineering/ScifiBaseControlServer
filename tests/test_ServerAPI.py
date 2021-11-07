@@ -36,11 +36,11 @@ def before_generate_case(context, strategy):
     op = context.operation
 
     def tune_case(case):
-        if "<string:node_id>" in op.path:
+        if "{node_id}" in op.path:
             # Super hacky i know, but I can't be bothered to check the actual solution here...
             if random.randint(0, 1):
                 case.path_parameters["node_id"] = random.choice(all_node_ids)
-        if "<string:additional_property>" in op.path:
+        if "{additional_property}" in op.path:
             if random.randint(0, 1):
                 case.path_parameters["node_id"] = random.choice(["health", "amount_stored"])
         return case
@@ -58,5 +58,7 @@ def setupServer(request):
 @settings(max_examples=100)
 def test_api(case, setupServer):
     case.call_and_validate()
+
+
 
 
