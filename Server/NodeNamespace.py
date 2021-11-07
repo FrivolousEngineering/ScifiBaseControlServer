@@ -53,7 +53,7 @@ static_properties = api.model("static_properties",
 
 UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested node\"}", status=404, mimetype='application/json')
 
-UNKNOWN_PROPERTY_RESPONSE = Response("Could not find the requested property", status=404, mimetype='application/json')
+UNKNOWN_PROPERTY_RESPONSE = Response("{\"message\": \"Could not find the requested property\"}", status=404, mimetype='application/json')
 
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
