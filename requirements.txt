@@ -8,5 +8,6 @@ pylint-quotes
 pytest-flask
 SQLAlchemy
 flask-restx
+zeroconf
 pytest
 schemathesis
