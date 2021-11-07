@@ -36,6 +36,8 @@ def before_generate_case(context, strategy):
     op = context.operation
 
     def tune_case(case):
+        # Reset the seed (if any)
+        random.seed(a=None)
         if "{node_id}" in op.path:
             # Super hacky i know, but I can't be bothered to check the actual solution here...
             if random.randint(0, 1):
@@ -44,7 +46,9 @@ def before_generate_case(context, strategy):
             if random.randint(0, 1):
                 case.path_parameters["node_id"] = random.choice(["health", "amount_stored"])
         return case
+
     return strategy.map(tune_case)
+
 
 @pytest.fixture(scope='module')
 def setupServer(request):

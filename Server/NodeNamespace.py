@@ -120,12 +120,14 @@ class Enabled(Resource):
             return UNKNOWN_NODE_RESPONSE
         return bool(nodes.isNodeEnabled(node_id))
 
+    @api.response(200, 'Success', fields.Boolean())
     @api.response(404, "Unknown Node")
     def put(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
+        return bool(nodes.isNodeEnabled(node_id))
 
 
 performance_parser = api.parser()
@@ -284,6 +286,7 @@ class AdditionalProperties(Resource):
 
 @node_namespace.route("/<string:node_id>/all_property_chart_data/")
 class AllProperties(Resource):
+    @api.response(200, "success")
     @api.response(404, "Unknown Node")
     def get(self, node_id):
         show_last = request.args.get("showLast")
