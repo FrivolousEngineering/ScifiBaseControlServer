@@ -4,7 +4,7 @@ import math
 import pytest
 
 from Nodes import HydroponicsBay
-from tests.testHelpers import createEngineFromConfig
+from tests.testHelpers import setupForIdealState, createEngineFromConfig
 
 
 @pytest.mark.parametrize("resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped",
@@ -48,24 +48,12 @@ def test_temperatureRemainTheSame(config_file):
     assert math.isclose(temperature_before, hydroponics.temperature)
 
 
-def setupForIdealState(config_file):
-    engine = createEngineFromConfig(config_file)
-
-    hydroponics = engine.getNodeById("hydroponics")
-    engine._default_outside_temperature = hydroponics._optimal_temperature
-    # Ensure that all nodes are at the perfect temperature
-    for node in engine.getAllNodes().values():
-        node._temperature = hydroponics._optimal_temperature
-        node.outside_temp = hydroponics._optimal_temperature
-        node.ensureSaneValues()
-    return engine
-
 @pytest.mark.parametrize("config_file", ["HydroponicsSetup.json", "HydroponicsSetupWithAnimalWaste.json"])
 def test_temperatureRemainTheSameOptimalTemperature(config_file):
     # Not quite a unit test; But create a simple setup.
     # Since the hydroponics does not create energy, it should just stay the same temperature.
     # For this test, we set the temp of all nodes at the perfect hydroponics temp (so that it actually creates resources!)
-    engine = setupForIdealState(config_file)
+    engine = setupForIdealState(config_file, "hydroponics")
     hydroponics = engine.getNodeById("hydroponics")
     temperature_before = hydroponics.temperature
 
@@ -79,7 +67,7 @@ def test_temperatureRemainTheSameOptimalTemperature(config_file):
 @pytest.mark.parametrize('ticks', [1, 10, 20])
 @pytest.mark.parametrize("config_file, plants_created_per_tick", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
 def test_plantsProduced(config_file, plants_created_per_tick, sub_ticks, ticks, performance):
-    engine = setupForIdealState(config_file)
+    engine = setupForIdealState(config_file, "hydroponics")
     engine._sub_ticks = sub_ticks
     hydroponics = engine.getNodeById("hydroponics")
     hydroponics._min_performance = performance

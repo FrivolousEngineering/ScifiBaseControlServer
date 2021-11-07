@@ -2,21 +2,8 @@ import math
 from unittest.mock import patch
 
 from Nodes import OilExtractor
-from tests.testHelpers import createEngineFromConfig
+from tests.testHelpers import setupForIdealState
 import pytest
-
-
-def setupForIdealState(config_file):
-    engine = createEngineFromConfig(config_file)
-
-    oil_extractor = engine.getNodeById("oil_extractor")
-    engine._default_outside_temperature = oil_extractor._optimal_temperature
-    # Ensure that all nodes are at the perfect temperature
-    for node in engine.getAllNodes().values():
-        node._temperature = oil_extractor._optimal_temperature
-        node.outside_temp = oil_extractor._optimal_temperature
-        node.ensureSaneValues()
-    return engine
 
 
 @pytest.mark.parametrize("performance", [1, 1.5, 0.8])
@@ -24,7 +11,7 @@ def setupForIdealState(config_file):
 @pytest.mark.parametrize('ticks', [1, 10, 20])
 @pytest.mark.parametrize("config_file, oil_created_per_tick", [("OilExtractor.json", 5)])
 def test_oilProduced_noHeat(config_file, oil_created_per_tick, sub_ticks, ticks, performance):
-    engine = setupForIdealState(config_file)
+    engine = setupForIdealState(config_file, "oil_extractor")
     engine._sub_ticks = sub_ticks
     oil_extractor = engine.getNodeById("oil_extractor")
     oil_extractor._min_performance = performance
