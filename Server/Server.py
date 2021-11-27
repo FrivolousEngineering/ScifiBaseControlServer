@@ -183,7 +183,10 @@ class Server(Flask):
 
     @register_route("/")
     def renderStartPage(self):
-        self._setupNodeDBUS()
+        try:
+            self._setupNodeDBUS()
+        except dbus.exceptions.DBusException:
+            pass
         display_data = []
         return render_template("index.html", data = display_data)
 
