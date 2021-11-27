@@ -148,8 +148,8 @@ class Node:
         # a value of 1 means it changes instantly, higher values means it changes slower.
         self._performance_change_factor = kwargs.get("performance_change_factor", 2)  # type: float
 
-        self._optimal_temperature = kwargs.get("optimal_temperature", 375) # type: float
-        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75) # type: float
+        self._optimal_temperature = kwargs.get("optimal_temperature", 375)  # type: float
+        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75)  # type: float
 
         self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
         """How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.

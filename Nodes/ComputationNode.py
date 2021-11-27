@@ -12,16 +12,20 @@ class ComputationNode(Node):
     """
 
     def __init__(self, node_id: str, **kwargs) -> None:
+        defaults = {"heat_convection_coefficient": 30,
+                    "temperature_degradation_speed": 30,  # It's going to break down pretty darn fast!
+                    "max_safe_temperature": 353.15,  # 80 Degree celcius.
+                    "min_performance": 0.25,
+                    "max_performance": 4}
+        defaults.update(kwargs)
+
         super().__init__(node_id, **kwargs)
         self._resources_required_per_tick["energy"] = 10
 
         self._heat_convection_coefficient = 2  # It's made of plastic or something.
         self._heat_per_data_computed = 100
         self._heat_per_data_not_computed = 20
-        self._max_safe_temperature = 353.15  # 80 Degree celcius.
 
-        # It's going to break down pretty darn fast!
-        self._temperature_degradation_speed = 30
         self._description = "This device requires energy to run, which it requires to generate data. It is <i>very" \
                             "</i> sensitive to heat and will break down very rapidly if reaches higher temperatures." \
                             "Even when this device is not generating any data, it will still consume a bit of " \

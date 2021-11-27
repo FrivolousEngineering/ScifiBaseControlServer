@@ -24,7 +24,9 @@ class Generator(Node):
                     "max_performance": 2,
                     "weight": 8000,
                     "surface_area": 8,
-                    "heat_convection_coefficient": 20}
+                    "heat_convection_coefficient": 20,
+                    "max_safe_temperature": 400,
+                    "performance_change_factor": 3}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
 
@@ -39,15 +41,11 @@ class Generator(Node):
 
         self._resources_left_over["energy"] = 0
 
-        self._max_safe_temperature = 400
-
         self._use_temperature_dependant_effectiveness_factor = True
-        self._performance_change_factor = 3
 
-        self._description = "This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
+        self._description = f"This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down."
-        self._description = self._description.format(fuel_type = fuel_type)
 
         self._tags.append("mechanical")
         self._tags.append("fuel")

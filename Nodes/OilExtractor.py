@@ -8,15 +8,17 @@ class OilExtractor(Node):
     The Oil extractor is a node that creates plant_oil from plants and fuel. It can also accept water for cooling
     """
     def __init__(self, node_id: str, **kwargs) -> None:
+        defaults = {"weight": 1000,
+                    "surface_area": 8,
+                    "temperature_efficiency": 0.5,
+                    "min_performance": 0.75,
+                    "max_performance": 1.5}
+        defaults.update(kwargs)
         super().__init__(node_id, **kwargs)
 
         self._resources_required_per_tick["fuel"] = 1
         self._resources_required_per_tick["plants"] = 10
         self._optional_resources_required_per_tick["water"] = 250
-        self._health = 100
-        self._temperature_efficiency = 0.5
-        self._weight = 1000
-        self._surface_area = 8
 
         self._fuel_per_plant_ratio = self._resources_required_per_tick["plants"] / self._resources_required_per_tick["fuel"]
 

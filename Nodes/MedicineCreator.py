@@ -7,7 +7,11 @@ class MedicineCreator(Node):
     The medicine creator converts raw plant oil, energy and water into medicine
     """
     def __init__(self, node_id: str, **kwargs) -> None:
-        super().__init__(node_id, **kwargs)
+        defaults = {"heat_convection_coefficient": 1,
+                    "optimal_temperature": 308.15,
+                    "optimal_temperature_range": 10}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         # TODO: This still needs to be tweaked.
         self._resources_required_per_tick["water"] = 5
@@ -18,9 +22,6 @@ class MedicineCreator(Node):
         self._optional_resources_required_per_tick["water"] = 25
 
         self._use_temperature_dependant_effectiveness_factor = True
-        self._heat_convection_coefficient = 1
-        self._optimal_temperature = 308.15
-        self._optimal_temperature_range = 10
 
         self._heat_per_medicine_created = 100
 

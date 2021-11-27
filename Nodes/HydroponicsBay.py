@@ -8,7 +8,15 @@ class HydroponicsBay(Node):
     The hydroponics bay produces oxygen, and requires water & energy to do so.
     """
     def __init__(self, node_id: str, **kwargs) -> None:
-        super().__init__(node_id, **kwargs)
+        defaults = {"temperature_efficiency": 0.5,
+                    "min_performance": 0.5,
+                    "weight": 2000,
+                    "optimal_temperature":  308.15,
+                    "optimal_temperature_range": 10,
+                    "heat_convection_coefficient": 1
+                    }
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         # TODO: This still needs to be tweaked.
         self._resources_required_per_tick["water"] = 5
@@ -19,12 +27,6 @@ class HydroponicsBay(Node):
         self._optional_resources_required_per_tick["water"] = 95
 
         self._use_temperature_dependant_effectiveness_factor = True
-        self._heat_convection_coefficient = kwargs.get("heat_convection_coefficient", 1.)  # type: float
-        self._optimal_temperature = kwargs.get("optimal_temperature", 308.15)  # type: float
-        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 10) # type: float
-
-        self._weight = kwargs.get("weight", 2000)  # type: float
-
         self._tags.append("plant")
 
     def update(self, sub_tick_modifier: float = 1) -> None:
