@@ -150,7 +150,7 @@ class Server(Flask):
             self._nodes = None
             return Response("The engine can't be found. Ensure that it's running before trying again", status =503)
         else:
-            self.logger.warning("An exception occured %s" % str(exception))
+            self.logger.warning("An exception occurred %s" % str(exception))
         return Response(str(exception),
                         status=500)
 
