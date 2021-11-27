@@ -22,7 +22,11 @@ class FluidCooler(Valve):
         defaults = {"weight": 5000,
                     "surface_area": 10,
                     "heat_emissivity": 0.9,
-                    "heat_convection_coefficient": 100}
+                    "heat_convection_coefficient": 100,
+                    "min_performance": 1,
+                    "max_performance": 1
+                    }
+
         defaults.update(kwargs)
         super().__init__(node_id, resource_type, fluid_per_tick, **defaults)
 

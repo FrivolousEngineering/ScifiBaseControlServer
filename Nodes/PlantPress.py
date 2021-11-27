@@ -8,7 +8,10 @@ class PlantPress(Node):
     tiny bit of water.
     """
     def __init__(self, node_id: str, **kwargs) -> None:
-        super().__init__(node_id, **kwargs)
+        defaults = {"min_performance": 0.75,
+                    "max_performance": 1.5}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         self._resources_required_per_tick["plants"] = 30
         self._resources_required_per_tick["energy"] = 10
