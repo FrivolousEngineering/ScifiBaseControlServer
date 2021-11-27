@@ -10,7 +10,6 @@ import os
 import random
 from hypothesis import settings
 
-from hypothesis import strategies as st
 server_process = subprocess.Popen(["python3", "server_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
 engine_process = subprocess.Popen(["python3", "engine_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
 
@@ -23,9 +22,6 @@ try:
     all_node_data = result.json()
     known_nodes = [node_data["node_id"] for node_data in all_node_data]
     all_node_ids = [node_data["node_id"] for node_data in all_node_data]
-
-
-
 except:
     # Create a fake schema
     schema = schemathesis.from_file('{"swagger": "2.0","info": {"title": "Sample API","description": "API description in Markdown.","version": "1.0.0"},"host": "api.example.com","basePath": "/v1","schemes": ["https"],"paths": {}}')
@@ -56,6 +52,7 @@ def setupServer(request):
         os.killpg(os.getpgid(server_process.pid), signal.SIGTERM)
         os.killpg(os.getpgid(engine_process.pid), signal.SIGTERM)
     request.addfinalizer(serverTeardown)
+
 
 @pytest.mark.skipif(server_process is None, reason = "Unable to start the server, skipping")
 @schema.parametrize()
