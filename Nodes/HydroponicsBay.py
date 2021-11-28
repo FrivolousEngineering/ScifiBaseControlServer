@@ -1,4 +1,3 @@
-from Nodes.Constants import SPECIFIC_HEAT, WEIGHT_PER_UNIT
 from Nodes.Node import Node
 from Nodes.Util import enforcePositive
 
