@@ -4,7 +4,23 @@ from Nodes.Util import enforcePositive
 
 class EnergyBalancer(Node):
     """
-    The energy balancer is a node that, when connected to two batteries, will ensure that the batteries are mad    """
+    The energy balancer is a node that draws a certain amount of power and distributes it in such a way that each
+    connected storage gets power depending on how much it has (giving more power if the storage has less).
+
+    This can be used in several setups:
+                    ⌜⎺⎺⎺ > B
+    A -> Converter -⎟
+                    ⌞⎽⎽⎽ > C
+    Power is drawn from A and spread to B & C. If B has 0 power and C has 10 power, all power drawn will be moved to B
+
+
+    Average two batteries
+    A <----- Converter <----- B
+    ⎟        ^       ⎟        ^
+    ⌞ ⎽⎽⎽⎽⎽⎽ ⌟       ⌞ ⎽⎽⎽⎽⎽⎽ ⌟
+    Power will first be drawn from both storages and then equally divided.
+
+    """
     def __init__(self, node_id: str, **kwargs) -> None:
         defaults = {}
         defaults.update(kwargs)
@@ -17,7 +33,6 @@ class EnergyBalancer(Node):
         super().update(sub_tick_modifier)
 
         energy_available = self.getResourceAvailableThisTick("energy")
-
 
         # This node needs a different strategy than "equal spread".
         energy_left = self._provideEnergy(energy_available)
