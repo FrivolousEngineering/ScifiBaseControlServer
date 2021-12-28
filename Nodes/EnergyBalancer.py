@@ -71,7 +71,7 @@ class EnergyBalancer(Node):
 
         return amount
 
-    def ensureConnectionIsPossible(self, connection: Connection) -> bool:
+    def ensureConnectionIsPossible(self, connection: Connection) -> None:
         super().ensureConnectionIsPossible(connection)
 
         if connection.target != self:
