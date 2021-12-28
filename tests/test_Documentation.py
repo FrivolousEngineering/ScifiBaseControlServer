@@ -23,9 +23,12 @@ exclude_signatures = ["kwargs", "args"]
 test_node = Node("whatever2")
 test_node._acceptable_resources.add("water")
 
+test_node_2 = Node("whatever")
+test_node_2._providable_resources.add("water")
+
 objects_to_check_for_documentation = [Node("whatever"),
                                       NodeEngine(),
-                                      Connection(Node("whatever"), test_node, "water"),
+                                      Connection(test_node_2, test_node, "water"),
                                       NodeHistory(Node("NodeHistory")),
                                       Generator("generator"),
                                       FluidCooler("fluid_cooler", "water", 10),

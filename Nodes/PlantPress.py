@@ -21,6 +21,9 @@ class PlantPress(Node):
         self._tags.append("mechanical")
         self._tags.append("fuel")
 
+        self._providable_resources.add("food")
+        self._providable_resources.add("water")
+
     def _updateResourceRequiredPerTick(self) -> None:
         """
         If there were resources left over, we should request less resources next time round.

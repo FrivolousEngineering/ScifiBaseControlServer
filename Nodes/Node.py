@@ -930,13 +930,18 @@ class Node:
 
     def ensureConnectionIsPossible(self, connection: Connection) -> None:
         """
-        Check if a given connection that is being made is possible at all
+        Check if a given connection that is being made is possible at all. If it's invalid, an InvalidConnection is
+        raised.
         :param connection:
         :return:
         """
         if connection.target == self:
             if connection.resource_type not in self._acceptable_resources:
                 raise InvalidConnection(f"Node [{self._node_id}] is unable to accept resources of type {connection.resource_type}")
+        else:
+            if connection.resource_type not in self._providable_resources:
+                raise InvalidConnection(
+                    f"{type(self).__name__} with ID [{self._node_id}] is unable to provide resources of type {connection.resource_type}")
 
     def connectWith(self, resource_type: str, target: "Node") -> None:
         """

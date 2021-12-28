@@ -28,6 +28,10 @@ class OilExtractor(Node):
 
         self._tags.append("mechanical")
 
+        self._providable_resources.add("plant_oil")
+        self._providable_resources.add("waste")
+        self._providable_resources.add("water")
+
     @modifiable_property
     def temperature_efficiency(self):
         # A damaged OilExtractor starts burning fuel less efficient (making it run more hot!)

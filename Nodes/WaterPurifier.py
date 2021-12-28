@@ -21,6 +21,9 @@ class WaterPurifier(Node):
         self._animal_waste_per_liter_dirty_water = 0.1
         self._tags.append("mechanical")
 
+        self._providable_resources.add("water")
+        self._providable_resources.add("animal_waste")
+
     def _updateResourceRequiredPerTick(self) -> None:
         """
         If there were resources left over, we should request less resources next time round.

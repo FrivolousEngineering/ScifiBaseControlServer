@@ -47,6 +47,9 @@ class Generator(Node):
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
                             "with cooling down."
 
+        self._providable_resources.add("energy")
+        self._providable_resources.add("water")
+
         self._tags.append("mechanical")
         self._tags.append("fuel")
 

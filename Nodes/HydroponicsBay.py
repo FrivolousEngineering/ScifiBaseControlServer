@@ -28,6 +28,10 @@ class HydroponicsBay(Node):
         self._use_temperature_dependant_effectiveness_factor = True
         self._tags.append("plant")
 
+        self._providable_resources.add("water")
+        self._providable_resources.add("oxygen")
+        self._providable_resources.add("plants")
+
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
         # Get the resources we asked for!

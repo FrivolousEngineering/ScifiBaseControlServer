@@ -10,6 +10,7 @@ from Nodes.Constants import WEIGHT_PER_UNIT
 @pytest.fixture
 def node_energy_left():
     node = Node.Node("zomg")
+    node._providable_resources.add("energy")
     node._resources_left_over["energy"] = 10
     return node
 
@@ -78,6 +79,7 @@ def test_addHeat():
 def test_connect():
     node_1 = Node.Node("zomg")
     node_2 = Node.Node("omg")
+    node_1._providable_resources.add('energy')
     node_2._acceptable_resources.add("energy")
 
     node_1.connectWith("energy", node_2)
@@ -160,9 +162,9 @@ def test_getResourceAvailableThisTick(node_energy_left):
 def test_postUpdate(node_energy_left):
     mocked_node = MagicMock()
     node_energy_left.getResourcesProducedThisTick()["fuel"] = 20
-    node_energy_left.connectWith("water", mocked_node)
+    node_energy_left.connectWith("energy", mocked_node)
 
-    connection = node_energy_left.getAllOutgoingConnectionsByType("water")[0]
+    connection = node_energy_left.getAllOutgoingConnectionsByType("energy")[0]
     connection.reset = MagicMock()
     node_energy_left.postUpdate()
 
@@ -437,6 +439,7 @@ def test_modifiedProperty(modifier_value, factor_value, result, property_to_modi
 def test_connectNodes():
     node = Node.Node("SuchNode!")
     node_2 = Node.Node("anotherNode")
+    node._providable_resources.add("energy")
     node_2._acceptable_resources.add("energy")
 
     node.connectWith("energy", node_2)

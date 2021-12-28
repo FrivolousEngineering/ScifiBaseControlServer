@@ -32,6 +32,7 @@ class EnergyBalancer(Node):
         super().__init__(node_id, **defaults)
 
         self._optional_resources_required_per_tick["energy"] = 10
+        self._providable_resources.add("energy")
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)

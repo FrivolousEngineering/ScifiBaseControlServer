@@ -30,7 +30,7 @@ class ComputationNode(Node):
                             "</i> sensitive to heat and will break down very rapidly if reaches higher temperatures." \
                             "Even when this device is not generating any data, it will still consume a bit of " \
                             "energy, albeit way less than it would when it's generating data."
-
+        self._providable_resources.add("data")
         self._tags.append("electronic")
 
     def update(self, sub_tick_modifier: float = 1) -> None:

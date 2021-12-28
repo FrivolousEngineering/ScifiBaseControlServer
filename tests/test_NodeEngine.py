@@ -110,6 +110,7 @@ def test_serializeConnection():
     engine = NodeEngine.NodeEngine()
     node_a = Node("a")
     node_b = Node("b")
+    node_a._providable_resources.add("energy")
     node_b._acceptable_resources.add("energy")
     engine.registerNode(node_a)
     engine.registerNode(node_b)

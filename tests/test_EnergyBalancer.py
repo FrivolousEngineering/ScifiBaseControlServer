@@ -17,5 +17,5 @@ def test_InvalidConnection():
     energy_balancer = EnergyBalancer("balancer")
 
     battery = ResourceStorage("battery", "energy", 0)
-    #with pytest.raises(InvalidConnection):
-    #    energy_balancer.connectWith("water", battery)
+    with pytest.raises(InvalidConnection):
+        energy_balancer.connectWith("water", battery)
