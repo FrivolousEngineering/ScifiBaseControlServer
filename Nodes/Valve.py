@@ -22,7 +22,7 @@ class Valve(ResourceStorage):
         defaults = {"heat_convection_coefficient": 0.2}
         defaults.update(kwargs)
 
-        super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **kwargs)
+        super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **defaults)
         self._fluid_per_tick = fluid_per_tick
         self._max_resources_requestables_per_tick = fluid_per_tick
 
