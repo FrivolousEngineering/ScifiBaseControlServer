@@ -5,6 +5,7 @@ from Nodes.Modifiers import Modifier
 import pytest
 
 from Nodes.Constants import WEIGHT_PER_UNIT
+from Nodes.Node import InvalidConnection
 
 
 @pytest.fixture
@@ -88,6 +89,22 @@ def test_connect():
     assert len(node_2.getAllIncomingConnectionsByType("energy")) == 1
 
 
+def test_invalidConnect():
+    node_1 = Node.Node("zomg")
+    node_2 = Node.Node("omg")
+    node_3 = Node.Node("beep")
+    with pytest.raises(InvalidConnection):
+        node_1.connectWith("energy", node_2)
+
+    node_1._providable_resources.add('energy')
+    with pytest.raises(InvalidConnection):  # Still raises
+        node_1.connectWith("energy", node_2)
+
+    node_3._acceptable_resources.add("energy")
+    with pytest.raises(InvalidConnection):  # Still raises
+        node_2.connectWith("energy", node_3)
+
+
 @pytest.mark.parametrize("starting_temperature, outside_temperature, heat_emitted", [(0, 0, 0),
                                                                                      (200, 200, 0),
                                                                                      (201, 200, -54.841602501),
@@ -140,6 +157,7 @@ def test_requiresReplanningOneConnectionStatisified():
     node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=False)))
 
     assert node.requiresReplanning()
+
 
 def test_requiresReplanningOneConnectionStatisifiedButDisabled():
     node = Node.Node("")
