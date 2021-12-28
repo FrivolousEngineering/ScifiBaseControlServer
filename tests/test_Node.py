@@ -78,6 +78,7 @@ def test_addHeat():
 def test_connect():
     node_1 = Node.Node("zomg")
     node_2 = Node.Node("omg")
+    node_2._acceptable_resources.add("energy")
 
     node_1.connectWith("energy", node_2)
 
@@ -436,6 +437,7 @@ def test_modifiedProperty(modifier_value, factor_value, result, property_to_modi
 def test_connectNodes():
     node = Node.Node("SuchNode!")
     node_2 = Node.Node("anotherNode")
+    node_2._acceptable_resources.add("energy")
 
     node.connectWith("energy", node_2)
 

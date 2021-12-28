@@ -30,6 +30,9 @@ class Connection:
             raise ValueError("Resource type %s was not recognised. Did you forget to add it to the constants file?" %
                              self.resource_type)
 
+        origin.ensureConnectionIsPossible(self)
+        target.ensureConnectionIsPossible(self)
+
     def lock(self) -> None:
         """
         Locking a connection is done during the reserve stage. Once a node can't provide any more resources, it will

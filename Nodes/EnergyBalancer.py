@@ -1,7 +1,7 @@
 from typing import cast
 
 from Nodes.Connection import Connection
-from Nodes.Node import Node
+from Nodes.Node import Node, InvalidConnection
 from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Util import enforcePositive
 
@@ -70,15 +70,9 @@ class EnergyBalancer(Node):
 
         return amount
 
-    def _isConnectionPossible(self, connection: Connection) -> bool:
-        if not super()._isConnectionPossible(connection):
-            return False
-
-        if connection.resource_type != "energy":
-            return False
+    def ensureConnectionIsPossible(self, connection: Connection) -> bool:
+        super().ensureConnectionIsPossible(connection)
 
         if connection.target != self:
             if not isinstance(connection.target, ResourceStorage):
-                return False
-
-        return True
+                raise InvalidConnection(f"EnergyBalancer {self._node_id} can only be connected to ResourceStorages")

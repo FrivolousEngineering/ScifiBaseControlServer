@@ -20,10 +20,12 @@ from Nodes.WaterPurifier import WaterPurifier
 function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
 
+test_node = Node("whatever2")
+test_node._acceptable_resources.add("water")
 
 objects_to_check_for_documentation = [Node("whatever"),
                                       NodeEngine(),
-                                      Connection(Node("whatever"), Node("whatever2"), "water"),
+                                      Connection(Node("whatever"), test_node, "water"),
                                       NodeHistory(Node("NodeHistory")),
                                       Generator("generator"),
                                       FluidCooler("fluid_cooler", "water", 10),

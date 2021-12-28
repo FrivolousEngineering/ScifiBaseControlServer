@@ -21,6 +21,11 @@ class ResourceStorage(Node):
         """
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
+
+        # Resource storage will always accept & provide the resource that it stores
+        self._acceptable_resources.add(self._resource_type)
+        self._providable_resources.add(self._resource_type)
+
         self._amount = amount
         self._max_storage = max_storage
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]

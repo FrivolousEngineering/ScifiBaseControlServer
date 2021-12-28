@@ -1,5 +1,5 @@
 from threading import RLock
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set
 
 from collections import defaultdict
 from Nodes.Connection import Connection
@@ -163,6 +163,9 @@ class Node:
 
         self._seconds_per_tick = 60
 
+        self._acceptable_resources: Set[str] = set()
+        self._providable_resources: Set[str] = set()
+
     @property
     def combined_specific_heat(self):
         total_specific_heat = self._weight * self._specific_heat
@@ -212,6 +215,9 @@ class Node:
         self._setPerformance(self.performance)
 
         self._stored_heat = self.weight * self._specific_heat * self._temperature
+
+        self._acceptable_resources.update(self._resources_required_per_tick.keys())
+        self._acceptable_resources.update(self._optional_resources_required_per_tick.keys())
 
     @modifiable_property
     def temperature_efficiency(self):
@@ -922,13 +928,15 @@ class Node:
             return False
         return len(self._incoming_connections) != num_statisfied_reservations
 
-    def _isConnectionPossible(self, connection: Connection) -> bool:
+    def ensureConnectionIsPossible(self, connection: Connection) -> None:
         """
         Check if a given connection that is being made is possible at all
         :param connection:
         :return:
         """
-        return True
+        if connection.target == self:
+            if connection.resource_type not in self._acceptable_resources:
+                raise InvalidConnection(f"Node [{self._node_id}] is unable to accept resources of type {connection.resource_type}")
 
     def connectWith(self, resource_type: str, target: "Node") -> None:
         """
@@ -939,11 +947,8 @@ class Node:
         """
         with self._update_lock:
             new_connection = Connection(origin=self, target=target, resource_type = resource_type)
-            if self._isConnectionPossible(new_connection):
-                self._outgoing_connections.append(new_connection)
-                target.addConnection(new_connection)
-            else:
-                raise InvalidConnection("Can't connect this")
+            self._outgoing_connections.append(new_connection)
+            target.addConnection(new_connection)
 
     def addConnection(self, connection: Connection) -> None:
         """
