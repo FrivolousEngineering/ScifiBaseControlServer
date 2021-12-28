@@ -23,8 +23,8 @@ try:
     known_nodes = [node_data["node_id"] for node_data in all_node_data]
     all_node_ids = [node_data["node_id"] for node_data in all_node_data]
 except:
-    # Create a fake schema
-    schema = schemathesis.from_file('{"swagger": "2.0","info": {"title": "Sample API","description": "API description in Markdown.","version": "1.0.0"},"host": "api.example.com","basePath": "/v1","schemes": ["https"],"paths": {}}')
+    # Create a fake schema. It needs to have at least one path, otherwise schemathesis breaks.
+    schema = schemathesis.from_file('{ "swagger": "2.0", "info": { "title": "Sample API", "description": "API description in Markdown.", "version": "1.0.0" }, "host": "api.example.com", "basePath": "/v1", "schemes": [ "https" ], "paths": { "/users": { "get": { "summary": "Returns a list of users.", "description": "Optional extended description in Markdown.", "produces": [ "application/json" ], "responses": { "200": { "description": "OK" } } } } } }')
     all_node_ids = []
     server_process = None
     engine_process = None
