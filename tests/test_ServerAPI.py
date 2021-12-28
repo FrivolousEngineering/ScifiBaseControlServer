@@ -26,6 +26,9 @@ except:
     # Create a fake schema
     schema = schemathesis.from_file('{"swagger": "2.0","info": {"title": "Sample API","description": "API description in Markdown.","version": "1.0.0"},"host": "api.example.com","basePath": "/v1","schemes": ["https"],"paths": {}}')
     all_node_ids = []
+    server_process = None
+    engine_process = None
+
 
 @schemathesis.hooks.register
 def before_generate_case(context, strategy):
