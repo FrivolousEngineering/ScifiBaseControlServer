@@ -24,7 +24,6 @@ class Valve(ResourceStorage):
 
         super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **defaults)
         self._fluid_per_tick = fluid_per_tick
-        self._max_resources_requestables_per_tick = fluid_per_tick
 
         # A valve cooler pretends to be a resource storage, but it shouldn't display this.
         #self.additional_properties.remove("amount_stored")
