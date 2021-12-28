@@ -11,6 +11,7 @@ def createEngineFromConfig(config_file) -> NodeEngine:
         engine.deserialize(loaded_data)
     return engine
 
+
 def setupForIdealState(config_file, target_node_id):
     engine = createEngineFromConfig(config_file)
 

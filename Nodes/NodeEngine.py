@@ -45,7 +45,7 @@ class NodeEngine:
         # deterministic. The randomisation ensures that the order in which the update of each node is done is much less
         # of a factor. If you see weird fluctuating behavior, increase the amount of subticks. Do note that this does
         # mean that more calculations are done, which might negatively impact larger systems.
-        self._sub_ticks = 30
+        self._sub_ticks = 1
 
         self._default_outside_temperature = 293.15
 

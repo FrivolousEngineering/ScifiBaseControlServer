@@ -1,4 +1,8 @@
+from typing import cast
+
+from Nodes.Connection import Connection
 from Nodes.Node import Node
+from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Util import enforcePositive
 
 
@@ -41,12 +45,13 @@ class EnergyBalancer(Node):
         self._resources_provided_this_tick["energy"] += energy_provided
 
     def _provideEnergy(self, amount: float) -> float:
-        total_energy_in_connected_nodes = 0
+        total_energy_in_connected_nodes = 0.
 
         outgoing_connections = self.getAllOutgoingConnectionsByType("energy")
 
         for outgoing_connection in outgoing_connections:
-            total_energy_in_connected_nodes += outgoing_connection.target.amount_stored
+            # We know the target will be a resource storage, since we don't accept connections that don't
+            total_energy_in_connected_nodes += cast(ResourceStorage, outgoing_connection.target).amount_stored
 
         original_amount = amount
         outgoing_connections = sorted(outgoing_connections,
@@ -56,7 +61,8 @@ class EnergyBalancer(Node):
 
         for outgoing_connection in outgoing_connections:
             connection_number += 1
-            energy_factor = (total_energy_in_connected_nodes - outgoing_connection.target.amount_stored) / total_energy_in_connected_nodes / (num_connections - 1)
+            target_node = cast(ResourceStorage, outgoing_connection.target)
+            energy_factor = (total_energy_in_connected_nodes - target_node.amount_stored) / total_energy_in_connected_nodes / (num_connections - 1)
             energy_to_provide = energy_factor * original_amount
 
             energy_dumped = outgoing_connection.giveResource(energy_to_provide)
@@ -64,4 +70,15 @@ class EnergyBalancer(Node):
 
         return amount
 
-    #TODO: Override addConnection, since this node can *only* be connected with energy storage nodes!
+    def _isConnectionPossible(self, connection: Connection) -> bool:
+        if not super()._isConnectionPossible(connection):
+            return False
+
+        if connection.resource_type != "energy":
+            return False
+
+        if connection.target != self:
+            if not isinstance(connection.target, ResourceStorage):
+                return False
+
+        return True

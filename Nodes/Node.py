@@ -10,6 +10,9 @@ from Signal import signalemitter, Signal
 
 from functools import wraps
 
+class InvalidConnection(Exception):
+    pass
+
 
 def modifiable_property(f):
     """
@@ -919,6 +922,14 @@ class Node:
             return False
         return len(self._incoming_connections) != num_statisfied_reservations
 
+    def _isConnectionPossible(self, connection: Connection) -> bool:
+        """
+        Check if a given connection that is being made is possible at all
+        :param connection:
+        :return:
+        """
+        return True
+
     def connectWith(self, resource_type: str, target: "Node") -> None:
         """
         Create a connection that transports the provided resource_type from this node to the provided node.
@@ -928,8 +939,11 @@ class Node:
         """
         with self._update_lock:
             new_connection = Connection(origin=self, target=target, resource_type = resource_type)
-            self._outgoing_connections.append(new_connection)
-            target.addConnection(new_connection)
+            if self._isConnectionPossible(new_connection):
+                self._outgoing_connections.append(new_connection)
+                target.addConnection(new_connection)
+            else:
+                raise InvalidConnection("Can't connect this")
 
     def addConnection(self, connection: Connection) -> None:
         """
