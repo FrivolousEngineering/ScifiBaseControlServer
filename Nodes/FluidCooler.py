@@ -14,8 +14,8 @@ class FluidCooler(Valve):
         A fairly simple node that has a high surface area and heat emissivity.
         It can accept a certain resource, which it cools down (because of it's large surface and heat emissivity)
         :param node_id: unique id of the node
-        :param resource_type: The resource type that this fluidcooler passes through
-        :param fluid_per_tick: units of resource that this fluidcooler can handle per tick
+        :param resource_type: The resource type that this fluid-cooler passes through
+        :param fluid_per_tick: units of resource that this fluid-cooler can handle per tick
         :param kwargs:
         """
         # Update the defaults like this so that the actual property can be set by base class
@@ -30,6 +30,6 @@ class FluidCooler(Valve):
         defaults.update(kwargs)
         super().__init__(node_id, resource_type, fluid_per_tick, **defaults)
 
-        self._description = "This device pumps {resource_type} from all incomming connections and provides them to" \
+        self._description = "This device pumps {resource_type} from all incoming connections and provides them to" \
                             " all of it's outgoing connections all the while cooling them down significantly."
         self._description = self._description.format(resource_type=resource_type)
