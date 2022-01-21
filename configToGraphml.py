@@ -1,10 +1,15 @@
-
+import base64
 import json
+from pathlib import Path
 
+from Nodes.FluidCooler import FluidCooler
+from Nodes.Generator import Generator
 from Nodes.NodeEngine import NodeEngine
 
 from lxml import etree
 
+from Nodes.ResourceStorage import ResourceStorage
+from Nodes.Valve import Valve
 
 engine = NodeEngine()
 
@@ -24,17 +29,44 @@ namespaces = {
 
 
 y_n = "{%s}" % namespaces["y"]
+yed_n = "{%s}" % namespaces["yed"]
 root = etree.Element("graphml", nsmap=namespaces)
+key_d5 = etree.Element("key")
+key_d5.set("for", "node")
+key_d5.set("id", "d5")
+key_d5.set("yfiles.type", "nodegraphics")
+root.append(key_d5)
+
+
+key_d7 = etree.Element("key")
+key_d7.set("for", "graphml")
+key_d7.set("id", "d7")
+key_d7.set("yfiles.type", "resources")
+root.append(key_d7)
 
 graph = etree.SubElement(root, "graph", edgedefault = "directed")
 
-key = etree.Element("key")
-key.set("for", "node")
-key.set("id", "d5")
-key.set("yfiles.type", "nodegraphics")
-root.append(key)
+
+# Prepare all the image files
+resources_data = etree.Element("data", key = "d7")
+resources = etree.SubElement(resources_data, y_n + "Resources")
+
+images = ["images/FluidStorage.png", "images/Battery.png", "images/SolidStorage.png", "images/Generator.png",
+          "images/Lights.png", "images/FluidCooler.png", "images/Valve.png"]
 
 
+for i, image in enumerate(images):
+    with open(image, "rb") as f:
+        encoded_image = base64.b64encode(f.read())
+        etree.SubElement(resources, y_n + "Resource", id = str(i), type = "java.awt.image.BufferedImage").text = encoded_image
+        icon_name = Path(image).stem
+        icon_resource = etree.SubElement(resources, y_n + "Resource", id = f"{icon_name}Icon")
+        scaled_icon = etree.SubElement(icon_resource, yed_n + "ScaledIcon", xScale = "0.25", yScale = "0.25")
+        etree.SubElement(scaled_icon, yed_n + "ImageIcon", image = str(i))
+
+
+
+# Add all the nodes
 for node_id, node in engine.getAllNodes().items():
     node_element = etree.SubElement(graph, "node", id = node_id)
     data = etree.SubElement(node_element, "data", key = "d5")
@@ -42,13 +74,38 @@ for node_id, node in engine.getAllNodes().items():
     etree.SubElement(shape_node, y_n + "Geometry", height = "100", width = "100", y = "100", x = "100")
     etree.SubElement(shape_node, y_n + "Fill", color="#FFCC00", transparent="false")
     etree.SubElement(shape_node, y_n + "BorderStyle", color="#000000", type="line", width ="1.0")
-    etree.SubElement(shape_node, y_n + "NodeLabel").text = node_id
+
+    icon_data = ""
+    # If the node is a store unit, add the storage icon
+    if type(node) == ResourceStorage:
+        # Yeah, it's not the cleanest solution, but whatever.
+        if node._resource_type != "energy":
+            if node._resource_type in ["fuel", "water", "oxygen", "dirty_water", "plant_oil"]:
+                icon_data = "FluidStorageIcon"
+            else:
+                icon_data = "SolidStorageIcon"
+        else:
+            icon_data = "BatteryIcon"
+    elif type(node) == Generator:
+        icon_data = "GeneratorIcon"
+
+    elif "lights" in node.getId():
+        icon_data = "LightsIcon"
+    elif type(node) == FluidCooler:
+        icon_data = "FluidCoolerIcon"
+    elif type(node) == Valve:
+        icon_data = "ValveIcon"
+
+    etree.SubElement(shape_node, y_n + "NodeLabel", iconData= icon_data).text = node_id
     etree.SubElement(shape_node, y_n + "Shape", type = "Rectangle")
 
 
+# Add all the connections
 for node_id, node in engine.getAllNodes().items():
     for connection in node.getAllOutgoingConnections():
         edge = etree.SubElement(graph, "edge", id = f"{node_id}_{connection.target.getId()}_{connection.resource_type}", source = node_id, target=connection.target.getId())
 
+
+root.append(resources_data)
 et = etree.ElementTree(root)
 et.write("output.graphml", pretty_print = True)
