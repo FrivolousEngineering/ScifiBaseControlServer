@@ -2,14 +2,19 @@ import base64
 import json
 from pathlib import Path
 
+from Nodes.ComputationNode import ComputationNode
 from Nodes.FluidCooler import FluidCooler
 from Nodes.Generator import Generator
 from Nodes.NodeEngine import NodeEngine
 
 from lxml import etree
 
+from Nodes.OilExtractor import OilExtractor
+from Nodes.PlantPress import PlantPress
 from Nodes.ResourceStorage import ResourceStorage
+from Nodes.Toilets import Toilets
 from Nodes.Valve import Valve
+from Nodes.WaterPurifier import WaterPurifier
 
 engine = NodeEngine()
 
@@ -44,6 +49,12 @@ key_d7.set("id", "d7")
 key_d7.set("yfiles.type", "resources")
 root.append(key_d7)
 
+key_d10 = etree.Element("key")
+key_d10.set("for", "edge")
+key_d10.set("id", "d10")
+key_d10.set("yfiles.type", "edgegraphics")
+root.append(key_d10)
+
 graph = etree.SubElement(root, "graph", edgedefault = "directed")
 
 
@@ -52,7 +63,9 @@ resources_data = etree.Element("data", key = "d7")
 resources = etree.SubElement(resources_data, y_n + "Resources")
 
 images = ["images/FluidStorage.png", "images/Battery.png", "images/SolidStorage.png", "images/Generator.png",
-          "images/Lights.png", "images/FluidCooler.png", "images/Valve.png"]
+          "images/Lights.png", "images/FluidCooler.png", "images/Valve.png", "images/Computer.png",
+          "images/WaterPurifier.png", "images/SolarPanel.png", "images/PlantPress.png", "images/Toilet.png",
+          "images/Extractor.png"]
 
 
 for i, image in enumerate(images):
@@ -95,7 +108,18 @@ for node_id, node in engine.getAllNodes().items():
         icon_data = "FluidCoolerIcon"
     elif type(node) == Valve:
         icon_data = "ValveIcon"
-
+    elif type(node) == ComputationNode or "scanner" in node.getId():
+        icon_data = "ComputerIcon"
+    elif type(node) == WaterPurifier:
+        icon_data = "WaterPurifierIcon"
+    elif node.getId() == "solar_panel":
+        icon_data = "SolarPanelIcon"
+    elif type(node) == PlantPress:
+        icon_data = "PlantPressIcon"
+    elif type(node) == Toilets:
+        icon_data = "ToiletIcon"
+    elif type(node) == OilExtractor:
+        icon_data = "ExtractorIcon"
     etree.SubElement(shape_node, y_n + "NodeLabel", iconData= icon_data).text = node_id
     etree.SubElement(shape_node, y_n + "Shape", type = "Rectangle")
 
