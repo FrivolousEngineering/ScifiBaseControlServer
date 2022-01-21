@@ -31,6 +31,7 @@ class OilExtractor(Node):
         self._providable_resources.add("plant_oil")
         self._providable_resources.add("waste")
         self._providable_resources.add("water")
+        self._providable_resources.add("fuel")
 
     @modifiable_property
     def temperature_efficiency(self):

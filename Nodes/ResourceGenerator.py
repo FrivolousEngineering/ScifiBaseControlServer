@@ -17,6 +17,7 @@ class ResourceGenerator(Node):
         super().__init__(node_id, **kwargs)
         self._resource_type = resource_type.lower()
         self._amount = amount
+        self._providable_resources.add(resource_type)
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
