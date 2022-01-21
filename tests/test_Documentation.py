@@ -1,6 +1,7 @@
 import pytest
 
 from Nodes.Connection import Connection
+from Nodes.EnergyBalancer import EnergyBalancer
 from Nodes.FluidCooler import FluidCooler
 from Nodes.Generator import Generator
 from Nodes.HydroponicsBay import HydroponicsBay
@@ -38,7 +39,9 @@ objects_to_check_for_documentation = [Node("whatever"),
                                       PlantPress("plant_press"),
                                       ResourceStorage("resource_storage", "waste", 10),
                                       Valve("valve", "fuel", 50),
-                                      WaterPurifier("water_purifier")]
+                                      WaterPurifier("water_purifier"),
+                                      EnergyBalancer("energy_balancer")]
+
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure
 # that multiple functions that are missing documentation will result in multiple failed tests.

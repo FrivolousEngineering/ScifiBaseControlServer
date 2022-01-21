@@ -46,6 +46,11 @@ class EnergyBalancer(Node):
         self._resources_provided_this_tick["energy"] += energy_provided
 
     def _provideEnergy(self, amount: float) -> float:
+        """
+        This node uses a different strategy than equal spread (other nodes distribute evenly)
+        :param amount: The amount of energy to distribute
+        :return: The amount of energy it couldn't distribute
+        """
         total_energy_in_connected_nodes = 0.
 
         outgoing_connections = self.getAllOutgoingConnectionsByType("energy")
