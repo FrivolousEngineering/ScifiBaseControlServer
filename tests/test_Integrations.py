@@ -8,6 +8,7 @@ from Nodes.NodeStorage import NodeStorage
 import os
 import math
 
+
 @pytest.mark.integration
 @pytest.mark.parametrize("sub_ticks", [1, 5, 10])
 def test_MultiWaterCooler(sub_ticks):
