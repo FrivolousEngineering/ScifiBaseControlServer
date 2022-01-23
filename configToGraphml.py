@@ -32,6 +32,9 @@ namespaces = {
     "yed": "http://www.yworks.com/xml/yed/3",
 }
 
+default_node_width = 100
+default_node_height = 100
+
 
 y_n = "{%s}" % namespaces["y"]
 yed_n = "{%s}" % namespaces["yed"]
@@ -84,7 +87,7 @@ for node_id, node in engine.getAllNodes().items():
     node_element = etree.SubElement(graph, "node", id = node_id)
     data = etree.SubElement(node_element, "data", key = "d5")
     shape_node = etree.SubElement(data, y_n + "ShapeNode")
-    etree.SubElement(shape_node, y_n + "Geometry", height = "100", width = "100", y = "100", x = "100")
+    etree.SubElement(shape_node, y_n + "Geometry", height = str(default_node_height), width = str(default_node_width), y = "100", x = "100")
     etree.SubElement(shape_node, y_n + "Fill", color="#FFCC00", transparent="false")
     etree.SubElement(shape_node, y_n + "BorderStyle", color="#000000", type="line", width ="1.0")
 
