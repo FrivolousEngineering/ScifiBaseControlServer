@@ -52,6 +52,13 @@ key_d7.set("id", "d7")
 key_d7.set("yfiles.type", "resources")
 root.append(key_d7)
 
+key_d9 = etree.Element("key")
+key_d9.set("for", "edge")
+key_d9.set("id", "d9")
+key_d9.set("yfiles.type", "edgegraphics")
+root.append(key_d9)
+
+
 key_d10 = etree.Element("key")
 key_d10.set("for", "edge")
 key_d10.set("id", "d10")
@@ -127,11 +134,25 @@ for node_id, node in engine.getAllNodes().items():
     etree.SubElement(shape_node, y_n + "Shape", type = "Rectangle")
 
 
+def getResourceColor(resource_type):
+    if resource_type == "water":
+        return "#0000ff"
+    if resource_type == "energy":
+        return "#ffff00"
+    if resource_type == "fuel":
+        return "#A52A2A"
+    if resource_type == "plants":
+        return "#00ff00"
+    return "#000000"
+
 # Add all the connections
 for node_id, node in engine.getAllNodes().items():
     for connection in node.getAllOutgoingConnections():
         edge = etree.SubElement(graph, "edge", id = f"{node_id}_{connection.target.getId()}_{connection.resource_type}", source = node_id, target=connection.target.getId())
-
+        data_key = etree.SubElement(edge, "data", key = "d9")
+        poly_line_edge = etree.SubElement(data_key, y_n + "PolyLineEdge")
+        color = getResourceColor(connection.resource_type)
+        etree.SubElement(poly_line_edge, y_n + "LineStyle", color = color, type="line", width = "1.0")
 
 root.append(resources_data)
 et = etree.ElementTree(root)
