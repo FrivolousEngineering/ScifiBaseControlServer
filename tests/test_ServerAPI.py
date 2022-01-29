@@ -29,6 +29,13 @@ except:
     server_process = None
     engine_process = None
 
+# This is a big nasty hack. But since we need the process to be started to get the schema, we have to do some magic
+# Pytest imports this during collection, but it can be that this test is skipped. This leads to the server & engine
+# process not getting killed. So we store them in pytest for a bit, and have a hook in conftest to call the kill
+# command again
+pytest.server_process = server_process
+pytest.engine_process = engine_process
+
 
 @schemathesis.hooks.register
 def before_generate_case(context, strategy):
