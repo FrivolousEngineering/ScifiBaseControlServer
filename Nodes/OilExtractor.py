@@ -14,7 +14,7 @@ class OilExtractor(Node):
                     "min_performance": 0.75,
                     "max_performance": 1.5}
         defaults.update(kwargs)
-        super().__init__(node_id, **kwargs)
+        super().__init__(node_id, **defaults)
 
         self._resources_required_per_tick["fuel"] = 1
         self._resources_required_per_tick["plants"] = 10
