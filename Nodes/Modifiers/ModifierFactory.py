@@ -93,38 +93,14 @@ class ModifierFactory:
 
     @classmethod
     def createModifier(cls, modifier: str) -> Optional[Modifier]:
-        if modifier == "BoostCoolingModifier":
-            return BoostCoolingModifier(DEFAULT_DURATION)
-        if modifier == "OverrideDefaultSafetyControlsModifier":
-            return OverrideDefaultSafetyControlsModifier(DEFAULT_DURATION)
         if modifier == "RepairOverTimeModifier":
             return RepairOverTimeModifier(2, DEFAULT_DURATION)
         if modifier == "JuryRigModifier":
             return JuryRigModifier(25, DEFAULT_DURATION)
 
-        if modifier == "SmallHeatPackModifier":
-            return SmallHeatPackModifier(DEFAULT_DURATION)
-        if modifier == "MediumHeatPackModifier":
-            return MediumHeatPackModifier(DEFAULT_DURATION)
-        if modifier == "LargeHeatPackModifier":
-            return LargeHeatPackModifier(DEFAULT_DURATION)
+        if modifier in globals() and modifier in cls._all_known_modifiers:
+            modifier_class = globals()[modifier]
+            return modifier_class(duration = DEFAULT_DURATION)
 
-        if modifier == "SmallCoolingPackModifier":
-            return SmallCoolingPackModifier(DEFAULT_DURATION)
-        if modifier == "MediumCoolingPackModifier":
-            return MediumCoolingPackModifier(DEFAULT_DURATION)
-        if modifier == "LargeCoolingPackModifier":
-            return LargeCoolingPackModifier(DEFAULT_DURATION)
-
-        if modifier == "PyrolythicResistantEnzymeInjectorModifier":
-            return PyrolythicResistantEnzymeInjectorModifier(DEFAULT_DURATION)
-
-        if modifier == "HeatResistantLubricationInjectionModifier":
-            return HeatResistantLubricationInjectionModifier(DEFAULT_DURATION)
-
-        if modifier == "OverclockModifier":
-            return OverclockModifier(DEFAULT_DURATION)
-
-        if modifier == "PressureReleaseValveModifier":
-            return PressureReleaseValveModifier(DEFAULT_DURATION)
+      
         return None
