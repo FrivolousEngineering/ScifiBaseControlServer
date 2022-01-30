@@ -1,3 +1,5 @@
+from typing import Dict, Optional
+
 from flask import request, Response
 from flask_restx import Resource, fields, Namespace
 import json
@@ -21,7 +23,7 @@ controller = api.model("controller", {
 UNKNOWN_CONTROLLER_RESPONSE = Response("{\"message\": \"Could not find the requested controller\"}", status=404, mimetype='application/json')
 
 
-def getControllerData(controller_id):
+def getControllerData(controller_id: str) -> Optional[Dict]:
     manager = ControllerManager.getInstance()
     controller = manager.getController(controller_id)
     if not controller:
