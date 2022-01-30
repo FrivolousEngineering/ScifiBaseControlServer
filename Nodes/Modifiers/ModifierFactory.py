@@ -102,5 +102,4 @@ class ModifierFactory:
             modifier_class = globals()[modifier]
             return modifier_class(duration = DEFAULT_DURATION)
 
-      
         return None
