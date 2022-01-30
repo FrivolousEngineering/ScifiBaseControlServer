@@ -75,7 +75,7 @@ class ModifierFactory:
 
         all_properties = modifier.getAllInfluencedProperties()
         if not node.hasSettablePerformance:
-            # If no performance can be set, the min & max should also not be changable!
+            # If no performance can be set, the min & max should also not be changeable!
             if "min_performance" in all_properties or "max_performance" in all_properties:
                 return False
         return True
