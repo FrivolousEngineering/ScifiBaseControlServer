@@ -46,7 +46,7 @@ class ModifierFactory:
         return cls._modifier_cache[modifier_type]
 
     @classmethod
-    def getModifierInfo(cls, modifier_type: str) -> Optional[Dict[str, Any]]:
+    def getModifierInfo(cls, modifier_type: str) -> Optional[Dict[str, str]]:
         """
         Provide static (eg; class based, not *object* based) information about a modifier.
         :param modifier_type:
