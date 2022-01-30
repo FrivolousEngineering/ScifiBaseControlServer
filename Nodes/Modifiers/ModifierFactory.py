@@ -1,7 +1,7 @@
 from typing import Optional, TYPE_CHECKING, Dict, List, cast, Any
 
 from Nodes.Modifiers.BoostCoolingModifier import BoostCoolingModifier
-from Nodes.Modifiers.HeatResistantLubricationInjectionModifier import HeatResistantLubricationInjection
+from Nodes.Modifiers.HeatResistantLubricationInjectionModifier import HeatResistantLubricationInjectionModifier
 from Nodes.Modifiers.JuryRigModifier import JuryRigModifier
 from Nodes.Modifiers.LargeCoolingPack import LargeCoolingPackModifier
 from Nodes.Modifiers.LargeHeatPackModifier import LargeHeatPackModifier
@@ -120,7 +120,7 @@ class ModifierFactory:
             return PyrolythicResistantEnzymeInjectorModifier(DEFAULT_DURATION)
 
         if modifier == "HeatResistantLubricationInjectionModifier":
-            return HeatResistantLubricationInjection(DEFAULT_DURATION)
+            return HeatResistantLubricationInjectionModifier(DEFAULT_DURATION)
 
         if modifier == "OverclockModifier":
             return OverclockModifier(DEFAULT_DURATION)
