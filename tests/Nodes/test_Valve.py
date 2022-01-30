@@ -22,3 +22,29 @@ def test_setPerformance():
 
     assert valve.max_amount_stored == 12.5
 
+
+def test_preGiveResource_wrongResource():
+    valve = Valve.Valve("omg", "fuel", 10)
+    assert valve.preGiveResource("water", 100) == 0
+
+
+def test_preGiveResource_negativeValue():
+    valve = Valve.Valve("omg", "fuel", 10)
+    assert valve.preGiveResource("fuel", -200) == 0
+
+
+def test_preGiveResource_extremelySmallAmount():
+    # The valve class has some code to check for larger amounts being given to it.
+    valve = Valve.Valve("omg", "fuel", 10)
+    assert valve.preGiveResource("fuel", 0.0001) == 0.0001
+
+
+def test_preGiveResource_largeAmount():
+    valve = Valve.Valve("omg", "fuel", 10)
+    assert valve.preGiveResource("fuel", 200) == 25
+
+
+def test_preGiveResource_largeAmount_partiallyFilled():
+    valve = Valve.Valve("omg", "fuel", 10)
+    valve.giveResource("fuel", 10)
+    assert valve.preGiveResource("fuel", 200) == 15
