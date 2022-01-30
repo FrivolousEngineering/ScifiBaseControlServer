@@ -19,7 +19,7 @@ from Nodes.Modifiers.SmallHeatPackModifier import SmallHeatPackModifier
 DEFAULT_DURATION = 10
 
 if TYPE_CHECKING:
-    from Node import Node
+    from Nodes.Node import Node
 
 
 class ModifierFactory:
