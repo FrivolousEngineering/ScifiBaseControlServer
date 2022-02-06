@@ -18,6 +18,7 @@ from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Valve import Valve
 from Nodes.WaterPurifier import WaterPurifier
 from Server.HardwareController import HardwareController
+from Server.HardwareControllerManager import HardwareControllerManager
 
 function_exclude_list = ["__new__", "__repr__"]
 exclude_signatures = ["kwargs", "args"]
@@ -42,7 +43,8 @@ objects_to_check_for_documentation = [Node("whatever"),
                                       Valve("valve", "fuel", 50),
                                       WaterPurifier("water_purifier"),
                                       EnergyBalancer("energy_balancer"),
-                                      HardwareController("something")]
+                                      HardwareController("something"),
+                                      HardwareControllerManager()]
 
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure

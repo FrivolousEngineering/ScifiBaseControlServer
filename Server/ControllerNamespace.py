@@ -4,7 +4,7 @@ from flask import request, Response
 from flask_restx import Resource, fields, Namespace
 import json
 from Server.Blueprint import api
-from Server.ControllerManager import ControllerManager
+from Server.HardwareControllerManager import HardwareControllerManager
 
 
 control_namespace = Namespace("controller", description ="Controllers are the remote devices that provide us with state.")
@@ -24,7 +24,7 @@ UNKNOWN_CONTROLLER_RESPONSE = Response("{\"message\": \"Could not find the reque
 
 
 def getControllerData(controller_id: str) -> Optional[Dict]:
-    manager = ControllerManager.getInstance()
+    manager = HardwareControllerManager.getInstance()
     controller = manager.getController(controller_id)
     if not controller:
         return None
@@ -38,13 +38,14 @@ def getControllerData(controller_id: str) -> Optional[Dict]:
 
     return result
 
+
 @control_namespace.route("/")
 @control_namespace.doc(description ="Get all the known controllers.")
 class Controllers(Resource):
     @api.response(200, "success", fields.List(fields.Nested(controller)))
     def get(self):
         result = []
-        manager = ControllerManager.getInstance()
+        manager = HardwareControllerManager.getInstance()
         for key in manager.getAllControllerIds():
             controller_data = getControllerData(key)
             if controller_data is not None:
@@ -58,7 +59,7 @@ class Controller(Resource):
     @api.response(200, "success", controller)
     @api.response(404, "Unknown Controller")
     def get(self, controller_id):
-        manager = ControllerManager.getInstance()
+        manager = HardwareControllerManager.getInstance()
         result = getControllerData(controller_id)
         if result is None:
             return UNKNOWN_CONTROLLER_RESPONSE
@@ -68,7 +69,7 @@ class Controller(Resource):
     @api.response(404, "Unknown Controller")
     @api.expect(api.model('Controller', {'sensor_value': fields.Float}), code=201)
     def put(self, controller_id):
-        manager = ControllerManager.getInstance()
+        manager = HardwareControllerManager.getInstance()
         result = getControllerData(controller_id)
         if result is None:
             return UNKNOWN_CONTROLLER_RESPONSE

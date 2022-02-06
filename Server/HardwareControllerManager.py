@@ -5,10 +5,17 @@ import dbus
 import dbus.exceptions
 
 
-class ControllerManager:
+class HardwareControllerManager:
+    """
+    There can be multiple external pieces of hardware that report sensor values to us. The HWCManager keeps track of
+    these and the mapping of these values. This allows for sensors to directly control / set properties of Nodes
+    """
     __instance = None
 
     def __init__(self) -> None:
+        """
+
+        """
         self._controllers = {}  # type: Dict[str, HardwareController]
 
         self._mapping = {"Base-Control-C64AF4": {"sensor_value": "e_to_h_valve"},
@@ -32,6 +39,10 @@ class ControllerManager:
                 self._dbus = None
 
     def _setupDBUS(self) -> None:
+        """
+        Ensure that the DBUS is setup and handled
+        :return:
+        """
         self._initDBUS()
         try:
             self._dbus.checkAlive()  # type: ignore
@@ -41,15 +52,32 @@ class ControllerManager:
             self._initDBUS()
 
     def getMappedIdFromSensor(self, controller_id: str, sensor_id: str) -> Optional[str]:
+        """
+        Get what sensor of a given controller is mapped to what node.
+        :param controller_id: Hardware controller ID
+        :param sensor_id: the sensor on the hardarecontroller to check
+        :return: ID of the node that it's mapped to, None if it wasn't found
+        """
         # Find if there is a mapping!
         sensor_mapping = self._mapping.get(controller_id)
         if sensor_mapping is None:
-            return None # No mapping!
+            return None  # No mapping!
 
         return sensor_mapping.get(sensor_id)
 
-    def _onSensorValueChanged(self, controller_id, sensor_id):
+    def _onSensorValueChanged(self, controller_id: str, sensor_id: str) -> None:
+        """
+        Handle the changes when a value of a sensor was changed.
+        :param controller_id:
+        :param sensor_id:
+        :return:
+        """
         new_value = self._controllers[controller_id].getSensorValue(sensor_id)
+        if new_value is None:
+            # This really shouldn't be possible...
+            print("No sensor value was found, even though a signal was emitted")
+            new_value = 0
+
         new_value /= 1024.
 
         node_id = self.getMappedIdFromSensor(controller_id, sensor_id)
@@ -70,20 +98,32 @@ class ControllerManager:
         # For the moment we only support setting the target performance.
         self._dbus.setTargetPerformance(node_id, float(new_value))
 
-    def updateController(self, controller_id, data):
+    def updateController(self, controller_id: str, data: Dict[str, float]) -> None:
+        """
+        :param controller_id: The Id of the controller to update
+        :param data: The data as reported by hardare. The keys in the dict represent the sensor_id, the values the value
+                    of that sensor.
+        """
         if controller_id not in self._controllers:
             self._controllers[controller_id] = HardwareController(controller_id)
             self._controllers[controller_id].sensorValueChanged.connect(self._onSensorValueChanged)
         self._controllers[controller_id].update(data)
 
-    def getController(self, controller_id) -> Optional[HardwareController]:
+    def getController(self, controller_id: str) -> Optional[HardwareController]:
+        """
+        :param controller_id: ID of the controller to request
+        :return: The hardware controller if it was found, None otherwise.
+        """
         return self._controllers.get(controller_id)
 
     def getAllControllerIds(self):
+        """
+        :return: All known controller Id's
+        """
         return self._controllers.keys()
 
     @staticmethod
-    def getInstance() -> "ControllerManager":
-        if ControllerManager.__instance is None:
-            ControllerManager.__instance = ControllerManager()
-        return ControllerManager.__instance
+    def getInstance() -> "HardwareControllerManager":
+        if HardwareControllerManager.__instance is None:
+            HardwareControllerManager.__instance = HardwareControllerManager()
+        return HardwareControllerManager.__instance
