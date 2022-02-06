@@ -25,7 +25,7 @@ class HardwareControllerManager:
                          "Base-Control-942AF2": {"sensor_value": "hydroponics_uncooled_water_valve"},
                          "Base-Control-C62B7E": {"sensor_value": "hydroponics_cooled_water_valve"}}
 
-        self._bus = None
+        self._bus: Optional[dbus.SessionBus] = None
         self._dbus = None
 
     def _initDBUS(self) -> None:
