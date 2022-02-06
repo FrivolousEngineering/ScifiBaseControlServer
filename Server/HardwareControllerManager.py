@@ -25,13 +25,19 @@ class HardwareControllerManager:
                          "Base-Control-942AF2": {"sensor_value": "hydroponics_uncooled_water_valve"},
                          "Base-Control-C62B7E": {"sensor_value": "hydroponics_cooled_water_valve"}}
 
-        self._bus = dbus.SessionBus()
+        self._bus = None
         self._dbus = None
 
     def _initDBUS(self) -> None:
         """
         Create DBUS object.
         """
+        if self._bus is None:
+            try:
+                self._bus = dbus.SessionBus()
+            except dbus.exceptions.DBusException:
+                return
+
         if self._dbus is None:
             try:
                 self._dbus = self._bus.get_object('com.frivengi.nodes', '/com/frivengi/nodes')
