@@ -6,8 +6,6 @@ from Nodes import Generator
 import math
 import pytest
 
-#TODO add test for different energy factors
-
 
 @pytest.fixture
 def generator():
@@ -17,7 +15,6 @@ def generator():
 
 
 def test_update(generator):
-
     generator._resources_received_this_sub_tick = {"fuel": 20, "water": 0}
     generator._provideResourceToOutgoingConnections = MagicMock(return_value = 5)
     generator._getAllReservedResources = MagicMock()
@@ -42,7 +39,6 @@ def test_update(generator):
     # Ensure that an attempt was made to provide water (0!)
     assert generator._provideResourceToOutgoingConnections.call_args_list[1][0][0] == "water"
     assert math.isclose(generator._provideResourceToOutgoingConnections.call_args_list[1][0][1], 0)
-
 
 
 def test_generator_resources_left_previous_update(generator):
