@@ -56,6 +56,7 @@ def test_restoreFromFile(config_file, ticks_to_run):
     first_key = next(iter(engine_with_storage.getAllNodes()))
     first_node = engine_with_storage.getNodeById(first_key)
     first_node.addModifier(OverrideDefaultSafetyControlsModifier(15))
+    assert first_node.getModifiers()  # ensure that it was added
 
     for _ in range(0, ticks_to_run):
         engine_with_storage.doTick()
