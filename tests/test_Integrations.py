@@ -37,7 +37,7 @@ def test_MultiWaterCooler(sub_ticks):
         assert math.isclose(total_water, starting_water)
 
 
-@pytest.mark.parametrize("ticks_to_run", [10, 20, 30])
+@pytest.mark.parametrize("ticks_to_run", [5, 20, 30])
 @pytest.mark.parametrize("config_file", ["MultiWaterTankConfig.json", "WaterTanksWithPumps.json", "GeneratorWaterCoolerConfiguration.json"])
 def test_restoreFromFile(config_file, ticks_to_run):
     engine_with_storage = NodeEngine()
