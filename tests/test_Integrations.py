@@ -56,6 +56,7 @@ def test_restoreFromFile(config_file, ticks_to_run):
     first_key = next(iter(engine_with_storage.getAllNodes()))
     first_node = engine_with_storage.getNodeById(first_key)
     first_node.addModifier(OverrideDefaultSafetyControlsModifier(15))
+
     for _ in range(0, ticks_to_run):
         engine_with_storage.doTick()
 
@@ -78,3 +79,46 @@ def test_restoreFromFile(config_file, ticks_to_run):
     assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())
 
     storage.purgeAllRevisions()
+
+
+def test_restoreFromFileWithPerformanceChanges():
+    target_performance = 0.5
+    ticks_to_run = 10
+    engine_with_storage = NodeEngine()
+    storage = NodeStorage(engine_with_storage)
+    storage.storage_name = "test_storage"
+
+    engine = NodeEngine()
+    path = "tests/configurations/GeneratorWaterCoolerConfiguration.json"
+    # Load a nice complex setup.
+    with open(path) as f:
+        loaded_data = json.loads(f.read())
+        engine_with_storage.deserialize(loaded_data)
+        engine.deserialize(loaded_data)
+
+    for node_id, node in engine.getAllNodes().items():
+        node.target_performance = target_performance
+
+    for _ in range(0, ticks_to_run):
+        engine_with_storage.doTick()
+
+        # We've now created a storage file by letting the given configuration run for 10 ticks!
+        # Time to restore it!
+        new_storage = NodeStorage(engine)
+        new_storage.storage_name = "test_storage.json"
+        new_storage.restoreNodeState()
+
+        # We need to remove the file after ourselves
+        os.remove("{storage_name}.json".format(storage_name=storage.storage_name))
+
+        for node_id, restored_node in engine.getAllNodes().items():
+            original_node = engine_with_storage.getNodeById(node_id)
+            assert restored_node.temperature, original_node.temperature
+            assert restored_node.additional_properties == original_node.additional_properties
+            assert restored_node.performance == original_node.performance
+            assert restored_node.target_performance == original_node.target_performance
+            assert restored_node.getModifiers() == original_node.getModifiers()
+
+        assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())
+
+        storage.purgeAllRevisions()

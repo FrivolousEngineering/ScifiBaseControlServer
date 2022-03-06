@@ -471,6 +471,7 @@ class Node:
         result["temperature"] = self.temperature
         result["custom_description"] = self._custom_description
         result["performace"] = self._performance
+        result["target_performance"] = self._target_performance
         result["modifiers"] = []
         for modifier in self._modifiers:
             result["modifiers"].append(modifier.serialize())
@@ -489,6 +490,7 @@ class Node:
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
         self._setPerformance(data.get("performance", 1.))
+        self._target_performance = data.get("target_performance", 1.)
 
         for modifier in data.get("modifiers", []):
             mod = ModifierFactory.createModifier(modifier["type"])
