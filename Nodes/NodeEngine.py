@@ -28,35 +28,37 @@ class NodeEngine:
         """
         Create a node Engine which controls a set of Nodes.
         """
-        self._nodes = {}  # type: Dict[str, Node]
-        self._node_histories = {}  # type: Dict[str, NodeHistory]
+        self._nodes: Dict[str, Node] = {}
+        self._node_histories: Dict[str, NodeHistory] = {}
 
         self._update_lock = RLock()
 
         self._tick_timer = PerpetualTimer(TICK_INTERVAL, self.doTick)
 
-        self._outside_temperature_handler = None  # type: Optional[TemperatureHandler]
-        self._tick_count = 0
+        self._outside_temperature_handler: Optional[TemperatureHandler] = None
+        self._tick_count: int = 0
 
-        # How many "in between" updates per tick should be done? This should be seen as "micro" ticks. Instead of doing
-        # the update of a tick in one go, it will be cut up in smaller chunks (so with 30 sub ticks, there will be 30
-        # calls to update, but in each of these only 1/30th of the production is done.
-        # We also randomise the order of the nodes in between these steps (although we use a seed for this to make it
-        # deterministic. The randomisation ensures that the order in which the update of each node is done is much less
-        # of a factor. If you see weird fluctuating behavior, increase the amount of subticks. Do note that this does
-        # mean that more calculations are done, which might negatively impact larger systems.
-        self._sub_ticks = 1
+        self._sub_ticks: int = 10
+        """
+        How many "in between" updates per tick should be done? This should be seen as "micro" ticks. Instead of doing
+        the update of a tick in one go, it will be cut up in smaller chunks (so with 30 sub ticks, there will be 30
+        calls to update, but in each of these only 1/30th of the production is done.
+        We also randomise the order of the nodes in between these steps (although we use a seed for this to make it
+        deterministic. The randomisation ensures that the order in which the update of each node is done is much less
+        of a factor. If you see weird fluctuating behavior, increase the amount of sub-ticks. Do note that this does
+        mean that more calculations are done, which might negatively impact larger systems.
+        """
 
         self._default_outside_temperature = 293.15
 
     def resetSeed(self) -> None:
         """
-        When using 'sub tick updates' we randomize the order in which we handle the updates
+        When using 'sub-tick updates' we randomize the order in which we handle the updates
         """
         random.seed(self._tick_count)
 
     @property
-    def tick_count(self):
+    def tick_count(self) -> int:
         return self._tick_count
 
     def setOutsideTemperatureHandler(self, temp_handler: TemperatureHandler) -> None:
@@ -173,7 +175,7 @@ class NodeEngine:
     def _preUpdate(self) -> None:
         """
         Handle the pre-update of the Node engine.
-        This basicly calls the pre-update for all nodes.
+        This basically calls the pre-update for all nodes.
         """
         self.preUpdateCalled.emit()
         for node in self._nodes.values():
