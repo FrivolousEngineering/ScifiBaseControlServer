@@ -858,6 +858,10 @@ class Node:
         self.damage(self.temperature_degradation_speed * (delta_temp / self._max_safe_temperature))
 
     def _dealDamageFromUsage(self) -> None:
+        """
+        If a node was active, check if damage needs to be done because of wear & tear.
+        :return:
+        """
         if self._active and self._usage_damage_factor > 0:
             self.damage(self._usage_damage_factor)
 
