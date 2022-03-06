@@ -30,7 +30,8 @@
 
         "medicine_creator":
         {
-            "type": "MedicineCreator"
+            "type": "MedicineCreator",
+            "usage_damage_factor": 0
         }
     },
     "connections":

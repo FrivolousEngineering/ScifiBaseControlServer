@@ -30,7 +30,8 @@
         },
         "hydroponics":
         {
-            "type": "HydroponicsBay"
+            "type": "HydroponicsBay",
+            "usage_damage_factor": 0
         },
         "oxygen_tank":
         {

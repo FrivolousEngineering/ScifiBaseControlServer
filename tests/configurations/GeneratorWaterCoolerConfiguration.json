@@ -9,7 +9,8 @@
         },
         "generator":
         {
-            "type": "Generator"
+            "type": "Generator",
+            "usage_damage_factor": 0
         },
         "fluid_cooler_1":
         {

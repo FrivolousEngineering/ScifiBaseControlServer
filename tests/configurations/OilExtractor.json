@@ -30,7 +30,8 @@
 
         "oil_extractor":
         {
-            "type": "OilExtractor"
+            "type": "OilExtractor",
+            "usage_damage_factor": 0
         }
     },
     "connections":
