@@ -245,6 +245,10 @@ class Node:
     def optimal_temperature_range(self):
         return self._optimal_temperature_range
 
+    @modifiable_property
+    def usage_damage_factor(self):
+        return self._usage_damage_factor
+
     @property
     def can_be_modified(self) -> bool:
         return self._can_be_modified
@@ -862,8 +866,8 @@ class Node:
         If a node was active, check if damage needs to be done because of wear & tear.
         :return:
         """
-        if self._active and self._usage_damage_factor > 0:
-            self.damage(self._usage_damage_factor)
+        if self._active and self.usage_damage_factor > 0:
+            self.damage(self.usage_damage_factor)
 
     def _getHealthEffectivenessFactor(self) -> float:
         """
