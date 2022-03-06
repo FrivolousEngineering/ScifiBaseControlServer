@@ -138,6 +138,9 @@ class Node:
 
         self._has_settable_performance = True
 
+        self._usage_damage_factor: float = kwargs.get("usage_damage_factor", 0.)
+        """How much damage should this node get by being in use?"""
+
         self._temperature_degradation_speed = kwargs.get("temperature_degradation_speed", 1)  # type: float
 
         """How fast should this node degrade if it's above a certain temperature?"""
@@ -781,6 +784,7 @@ class Node:
         self._emitHeat()
         self._convectiveHeatTransfer()
         self._dealDamageFromHeat()
+        self._dealDamageFromUsage()
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
         self._resources_received_last_tick = self._resources_received_this_tick.copy()
         self._optional_resources_required_last_tick = self._optional_resources_required_per_tick.copy()
@@ -846,6 +850,10 @@ class Node:
         if delta_temp <= 0:
             return
         self.damage(self.temperature_degradation_speed * (delta_temp / self._max_safe_temperature))
+
+    def _dealDamageFromUsage(self) -> None:
+        if self._active and self._usage_damage_factor > 0:
+            self.damage(self._usage_damage_factor)
 
     def _getHealthEffectivenessFactor(self) -> float:
         """
