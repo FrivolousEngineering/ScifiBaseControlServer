@@ -269,38 +269,3 @@ class NodeEngine:
 
         self.resetSeed()
         print("TICK ENDED!")
-
-    def generatePlantUMLGraph(self) -> str:
-        """
-        Convenience function that generates UMLLet data of all the nodes & connections.
-        :return:
-        """
-
-        def getResourceColor(resource_type: str) -> str:
-            if resource_type == "energy":
-                return "yellow"
-            if resource_type == "water":
-                return "blue"
-            if resource_type == "plants":
-                return "green"
-            return ""
-
-        result = "@startuml\nskinparam linetype ortho\n"
-
-        for node_id in self._nodes:
-            result += "map {node_id}".format(node_id = node_id)
-            result += "{\n"
-            result += "    Weight => {weight}\n".format(weight = self._nodes[node_id].weight)
-            result += "    Max temp => {max_safe_temperature}\n".format(max_safe_temperature=self._nodes[node_id].max_safe_temperature)
-            result += "}\n"
-
-        for node in self._nodes.values():
-            for connection in node.getAllOutgoingConnections():
-                color = getResourceColor(connection.resource_type)
-                color_string = "[#{color}]".format(color = color) if color else ""
-                result += "{origin} -{color}-> {target}\n".format(origin = connection.origin.getId(),
-                                                                  target = connection.target.getId(),
-                                                                  color = color_string)
-
-        result += "@enduml"
-        return result
