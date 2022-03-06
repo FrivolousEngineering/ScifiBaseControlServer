@@ -139,6 +139,7 @@ class Node:
         self._has_settable_performance = True
 
         self._temperature_degradation_speed = kwargs.get("temperature_degradation_speed", 1)  # type: float
+
         """How fast should this node degrade if it's above a certain temperature?"""
         self._description = ""  # type: str
         self._custom_description = ""  # type: str
@@ -844,9 +845,7 @@ class Node:
         delta_temp = self.temperature - self._max_safe_temperature
         if delta_temp <= 0:
             return
-        self._health -= self.temperature_degradation_speed * (delta_temp / self._max_safe_temperature)
-        if self._health < 0:
-            self._health = 0
+        self.damage(self.temperature_degradation_speed * (delta_temp / self._max_safe_temperature))
 
     def _getHealthEffectivenessFactor(self) -> float:
         """
