@@ -16,9 +16,9 @@ def node_energy_left():
     return node
 
 
-def createConnection(is_statisfied, reservation_deficiency, pre_give_result = 0):
+def createConnection(is_satisfied, reservation_deficiency, pre_give_result = 0):
     connection = MagicMock()
-    connection.isReservationStatisfied = MagicMock(return_value=is_statisfied)
+    connection.isReservationSatisfied = MagicMock(return_value=is_satisfied)
     connection.getReservationDeficiency = MagicMock(return_value=reservation_deficiency)
     connection.preGiveResource = MagicMock(return_value = pre_give_result)
     connection.giveResource = MagicMock(return_value=pre_give_result)
@@ -145,16 +145,16 @@ def test_requiresReplanningNoConnections():
     assert not node.requiresReplanning()
 
 
-def test_requiresReplanningAllConnectionsStatisfied():
+def test_requiresReplanningAllConnectionsSatisfied():
     node = Node.Node("")
-    node.addConnection(MagicMock(isReservationStatisfied = MagicMock(return_value = True)))
+    node.addConnection(MagicMock(isReservationSatisfied = MagicMock(return_value = True)))
     assert not node.requiresReplanning()
 
 
 def test_requiresReplanningOneConnectionStatisified():
     node = Node.Node("")
-    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=True)))
-    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=False)))
+    node.addConnection(MagicMock(isReservationSatisfied=MagicMock(return_value=True)))
+    node.addConnection(MagicMock(isReservationSatisfied=MagicMock(return_value=False)))
 
     assert node.requiresReplanning()
 
@@ -162,10 +162,10 @@ def test_requiresReplanningOneConnectionStatisified():
 def test_requiresReplanningOneConnectionStatisifiedButDisabled():
     node = Node.Node("")
     node.enabled = False
-    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=True)))
-    node.addConnection(MagicMock(isReservationStatisfied=MagicMock(return_value=False)))
+    node.addConnection(MagicMock(isReservationSatisfied=MagicMock(return_value=True)))
+    node.addConnection(MagicMock(isReservationSatisfied=MagicMock(return_value=False)))
 
-    assert not node.requiresReplanning() # Disabled nods should never need to be replanned!
+    assert not node.requiresReplanning()  # Disabled nods should never need to be re-planned!
 
 
 def test_getResourceAvailableThisTick(node_energy_left):
@@ -237,7 +237,7 @@ def test_replanReservationsNoDefficiency():
     connection_2.lock.assert_called_once()
 
 
-def test_replanReservationsNoStatisfied():
+def test_replanReservationsNoSatisfied():
     node = Node.Node("")
     node.getResourcesRequiredPerTick()["water"] = 10
     connection_1 = createConnection(False, 0)

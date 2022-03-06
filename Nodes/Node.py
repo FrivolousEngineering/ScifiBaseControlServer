@@ -744,15 +744,15 @@ class Node:
         for resource_type in all_resources:
             connections = self.getAllIncomingConnectionsByType(resource_type)
             total_resource_deficiency = sum([connection.getReservationDeficiency() for connection in connections])
-            num_statisfied_reservations = len(
-                [connection for connection in connections if connection.isReservationStatisfied()])
+            num_satisfied_reservations = len(
+                [connection for connection in connections if connection.isReservationSatisfied()])
 
-            if num_statisfied_reservations == 0:
+            if num_satisfied_reservations == 0:
                 extra_resource_to_ask_per_connection = 0.
             else:
-                extra_resource_to_ask_per_connection = total_resource_deficiency / num_statisfied_reservations
+                extra_resource_to_ask_per_connection = total_resource_deficiency / num_satisfied_reservations
             for connection in connections:
-                if not connection.isReservationStatisfied():
+                if not connection.isReservationSatisfied():
                     # So the connection that could not meet demand needs to be locked (since we can't get more!)
                     connection.lock()
                 else:
@@ -938,12 +938,12 @@ class Node:
         """
         if not self.enabled:
             return False  # Disabled nodes don't need replanning!
-        num_statisfied_reservations = len(
-            [connection for connection in self._incoming_connections if connection.isReservationStatisfied()])
+        num_satisfied_reservations = len(
+            [connection for connection in self._incoming_connections if connection.isReservationSatisfied()])
 
-        if not num_statisfied_reservations:
+        if not num_satisfied_reservations:
             return False
-        return len(self._incoming_connections) != num_statisfied_reservations
+        return len(self._incoming_connections) != num_satisfied_reservations
 
     def ensureConnectionIsPossible(self, connection: Connection) -> None:
         """

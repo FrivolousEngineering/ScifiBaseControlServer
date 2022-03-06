@@ -37,6 +37,7 @@ def test_createUnknownResource(origin_node, target_node):
     with pytest.raises(ValueError):
         Connection.Connection(origin_node, target_node, "zomg")
 
+
 def test_getReservationDeficiency(origin_node, target_node):
     connection = Connection.Connection(origin_node, target_node, "energy")
 
@@ -49,13 +50,12 @@ def test_getReservationDeficiency(origin_node, target_node):
     assert connection.getReservationDeficiency() == 0
 
 
-
 def test_lock(origin_node, target_node):
     connection = Connection.Connection(origin_node, target_node, "energy")
     assert not connection.locked
     connection.lock()
     assert connection.locked
-    assert connection.isReservationStatisfied()  # Locked connections are always statisfied.
+    assert connection.isReservationSatisfied()  # Locked connections are always satisfied.
 
 
 def test_reserveResource(energy_connection: Connection.Connection):

@@ -70,9 +70,9 @@ class Connection:
         """
         return self.getResource(self.reserved_available_amount * sub_tick_modifier)
 
-    def isReservationStatisfied(self) -> bool:
+    def isReservationSatisfied(self) -> bool:
         """
-        Check if the reservation was statisfied. This can be because enough resources are available or when reservation
+        Check if the reservation was satisfied. This can be because enough resources are available or when reservation
         is locked (aka; it can't be used to get more)
 
         :return:
