@@ -10,6 +10,7 @@ from Signal import signalemitter, Signal
 
 from functools import wraps
 
+
 class InvalidConnection(Exception):
     pass
 
@@ -41,6 +42,9 @@ def modifiable_property(f):
     return property(wrapper)
 
 
+resource_dict = Dict[str, float]
+
+
 @signalemitter
 class Node:
     """
@@ -64,49 +68,50 @@ class Node:
         self._incoming_connections = []  # type: List[Connection]
         self._outgoing_connections = []  # type: List[Connection]
 
-        self._resources_required_per_tick = {}  # type: Dict[str, float]
+        self._resources_required_per_tick: resource_dict = {}
         """ What resources must this node get in order to function? """
 
-        self._original_resources_required_per_tick = {}  # type: Dict[str, float]
+        self._original_resources_required_per_tick: resource_dict = {}
         """Resources required per tick holds the current (modified) amount. This holds the unmodified amounts"""
 
-        self._optional_resources_required_per_tick = {}  # type: Dict[str, float]
+        self._optional_resources_required_per_tick: resource_dict = {}
         """What resources does this node want in order to function, but it could do without?"""
-        self._original_optional_resources_required_per_tick = {}  # type: Dict[str, float]
-        self._optional_resources_required_last_tick = {}  # type: Dict[str, float]
+        self._original_optional_resources_required_per_tick: resource_dict = {}
+        self._optional_resources_required_last_tick: resource_dict = {}
 
-        self._resources_received_this_tick = defaultdict(float)  # type: Dict[str, float]
-        self._resources_produced_this_tick = defaultdict(float)  # type: Dict[str, float]
-        self._resources_provided_this_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_received_this_tick: resource_dict = defaultdict(float)
+        self._resources_produced_this_tick: resource_dict = defaultdict(float)
+        self._resources_provided_this_tick: resource_dict = defaultdict(float)
 
-        self._resources_received_this_sub_tick = defaultdict(float)  # type: Dict[str, float]
+        self._resources_received_this_sub_tick: resource_dict = defaultdict(float)
 
-        self._resources_required_last_tick = {}  # type: Dict[str, float]
-        self._resources_received_last_tick = {}  # type: Dict[str, float]
-        self._resources_produced_last_tick = {}  # type: Dict[str, float]
-        self._resources_provided_last_tick = {}  # type: Dict[str, float]
+        self._resources_required_last_tick: Dict[str, float] = {}
+        self._resources_received_last_tick: resource_dict = {}
+        self._resources_produced_last_tick: resource_dict = {}
+        self._resources_provided_last_tick: resource_dict = {}
 
-        # Any resources that were left from previous (ticks) that could not be left anywhere.
-        self._resources_left_over = {}  # type: Dict[str, float]
+        self._resources_left_over: resource_dict = {}
+        """Any resources that were left from previous (ticks) that could not be left anywhere."""
 
-        self._weight = kwargs.get("weight", 300)  # type: float
+        self._weight: float = kwargs.get("weight", 300)
 
-        self._specific_heat = 420  # type: float
+        self._specific_heat: float = 420
         """ How much energy is needed to increase 1kg of this node by one degree"""
 
-        self._stored_heat = self._weight * temperature * self._specific_heat  # type: float
+        self._stored_heat: float = self._weight * temperature * self._specific_heat
         """How much heat is stored inside this object. This is used to calculate the energy"""
 
-        # Temperature is in kelvin
-        self._temperature = temperature
+        self._temperature: float = temperature
+        """Temperature is in kelvin"""
 
-        # How well does this node emit heat. 0 is a perfect reflector, 1 is the sun.
-        self._heat_emissivity = kwargs.get("heat_emissivity", 0.5)  # type: float
+        self._heat_emissivity: float = kwargs.get("heat_emissivity", 0.5)
+        """How well does this node emit heat. 0 is a perfect reflector, 1 is the sun."""
 
-        # Is the node working at all?
-        self._enabled = kwargs.get("enabled", True)
+        self._enabled: bool = kwargs.get("enabled", True)
+        """Is the node working at all?"""
 
-        self._can_be_modified = kwargs.get("can_be_modified", True)
+        self._can_be_modified: bool = kwargs.get("can_be_modified", True)
+        """Can this node receive modifiers?"""
 
         self._update_lock = RLock()
 
@@ -114,34 +119,35 @@ class Node:
         # Plastic: 0.1-0.22
         # Stainless steel: 16-24
         # Aluminum: 205 - 250
-        self._heat_convection_coefficient = kwargs.get("heat_convection_coefficient", 10.)  # type: float
+        self._heat_convection_coefficient: float = kwargs.get("heat_convection_coefficient", 10.)
 
-        self._surface_area = kwargs.get("surface_area", 1)  # type: float
+        self._surface_area: float = kwargs.get("surface_area", 1)
         """How large is the surface of this object (in M2)"""
 
-        self.__stefan_boltzmann_constant = 5.67e-8  # type: float
+        self.__stefan_boltzmann_constant: float = 5.67e-8
         """A constant for heat."""
 
-        self._additional_properties = ["health"]  # type: List[str]
+        self._additional_properties: List[str] = ["health"]
 
-        self._health = kwargs.get("health", 100)   # type: float
-        self._max_health = 100  # type: float
-        self._active = False  # type: bool
-        self._max_safe_temperature = kwargs.get("max_safe_temperature", 400)  # type: float
+        self._health: float = kwargs.get("health", 100.)
+        self._max_health: float = 100.
+        self._active: bool = False
+        self._max_safe_temperature: float = kwargs.get("max_safe_temperature", 400)
 
-        # At what level should this node perform?
-        self._performance = kwargs.get("performance", 1)  # type: float
-        self._target_performance = kwargs.get("target_performance", 1)  # type: float
+        self._performance: float = kwargs.get("performance", 1.)
+        """At what level should this node perform? Factor that runs from 0 to x, where 1 is normal performance"""
 
-        self._min_performance = kwargs.get("min_performance", 1)  # type: float
-        self._max_performance = kwargs.get("max_performance", 1)  # type: float
+        self._target_performance: float = kwargs.get("target_performance", 1.)
+
+        self._min_performance: float = kwargs.get("min_performance", 1)
+        self._max_performance: float = kwargs.get("max_performance", 1)
 
         self._has_settable_performance = True
 
         self._usage_damage_factor: float = kwargs.get("usage_damage_factor", 0.)
         """How much damage should this node get by being in use?"""
 
-        self._temperature_degradation_speed = kwargs.get("temperature_degradation_speed", 1)  # type: float
+        self._temperature_degradation_speed: float = kwargs.get("temperature_degradation_speed", 1)
 
         """How fast should this node degrade if it's above a certain temperature?"""
         self._description = ""  # type: str
@@ -153,17 +159,17 @@ class Node:
 
         # Does this node change it's performance instantly?
         # a value of 1 means it changes instantly, higher values means it changes slower.
-        self._performance_change_factor = kwargs.get("performance_change_factor", 2)  # type: float
+        self._performance_change_factor: float = kwargs.get("performance_change_factor", 2)
 
-        self._optimal_temperature = kwargs.get("optimal_temperature", 375)  # type: float
-        self._optimal_temperature_range = kwargs.get("optimal_temperature_range", 75)  # type: float
+        self._optimal_temperature: float = kwargs.get("optimal_temperature", 375)
+        self._optimal_temperature_range: float = kwargs.get("optimal_temperature_range", 75)
 
-        self._temperature_efficiency = kwargs.get("temperature_efficiency", 1)  # type: float
+        self._temperature_efficiency: float = kwargs.get("temperature_efficiency", 1)
         """How (in)efficient is the Node. This is only for nodes that produce something and heat at the same time.
         An efficiency of 0 means that no heat is produced. An efficiency of 1 means that all heat of production is
         transformed into heat. Note that this does not have an effect on the actual resources produced, just the heat"""
 
-        self._tags = []  # type: List[str]
+        self._tags: List[str] = []
 
         self._seconds_per_tick = 60
 
@@ -171,7 +177,7 @@ class Node:
         self._providable_resources: Set[str] = set()
 
     @property
-    def combined_specific_heat(self):
+    def combined_specific_heat(self) -> float:
         total_specific_heat = self._weight * self._specific_heat
 
         for resource_type, amount in self._resources_left_over.items():
