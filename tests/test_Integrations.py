@@ -66,6 +66,12 @@ def test_restoreFromFile(config_file, ticks_to_run):
     new_storage.storage_name = "test_storage.json"
     new_storage.restoreNodeState()
 
+    # Since we don't just want to check a few values, we can employ an extra trick here. If we let *both* the new and
+    # the old engine do another tick, they should result in the same values. If that fails, it means some property that
+    # does affect the result was not correctly restored!
+    engine_with_storage.doTick()
+    engine.doTick()
+
     # We need to remove the file after ourselves
     os.remove("{storage_name}.json".format(storage_name = storage.storage_name))
 
@@ -102,23 +108,29 @@ def test_restoreFromFileWithPerformanceChanges():
     for _ in range(0, ticks_to_run):
         engine_with_storage.doTick()
 
-        # We've now created a storage file by letting the given configuration run for 10 ticks!
-        # Time to restore it!
-        new_storage = NodeStorage(engine)
-        new_storage.storage_name = "test_storage.json"
-        new_storage.restoreNodeState()
+    # We've now created a storage file by letting the given configuration run for 10 ticks!
+    # Time to restore it!
+    new_storage = NodeStorage(engine)
+    new_storage.storage_name = "test_storage.json"
+    new_storage.restoreNodeState()
 
-        # We need to remove the file after ourselves
-        os.remove("{storage_name}.json".format(storage_name=storage.storage_name))
+    # Since we don't just want to check a few values, we can employ an extra trick here. If we let *both* the new and
+    # the old engine do another tick, they should result in the same values. If that fails, it means some property that
+    # does affect the result was not correctly restored!
+    engine_with_storage.doTick()
+    engine.doTick()
 
-        for node_id, restored_node in engine.getAllNodes().items():
-            original_node = engine_with_storage.getNodeById(node_id)
-            assert restored_node.temperature, original_node.temperature
-            assert restored_node.additional_properties == original_node.additional_properties
-            assert restored_node.performance == original_node.performance
-            assert restored_node.target_performance == original_node.target_performance
-            assert restored_node.getModifiers() == original_node.getModifiers()
+    # We need to remove the file after ourselves
+    os.remove("{storage_name}.json".format(storage_name=storage.storage_name))
 
-        assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())
+    for node_id, restored_node in engine.getAllNodes().items():
+        original_node = engine_with_storage.getNodeById(node_id)
+        assert restored_node.temperature, original_node.temperature
+        assert restored_node.additional_properties == original_node.additional_properties
+        assert restored_node.performance == original_node.performance
+        assert restored_node.target_performance == original_node.target_performance
+        assert restored_node.getModifiers() == original_node.getModifiers()
 
-        storage.purgeAllRevisions()
+    assert len(engine.getAllNodes()) == len(engine_with_storage.getAllNodes())
+
+    storage.purgeAllRevisions()

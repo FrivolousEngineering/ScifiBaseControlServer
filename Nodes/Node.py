@@ -470,7 +470,7 @@ class Node:
         result["resources_left_over"] = self._resources_left_over
         result["temperature"] = self.temperature
         result["custom_description"] = self._custom_description
-        result["performace"] = self._performance
+        result["performance"] = self._performance
         result["target_performance"] = self._target_performance
         result["modifiers"] = []
         for modifier in self._modifiers:
@@ -483,9 +483,9 @@ class Node:
         :param data:
         """
         self._node_id = data["node_id"]
-        self._resources_received_this_tick = data["resources_received_this_tick"]
-        self._resources_produced_this_tick = data["resources_produced_this_tick"]
-        self._resources_provided_this_tick = data["resources_provided_this_tick"]
+        self._resources_received_this_tick.update(data["resources_received_this_tick"])
+        self._resources_produced_this_tick.update(data["resources_produced_this_tick"])
+        self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
         self._custom_description = data.get("custom_description", "")
