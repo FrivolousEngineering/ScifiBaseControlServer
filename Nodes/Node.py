@@ -898,7 +898,7 @@ class Node:
         # 25% health: 50% effectiveness
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
-        factor = (-((health_factor + 0.5) / (health_factor + 0.5) ** 2.) + 2) / 1.333333333333333
+        factor = 0.75 * (2 - 1 / (health_factor + 0.5))
         return factor
 
     @property
