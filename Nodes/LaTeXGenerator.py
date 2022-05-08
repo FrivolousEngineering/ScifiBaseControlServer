@@ -1,6 +1,6 @@
 from collections import defaultdict
 import matplotlib
-from pylatex import Section, Subsection, Tabular, LineBreak, NewLine, Figure, Subsubsection
+from pylatex import Section, Subsection, Tabular, LineBreak, NewLine, Figure, Subsubsection, Hyperref, Marker
 from pylatex.utils import italic, bold, NoEscape
 
 matplotlib.use('Agg')  # Not to use X server. For TravisCI.
@@ -45,6 +45,33 @@ class LaTeXGenerator:
                         self._generateTemperatureEfficiencyGraph(doc, node)
 
                         self._generateHealthEffectivenessGraph(doc, node)
+
+                        self._generateOutgoingConnectionList(doc, node)
+
+                        self._generateIncomingConnectionsList(doc, node)
+
+    def _generateOutgoingConnectionList(self, doc, node):
+        outgoing_connections = node.getAllOutgoingConnections()
+
+        with doc.create(Subsubsection("Outgoing Connections")):
+            for connection in outgoing_connections:
+                with doc.create(Tabular(' l | r ')) as table:
+                    sanitized_label = self._convertPropertyToHumanReadable(connection.target.label)
+                    table.add_row(["Target", "Resource"], mapper=[bold])
+                    table.add_hline()
+                    table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)), connection.resource_type.title())
+
+    def _generateIncomingConnectionsList(self, doc, node):
+        incoming_connections = node.getAllIncomingConnections()
+
+        with doc.create(Subsubsection("Incoming Connections")):
+            for connection in incoming_connections:
+                with doc.create(Tabular(' l | r ')) as table:
+                    sanitized_label = self._convertPropertyToHumanReadable(connection.origin.label)
+                    table.add_row(["Target", "Resource"], mapper=[bold])
+                    table.add_hline()
+                    table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)),
+                                  connection.resource_type.title())
 
     def _generateHealthEffectivenessGraph(self, doc, node):
         with doc.create(Subsubsection("Health Effectiveness")):

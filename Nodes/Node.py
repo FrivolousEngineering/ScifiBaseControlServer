@@ -891,6 +891,7 @@ class Node:
         Calculate how much efficiency is left due to the heath of this node.
         :return: The factor (between 0 and 1)
         """
+
         health_factor = self._health / 100.
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
@@ -899,6 +900,12 @@ class Node:
         # 10% health: 25% effectiveness
         # 1%  health: ~3% effectiveness
         factor = 0.75 * (2 - 1 / (health_factor + 0.5))
+
+        if factor < 0:
+            factor = 0
+
+        if factor > 1:
+            factor = 1
         return factor
 
     @property
