@@ -156,6 +156,9 @@ class Node:
         self._custom_description = ""  # type: str
         """Description specific to this node"""
 
+        self._label = ""
+        """Human readable name for this Node"""
+
         self._modifiers = []  # type: List[Modifier]
 
         self._use_temperature_dependant_effectiveness_factor = False
@@ -255,6 +258,10 @@ class Node:
     @property
     def can_be_modified(self) -> bool:
         return self._can_be_modified
+
+    @property
+    def label(self) -> str:
+        return self._label
 
     def getModifiers(self) -> List[Modifier]:
         """
@@ -467,6 +474,8 @@ class Node:
         """
         result = dict()  # type: Dict[str, Any]
         result["node_id"] = self._node_id
+        if self._label:
+            result["label"] = self._label
         result["resources_received_this_tick"] = self._resources_received_this_tick
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
         result["resources_provided_this_tick"] = self._resources_provided_this_tick
@@ -486,6 +495,7 @@ class Node:
         :param data:
         """
         self._node_id = data["node_id"]
+        self._label = data.get("label", self._node_id)
         self._resources_received_this_tick.update(data["resources_received_this_tick"])
         self._resources_produced_this_tick.update(data["resources_produced_this_tick"])
         self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
