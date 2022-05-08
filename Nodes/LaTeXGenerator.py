@@ -54,10 +54,11 @@ class LaTeXGenerator:
         outgoing_connections = node.getAllOutgoingConnections()
 
         with doc.create(Subsubsection("Outgoing Connections")):
-            for connection in outgoing_connections:
-                with doc.create(Tabular(' l | r ')) as table:
+            with doc.create(Tabular(' l | r ')) as table:
+                table.add_row(["Target", "Resource"], mapper=[bold])
+                for connection in outgoing_connections:
+
                     sanitized_label = self._convertPropertyToHumanReadable(connection.target.label)
-                    table.add_row(["Target", "Resource"], mapper=[bold])
                     table.add_hline()
                     table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)), connection.resource_type.title())
 
@@ -65,10 +66,10 @@ class LaTeXGenerator:
         incoming_connections = node.getAllIncomingConnections()
 
         with doc.create(Subsubsection("Incoming Connections")):
-            for connection in incoming_connections:
-                with doc.create(Tabular(' l | r ')) as table:
+            with doc.create(Tabular(' l | r ')) as table:
+                table.add_row(["Target", "Resource"], mapper=[bold])
+                for connection in incoming_connections:
                     sanitized_label = self._convertPropertyToHumanReadable(connection.origin.label)
-                    table.add_row(["Target", "Resource"], mapper=[bold])
                     table.add_hline()
                     table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)),
                                   connection.resource_type.title())
