@@ -44,6 +44,25 @@ class LaTeXGenerator:
 
                         self._generateTemperatureEfficiencyGraph(doc, node)
 
+                        self._generateHealthEffectivenessGraph(doc, node)
+
+    def _generateHealthEffectivenessGraph(self, doc, node):
+        with doc.create(Subsubsection("Health Effectiveness")):
+            doc.append("Damage has the following effect on the node")
+            doc.append(NewLine())
+
+            healths = list(range(0, 100))
+            effectiveness_factors = []
+
+            for health in healths:
+                node._health = health
+                effectiveness_factors.append(node._getHealthEffectivenessFactor())
+
+            plt.plot(healths, effectiveness_factors)
+            with doc.create(Figure(position='H')) as plot:
+                plot.add_plot(width = NoEscape(r'0.5\textwidth'))
+            plt.close()
+
     def _generateTemperatureEfficiencyGraph(self, doc, node):
         with doc.create(Subsubsection("Temperature Effectiveness")):
             doc.append("Temperature has the following effect on the node")
