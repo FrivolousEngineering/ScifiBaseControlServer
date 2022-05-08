@@ -33,8 +33,7 @@ class ResourceStorage(Node):
 
         self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 1000)
 
-        self._description = "This device stores {resource_type}, which can be used by any connected device."
-        self._description = self._description.format(resource_type = resource_type)
+        self._description = "This device stores a given resource, which can be used by any connected device."
         self._has_settable_performance = False
 
     @property

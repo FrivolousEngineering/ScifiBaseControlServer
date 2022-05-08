@@ -199,7 +199,7 @@ class Node:
         If the max value a property can take should also be communicated, the max_{property_name} is also requested
         :return:
         """
-        return self._additional_properties
+        return self.optimal_temperature
 
     @property
     def tags(self) -> List[str]:
