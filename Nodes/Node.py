@@ -904,8 +904,8 @@ class Node:
     @property
     def health_effectiveness_factor(self) -> float:
         """
-        If the node doesn't have a temperature dependant effiency, will be the same as effectivenss_factor
-        The main reason you would want to use this instead of the effectivenss factor, is when you only want to take
+        If the node doesn't have a temperature dependant efficiency, will be the same as effectiveness_factor
+        The main reason you would want to use this instead of the effectiveness factor, is when you only want to take
         the health into account (eg; A generator will not produce energy as fast, but it did burn all the fuel). As such
         only the health should be taken into account!
         :return:

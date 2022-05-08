@@ -44,7 +44,6 @@ class LaTeXGenerator:
 
                         self._generateTemperatureEfficiencyGraph(doc, node)
 
-
     def _generateTemperatureEfficiencyGraph(self, doc, node):
         with doc.create(Subsubsection("Temperature Effectiveness")):
             doc.append("Temperature has the following effect on the node")
