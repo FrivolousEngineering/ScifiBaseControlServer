@@ -59,6 +59,9 @@ class Node:
     updateCalled = Signal()
     postUpdateCalled = Signal()
 
+    _description: str = ""
+    """Description for this type of node"""
+
     def __init__(self, node_id: str, temperature: float = 293.15, **kwargs) -> None:
         """
         :param node_id: Unique identifier of the node.
@@ -150,13 +153,10 @@ class Node:
         self._temperature_degradation_speed: float = kwargs.get("temperature_degradation_speed", 1)
         """How fast should this node degrade if it's above a certain temperature?"""
 
-        self._description = ""  # type: str
-        """Description for this type of node"""
-
-        self._custom_description = ""  # type: str
+        self._custom_description = kwargs.get("custom_description", "")  # type: str
         """Description specific to this node"""
 
-        self._label = ""
+        self._label = kwargs.get("label", "")
         """Human readable name for this Node"""
 
         self._modifiers = []  # type: List[Modifier]
@@ -261,7 +261,9 @@ class Node:
 
     @property
     def label(self) -> str:
-        return self._label
+        if self._label:
+            return self._label
+        return self._node_id
 
     def getModifiers(self) -> List[Modifier]:
         """
