@@ -6,8 +6,9 @@ from pylatex.utils import italic, bold, NoEscape
 matplotlib.use('Agg')  # Not to use X server. For TravisCI.
 import matplotlib.pyplot as plt  # noqa
 
-class LaTeXGenerator:
 
+
+class LaTeXGenerator:
     propertiesToAdd = ["weight",
                        "performance_change_factor",
                        "min_performance",
@@ -22,7 +23,7 @@ class LaTeXGenerator:
     temperature_specific_properties = ["optimal_temperature", "optimal_temperature_range"]
 
     def __init__(self) -> None:
-        self._nodes = defaultdict(list)
+        self._nodes = defaultdict(list) # type: ignore
 
     def addNode(self, node):
         self._nodes[type(node)].append(node)
