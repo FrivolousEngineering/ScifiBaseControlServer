@@ -46,7 +46,7 @@ class Generator(Node):
 
         self._description = f"This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
-                            "with cooling down."
+                            " with cooling down."
 
         self._providable_resources.add("energy")
         self._providable_resources.add("water")
