@@ -148,10 +148,13 @@ class Node:
         """How much damage should this node get by being in use?"""
 
         self._temperature_degradation_speed: float = kwargs.get("temperature_degradation_speed", 1)
-
         """How fast should this node degrade if it's above a certain temperature?"""
+
         self._description = ""  # type: str
+        """Description for this type of node"""
+
         self._custom_description = ""  # type: str
+        """Description specific to this node"""
 
         self._modifiers = []  # type: List[Modifier]
 
