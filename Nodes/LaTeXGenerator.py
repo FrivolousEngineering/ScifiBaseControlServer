@@ -54,6 +54,9 @@ class LaTeXGenerator:
         outgoing_connections = node.getAllOutgoingConnections()
 
         with doc.create(Subsubsection("Outgoing Connections")):
+            if not outgoing_connections:
+                doc.append("No outgoing connections")
+                return
             with doc.create(Tabular(' l | r ')) as table:
                 table.add_row(["Target", "Resource"], mapper=[bold])
                 for connection in outgoing_connections:
@@ -66,6 +69,9 @@ class LaTeXGenerator:
         incoming_connections = node.getAllIncomingConnections()
 
         with doc.create(Subsubsection("Incoming Connections")):
+            if not incoming_connections:
+                doc.append("No incoming connections")
+                return
             with doc.create(Tabular(' l | r ')) as table:
                 table.add_row(["Target", "Resource"], mapper=[bold])
                 for connection in incoming_connections:
@@ -76,7 +82,7 @@ class LaTeXGenerator:
 
     def _generateHealthEffectivenessGraph(self, doc, node):
         with doc.create(Subsubsection("Health Effectiveness")):
-            doc.append("Damage has the following effect on the node")
+            doc.append("Damage has the following effect on the device")
             doc.append(NewLine())
 
             healths = list(range(0, 100))
@@ -93,7 +99,7 @@ class LaTeXGenerator:
 
     def _generateTemperatureEfficiencyGraph(self, doc, node):
         with doc.create(Subsubsection("Temperature Effectiveness")):
-            doc.append("Temperature has the following effect on the node")
+            doc.append("Temperature has the following effect on the device")
             doc.append(NewLine())
             optimal_temperature = node.optimal_temperature
             temperature_range = node.optimal_temperature_range
