@@ -147,6 +147,9 @@ def getResourceColor(resource_type):
         return "#cc00cc"
     if resource_type == "waste":
         return "#A52A2A"
+    if resource_type == "oxygen":
+        return "#00ffff"
+
     return "#FFFFFF"
 
 # Add all the connections
