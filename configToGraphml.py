@@ -32,8 +32,8 @@ namespaces = {
     "yed": "http://www.yworks.com/xml/yed/3",
 }
 
-default_node_width = 100
-default_node_height = 100
+default_node_width = 140
+default_node_height = 180
 
 
 y_n = "{%s}" % namespaces["y"]
@@ -139,11 +139,15 @@ def getResourceColor(resource_type):
         return "#0000ff"
     if resource_type == "energy":
         return "#ffff00"
-    if resource_type == "fuel":
-        return "#A52A2A"
+    if resource_type == "animal_waste":
+        return "#cb3434"
     if resource_type == "plants":
         return "#00ff00"
-    return "#000000"
+    if resource_type == "fuel":
+        return "#cc00cc"
+    if resource_type == "waste":
+        return "#A52A2A"
+    return "#FFFFFF"
 
 # Add all the connections
 for node_id, node in engine.getAllNodes().items():
