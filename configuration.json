@@ -266,7 +266,11 @@
         {
             "type": "MultiResourceDestroyer",
             "resources_required": {"animal_waste": 5, "energy":  2},
-            "label": "Health Scanner"
+            "label": "Health Scanner",
+            "min_performance": 0,
+            "performance": 0,
+            "target_performance": 0,
+            "custom_description": "A device that continuously monitors the sewage produced by the staff members on base. The health data generated this way is automatically shared with the medical scanner, significantly boosting it's effectiveness."
         },
         "medicine_creator":
         {
