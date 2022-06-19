@@ -3,7 +3,8 @@
     {
         "extractor":
         {
-            "type": "OilExtractor"
+            "type": "OilExtractor",
+            "label": "Oil Extractor"
         },
 
         "fuel_storage":
@@ -11,7 +12,8 @@
             "type": "ResourceStorage",
             "resource_type": "fuel",
             "amount": 40000,
-            "max_storage": 50000
+            "max_storage": 50000,
+            "label": "Fuel Storage"
         },
 
         "plant_oil_storage":
@@ -25,20 +27,23 @@
         {
             "type": "ResourceStorage",
             "resource_type": "waste",
-            "amount": 2000
+            "amount": 2000,
+            "label": "Waste Storage"
         },
         "extractor_water_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 1000,
+            "label": "Water Tank"
         },
 
         "generator_water_tank":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 3000
+            "amount": 3000,
+            "label": "Water Tank"
         },
         "e_to_h_valve":
         {
@@ -154,7 +159,8 @@
 
         "hydroponics":
         {
-            "type": "HydroponicsBay"
+            "type": "HydroponicsBay",
+            "label": "Hydroponics Bay"
         },
         "waste_generator":
         {
@@ -178,7 +184,8 @@
         {
             "type": "ResourceGenerator",
             "resource_type": "energy",
-            "amount": 10
+            "amount": 10,
+            "label": "Solar Panel"
         },
         "main_science_battery":
         {
@@ -196,13 +203,15 @@
         },
         "computer":
         {
-            "type": "ComputationNode"
+            "type": "ComputationNode",
+            "label": "Mainframe"
         },
         "database":
         {
             "type": "ResourceStorage",
             "resource_type": "data",
-            "amount": 0
+            "amount": 0,
+            "label": "Database"
         },
 
         "lights_med":
@@ -235,7 +244,8 @@
         },
         "medicine_creator":
         {
-            "type": "MedicineCreator"
+            "type": "MedicineCreator",
+            "label": "Medicine Fabricator"
         },
         "medicine_storage":
         {
@@ -288,7 +298,8 @@
         },
         "toilets":
         {
-            "type": "Toilets"
+            "type": "Toilets",
+            "label": "Toilets"
         }
     },
     "connections":
