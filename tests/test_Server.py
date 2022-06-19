@@ -38,6 +38,7 @@ def app():
     mocked_dbus.getActiveModifiers= MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="modifiers"))
     mocked_dbus.getSurfaceArea = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="surface_area"))
     mocked_dbus.getDescription = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="description"))
+    mocked_dbus.getLabel = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name = "label"))
     mocked_dbus.getTemperatureHistory = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="temperature_history"))
     mocked_dbus.getAdditionalProperties = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="additional_properties"))
     mocked_dbus.getMaxAdditionalPropertyValue = MagicMock(side_effect=lambda r, s: getNodeAttribute(r, attribute_name="additional_property_max")[s])
@@ -76,9 +77,10 @@ def test_getStaticProperties(client):
     with patch.dict(default_property_dict, {"surface_area": 20,
                                             "description": 300,
                                             "has_settable_performance": False,
-                                            "supported_modifiers": ["whoop"]}):
+                                            "supported_modifiers": ["whoop"],
+                                            "label": "test"}):
         response = client.get("/node/default/static_properties/")
-    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "has_settable_performance": false, "supported_modifiers": ["whoop"]}'
+    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "has_settable_performance": false, "supported_modifiers": ["whoop"], "label": "test"}'
 
 
 def test_getModifiers(client):
