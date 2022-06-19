@@ -214,6 +214,14 @@
             "max_storage": 1000,
             "label": "Battery C"
         },
+        "energy_balancer_science_support":
+        {
+            "type": "EnergyBalancer",
+            "label": "Load Balancer A",
+            "min_performance": 0,
+            "performance": 0,
+            "target_performance": 0
+        },
         "support_battery":
         {
             "type": "ResourceStorage",
@@ -413,6 +421,7 @@
         { "from": "support_battery", "to": "lights_med", "resource_type": "energy" },
         { "from": "support_battery", "to": "health_scanner", "resource_type": "energy" },
         { "from": "support_battery", "to": "medicine_creator", "resource_type": "energy" },
+        { "from": "support_battery", "to": "energy_balancer_science_support", "resource_type": "energy" },
 
         { "from": "main_science_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "lights_med", "resource_type": "energy" },
@@ -420,6 +429,10 @@
         { "from": "main_science_battery", "to": "med_scanner", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "science_scanner", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "medicine_creator", "resource_type":  "energy"},
+        { "from": "main_science_battery", "to": "energy_balancer_science_support", "resource_type": "energy" },
+
+        { "from": "energy_balancer_science_support", "to": "main_science_battery", "resource_type": "energy" },
+        { "from": "energy_balancer_science_support", "to": "support_battery", "resource_type": "energy" },
 
         { "from": "computer", "to": "database", "resource_type": "data" },
 
