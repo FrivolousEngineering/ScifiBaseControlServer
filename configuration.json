@@ -153,7 +153,20 @@
             "type": "ResourceStorage",
             "resource_type": "oxygen",
             "amount": 10000,
-            "label": "Oxygen Tank"
+            "label": "Oxygen Tank",
+            "max_storage": 10000
+        },
+        "oxygen_release_valve":
+        {
+            "type": "ResourceDestroyer",
+            "resource_type": "oxygen",
+            "amount": 25,
+            "has_settable_performance": true,
+            "min_performance": 0,
+            "target_performance": 0,
+            "performance": 0,
+            "max_performance": 2,
+            "label": "Open Air Release"
         },
 
         "hydroponics_battery":
@@ -456,10 +469,11 @@
         { "from": "plant_oil_storage", "to": "medicine_creator", "resource_type": "plant_oil"},
 
         { "from": "toilet_waste_storage", "to": "hydroponics", "resource_type": "animal_waste" },
-
         { "from": "toilet_waste_storage", "to": "health_scanner", "resource_type": "animal_waste" },
 
         { "from": "oxygen_storage", "to": "water_purifier", "resource_type": "oxygen"},
+        { "from": "oxygen_storage", "to": "oxygen_release_valve", "resource_type": "oxygen"},
+
         {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"}
     ]
 }
