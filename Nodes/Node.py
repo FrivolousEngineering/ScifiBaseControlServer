@@ -799,7 +799,8 @@ class Node:
         :return: True if it's active, false otherwise.
         """
         for resource_required, amount_needed in self._resources_required_per_tick.items():
-            if self._resources_received_this_tick.get(resource_required, 0) < amount_needed:
+            # Do a fuzzy match, as it can sometimes happen that it gets 0.99999999 if it asks for 1. 
+            if self._resources_received_this_tick.get(resource_required, 0) < amount_needed * 0.99:
                 return False
         return True
 
