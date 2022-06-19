@@ -21,7 +21,8 @@
             "type": "ResourceStorage",
             "resource_type": "plant_oil",
             "amount": 0,
-            "max_storage":1000
+            "max_storage": 1000,
+            "label": "Plant Oil Tank"
         },
         "waste_storage":
         {
@@ -35,7 +36,7 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 1000,
-            "label": "Water Tank"
+            "label": "Water Tank A"
         },
 
         "generator_water_tank":
@@ -43,13 +44,14 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 3000,
-            "label": "Water Tank"
+            "label": "Water Tank B"
         },
         "e_to_h_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Valve A-C"
         },
         "h_to_g_valve":
         {
@@ -57,13 +59,15 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "target_performance": 0,
-            "performance": 0
+            "performance": 0,
+            "label": "Valve B-C"
         },
         "h_to_e_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Valve C-A"
         },
 
         "g_to_h_valve":
@@ -72,73 +76,84 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "target_performance": 0,
-            "performance": 0
+            "performance": 0,
+            "label": "Valve C-B"
         },
 
         "water_cooler":
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Water Cooler A"
         },
 
         "hydroponics_water_cooler":
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Water Cooler C"
         },
         "generator_cooler":
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 180
+            "fluid_per_tick": 180,
+            "label": "Water Cooler B"
         },
         "hydroponics_cooled_water_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Hydro Valve A"
         },
 
         "hydroponics_uncooled_water_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100
+            "fluid_per_tick": 100,
+            "label": "Hydro Valve B"
         },
 
         "plant_press":
         {
-            "type": "PlantPress"
+            "type": "PlantPress",
+            "label": "Food Packager"
         },
 
         "food_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "food",
-            "amount": 0
+            "amount": 0,
+            "label": "Food Storage"
         },
 
         "plant_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "plants",
-            "amount": 0
+            "amount": 0,
+            "label": "Plant Storage"
         },
 
         "hydroponics_water_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000
+            "amount": 1000,
+            "label": "Water Tank C"
         },
 
         "oxygen_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "oxygen",
-            "amount": 10000
+            "amount": 10000,
+            "label": "Oxygen Tank"
         },
 
         "hydroponics_battery":
@@ -146,7 +161,8 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 0,
-            "max_storage": 150
+            "max_storage": 150,
+            "label": "Battery B"
         },
 
         "plant_press_battery":
@@ -154,7 +170,8 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 0,
-            "max_storage": 150
+            "max_storage": 150,
+            "label": "Battery A"
         },
 
         "hydroponics":
@@ -173,12 +190,14 @@
             "performance": 0,
             "target_performance": 0,
             "weight" : 1000,
-            "surface_area": 3
+            "surface_area": 3,
+            "label": "Backup Generator"
         },
         "generator":
         {
             "type": "Generator",
-            "fuel_type": "fuel"
+            "fuel_type": "fuel",
+            "label": "Main Generator"
         },
         "solar_panel":
         {
@@ -192,14 +211,16 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 200,
-            "max_storage": 1000
+            "max_storage": 1000,
+            "label": "Battery C"
         },
         "support_battery":
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 200,
-            "max_storage": 1000
+            "max_storage": 1000,
+            "label": "Battery D"
         },
         "computer":
         {
@@ -218,29 +239,34 @@
         {
             "type": "ResourceDestroyer",
             "resource_type": "energy",
-            "amount": 2
+            "amount": 2,
+            "label": "MedBay Lights"
         },
         "lights_science":
         {
             "type": "ResourceDestroyer",
             "resource_type": "energy",
-            "amount": 3
+            "amount": 3,
+            "label": "ScienceBayLights"
         },
 
         "science_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "resources_required": {"data": 5, "energy":  1}
+            "resources_required": {"data": 5, "energy":  1},
+            "label": "Science Scanner"
         },
         "med_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "resources_required": {"data": 5, "energy":  1}
+            "resources_required": {"data": 5, "energy":  1},
+            "label": "MedScanner"
         },
         "health_scanner":
         {
             "type": "MultiResourceDestroyer",
-            "resources_required": {"animal_waste": 5, "energy":  2}
+            "resources_required": {"animal_waste": 5, "energy":  2},
+            "label": "Health Scanner"
         },
         "medicine_creator":
         {
@@ -252,7 +278,8 @@
             "type": "ResourceStorage",
             "resource_type": "medicine",
             "amount": 0,
-            "max_storage": 250
+            "max_storage": 250,
+            "label": "Medicine Storage"
         },
 
         "rain_water_collector":
@@ -261,7 +288,8 @@
             "resource_type": "water",
             "amount": 5,
             "frequencies": [0.01, 0.05, 0.1, 0.009],
-            "amplitudes": [5, 1, 0.2, 1.2]
+            "amplitudes": [5, 1, 0.2, 1.2],
+            "label": "Rain Collector"
         },
 
         "rain_water_tank":
@@ -269,32 +297,37 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 0,
-            "max_storage": 2000
+            "max_storage": 2000,
+            "label": "Water Tank D"
         },
         "purified_water_tank":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 100,
-            "max_storage": 400
+            "max_storage": 400,
+            "label": "Water Tank E"
         },
         "dirty_water_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "dirty_water",
             "amount": 50,
-            "max_storage": 1000
+            "max_storage": 1000,
+            "label": "Waste Water Tank"
         },
         "water_purifier":
         {
-            "type": "WaterPurifier"
+            "type": "WaterPurifier",
+            "label": "Sewage purifier"
         },
         "toilet_waste_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "animal_waste",
             "amount": 200,
-            "max_storage": 1000
+            "max_storage": 1000,
+            "label": "Sewage Tank"
         },
         "toilets":
         {
