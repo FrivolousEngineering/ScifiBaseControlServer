@@ -7,16 +7,17 @@ class Toilets(Node):
     Is more information really needed here? Toilets are as you imagine: They accept water and produce dirty water.
     """
     def __init__(self, node_id: str, **kwargs) -> None:
-        super().__init__(node_id, **kwargs)
+        defaults = {"has_settable_performance": False,
+                    "min_performance": 1,
+                    "max_performance": 1}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         self._use_temperature_dependant_effectiveness_factor = False
 
         # Engineering can't really make the toilets go faster... (well, they could, but not through the engineering
         # console). I don't want to code in "burrito night" to increase the effect of the toilets.
-        self._min_performance = 1
-        self._max_performance = 1
         self._resources_required_per_tick["water"] = 10
-        self._has_settable_performance = False
 
         self._providable_resources.add("dirty_water")
 

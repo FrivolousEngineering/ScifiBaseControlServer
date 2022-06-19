@@ -145,7 +145,7 @@ class Node:
         self._min_performance: float = kwargs.get("min_performance", 1)
         self._max_performance: float = kwargs.get("max_performance", 1)
 
-        self._has_settable_performance = True
+        self._has_settable_performance: bool = kwargs.get("has_settable_performance", True)
 
         self._usage_damage_factor: float = kwargs.get("usage_damage_factor", 0.)
         """How much damage should this node get by being in use?"""

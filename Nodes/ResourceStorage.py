@@ -19,7 +19,9 @@ class ResourceStorage(Node):
         :param max_storage: How much units of resource can it store
         :param kwargs:
         """
-        super().__init__(node_id, **kwargs)
+        defaults = {"has_settable_performance": False}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
         self._resource_type = resource_type.lower()
 
         # Resource storage will always accept & provide the resource that it stores
@@ -34,7 +36,6 @@ class ResourceStorage(Node):
         self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 1000)
 
         self._description = "This device stores a given resource, which can be used by any connected device."
-        self._has_settable_performance = False
 
     @property
     def max_amount_stored(self) -> float:
