@@ -1,6 +1,7 @@
 from typing import cast
 
 from Nodes.Connection import Connection
+from Nodes.Constants import COMBUSTION_HEAT
 from Nodes.Node import Node, InvalidConnection
 from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Util import enforcePositive
@@ -43,6 +44,10 @@ class EnergyBalancer(Node):
         energy_left = self._provideEnergy(energy_available)
 
         energy_provided = enforcePositive(energy_available - energy_left)
+
+        # Convert the left over energy to heat.
+        self.addHeat(energy_left * COMBUSTION_HEAT["energy"])
+
         self._resources_provided_this_tick["energy"] += energy_provided
 
     def _provideEnergy(self, amount: float) -> float:

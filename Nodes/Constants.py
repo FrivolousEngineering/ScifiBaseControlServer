@@ -41,7 +41,7 @@ WEIGHT_PER_UNIT = {"water": 1,
 
 COMBUSTION_HEAT = {"water": 0,
                    "fuel": 42000000,  # Based on Diesel
-                   "energy": 0,
+                   "energy": 10000000,  # Not entiiiirely combustion heat. But hey. The energy balancer uses this.
                    "oxygen": 0,
                    "data": 0,
                    "dirty_water": 0,
