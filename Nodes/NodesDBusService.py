@@ -338,3 +338,11 @@ class NodesDBusService(dbus.service.Object):
             return node.effectiveness_factor
         else:
             return 1
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="s")
+    def getLabel(self, node_id: str):
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.label
+        else:
+            return "Unknown"

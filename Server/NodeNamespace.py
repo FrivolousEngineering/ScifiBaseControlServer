@@ -83,7 +83,8 @@ node = api.model("node", {
     "resources_produced": fields.List(fields.Nested(resource_amount)),
     "optional_resources_required": fields.List(fields.Nested(resource_amount)),
     "additional_properties": fields.List(fields.Nested(addit_property)),
-    "effectiveness_factor": fields.Float(description = "How well is this node performing? This factor can be influenced by it's health and the temperature of the node")
+    "effectiveness_factor": fields.Float(description = "How well is this node performing? This factor can be influenced by it's health and the temperature of the node"),
+    "label": fields.String(description = "Human readable name of the node", example = "Generator", readonly = True)
 })
 
 
@@ -471,6 +472,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "resources_received": received_resources,
             "resources_produced": resources_produced,
             "additional_properties": getAdditionalPropertiesForNode(node_id),
-            "effectiveness_factor": nodes.getEffectivenessFactor(node_id)
+            "effectiveness_factor": nodes.getEffectivenessFactor(node_id),
+            "label": nodes.getLabel(node_id)
             }
     return data
