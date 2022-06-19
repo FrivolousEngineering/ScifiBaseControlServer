@@ -16,7 +16,9 @@ class MultiResourceDestroyer(Node):
         :param resources_required: What resources should it destroy (key / value pairs!)
         :param kwargs:
         """
-        super().__init__(node_id, **kwargs)
+        defaults = {"has_settable_performance": False}
+        defaults.update(kwargs)
+        super().__init__(node_id, **defaults)
 
         for resource_type, amount in resources_required.items():
             self._resources_required_per_tick[resource_type.lower()] = amount

@@ -6,8 +6,6 @@ class ResourceDestroyer(Node):
     A Resource Destroyer is, as the name implies, a node that accepts (and destroys) a given resource every tick.
     """
     def __init__(self, node_id: str, resource_type: str, amount: float, **kwargs) -> None:
-        defaults = {"has_settable_performance": False}
-        defaults.update(kwargs)
         """
         Create a Resource destroyer that accepts (and destroys) a given resource every tick.
         :param node_id: Unique identifier of the node
@@ -15,6 +13,8 @@ class ResourceDestroyer(Node):
         :param amount: How much of the resource should it accept & destroy every tick?
         :param kwargs:
         """
+        defaults = {"has_settable_performance": False}
+        defaults.update(kwargs)
         super().__init__(node_id, **defaults)
         self._resources_required_per_tick[resource_type.lower()] = amount
 
