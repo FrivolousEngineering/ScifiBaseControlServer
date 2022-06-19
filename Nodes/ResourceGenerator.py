@@ -21,10 +21,11 @@ class ResourceGenerator(Node):
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
-
+        resource_produced = sub_tick_modifier * self._amount
         # Bit of a hack, but since we're creating resources out of thin air here (without creating more energy)
         # It goes a bit wonky otherwise. So we just reset the heat to back to what it was.
         stored_heat = self._stored_heat
-        resources_left = self._provideResourceToOutgoingConnections(self._resource_type, self._amount)
+        resources_left = self._provideResourceToOutgoingConnections(self._resource_type, resource_produced)
         self._stored_heat = stored_heat
-        self._resources_produced_this_tick[self._resource_type] += enforcePositive(self._amount - resources_left)
+        self._resources_provided_this_tick[self._resource_type] += enforcePositive(resource_produced - resources_left)
+        self._resources_produced_this_tick[self._resource_type] += enforcePositive(resource_produced)
