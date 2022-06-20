@@ -17,7 +17,7 @@ class Toilets(Node):
 
         # Engineering can't really make the toilets go faster... (well, they could, but not through the engineering
         # console). I don't want to code in "burrito night" to increase the effect of the toilets.
-        self._resources_required_per_tick["water"] = 10
+        self._resources_required_per_tick["water"] = 8
 
         self._providable_resources.add("dirty_water")
 
@@ -35,8 +35,8 @@ class Toilets(Node):
             # Since dirty_water is heavier than normal water, we need to make sure we don't lose energy (assume that
             # the shit people do adds heat here...)
             self._stored_heat = original_heat
-        self._resources_produced_this_tick["dirty_water"] = water_available
+        self._resources_produced_this_tick["dirty_water"] += water_available
 
         dirty_water_provided = enforcePositive(water_available - dirty_water_left)
         self._resources_left_over["dirty_water"] = dirty_water_left
-        self._resources_provided_this_tick["dirty_water"] = dirty_water_provided
+        self._resources_provided_this_tick["dirty_water"] += dirty_water_provided
