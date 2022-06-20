@@ -29,14 +29,16 @@
             "type": "ResourceStorage",
             "resource_type": "waste",
             "amount": 2000,
-            "label": "Waste Storage"
+            "label": "Waste Storage",
+            "max_storage": 3000
         },
         "extractor_water_storage":
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000,
-            "label": "Water Tank A"
+            "amount": 2500,
+            "label": "Water Tank A",
+            "max_storage": 8000
         },
 
         "generator_water_tank":
@@ -44,7 +46,8 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 3000,
-            "label": "Water Tank B"
+            "label": "Water Tank B",
+            "max_storage": 9000
         },
         "e_to_h_valve":
         {
@@ -144,8 +147,9 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 1000,
-            "label": "Water Tank C"
+            "amount": 5000,
+            "label": "Water Tank C",
+            "max_storage": 7500
         },
 
         "oxygen_storage":
@@ -174,7 +178,7 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 0,
-            "max_storage": 150,
+            "max_storage": 500,
             "label": "Battery B"
         },
 
@@ -183,7 +187,7 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 0,
-            "max_storage": 150,
+            "max_storage": 500,
             "label": "Battery A"
         },
 
