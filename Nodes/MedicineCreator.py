@@ -22,8 +22,6 @@ class MedicineCreator(Node):
         # It doesn't need the extra water, it just uses it for temperature purposes
         self._optional_resources_required_per_tick["water"] = 25
 
-        self._use_temperature_dependant_effectiveness_factor = True
-
         self._heat_per_medicine_created = 100
 
         self._providable_resources.add("medicine")
