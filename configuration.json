@@ -339,7 +339,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "water",
-            "amount": 0,
+            "amount": 200,
             "max_storage": 2000,
             "label": "Water Tank D"
         },
@@ -500,6 +500,5 @@
 
         {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
         {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"}
-
     ]
 }
