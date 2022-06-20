@@ -57,7 +57,7 @@ class OilExtractor(Node):
 
         water_available = self.getResourceAvailableThisTick("water")
 
-        oil_produced = min(5 * fuel_available, plants_available)
+        oil_produced = min(self._fuel_per_plant_ratio * 0.5 * fuel_available, plants_available)
 
         self._resources_left_over["plants"] = plants_available - oil_produced
         self._resources_left_over["fuel"] = fuel_available - oil_produced / self._fuel_per_plant_ratio
@@ -91,7 +91,7 @@ class OilExtractor(Node):
         self.addHeat(heat_produced)
 
         # Then try to dump half of the fuel that we received back again
-        self._resources_left_over["fuel"] += self._provideResourceToOutgoingConnections("fuel", 0.5 * fuel_used)
+        self._resources_left_over["fuel"] = self._provideResourceToOutgoingConnections("fuel", 0.5 * fuel_used + self._resources_left_over["fuel"])
 
         # Burn *all* of the fuel that was not used to produce something (or could not be dumped!)
         heat_produced = self._resources_left_over["fuel"] * COMBUSTION_HEAT["fuel"] * WEIGHT_PER_UNIT["fuel"] * self.temperature_efficiency
