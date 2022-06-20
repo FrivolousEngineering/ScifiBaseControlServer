@@ -498,6 +498,8 @@
         { "from": "oxygen_storage", "to": "water_purifier", "resource_type": "oxygen"},
         { "from": "oxygen_storage", "to": "oxygen_release_valve", "resource_type": "oxygen"},
 
-        {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"}
+        {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
+        {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"}
+
     ]
 }
