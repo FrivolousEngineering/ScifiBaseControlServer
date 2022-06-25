@@ -208,7 +208,8 @@
             "target_performance": 0,
             "weight" : 1207,
             "surface_area": 3.2,
-            "label": "Waste Generator A"
+            "label": "Waste Generator A",
+            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up"
         },
         "secondary_waste_generator":
         {
@@ -222,7 +223,8 @@
             "target_performance": 0,
             "weight" : 1412,
             "surface_area": 3.4,
-            "label": "Waste Generator B"
+            "label": "Waste Generator B",
+            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up"
         },
         "generator":
         {
@@ -286,7 +288,7 @@
             "type": "ResourceDestroyer",
             "resource_type": "energy",
             "amount": 3,
-            "label": "ScienceBayLights"
+            "label": "ScienceBay Lights"
         },
 
         "science_scanner":
@@ -332,7 +334,8 @@
             "amount": 5,
             "frequencies": [0.01, 0.05, 0.1, 0.009],
             "amplitudes": [5, 1, 0.2, 1.2],
-            "label": "Rain Collector"
+            "label": "Rain Collector",
+            "custom_description": "Provides water by collecting rain. The output will strongly fluctuate over time, so it should not be relied on too much"
         },
 
         "rain_water_tank":
