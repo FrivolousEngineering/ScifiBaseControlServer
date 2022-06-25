@@ -24,7 +24,8 @@ class FluidCooler(Valve):
                     "heat_emissivity": 0.9,
                     "heat_convection_coefficient": 100,
                     "min_performance": 1,
-                    "max_performance": 1
+                    "max_performance": 1,
+                    "has_settable_performance": False
                     }
 
         defaults.update(kwargs)
