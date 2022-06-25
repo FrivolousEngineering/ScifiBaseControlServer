@@ -885,7 +885,7 @@ class Node:
         :return:
         """
         if self._active and self.usage_damage_factor > 0:
-            self.damage(self.usage_damage_factor)
+            self.damage(self.usage_damage_factor * self.performance)
 
     def _getHealthEffectivenessFactor(self) -> float:
         """
