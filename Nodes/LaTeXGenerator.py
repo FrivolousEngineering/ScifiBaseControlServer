@@ -173,3 +173,8 @@ class LaTeXGenerator:
             for item in self.propertiesToAdd:
                 table.add_hline()
                 table.add_row((self._convertPropertyToHumanReadable(item), getattr(node, item)))
+
+            if node.isTemperatureDependant:
+                for item in self.temperature_specific_properties:
+                    table.add_hline()
+                    table.add_row((self._convertPropertyToHumanReadable(item), getattr(node, item)))
