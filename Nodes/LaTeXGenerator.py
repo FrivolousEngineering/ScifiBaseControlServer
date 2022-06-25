@@ -2,6 +2,7 @@ from collections import defaultdict
 import matplotlib
 from pylatex import Section, Subsection, Tabular, LineBreak, NewLine, Figure, Subsubsection, Hyperref, Marker
 from pylatex.utils import italic, bold, NoEscape
+import re
 
 matplotlib.use('Agg')  # Not to use X server. For TravisCI.
 import matplotlib.pyplot as plt  # noqa
@@ -120,8 +121,10 @@ class LaTeXGenerator:
             node._temperature = original_temp
 
     def _convertPropertyToHumanReadable(self, property_name: str) -> str:
+        # Add spaces in front of capitals
+        property_name = re.sub(r"(\w)([A-Z])", r"\1 \2", property_name)
         result = property_name.replace("_", " ")
-        result = result.capitalize()
+        result = result.title()
         return result
 
     def _generateRequiredResourceTable(self, doc, node):
