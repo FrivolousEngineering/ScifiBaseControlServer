@@ -128,8 +128,13 @@ class LaTeXGenerator:
         return result
 
     def _generateRequiredResourceTable(self, doc, node):
+
         with doc.create(Subsubsection("Required Resources")):
-            doc.append("It requires the following resources to function correctly")
+
+            if not node._original_resources_required_per_tick.items():
+                doc.append("It requires no resources to function correctly")
+            else:
+                doc.append("It requires the following resources to function correctly")
 
             if not node._original_resources_required_per_tick:
                 return
@@ -146,7 +151,10 @@ class LaTeXGenerator:
 
     def _generateOptionalResourceTable(self, doc, node):
         with doc.create(Subsubsection("Optional Resources")):
-            doc.append("It can accept the following optional resources")
+            if node._original_optional_resources_required_per_tick.items():
+                doc.append("It can accept the following optional resources")
+            else:
+                doc.append("It doesn't need any optional resources")
 
             if not node._original_optional_resources_required_per_tick:
                 return
