@@ -26,7 +26,7 @@ class Generator(Node):
                     "surface_area": 8,
                     "heat_convection_coefficient": 20,
                     "max_safe_temperature": 400,
-                    "performance_change_factor": 3,
+                    "performance_change_factor": 4,
                     "usage_damage_factor": 0.01}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)

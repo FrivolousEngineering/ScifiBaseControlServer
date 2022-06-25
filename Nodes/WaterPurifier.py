@@ -11,7 +11,8 @@ class WaterPurifier(Node):
 
     def __init__(self, node_id: str, **kwargs) -> None:
         defaults = {"min_performance": 0.75,
-                    "max_performance": 1.5}
+                    "max_performance": 1.5,
+                    "performance_change_factor": 2.5}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
         self._optional_resources_required_per_tick["oxygen"] = 140

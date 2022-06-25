@@ -9,7 +9,8 @@ class OilExtractor(Node):
     """
     def __init__(self, node_id: str, **kwargs) -> None:
         defaults = {"weight": 5000,
-                    "surface_area": 8,
+                    "surface_area": 8.9,
+                    "heat_emissivity": 0.72,
                     "temperature_efficiency": 0.5,
                     "min_performance": 0.75,
                     "max_performance": 1.5,
