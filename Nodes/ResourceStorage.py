@@ -36,7 +36,7 @@ class ResourceStorage(Node):
         self._resource_weight_per_unit = WEIGHT_PER_UNIT[self._resource_type]
         self._additional_properties.append("amount_stored")
 
-        self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 1000)
+        self._max_resources_requestable_per_tick = kwargs.get("max_resources_requestable_per_tick", 500)
 
         self._description = "This device stores a single resource, which can be used by any connected device."
 
@@ -48,7 +48,7 @@ class ResourceStorage(Node):
 
     @property
     def max_resources_per_tick(self) -> float:
-        return self._max_resources_requestable_per_tick
+        return self.effectiveness_factor * self._max_resources_requestable_per_tick
 
     def serialize(self) -> Dict[str, Any]:
         data = super().serialize()
@@ -117,7 +117,7 @@ class ResourceStorage(Node):
         reserved_amount = 0.
 
         while sorted_reservations:
-            max_resources_to_give = (min(self._amount, self._max_resources_requestable_per_tick) - reserved_amount) / len(sorted_reservations)
+            max_resources_to_give = (min(self._amount, self.max_resources_per_tick) - reserved_amount) / len(sorted_reservations)
             active_reservation = sorted_reservations.pop()
             active_reservation.reserved_available_amount = min(max_resources_to_give,
                                                                active_reservation.reserved_requested_amount)

@@ -22,7 +22,7 @@ class LaTeXGenerator:
     temperature_specific_properties = ["optimal_temperature", "optimal_temperature_range"]
 
     def __init__(self) -> None:
-        self._nodes = defaultdict(list) # type: ignore
+        self._nodes = defaultdict(list)  # type: ignore
 
     def addNode(self, node):
         self._nodes[type(node)].append(node)
