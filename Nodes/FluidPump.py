@@ -25,6 +25,7 @@ class FluidPump(Node):
         self._resource_type = resource_type
 
         self._resources_required_per_tick["energy"] = 1
+        self._resources_left_over[self._resource_type] = 0
         self._providable_resources.add(resource_type)
 
     def update(self, sub_tick_modifier: float = 1) -> None:
@@ -33,6 +34,7 @@ class FluidPump(Node):
         energy_gained = self.getResourceAvailableThisTick("energy")
 
         resource_produced = energy_gained * 10 * self.effectiveness_factor
+        self._markResourceAsCreated(self._resource_type, resource_produced)
 
         self._resources_produced_this_tick[self._resource_type] += resource_produced
         resource_available = resource_produced + self._resources_left_over[self._resource_type]
@@ -45,6 +47,3 @@ class FluidPump(Node):
         self._resources_provided_this_tick[self._resource_type] += enforcePositive(resource_available - resource_left)
 
         self._resources_left_over[self._resource_type] = resource_left
-
-        self._resources_provided_this_tick[self._resource_type] += enforcePositive(resource_available - resource_left)
-
