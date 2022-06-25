@@ -8,7 +8,6 @@ matplotlib.use('Agg')  # Not to use X server. For TravisCI.
 import matplotlib.pyplot as plt  # noqa
 
 
-
 class LaTeXGenerator:
     propertiesToAdd = ["weight",
                        "heat_emissivity",
@@ -30,6 +29,22 @@ class LaTeXGenerator:
         node.ensureSaneValues()
 
     def fillDocument(self, doc):
+        with doc.create(Section("Properties")):
+            doc.append("This chapter explains the various properties listed by the various devices.")
+            with doc.create(Subsection("Weight")):
+                doc.append("The weight of the device in kilogram. Note that this value can fluctuate. Storages will also include the weight of their stored resources as part of their own weight. This means that an empty storage tank will heat up significantly faster")
+            with doc.create(Subsection("Heat Emissivity")):
+                doc.append("How well does this device emit heat by means of radiation? This includes both visible radiation by means of light, but in most cases only includes infrared radiation. The ratio varies from 0 to 1. The surface of a perfect black body (with an emissivity of 1) emits thermal radiation at the rate of approximately 448 watts per square metre at room temperature (25 °C, 298.15 K); all real objects have emissivities less than 1.0, and emit radiation at correspondingly lower rates.")
+            with doc.create(Subsection("Surface Area")):
+                doc.append("What is the surface area of this device in m2. Larger numbers indicate that much more heat can be emitted by means of (infrared) emission, but also by means of heat convection.")
+            with doc.create(Subsection("Heat Convection Coefficient")):
+                doc.append("How well is this device insulated? All values are reported in W/m K. Steel objects tend to be in the 16-24 range, aluminum is well above the 200 range, whereas most plastic is below the 0.25 range")
+            with doc.create(Subsection("Max Safe Temperature")):
+                doc.append("The maximum temperature (in Kelvin) that this device should be operated at. The further it goes above this number, the faster it will start to receive damage. It is strongly advised to keep all devices well below this temperature to ensure a continued operation.")
+            with doc.create(Subsection("Performance Change Factor")):
+                doc.append("How quickly is this device able to react to requested changes from engineers? If the factor is one, the device is able to change is current performance to the target performance directly. The higher this number, the slower it is to react to changes.")
+
+
         for node_type, nodes in self._nodes.items():
             with doc.create(Section(self._convertPropertyToHumanReadable(node_type.__name__))):
                 doc.append(nodes[0].description)
