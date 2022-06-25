@@ -19,7 +19,10 @@ class ResourceStorage(Node):
         :param max_storage: How much units of resource can it store
         :param kwargs:
         """
-        defaults = {"has_settable_performance": False}
+        defaults = {"has_settable_performance": False,
+                    "surface_area": 8,
+                    "heat_convection_coefficient": 1.2,
+                    "heat_emissivity": 0.35}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
         self._resource_type = resource_type.lower()
@@ -42,6 +45,10 @@ class ResourceStorage(Node):
         if self._max_storage is None:
             return -1
         return self._max_storage
+
+    @property
+    def max_resources_per_tick(self) -> float:
+        return self._max_resources_requestable_per_tick
 
     def serialize(self) -> Dict[str, Any]:
         data = super().serialize()

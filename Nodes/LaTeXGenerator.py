@@ -185,4 +185,9 @@ class LaTeXGenerator:
             if hasattr(node, "_resource_type"):
                 table.add_hline()
                 table.add_row((self._convertPropertyToHumanReadable("Resource type"), getattr(node, "_resource_type")))
+            if hasattr(node, "max_resources_per_tick"):
+                table.add_hline()
+                table.add_row(
+                    (self._convertPropertyToHumanReadable("Resource Flow"), getattr(node, "max_resources_per_tick")))
+
 
