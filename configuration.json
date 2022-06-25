@@ -115,6 +115,12 @@
             "weight": 320,
             "custom_description": "Open this valve to increase the amount of cooler water that is provided to the Hydroponics Bay. This is one of the main valves to regulate the temperature of the Hydroponics"
         },
+        "water_pump":
+        {
+            "type": "FluidPump",
+            "resource_type": "water",
+            "label": "Ground Pump"
+        },
 
         "hydroponics_uncooled_water_valve":
         {
@@ -475,6 +481,7 @@
         { "from": "support_battery", "to": "health_scanner", "resource_type": "energy" },
         { "from": "support_battery", "to": "medicine_creator", "resource_type": "energy" },
         { "from": "support_battery", "to": "energy_balancer_science_support", "resource_type": "energy" },
+        { "from": "support_battery", "to": "water_pump", "resource_type": "energy" },
 
         { "from": "main_science_battery", "to": "lights_science", "resource_type": "energy" },
         { "from": "main_science_battery", "to": "lights_med", "resource_type": "energy" },
@@ -515,6 +522,9 @@
         { "from": "oxygen_storage", "to": "oxygen_release_valve", "resource_type": "oxygen"},
 
         {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
-        {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"}
+        {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"},
+
+        {"from": "water_pump", "to":  "purified_water_tank",  "resource_type": "water"}
+
     ]
 }
