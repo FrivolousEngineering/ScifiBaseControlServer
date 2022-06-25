@@ -93,7 +93,7 @@ class Node:
         self._resources_produced_last_tick: resource_dict = {}
         self._resources_provided_last_tick: resource_dict = {}
 
-        self._resources_left_over: resource_dict = {}
+        self._resources_left_over: resource_dict = defaultdict(float)
         """Any resources that were left from previous (ticks) that could not be left anywhere."""
 
         self._weight: float = kwargs.get("weight", 300)

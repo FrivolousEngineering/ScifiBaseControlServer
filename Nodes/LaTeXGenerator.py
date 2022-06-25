@@ -26,7 +26,6 @@ class LaTeXGenerator:
 
     def addNode(self, node):
         self._nodes[type(node)].append(node)
-        node.ensureSaneValues()
 
     def fillDocument(self, doc):
         with doc.create(Section("Properties")):
