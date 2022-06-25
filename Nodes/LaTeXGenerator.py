@@ -44,7 +44,6 @@ class LaTeXGenerator:
             with doc.create(Subsection("Performance Change Factor")):
                 doc.append("How quickly is this device able to react to requested changes from engineers? If the factor is one, the device is able to change is current performance to the target performance directly. The higher this number, the slower it is to react to changes.")
 
-
         for node_type, nodes in self._nodes.items():
             with doc.create(Section(self._convertPropertyToHumanReadable(node_type.__name__))):
                 doc.append(nodes[0].description)
@@ -114,6 +113,10 @@ class LaTeXGenerator:
             plt.close()
 
     def _generateTemperatureEfficiencyGraph(self, doc, node):
+        if not node.isTemperatureDependant:
+            # No need to add this paragraph. Node doesn't react to temperature changes
+            return
+
         with doc.create(Subsubsection("Temperature Effectiveness")):
             doc.append("Temperature has the following effect on the device")
             doc.append(NewLine())
