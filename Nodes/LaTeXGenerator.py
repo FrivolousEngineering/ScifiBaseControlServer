@@ -77,7 +77,7 @@ class LaTeXGenerator:
 
                     sanitized_label = self._convertPropertyToHumanReadable(connection.target.label)
                     table.add_hline()
-                    table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)), connection.resource_type.title())
+                    table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)), self._convertPropertyToHumanReadable(connection.resource_type))
 
     def _generateIncomingConnectionsList(self, doc, node):
         incoming_connections = node.getAllIncomingConnections()
@@ -92,7 +92,7 @@ class LaTeXGenerator:
                     sanitized_label = self._convertPropertyToHumanReadable(connection.origin.label)
                     table.add_hline()
                     table.add_row((Hyperref(Marker(sanitized_label, "subsec"), sanitized_label)),
-                                  connection.resource_type.title())
+                                  self._convertPropertyToHumanReadable(connection.resource_type))
 
     def _generateHealthEffectivenessGraph(self, doc, node):
         with doc.create(Subsubsection("Health Effectiveness")):
@@ -147,11 +147,9 @@ class LaTeXGenerator:
         with doc.create(Subsubsection("Required Resources")):
             if not node._original_resources_required_per_tick.items():
                 doc.append("It requires no resources to function correctly")
+                return
             else:
                 doc.append("It requires the following resources to function correctly")
-
-            if not node._original_resources_required_per_tick:
-                return
 
             doc.append(NewLine())
             doc.append(NewLine())
@@ -169,8 +167,6 @@ class LaTeXGenerator:
                 doc.append("It can accept the following optional resources")
             else:
                 doc.append("It doesn't need any optional resources")
-
-            if not node._original_optional_resources_required_per_tick:
                 return
 
             doc.append(NewLine())
