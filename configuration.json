@@ -106,6 +106,13 @@
             "fluid_per_tick": 180,
             "label": "Water Cooler B"
         },
+        "water_cooler_d":
+        {
+            "type": "FluidCooler",
+            "resource_type": "water",
+            "fluid_per_tick": 15,
+            "label": "Water Cooler D"
+        },
         "hydroponics_cooled_water_valve":
         {
             "type": "Valve",
@@ -523,6 +530,9 @@
 
         {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
         {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"},
+        { "from": "medicine_creator", "to": "water_cooler_d", "resource_type": "water" },
+
+        { "from": "water_cooler_d", "to": "purified_water_tank", "resource_type": "water" },
 
         {"from": "water_pump", "to":  "purified_water_tank",  "resource_type": "water"}
 
