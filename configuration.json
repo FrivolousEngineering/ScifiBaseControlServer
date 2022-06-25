@@ -38,7 +38,8 @@
             "resource_type": "water",
             "amount": 2500,
             "label": "Water Tank A",
-            "max_storage": 8000
+            "max_storage": 8000,
+            "weight": 900
         },
 
         "generator_water_tank":
@@ -110,7 +111,8 @@
             "type": "Valve",
             "resource_type": "water",
             "fluid_per_tick": 100,
-            "label": "Hydro Valve A"
+            "label": "Hydro Valve A",
+            "weight": 320
         },
 
         "hydroponics_uncooled_water_valve":
@@ -118,7 +120,8 @@
             "type": "Valve",
             "resource_type": "water",
             "fluid_per_tick": 100,
-            "label": "Hydro Valve B"
+            "label": "Hydro Valve B",
+            "weight": 320
         },
 
         "plant_press":
@@ -132,7 +135,8 @@
             "type": "ResourceStorage",
             "resource_type": "food",
             "amount": 0,
-            "label": "Food Storage"
+            "label": "Food Storage",
+            "weight": 570
         },
 
         "plant_storage":
@@ -140,7 +144,8 @@
             "type": "ResourceStorage",
             "resource_type": "plants",
             "amount": 0,
-            "label": "Plant Storage"
+            "label": "Plant Storage",
+            "weight": 367
         },
 
         "hydroponics_water_storage":
@@ -149,7 +154,8 @@
             "resource_type": "water",
             "amount": 5000,
             "label": "Water Tank C",
-            "max_storage": 7500
+            "max_storage": 7500,
+            "weight": 4320
         },
 
         "oxygen_storage":
@@ -158,7 +164,8 @@
             "resource_type": "oxygen",
             "amount": 10000,
             "label": "Oxygen Tank",
-            "max_storage": 10000
+            "max_storage": 10000,
+            "weight": 1600
         },
         "oxygen_release_valve":
         {
@@ -170,7 +177,8 @@
             "target_performance": 0,
             "performance": 0,
             "max_performance": 2,
-            "label": "Open Air Release"
+            "label": "Open Air Release",
+            "weight": 75
         },
 
         "hydroponics_battery":
