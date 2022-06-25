@@ -100,7 +100,7 @@ class LaTeXGenerator:
             doc.append("Damage has the following effect on the device")
             doc.append(NewLine())
 
-            healths = list(range(0, node.max_health))
+            healths = list(range(0, int(node.max_health)))
             effectiveness_factors = []
 
             for health in healths:
