@@ -112,7 +112,8 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "label": "Hydro Valve A",
-            "weight": 320
+            "weight": 320,
+            "custom_description": "Open this valve to increase the amount of cooler water that is provided to the Hydroponics Bay. This is one of the main valves to regulate the temperature of the Hydroponics"
         },
 
         "hydroponics_uncooled_water_valve":
@@ -121,7 +122,8 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "label": "Hydro Valve B",
-            "weight": 320
+            "weight": 320,
+            "custom_description": "Open this valve to increase the amount of uncooled water that is provided to the Hydroponics Bay. This is one of the main valves to regulate the temperature of the Hydroponics"
         },
 
         "plant_press":
