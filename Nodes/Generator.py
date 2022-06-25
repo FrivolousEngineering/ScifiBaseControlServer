@@ -44,9 +44,14 @@ class Generator(Node):
 
         self._use_temperature_dependant_effectiveness_factor = True
 
-        self._description = f"This device accepts {fuel_type} and converts it to energy, generating large amounts of" \
+        self._description = f"This device accepts fuel and converts it to energy, generating large amounts of " \
                             "heat in the process. As such, it also accepts (and subsequently outputs) water to help" \
-                            " with cooling down."
+                            " with cooling down. Generators require quite some time to start (and stop) producing " \
+                            "power. This is caused by their high Performance Change Factor and by the fact that " \
+                            "their output is temperature dependant. A generator can be kickstarted faster by " \
+                            "setting the performance higher than is needed for some time, as this makes it heat up " \
+                            "faster. This is a tricky thing to do however, as it's easy to forget to turn it down " \
+                            "again once it reached it's ideal temperature."
 
         self._providable_resources.add("energy")
         self._providable_resources.add("water")
