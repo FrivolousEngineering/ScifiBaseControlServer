@@ -893,7 +893,7 @@ class Node:
         :return: The factor (between 0 and 1)
         """
 
-        health_factor = self._health / 100.
+        health_factor = self._health / self.max_health
         # This makes the effectiveness a bit less punishing.
         # 75% health: 90% effectiveness
         # 50% health: 75% effectiveness
