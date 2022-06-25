@@ -26,6 +26,10 @@ class HydroponicsBay(Node):
         # It doesn't need the extra water, it just uses it for temperature purposes
         self._optional_resources_required_per_tick["water"] = 95
 
+        self._description = "The hydroponics bay grows plants and creates oxygen. It needs animal waste to fertilize " \
+                            "the plants and a small amount of water is consumed to grow the plants. Most of the water" \
+                            "it accepts is used to regulate the temperature. "
+
         self._use_temperature_dependant_effectiveness_factor = True
         self._tags.append("plant")
 

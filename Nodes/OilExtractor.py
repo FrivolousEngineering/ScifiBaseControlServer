@@ -23,9 +23,11 @@ class OilExtractor(Node):
 
         self._fuel_per_plant_ratio = self._resources_required_per_tick["plants"] / self._resources_required_per_tick["fuel"]
 
-        self._description = "This device extracts essential oils from plants. The process requires fuel, but only a part" \
-                            "of the fuel provided is used. The contaminated fuel is burned in the process. All fuel that" \
-                            "can not be returned is burned as well."
+        self._description = "This device extracts essential oils from plants. The process requires fuel, but only a " \
+                            "part of the fuel provided is used. The contaminated fuel is burned in the process. All " \
+                            "fuel that can not be returned is burned as well. Note that this burning of fuel will " \
+                            "result in the system heating up significantly. Ensure that that this system is supplied " \
+                            "with cooling water as much as possible."
 
         self._tags.append("mechanical")
 
