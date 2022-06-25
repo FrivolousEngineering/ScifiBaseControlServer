@@ -26,7 +26,7 @@ class Valve(ResourceStorage):
         self._fluid_per_tick = fluid_per_tick
 
         # A valve cooler pretends to be a resource storage, but it shouldn't display this.
-        #self.additional_properties.remove("amount_stored")
+        self.additional_properties.remove("amount_stored")
 
         # Also try to pump up resources!
         self._optional_resources_required_per_tick[self._resource_type] = fluid_per_tick
