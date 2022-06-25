@@ -17,6 +17,12 @@ class WaterPurifier(Node):
         self._optional_resources_required_per_tick["oxygen"] = 140
         self._resources_required_per_tick["dirty_water"] = 10
 
+        self._description = "This device purifies sewage water, making it suitable for consumption and cooling once " \
+                            "again. As it uses bacteria that are activated by the presence of oxygen, it's possible " \
+                            "to force additional oxygen through the water, vastly increasing the water that can be " \
+                            "purified. After purification it will need to have a place to store the animal waste that" \
+                            "is removed from the water."
+
         self._waste_oxygen_conversion_rate = 28  # 280 oxygen is needed to convert 1 extra dirty water
         self._animal_waste_per_liter_dirty_water = 0.1
         self._tags.append("mechanical")

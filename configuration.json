@@ -134,9 +134,10 @@
         {
             "type": "ResourceStorage",
             "resource_type": "food",
-            "amount": 0,
+            "amount": 7000,
             "label": "Food Storage",
-            "weight": 570
+            "weight": 570,
+            "custom_description": "Although the colony will have advanced hydroponics system, these will not provide enough food to sufficiently feed all colonists. As such, dried food needs to be shipped with the colony ship."
         },
 
         "plant_storage":
@@ -178,7 +179,8 @@
             "performance": 0,
             "max_performance": 2,
             "label": "Open Air Release",
-            "weight": 75
+            "weight": 75,
+            "custom_description": "If the oxygen tank fills up, this device can be set to release any of the stored oxygen to the open air. This valve should be closed by default and only opened if the filled oxygen tank prevents the normal operation of other devices"
         },
 
         "hydroponics_battery":
@@ -331,8 +333,9 @@
             "type": "ResourceStorage",
             "resource_type": "medicine",
             "amount": 0,
-            "max_storage": 250,
-            "label": "Medicine Storage"
+            "max_storage": 10000,
+            "label": "Medicine Storage",
+            "custom_description": "The storage for medicine that is produced for the colony. As it's expected that not all medication can be created by the colonists immediately, it's required to ship sufficient medical supplies to bridge this period."
         },
 
         "rain_water_collector":
