@@ -178,3 +178,11 @@ class LaTeXGenerator:
                 for item in self.temperature_specific_properties:
                     table.add_hline()
                     table.add_row((self._convertPropertyToHumanReadable(item), getattr(node, item)))
+
+            if hasattr(node, "max_amount_stored") and getattr(node, "max_amount_stored") != -1:
+                table.add_hline()
+                table.add_row((self._convertPropertyToHumanReadable("Max amount stored"), getattr(node, "max_amount_stored")))
+            if hasattr(node, "_resource_type"):
+                table.add_hline()
+                table.add_row((self._convertPropertyToHumanReadable("Resource type"), getattr(node, "_resource_type")))
+
