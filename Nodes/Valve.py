@@ -19,7 +19,7 @@ class Valve(ResourceStorage):
         :param kwargs:
         """
         # Update the defaults like this so that the actual property can be set by base class
-        defaults = {"heat_convection_coefficient": 0.2, "surface_area": 0.35}
+        defaults = {"heat_convection_coefficient": 0.2, "surface_area": 0.35, "has_settable_performance": True}
         defaults.update(kwargs)
 
         super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **defaults)
@@ -36,7 +36,6 @@ class Valve(ResourceStorage):
         self._description = self._description.format(resource_type = resource_type)
         self._performance_change_factor = 1
 
-        self._has_settable_performance = True
 
     def _updateResourceRequiredPerTick(self) -> None:
         """
