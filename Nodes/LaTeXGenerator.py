@@ -11,15 +11,14 @@ import matplotlib.pyplot as plt  # noqa
 
 class LaTeXGenerator:
     propertiesToAdd = ["weight",
-                       "performance_change_factor",
-                       "min_performance",
-                       "max_performance",
                        "heat_emissivity",
                        "surface_area",
                        "heat_convection_coefficient",
                        "max_safe_temperature",
-                       "max_health",
+                       "max_health"
                        ]
+
+    performance_properties = ["performance_change_factor", "min_performance", "max_performance"]
 
     temperature_specific_properties = ["optimal_temperature", "optimal_temperature_range"]
 
@@ -128,9 +127,7 @@ class LaTeXGenerator:
         return result
 
     def _generateRequiredResourceTable(self, doc, node):
-
         with doc.create(Subsubsection("Required Resources")):
-
             if not node._original_resources_required_per_tick.items():
                 doc.append("It requires no resources to function correctly")
             else:
@@ -176,6 +173,11 @@ class LaTeXGenerator:
 
             if node.isTemperatureDependant:
                 for item in self.temperature_specific_properties:
+                    table.add_hline()
+                    table.add_row((self._convertPropertyToHumanReadable(item), getattr(node, item)))
+
+            if node.hasSettablePerformance:
+                for item in self.performance_properties:
                     table.add_hline()
                     table.add_row((self._convertPropertyToHumanReadable(item), getattr(node, item)))
 
