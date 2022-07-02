@@ -24,10 +24,10 @@ class User(Base):  # type: ignore
         self.email = email
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<User %r>' % self.name
 
 
-class Ability(Base): # type: ignore
+class Ability(Base):  # type: ignore
     __tablename__ = 'ability'
     id = Column(Integer, primary_key=True)
     name = Column(String(12), unique=True)
@@ -39,6 +39,6 @@ class Ability(Base): # type: ignore
         return '<Ability {}>'.format(self.name)
 
     def __str__(self):
-      return self.name
+        return self.name
 
 

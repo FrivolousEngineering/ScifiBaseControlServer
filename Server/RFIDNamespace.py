@@ -32,7 +32,7 @@ class RFID(Resource):
 # name, email are required for new users. Ability can be passed multiple times.
 # Only adds abilities; does not remove them.
 @RFID_namespace.route("/update/<string:card_id>/")
-@RFID_namespace.doc(description ="Update a user's information")
+@RFID_namespace.doc(description = "Update a user's information")
 class RFIDUpdate(Resource):
     @api.response(200, "User updated")
     @api.response(500, "User update failed")

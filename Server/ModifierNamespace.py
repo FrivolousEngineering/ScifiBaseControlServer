@@ -14,7 +14,7 @@ modifier = api.model("modifier",
 
 
 @modifier_namespace.route("/")
-@modifier_namespace.doc(description ="Get all modifier types")
+@modifier_namespace.doc(description = "Get all modifier types")
 class Modifiers(Resource):
     @api.response(200, "Success", fields.List(fields.Nested(modifier)))
     def get(self):
