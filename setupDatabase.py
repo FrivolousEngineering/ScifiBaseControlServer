@@ -1,6 +1,6 @@
 from Server.Database import init_db, createDBSession
 
-from Server.Database import db_session
+from Server.Database import getDBSession
 from Server.models import User, Ability, AccessCard
 
 createDBSession('sqlite:///ScifiControlServer.db')
@@ -21,7 +21,7 @@ user_three.access_cards.append(card_three)
 see_user_ability = Ability("see_users")
 user_one.abilities.append(see_user_ability)
 user_two.abilities.append(see_user_ability)
-
+db_session = getDBSession()
 db_session.add(user_one)
 db_session.add(user_two)
 db_session.add(user_three)
