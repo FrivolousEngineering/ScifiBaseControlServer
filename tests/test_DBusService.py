@@ -175,7 +175,7 @@ def test_getActiveModifiers(DBus):
     mod_node.getModifiers = MagicMock(return_value=[modifier])
     unmodded_node.getModifiers = MagicMock(return_value = [])
     with patch.dict(node_dict, {"modded_node": mod_node, "unmodded_node": unmodded_node}):
-        assert DBus.getActiveModifiers("modded_node") == [{"name": "modifier", "duration": 200, "abbreviation": "FOO"}]
+        assert DBus.getActiveModifiers("modded_node") == [{"name": "modifier", "duration": 200, "abbreviation": "FOO", "type": "MagicMock"}]
         assert DBus.getActiveModifiers("unmodded_node") == []
         assert DBus.getActiveModifiers("unknown_node") == []
 

@@ -8,11 +8,9 @@ from functools import wraps, partial
 from flask import Flask, Response, render_template, request
 
 
-from Server.Database import db_session, init_db
+from Server.Database import init_db, createDBSession, getDBSession
 from Server.models import User, Ability, AccessCard, Modifier
 from werkzeug.exceptions import Forbidden, Unauthorized
-
-from Server.Database import db_session
 
 if TYPE_CHECKING:
     from Nodes.NodesDBusService import NodesDBusService
@@ -83,7 +81,7 @@ class Server(Flask):
 
     STATIC_LOCATION = ""
     
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, db_location, *args, **kwargs) -> None:
         if "import_name" not in kwargs:
             kwargs.setdefault('import_name', __name__)
 
@@ -107,11 +105,13 @@ class Server(Flask):
         self._nodes = None  # type: Optional["NodesDBusService"]
         self._modifiers = None
         self._last_known_tick = 0
+
+        createDBSession(db_location)
         init_db()
 
     @staticmethod
     def _shutdownSession(exception):
-        db_session.remove()
+        getDBSession().remove()
 
     def getNodeDBusObject(self) -> "NodesDBusService":
         """
@@ -157,15 +157,15 @@ class Server(Flask):
         return Response(str(exception),
                         status=500)
 
-    def _handleTickUpdate(self):
+    def _handleTickUpdate(self) -> None:
         try:
             for modifier in Modifier.query.all():
                 # Check if the modifier has been removed.
-                modifier_names = [mod["type"] for mod in self._nodes.getActiveModifiers(modifier.node_id)]
+                modifier_names = [mod["type"] for mod in self._nodes.getActiveModifiers(modifier.node_id)]  # type: ignore
 
                 if modifier.name not in modifier_names:
-                    db_session.delete(modifier)
-            db_session.commit()
+                    getDBSession().delete(modifier)
+            getDBSession().commit()
 
         except Exception as e:
             print(e)
@@ -177,7 +177,7 @@ class Server(Flask):
             # Since getting DBUS signals to work properly with flask proved to be annoying, we just use ask what the
             # last tick that we saw was. Based on that we can decide if an update is needed.
             # Since this function is always called before any update, we should never get outdated info.
-            tick_number = self._nodes.getCurrentTick()
+            tick_number = self._nodes.getCurrentTick()  # type: ignore
             if self._last_known_tick != tick_number:
                 self._last_known_tick = tick_number
                 self._handleTickUpdate()
@@ -230,7 +230,7 @@ class Server(Flask):
     @requires_user_ability("see_users")
     def listAllUsers(self):
         all_users = User.query.all()
-        return Response(flask.json.dumps([user.name for user in all_users]), status=200, mimetype="application/json")
+        return Response(flask.json.dumps([user.id for user in all_users]), status=200, mimetype="application/json")
 
     @register_route("/startTick", ["POST"])
     def startTick(self) -> Response:

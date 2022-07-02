@@ -1,9 +1,9 @@
-from Server.Database import init_db
-
+from Server.Database import init_db, createDBSession
 
 from Server.Database import db_session
 from Server.models import User, Ability, AccessCard
 
+createDBSession('sqlite:///ScifiControlServer.db')
 init_db()
 user_one = User('admin_a', engineering_level = 2)
 card_one = AccessCard("a")
