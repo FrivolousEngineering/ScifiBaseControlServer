@@ -7,7 +7,7 @@ Base = declarative_base()
 engine = None
 
 
-def createDBSession(db_location):
+def createDBSession(db_location: str) -> None:
     global engine, db_session
     engine = create_engine(db_location, convert_unicode=True)
     db_session = scoped_session(sessionmaker(autocommit=False,

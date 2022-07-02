@@ -81,7 +81,7 @@ class Server(Flask):
 
     STATIC_LOCATION = ""
     
-    def __init__(self, db_location, *args, **kwargs) -> None:
+    def __init__(self, db_location: str, *args, **kwargs) -> None:
         if "import_name" not in kwargs:
             kwargs.setdefault('import_name', __name__)
 
@@ -164,8 +164,8 @@ class Server(Flask):
                 modifier_names = [mod["type"] for mod in self._nodes.getActiveModifiers(modifier.node_id)]  # type: ignore
 
                 if modifier.name not in modifier_names:
-                    getDBSession().delete(modifier)
-            getDBSession().commit()
+                    getDBSession().delete(modifier)  # type: ignore
+            getDBSession().commit() # type: ignore
 
         except Exception as e:
             print(e)
@@ -241,4 +241,4 @@ class Server(Flask):
 
 
 if __name__ == "__main__":
-    Server().run(debug=True)
+    Server('sqlite:///ScifiControlServer.db').run(debug=True)
