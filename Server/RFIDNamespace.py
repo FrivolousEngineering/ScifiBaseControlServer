@@ -2,7 +2,7 @@ from Server.Blueprint import api
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 from flask import current_app as app
 from Server.Blueprint import api
-from Server.models import User, Ability
+from Server.models import User, Ability, AccessCard
 from Server.Database import db_session
 from sqlalchemy import exc
 
@@ -22,11 +22,11 @@ class RFID(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Card")
     def get(self, card_id):
-        user = User.query.filter_by(card_id = card_id).first()
-        if not user:
+        access_card = AccessCard.query.filter_by(id = card_id).first()
+        if not access_card:
             return UNKNOWN_CARD_RESPONSE
         else:
-            return "Welcome back!"
+            return f"Welcome back '{access_card.user.name}' with '{card_id}'"
 
 
 # name, email are required for new users. Ability can be passed multiple times.
