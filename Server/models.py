@@ -4,30 +4,34 @@ from Server.Database import Base
 
 
 user_ability_table = Table('user_ability', Base.metadata,
-    Column('user_id', Integer, ForeignKey('user.card_id')),
+    Column('user_id', Integer, ForeignKey('user.id')),
     Column('ability_id', Integer, ForeignKey('ability.id'))
 )
 
-user_modifier_table = Table('user_modifier', Base.metadata,
-    Column('user_id', Integer, ForeignKey('user.card_id')),
-    Column('modifier_id', Integer, ForeignKey('modifier.id'))
-)
+
+class AccessCard(Base):
+    __tablename__ = "access_card"
+
+    id = Column(String(50), primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User", back_populates = "access_cards")
+
+    def __init__(self, card_id):
+        self.id = card_id
 
 
 class User(Base):  # type: ignore
     __tablename__ = 'user'
-    card_id = Column(String(50), primary_key=True)
+    id = Column(Integer, primary_key=True)
 
     name = Column(String(50), unique=True)
-    email = Column(String(120), unique=True)
 
-    abilities = relationship("Ability", secondary = user_ability_table, backref = "users")
-    active_modifiers = relationship("Modifier", secondary = user_modifier_table)
+    abilities = relationship("Ability", secondary = user_ability_table, backref = "user")
+    access_cards = relationship("AccessCard", back_populates="user")
+    modifiers = relationship("Modifier", back_populates="user")
 
-    def __init__(self, card_id=None, name=None, email=None):
-        self.card_id = card_id
+    def __init__(self, name=None):
         self.name = name
-        self.email = email
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -39,12 +43,12 @@ class Modifier(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50))  # What is the name of the modifier that was placed?
     node_id = Column(String(100))  # On what node is this placed?
-    card_id = Column(String(50))  # By which card was this modifier placed?
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User", back_populates = "modifiers")
 
-    def __init__(self, name=None, node_id=None, card_id = None):
+    def __init__(self, name=None, node_id=None):
         self.name = name
         self.node_id = node_id
-        self.card_id = card_id
 
 
 class Ability(Base):  # type: ignore
