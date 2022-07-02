@@ -13,7 +13,7 @@ import signal
 import socket
 
 
-app = Server()
+app = Server('sqlite:///ScifiControlServer.db')
 api.add_namespace(node_namespace)
 api.add_namespace(control_namespace)
 api.add_namespace(modifier_namespace)
