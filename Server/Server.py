@@ -12,6 +12,7 @@ from Server.Database import db_session, init_db
 from Server.models import User, Ability, AccessCard, Modifier
 from werkzeug.exceptions import Forbidden, Unauthorized
 
+from Server.Database import db_session
 
 if TYPE_CHECKING:
     from Nodes.NodesDBusService import NodesDBusService
@@ -157,25 +158,36 @@ class Server(Flask):
                         status=500)
 
     def _handleTickUpdate(self):
-        for modifier in Modifier.query.all():
-            pass
+        try:
+            for modifier in Modifier.query.all():
+                # Check if the modifier has been removed.
+                modifier_names = [mod["type"] for mod in self._nodes.getActiveModifiers(modifier.node_id)]
+
+                if modifier.name not in modifier_names:
+                    db_session.delete(modifier)
+            db_session.commit()
+
+        except Exception as e:
+            print(e)
 
     def _setupNodeDBUS(self) -> None:
         self._initNodeDBUS()
         try:
             self._nodes.checkAlive()  # type: ignore
-
             # Since getting DBUS signals to work properly with flask proved to be annoying, we just use ask what the
             # last tick that we saw was. Based on that we can decide if an update is needed.
             # Since this function is always called before any update, we should never get outdated info.
             tick_number = self._nodes.getCurrentTick()
             if self._last_known_tick != tick_number:
-                self._handleTickUpdate()
                 self._last_known_tick = tick_number
+                self._handleTickUpdate()
 
         except dbus.exceptions.DBusException:
             self._nodes = None
             # It could be that the service was rebooted, so we should try this again.
+            self._initNodeDBUS()
+        except AttributeError:
+            self._nodes = None
             self._initNodeDBUS()
 
     def _initNodeDBUS(self) -> None:

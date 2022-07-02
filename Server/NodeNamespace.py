@@ -7,9 +7,10 @@ from flask_restx import Resource, fields, Namespace
 from Nodes.Constants import SPECIFIC_HEAT
 from Nodes.NodesDBusService import NodesDBusService
 from Server.Server import Server
+from Server.Database import db_session
 from Server.Blueprint import api
 
-from Server.models import AccessCard
+from Server.models import AccessCard, Modifier
 
 import json
 
@@ -408,6 +409,11 @@ class Modifiers(Resource):
         successful = nodes.addModifierToNode(node_id, data["modifier_name"])
         if not successful:
             return Response("Unknown modifier", status = 400, mimetype='application/json')
+
+        # Add the modifier to the database!
+        modifier = Modifier(data["modifier_name"], node_id)
+        access_card.user.modifiers.append(modifier)
+        db_session.commit()
         return nodes.getActiveModifiers(node_id)
 
 
