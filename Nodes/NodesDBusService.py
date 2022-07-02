@@ -32,6 +32,7 @@ class NodesDBusService(dbus.service.Object):
 
         self._object_path = "/com/frivengi/nodes"
         self._node_engine = engine
+
         super().__init__(
             bus_name=self._bus_name,
             object_path=self._object_path
@@ -223,6 +224,10 @@ class NodesDBusService(dbus.service.Object):
     @dbus.service.method("com.frivengi.nodes")
     def doTick(self) -> None:
         self._node_engine.doTick()
+
+    @dbus.service.method("com.frivengi.nodes", out_signature = "v")
+    def getCurrentTick(self) -> int:
+        return self._node_engine.tick_count
 
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="b")
     def isNodeEnabled(self, node_id: str) -> bool:

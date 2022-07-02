@@ -1,12 +1,17 @@
+from typing import cast
 
 from flask_restx import Resource, fields, Namespace
 from Server.Blueprint import api
 from Server.models import User
 
-from flask import Response, request
+from flask import Response, request, current_app
+from Server.Server import Server
 
 User_namespace = Namespace("User", description = "TODO")
 
+
+# Workaround so that mypy understands that the app is of type "Server" and not "Flask"
+app = cast(Server, current_app)
 
 UNKNOWN_USER_RESPONSE = Response('{"message": "Unknown User"}', status=404, mimetype='application/json')
 
