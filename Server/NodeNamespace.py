@@ -410,6 +410,12 @@ class Modifiers(Resource):
         if not successful:
             return Response("Unknown modifier", status = 400, mimetype='application/json')
 
+        # Check if it was a modifier that was "replaced". Basicly users can place a modifier again to reset the duration
+        # In that case it shouldn't add another item to the DB.
+        for modifier in access_card.user.modifiers:
+            if modifier.name == data["modifier_name"] and modifier.node_id == node_id:
+                return nodes.getActiveModifiers(node_id)
+
         # Add the modifier to the database!
         modifier = Modifier(data["modifier_name"], node_id)
         access_card.user.modifiers.append(modifier)
