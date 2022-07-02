@@ -25,7 +25,8 @@ user_model = api.model("node", {
                              example = "admin",
                              readonly = True),
     "access_cards": fields.List(fields.String(description = "unique key of the access card")),
-    "active_modifiers": fields.List(fields.Nested(modifier))
+    "active_modifiers": fields.List(fields.Nested(modifier)),
+    "engineering_level": fields.Integer(description = "The engineering level of this user. This is 0 by default")
     })
 
 
@@ -46,5 +47,6 @@ class UserResource(Resource):
                             "name": modifier.name,
                             "node_id": modifier.node_id
                         } for modifier in user.modifiers
-                    ]
+                    ],
+                    "engineering_level": user.engineering_level
                     }

@@ -24,12 +24,15 @@ class User(Base):  # type: ignore
     __tablename__ = 'user'
     id = Column(String(50), primary_key=True)
 
+    engineering_level = Column(Integer)
+
     abilities = relationship("Ability", secondary = user_ability_table, backref = "user")
     access_cards = relationship("AccessCard", back_populates="user")
     modifiers = relationship("Modifier", back_populates="user")
 
-    def __init__(self, name=None):
+    def __init__(self, name, engineering_level = 0):
         self.id = name
+        self.engineering_level = engineering_level
 
     def __repr__(self):
         return '<User %r>' % self.name

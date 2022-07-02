@@ -5,17 +5,17 @@ from Server.Database import db_session
 from Server.models import User, Ability, AccessCard
 
 init_db()
-user_one = User('admin')
-card_one = AccessCard("8666529cc")
+user_one = User('admin_a', engineering_level = 2)
+card_one = AccessCard("a")
 user_one.access_cards.append(card_one)
 
-user_two = User("AnotherAdmin")
-card_two = AccessCard("abcdef")
+user_two = User("admin_b", engineering_level = 1)
+card_two = AccessCard("b")
 user_two.access_cards.append(card_two)
 
 
-user_three = User("Normal User!")
-card_three = AccessCard("123abc")
+user_three = User("user")
+card_three = AccessCard("c")
 user_three.access_cards.append(card_three)
 
 see_user_ability = Ability("see_users")
