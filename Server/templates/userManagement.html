@@ -44,7 +44,7 @@ th {
     {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        url = "/users/?userID=".concat(urlParams.get("userID"));
+        url = "/users/?accessCardID=".concat(urlParams.get("accessCardID"));
         $.get(url, function(data) {
             updateTable(data);
         });

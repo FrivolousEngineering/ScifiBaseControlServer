@@ -9,7 +9,7 @@ from flask import Flask, Response, render_template, request
 
 
 from Server.Database import db_session, init_db
-from Server.models import User, Ability
+from Server.models import User, Ability, AccessCard
 from werkzeug.exceptions import Forbidden, Unauthorized
 
 
@@ -46,15 +46,16 @@ def requires_user_ability(ability: str):
     def wrapper(func):
         @wraps(func)
         def inner(*args, **kwargs):
-            user_id = request.args.get("userID")
-            if not user_id:
+            card_id = request.args.get("accessCardID")
+            if not card_id:
                 raise Unauthorized("You need to provide some credentials first!")
-            user = User.query.filter_by(card_id = user_id).first()
-            if not user:
-                raise Forbidden("User is unknown")
+            access_card = AccessCard.query.filter_by(id = card_id).first()
+            #user = User.query.filter_by(card_id = user_id).first()
+            if not access_card:
+                raise Forbidden(f"Access card [{card_id}] is unknown")
 
             desired_ability = Ability.query.filter_by(name = ability).first()
-
+            user = access_card.user
             if desired_ability in user.abilities:
                 return func(*args, **kwargs)
 
