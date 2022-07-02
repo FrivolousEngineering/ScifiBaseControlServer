@@ -368,9 +368,9 @@ class OutgoingConnections(Resource):
         return nodes.getOutgoingConnections(node_id)
 
 
-
 modifier_parser = authorization_parser.copy()
 modifier_parser.add_argument("modifier_name", location = "json")
+
 
 @node_namespace.route("/<string:node_id>/modifiers/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
@@ -403,13 +403,21 @@ class Modifiers(Resource):
         if not access_card:
             return UNKNOWN_ACCESS_CARD
 
-        if access_card.user.engineering_level == 0:
-            return INSUFFICIENT_RIGHTS
-
         try:
             data = json.loads(request.data)
         except:
             return Response("Unable to format the provided data!", status = 400, mimetype='application/json')
+
+        # Engineering level defines how much modifiers you can place
+        if access_card.user.engineering_level <= len(access_card.user.modifiers):
+            # The exception to this if a user wants to 're-place' a modifier.
+            is_replace = False
+            for modifier in access_card.user.modifiers:
+                if modifier.name == data["modifier_name"] and modifier.node_id == node_id:
+                    is_replace = True
+                    break
+            if not is_replace:
+                return INSUFFICIENT_RIGHTS
 
         successful = nodes.addModifierToNode(node_id, data["modifier_name"])
         if not successful:
