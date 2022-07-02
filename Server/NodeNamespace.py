@@ -368,7 +368,7 @@ class Modifiers(Resource):
 
     @api.response(404, "Unknown Node")
     @api.response(400, "Bad Request")
-    @api.response(200, "Success'")
+    @api.response(200, "Success")
     def post(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
