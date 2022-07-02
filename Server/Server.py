@@ -50,7 +50,7 @@ def requires_user_ability(ability: str):
             if not card_id:
                 raise Unauthorized("You need to provide some credentials first!")
             access_card = AccessCard.query.filter_by(id = card_id).first()
-            #user = User.query.filter_by(card_id = user_id).first()
+            
             if not access_card:
                 raise Forbidden(f"Access card [{card_id}] is unknown")
 
