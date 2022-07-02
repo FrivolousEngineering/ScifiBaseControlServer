@@ -2,12 +2,14 @@ from typing import Optional, Dict, Any, Union, List, cast
 
 from flask import request, Response, make_response
 from flask import current_app
-from flask_restx import Resource,fields, Namespace
+from flask_restx import Resource, fields, Namespace
 
 from Nodes.Constants import SPECIFIC_HEAT
 from Nodes.NodesDBusService import NodesDBusService
 from Server.Server import Server
 from Server.Blueprint import api
+
+from Server.models import AccessCard
 
 import json
 
@@ -55,6 +57,10 @@ UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested n
 
 UNKNOWN_PROPERTY_RESPONSE = Response("{\"message\": \"Could not find the requested property\"}", status=404, mimetype='application/json')
 
+CREDENTIALS_REQUIRED_RESPONSE = Response("{\"message\": \"Please provide an accessCardID\"}", status=401, mimetype='application/json')
+
+UNKNOWN_ACCESS_CARD = Response("{\"message\": \"Access card ID is not recognised.\"}", status=401, mimetype='application/json')
+
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
                              example = "generator",
@@ -86,6 +92,10 @@ node = api.model("node", {
     "effectiveness_factor": fields.Float(description = "How well is this node performing? This factor can be influenced by it's health and the temperature of the node"),
     "label": fields.String(description = "Human readable name of the node", example = "Generator", readonly = True)
 })
+
+
+authorization_parser = api.parser()
+authorization_parser.add_argument("accessCardID", type = str, required = True)
 
 
 def checkIfNodeExists(nodes: "NodesDBusService", node_id: str) -> bool:
@@ -355,6 +365,10 @@ class OutgoingConnections(Resource):
         return nodes.getOutgoingConnections(node_id)
 
 
+
+modifier_parser = authorization_parser.copy()
+modifier_parser.add_argument("modifier_name", location = "json")
+
 @node_namespace.route("/<string:node_id>/modifiers/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
 class Modifiers(Resource):
@@ -369,10 +383,22 @@ class Modifiers(Resource):
     @api.response(404, "Unknown Node")
     @api.response(400, "Bad Request")
     @api.response(200, "Success")
+    @api.response(403, "")
+    @api.response(401, "Authentication required")
+    @api.expect(modifier_parser)
     def post(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
+
+        access_id = request.args.get("accessCardID")
+
+        if not access_id:
+            return CREDENTIALS_REQUIRED_RESPONSE
+
+        access_card = AccessCard.query.filter_by(id = access_id).first()
+        if not access_card:
+            return UNKNOWN_ACCESS_CARD
 
         try:
             data = json.loads(request.data)

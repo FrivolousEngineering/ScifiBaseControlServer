@@ -29,9 +29,6 @@ class RFID(Resource):
             return f"Welcome back '{access_card.user.name}' with '{card_id}'"
 
 
-
-
-
 # name, email are required for new users. Ability can be passed multiple times.
 # Only adds abilities; does not remove them.
 @RFID_namespace.route("/update/<string:card_id>/")
