@@ -6,6 +6,7 @@ from Server.Blueprint import blueprint, api
 from Server.ControllerNamespace import control_namespace
 from Server.ModifierNamespace import modifier_namespace
 from Server.RFIDNamespace import RFID_namespace
+from Server.UserNamespace import User_namespace
 
 import sys
 import signal
@@ -17,6 +18,7 @@ api.add_namespace(node_namespace)
 api.add_namespace(control_namespace)
 api.add_namespace(modifier_namespace)
 api.add_namespace(RFID_namespace)
+api.add_namespace(User_namespace)
 app.register_blueprint(blueprint)
 
 

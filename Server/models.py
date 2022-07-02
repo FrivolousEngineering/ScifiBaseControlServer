@@ -22,16 +22,14 @@ class AccessCard(Base):
 
 class User(Base):  # type: ignore
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-
-    name = Column(String(50), unique=True)
+    id = Column(String(50), primary_key=True)
 
     abilities = relationship("Ability", secondary = user_ability_table, backref = "user")
     access_cards = relationship("AccessCard", back_populates="user")
     modifiers = relationship("Modifier", back_populates="user")
 
     def __init__(self, name=None):
-        self.name = name
+        self.id = name
 
     def __repr__(self):
         return '<User %r>' % self.name
