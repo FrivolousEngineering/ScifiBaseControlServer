@@ -62,6 +62,8 @@ CREDENTIALS_REQUIRED_RESPONSE = Response("{\"message\": \"Please provide an acce
 
 UNKNOWN_ACCESS_CARD = Response("{\"message\": \"Access card ID is not recognised.\"}", status=401, mimetype='application/json')
 
+INSUFFICIENT_RIGHTS = Response("{\"message\": \"User is not allowed to perform this action.\"}", status=403, mimetype='application/json')
+
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
                              example = "generator",
@@ -384,7 +386,7 @@ class Modifiers(Resource):
     @api.response(404, "Unknown Node")
     @api.response(400, "Bad Request")
     @api.response(200, "Success")
-    @api.response(403, "")
+    @api.response(403, "Insufficient Rights")
     @api.response(401, "Authentication required")
     @api.expect(modifier_parser)
     def post(self, node_id):
@@ -400,6 +402,9 @@ class Modifiers(Resource):
         access_card = AccessCard.query.filter_by(id = access_id).first()
         if not access_card:
             return UNKNOWN_ACCESS_CARD
+
+        if access_card.user.engineering_level == 0:
+            return INSUFFICIENT_RIGHTS
 
         try:
             data = json.loads(request.data)
