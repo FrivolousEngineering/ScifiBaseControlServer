@@ -151,10 +151,11 @@ class Server(Flask):
         if exception.get_dbus_name() == "org.freedesktop.DBus.Error.ServiceUnknown":
             # We couldn't find the server on the other side. No need to log it more
             self._nodes = None
-            return Response("The engine can't be found. Ensure that it's running before trying again", status =503)
+            return Response('{"message": "The engine cant be found. Ensure that its running before trying again"}',
+                            status = 503)
         else:
             self.logger.warning("An exception occurred %s" % str(exception))
-        return Response(str(exception),
+        return Response('{"message": "An exception ocurred: ' + str(exception) + '"}',
                         status=500)
 
     def _handleTickUpdate(self) -> None:
