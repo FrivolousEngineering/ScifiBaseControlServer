@@ -399,8 +399,8 @@ class Modifiers(Resource):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
-
-        access_id = request.args.get("accessCardID")
+        args = modifier_parser.parse_args()
+        access_id = args.get("accessCardID")
 
         if not access_id:
             return CREDENTIALS_REQUIRED_RESPONSE
