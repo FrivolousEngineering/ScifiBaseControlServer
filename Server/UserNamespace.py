@@ -30,6 +30,30 @@ user_model = api.model("node", {
     })
 
 
+def createUserModel(user):
+    return {"id": user.id,
+            "access_cards": [access_card.id for access_card in user.access_cards],
+            "active_modifiers": [
+                {
+                    "name": modifier.name,
+                    "node_id": modifier.node_id
+                } for modifier in user.modifiers
+            ],
+            "engineering_level": user.engineering_level
+            }
+
+
+@User_namespace.route("/")
+@User_namespace.doc(description = "All users")
+class AllUsers(Resource):
+    @api.response(200, "Success", fields.List(fields.Nested(user_model)))
+    def get(self):
+        result = []
+        for user in User.query.all():
+            result.append(createUserModel(user))
+        return result
+
+
 @User_namespace.route("/<string:user_id>/")
 @User_namespace.doc(description = "Get User info")
 class UserResource(Resource):
@@ -40,13 +64,4 @@ class UserResource(Resource):
         if not user:
             return UNKNOWN_USER_RESPONSE
         else:
-            return {"id": user.id,
-                    "access_cards": [access_card.id for access_card in user.access_cards],
-                    "active_modifiers": [
-                        {
-                            "name": modifier.name,
-                            "node_id": modifier.node_id
-                        } for modifier in user.modifiers
-                    ],
-                    "engineering_level": user.engineering_level
-                    }
+            return createUserModel(user)
