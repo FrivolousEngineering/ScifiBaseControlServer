@@ -89,7 +89,7 @@ def test_getModifiers(client):
 
 def test_getUser(client):
     known_response = client.get("/RFID/123/")
-    assert known_response.data.strip() == b'"Welcome back \'admin\' with \'123\'"'
+    assert known_response.data.strip() == b'{"user_name": "admin"}'
     unknown_response = client.get("/RFID/123c/")
     assert unknown_response.data.strip() == b'{"message": "Unknown Card"}'
 

@@ -26,7 +26,8 @@ class RFID(Resource):
         if not access_card:
             return UNKNOWN_CARD_RESPONSE
         else:
-            return f"Welcome back '{access_card.user.id}' with '{card_id}'"
+            return {"user_name": access_card.user.id}
+
 
 
 # name, email are required for new users. Ability can be passed multiple times.

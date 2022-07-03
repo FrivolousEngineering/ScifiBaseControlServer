@@ -76,6 +76,13 @@ class NodesDBusService(dbus.service.Object):
             return node.description
         return ""
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s")
+    def getCustomDescription(self, node_id: str) -> str:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            return node.custom_description
+        return ""
+
     @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="d")
     def getHeatEmissivity(self, node_id) -> float:
         node = self._node_engine.getNodeById(node_id)
