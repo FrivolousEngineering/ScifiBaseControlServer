@@ -9,6 +9,10 @@ import schemathesis
 import os
 import random
 from hypothesis import settings
+import shutil
+
+
+
 
 server_process = subprocess.Popen(["python3", "server_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
 engine_process = subprocess.Popen(["python3", "engine_run.py"], stdout=subprocess.PIPE, preexec_fn=os.setsid)
@@ -22,6 +26,7 @@ try:
     all_node_data = result.json()
     known_nodes = [node_data["node_id"] for node_data in all_node_data]
     all_node_ids = [node_data["node_id"] for node_data in all_node_data]
+    shutil.copyfile('ScifiControlServer.db', 'ScifiControlServerOriginal.db')
 except:
     # Create a fake schema. It needs to have at least one path, otherwise schemathesis breaks.
     schema = schemathesis.from_file('{ "swagger": "2.0", "info": { "title": "Sample API", "description": "API description in Markdown.", "version": "1.0.0" }, "host": "api.example.com", "basePath": "/v1", "schemes": [ "https" ], "paths": { "/users": { "get": { "summary": "Returns a list of users.", "description": "Optional extended description in Markdown.", "produces": [ "application/json" ], "responses": { "200": { "description": "OK" } } } } } }')
@@ -61,6 +66,8 @@ def setupServer(request):
     def serverTeardown():
         os.killpg(os.getpgid(server_process.pid), signal.SIGTERM)
         os.killpg(os.getpgid(engine_process.pid), signal.SIGTERM)
+        shutil.copyfile('ScifiControlServerOriginal.db', 'ScifiControlServer.db')
+        os.remove("ScifiControlServerOriginal.db")
     request.addfinalizer(serverTeardown)
 
 
