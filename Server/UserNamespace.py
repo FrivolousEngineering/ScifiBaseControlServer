@@ -16,6 +16,7 @@ app = cast(Server, current_app)
 
 UNKNOWN_USER_RESPONSE = Response('{"message": "Unknown User"}', status = 404, mimetype = 'application/json')
 USER_ADDED = Response('{"message": "User Added"}', status = 201, mimetype = 'application/json')
+USER_UPDATE_SUCCEEDED = Response('{"message": "User updated"}', status = 200, mimetype = 'application/json')
 
 modifier = api.model("modifier", {
     "name": fields.String(description = "Name of the modifier that is placed"),
@@ -62,6 +63,13 @@ user_parser.add_argument('engineering_level',
                          help = 'The engineering level of the user. This is 0 by default',
                          location = 'form')
 
+user_parser_put = user_parser.copy()
+user_parser_put.replace_argument('engineering_level',
+                            type = int,
+                            help = 'The engineering level of the user. This is 0 by default',
+                            location = 'form',
+                            required = True)
+
 
 @User_namespace.route("/<string:user_id>/")
 @User_namespace.doc(description = "Get User info")
@@ -92,4 +100,18 @@ class UserResource(Resource):
         db_session.commit()
 
         return USER_ADDED
+
+    @api.response(404, "Unknown User")
+    @api.response(200, "User Updated")
+    @api.expect(user_parser_put)
+    def put(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            return UNKNOWN_USER_RESPONSE
+
+        args = user_parser.parse_args()
+        user.engineering_level = args.get("engineering_level")
+        getDBSession().commit()
+        return USER_UPDATE_SUCCEEDED
+
 
