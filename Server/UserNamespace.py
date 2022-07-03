@@ -97,6 +97,8 @@ class UserResource(Resource):
         engineering_level = args.get("engineering_level", 0)
         if engineering_level > 100:
             engineering_level = 100
+        if engineering_level < 0:
+            engineering_level = 0
         new_user = User(user_id, engineering_level)
         db_session = getDBSession()
         db_session.add(new_user)
@@ -116,6 +118,8 @@ class UserResource(Resource):
         engineering_level = args.get("engineering_level", 0)
         if engineering_level > 100:
             engineering_level = 100
+        if engineering_level < 0:
+            engineering_level = 0
         user.engineering_level = engineering_level
         getDBSession().commit()
         return USER_UPDATE_SUCCEEDED
