@@ -100,6 +100,16 @@ node = api.model("node", {
 authorization_parser = api.parser()
 authorization_parser.add_argument("accessCardID", type = str, required = True)
 
+performance_parser = api.parser()
+performance_parser.add_argument('performance', type=float, help='New performance', location='form')
+
+
+modifier_parser = authorization_parser.copy()
+modifier_parser.add_argument("modifier_name", location = "json", required = True)
+
+show_last_parser = api.parser()
+show_last_parser.add_argument("showLast", type = str, location='args')
+
 
 def checkIfNodeExists(nodes: "NodesDBusService", node_id: str) -> bool:
     try:
@@ -142,10 +152,6 @@ class Enabled(Resource):
             return UNKNOWN_NODE_RESPONSE
         nodes.setNodeEnabled(node_id, not nodes.isNodeEnabled(node_id))
         return bool(nodes.isNodeEnabled(node_id))
-
-
-performance_parser = api.parser()
-performance_parser.add_argument('performance', type=float, help='New performance', location='form')
 
 
 @node_namespace.route('/<string:node_id>/performance/')
@@ -227,12 +233,14 @@ class TargetPerformance(Resource):
 class TemperatureHistory(Resource):
     @api.response(200, "success", fields.List(fields.Float))
     @api.response(404, "Unknown Node")
+    @api.expect(show_last_parser)
     def get(self, node_id):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
         result = nodes.getTemperatureHistory(node_id)  # type: ignore
-        show_last = request.args.get("showLast")
+        args = show_last_parser.parse_args()
+        show_last = args.get("showLast")
         if show_last is not None and show_last:
             try:
                 result = result[-int(show_last):]
@@ -302,8 +310,10 @@ class AdditionalProperties(Resource):
 class AllProperties(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Node")
+    @api.expect(show_last_parser)
     def get(self, node_id):
-        show_last = request.args.get("showLast")
+        args = show_last_parser.parse_args()
+        show_last = args.get("showLast")
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
@@ -366,10 +376,6 @@ class OutgoingConnections(Resource):
             return UNKNOWN_NODE_RESPONSE
 
         return nodes.getOutgoingConnections(node_id)
-
-
-modifier_parser = authorization_parser.copy()
-modifier_parser.add_argument("modifier_name", location = "json", required = True)
 
 
 @node_namespace.route("/<string:node_id>/modifiers/")
