@@ -327,19 +327,21 @@
 
         "science_scanner":
         {
-            "type": "MultiResourceDestroyer",
+            "type": "Scanner",
             "resources_required": {"data": 5, "energy":  1},
-            "label": "Science Scanner"
+            "label": "Science Scanner",
+            "custom_description": "This state of the art scanner allows for various types of scans to be done on samples. It is powered by a rudimentary AI that is able to suggest courses of action based on the scanning results. "
         },
         "med_scanner":
         {
-            "type": "MultiResourceDestroyer",
+            "type": "Scanner",
             "resources_required": {"data": 5, "energy":  1},
-            "label": "MedScanner"
+            "label": "Med Scanner",
+            "custom_description": "The scanner located in the medical bay. It allows doctors to quickly figure out what is going on with a patient without resorting to invasive procedures."
         },
         "health_scanner":
         {
-            "type": "MultiResourceDestroyer",
+            "type": "Scanner",
             "resources_required": {"animal_waste": 5, "energy":  2},
             "label": "Health Scanner",
             "min_performance": 0,
