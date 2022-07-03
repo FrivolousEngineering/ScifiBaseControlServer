@@ -152,11 +152,13 @@ class Server(Flask):
             # We couldn't find the server on the other side. No need to log it more
             self._nodes = None
             return Response('{"message": "The engine cant be found. Ensure that its running before trying again"}',
-                            status = 503)
+                            status = 503,
+                            mimetype="application/json")
         else:
             self.logger.warning("An exception occurred %s" % str(exception))
         return Response('{"message": "An exception ocurred: ' + str(exception) + '"}',
-                        status=500)
+                        status=500,
+                        mimetype="application/json")
 
     def _handleTickUpdate(self) -> None:
         try:
@@ -166,7 +168,7 @@ class Server(Flask):
 
                 if modifier.name not in modifier_names:
                     getDBSession().delete(modifier)  # type: ignore
-            getDBSession().commit() # type: ignore
+            getDBSession().commit()  # type: ignore
 
         except Exception as e:
             print(e)

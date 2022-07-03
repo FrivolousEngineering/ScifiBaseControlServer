@@ -8,14 +8,14 @@ from Server.models import User
 from flask import Response, request, current_app
 from Server.Server import Server
 
-User_namespace = Namespace("User", description = "TODO")
+User_namespace = Namespace("User", description = "Management for all users in this system")
 
 
 # Workaround so that mypy understands that the app is of type "Server" and not "Flask"
 app = cast(Server, current_app)
 
-UNKNOWN_USER_RESPONSE = Response('{"message": "Unknown User"}', status=404, mimetype='application/json')
-USER_ADDED = Response('{"message": "User Added"}', status=201, mimetype='application/json')
+UNKNOWN_USER_RESPONSE = Response('{"message": "Unknown User"}', status = 404, mimetype = 'application/json')
+USER_ADDED = Response('{"message": "User Added"}', status = 201, mimetype = 'application/json')
 
 modifier = api.model("modifier", {
     "name": fields.String(description = "Name of the modifier that is placed"),
