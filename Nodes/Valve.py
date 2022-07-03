@@ -41,7 +41,7 @@ class Valve(ResourceStorage):
         """
         If there were resources left over, we should request less resources next time round.
         """
-        new_amount_required = self._fluid_per_tick * self._performance
+        new_amount_required = self._fluid_per_tick * self._performance * self.effectiveness_factor
         storage_room_left = cast(float, self._max_storage) - self._amount
         if storage_room_left < new_amount_required:
             new_amount_required = storage_room_left
@@ -52,7 +52,7 @@ class Valve(ResourceStorage):
         super()._setPerformance(new_performance)
 
         # HACK: Make it a bit bigger than it should be. This prevents weird fluctuations if you put two valves in a row.
-        self._max_storage = 2.5 * self._performance * self._fluid_per_tick
+        self._max_storage = 2.5 * self._performance * self._fluid_per_tick * self.effectiveness_factor
 
     def preGiveResource(self, resource_type: str, amount: float) -> float:
         if resource_type != self._resource_type:
@@ -70,6 +70,8 @@ class Valve(ResourceStorage):
         return amount
 
     def update(self, sub_tick_modifier: float = 1) -> None:
+        # HACK: Make it a bit bigger than it should be. This prevents weird fluctuations if you put two valves in a row.
+        self._max_storage = 2.5 * self._performance * self._fluid_per_tick * self.effectiveness_factor
         # First, we store the resources other nodes *gave* us (these are already added!)
         #resource_already_added = self._resources_received_this_tick.get(self._resource_type, 0)
 
@@ -79,7 +81,7 @@ class Valve(ResourceStorage):
 
         # Now we can figure out how much we really have right now.
         self._amount = self._amount + resource_available
-        resources_to_distribute = min(self._fluid_per_tick * self.performance * sub_tick_modifier, self._amount)
+        resources_to_distribute = min(self._fluid_per_tick * self.performance * sub_tick_modifier * self.effectiveness_factor, self._amount)
         resources_left = self._amount - resources_to_distribute
 
         # Then we try to give as much away as possible.

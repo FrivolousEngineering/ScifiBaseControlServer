@@ -1,4 +1,5 @@
-from unittest.mock import MagicMock
+from unittest import mock
+from unittest.mock import MagicMock, PropertyMock
 
 from Nodes import Valve
 
@@ -48,3 +49,15 @@ def test_preGiveResource_largeAmount_partiallyFilled():
     valve = Valve.Valve("omg", "fuel", 10)
     valve.giveResource("fuel", 10)
     assert valve.preGiveResource("fuel", 200) == 15
+
+
+def test_lowEffectivenessFactor():
+    normal_valve = Valve.Valve("zomg", "fuel", 10)
+    normal_valve.ensureSaneValues()
+
+    with mock.patch("Nodes.Valve.Valve.effectiveness_factor",  new_callable=PropertyMock, return_value = 0.5):
+        damaged_valve = Valve.Valve("omg", "fuel", 10)
+        damaged_valve.ensureSaneValues()
+
+        assert  0.5 * normal_valve.max_amount_stored == damaged_valve.max_amount_stored
+
