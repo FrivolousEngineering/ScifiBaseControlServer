@@ -11,8 +11,10 @@ class Lights(ResourceDestroyer):
         :param amount: How much power do the lights need per tick?
         :param kwargs:
         """
+        del kwargs["resource_type"]
         defaults = {}
         defaults.update(kwargs)
+
         super().__init__(node_id, resource_type = "energy", amount = amount, **defaults)
 
         self._description = "A set of lights that ensure that an area can be worked in. If not enough energy is " \
