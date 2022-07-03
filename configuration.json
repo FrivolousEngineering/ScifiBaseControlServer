@@ -313,14 +313,16 @@
             "type": "Lights",
             "resource_type": "energy",
             "amount": 2,
-            "label": "MedBay Lights"
+            "label": "MedBay Lights",
+            "custom_description": "This system includes all the lights near the MedBay."
         },
         "lights_science":
         {
             "type": "Lights",
             "resource_type": "energy",
             "amount": 3,
-            "label": "ScienceBay Lights"
+            "label": "ScienceBay Lights",
+            "custom_description": "This system includes all the lights near the ScienceBay."
         },
 
         "science_scanner":

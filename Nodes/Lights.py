@@ -18,4 +18,6 @@ class Lights(ResourceDestroyer):
         self._description = "A set of lights that ensure that an area can be worked in. If not enough energy is " \
                             "provided, the lights will jump to 'backup' power mode. It's still possible to work when" \
                             "this mode is activated, but it will be with decreased efficiency. Working in poor " \
-                            "lighting conditions is not recommended for longer periods of time."
+                            "lighting conditions is not recommended for longer periods of time." \
+                            "It should also be noted that if too little power is provided, the power it does get " \
+                            "is lost!"
