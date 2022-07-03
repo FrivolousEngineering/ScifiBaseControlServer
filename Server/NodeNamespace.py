@@ -369,7 +369,7 @@ class OutgoingConnections(Resource):
 
 
 modifier_parser = authorization_parser.copy()
-modifier_parser.add_argument("modifier_name", location = "json")
+modifier_parser.add_argument("modifier_name", location = "json", required = True)
 
 
 @node_namespace.route("/<string:node_id>/modifiers/")
@@ -407,6 +407,9 @@ class Modifiers(Resource):
             data = json.loads(request.data)
         except:
             return Response("Unable to format the provided data!", status = 400, mimetype='application/json')
+
+        if "modifier_name" not in data:
+            return Response('{"message": "modifier name must be set}"', status = 400, mimetype='application/json')
 
         # Engineering level defines how much modifiers you can place
         if access_card.user.engineering_level <= len(access_card.user.modifiers):

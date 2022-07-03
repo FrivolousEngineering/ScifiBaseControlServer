@@ -60,6 +60,7 @@ class RFID(Resource):
     @api.response(201, "Card was added to the database")
     @api.response(409, "Card already exists, unable to add it again")
     @api.response(404, "User not found")
+    @api.response(400, "Bad request")
     @api.expect(user_parser)
     def post(self, card_id):
         access_card = AccessCard.query.filter_by(id=card_id).first()
