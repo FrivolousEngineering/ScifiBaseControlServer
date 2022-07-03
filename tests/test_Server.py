@@ -38,6 +38,7 @@ def app():
     mocked_dbus.getActiveModifiers= MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="modifiers"))
     mocked_dbus.getSurfaceArea = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="surface_area"))
     mocked_dbus.getDescription = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="description"))
+    mocked_dbus.getCustomDescription = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="custom_description"))
     mocked_dbus.getLabel = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name = "label"))
     mocked_dbus.getTemperatureHistory = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="temperature_history"))
     mocked_dbus.getAdditionalProperties = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="additional_properties"))
@@ -55,7 +56,7 @@ def app():
     mocked_dbus.getTargetPerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="target_performance"))
     mocked_dbus.hasSettablePerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="has_settable_performance"))
     mocked_dbus.getSupportedModifiers = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="supported_modifiers"))
-    print("OMGZOMG")
+
     admin_user = User('admin')
     card_one = AccessCard("123")
     admin_user.access_cards.append(card_one)
@@ -74,11 +75,12 @@ def app():
 def test_getStaticProperties(client):
     with patch.dict(default_property_dict, {"surface_area": 20,
                                             "description": 300,
+                                            "custom_description": "omg",
                                             "has_settable_performance": False,
                                             "supported_modifiers": ["whoop"],
                                             "label": "test"}):
         response = client.get("/node/default/static_properties/")
-    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "has_settable_performance": false, "supported_modifiers": ["whoop"], "label": "test"}'
+    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "custom_description": "omg", "has_settable_performance": false, "supported_modifiers": ["whoop"], "label": "test"}'
 
 
 def test_getModifiers(client):
