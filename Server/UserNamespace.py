@@ -94,8 +94,10 @@ class UserResource(Resource):
                             status=409,
                             mimetype='application/json')
         args = user_parser.parse_args()
-
-        new_user = User(user_id, args.get("engineering_level", 0))
+        engineering_level = args.get("engineering_level", 0)
+        if engineering_level > 100:
+            engineering_level = 100
+        new_user = User(user_id, engineering_level)
         db_session = getDBSession()
         db_session.add(new_user)
         db_session.commit()
@@ -111,7 +113,10 @@ class UserResource(Resource):
             return UNKNOWN_USER_RESPONSE
 
         args = user_parser.parse_args()
-        user.engineering_level = args.get("engineering_level")
+        engineering_level = args.get("engineering_level", 0)
+        if engineering_level > 100:
+            engineering_level = 100
+        user.engineering_level = engineering_level
         getDBSession().commit()
         return USER_UPDATE_SUCCEEDED
 
