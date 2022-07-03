@@ -61,14 +61,15 @@ user_parser = api.parser()
 user_parser.add_argument('engineering_level',
                          type = int,
                          help = 'The engineering level of the user. This is 0 by default',
-                         location = 'form')
+                         location = 'form',
+                         default = 0)
 
 user_parser_put = user_parser.copy()
 user_parser_put.replace_argument('engineering_level',
-                            type = int,
-                            help = 'The engineering level of the user. This is 0 by default',
-                            location = 'form',
-                            required = True)
+                                type = int,
+                                help = 'The engineering level of the user. This is 0 by default',
+                                location = 'form',
+                                required = True)
 
 
 @User_namespace.route("/<string:user_id>/")
