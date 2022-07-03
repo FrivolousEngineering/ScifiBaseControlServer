@@ -18,7 +18,6 @@ class ResourceDestroyer(Node):
         super().__init__(node_id, **defaults)
         self._resources_required_per_tick[resource_type.lower()] = amount
 
-
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
 

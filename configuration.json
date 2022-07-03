@@ -310,14 +310,14 @@
 
         "lights_med":
         {
-            "type": "ResourceDestroyer",
+            "type": "Lights",
             "resource_type": "energy",
             "amount": 2,
             "label": "MedBay Lights"
         },
         "lights_science":
         {
-            "type": "ResourceDestroyer",
+            "type": "Lights",
             "resource_type": "energy",
             "amount": 3,
             "label": "ScienceBay Lights"
