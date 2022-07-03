@@ -69,7 +69,8 @@ class RFID(Resource):
                             status=409,
                             mimetype='application/json')
 
-        user = User.query.filter_by(id = request.form["user_name"]).first()
+        args = user_parser.parse_args()
+        user = User.query.filter_by(id = args["user_name"]).first()
         if not user:
             return UNKNOWN_USER
 
@@ -86,7 +87,8 @@ class RFID(Resource):
         access_card = AccessCard.query.filter_by(id=card_id).first()
         if not access_card:
             return UNKNOWN_CARD_RESPONSE
-        user = User.query.filter_by(id=request.form["user_name"]).first()
+        args = user_parser.parse_args()
+        user = User.query.filter_by(id = args["user_name"]).first()
         if not user:
             return UNKNOWN_USER
 
