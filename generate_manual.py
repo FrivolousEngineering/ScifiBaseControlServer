@@ -2,12 +2,9 @@ import json
 
 from pylatex import Document, Package
 
-from Nodes.Generator import Generator
-from Nodes.HydroponicsBay import HydroponicsBay
+
 from Nodes.LaTeXGenerator import LaTeXGenerator
-from Nodes.Node import Node
 from Nodes.NodeEngine import NodeEngine
-from Nodes.ResourceStorage import ResourceStorage
 
 doc = Document('basic')
 doc.packages.append(Package('float'))
@@ -24,4 +21,4 @@ for node in engine.getAllNodes().values():
 
 generator.fillDocument(doc)
 
-doc.generate_pdf("manual", clean_tex=False)
+doc.generate_pdf("manual", clean_tex = False)
