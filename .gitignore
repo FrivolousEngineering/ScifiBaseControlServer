@@ -108,5 +108,9 @@ venv.bak/
 # Test stuff
 test.db
 
+# Generated documents
+ScifiControlServer.db 
+
+
 # pycharm stuff
 .idea/
