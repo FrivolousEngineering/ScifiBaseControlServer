@@ -28,17 +28,34 @@ user_parser.add_argument('user_name',
                          required = True)
 
 
+access_card_model = api.model("access_card", {
+    "id": fields.String(description = "Unique identifier of RFID card",
+                             example = "some hex",
+                             readonly = True),
+    "user_name": fields.String(description = "Name of the user the card is attached to",
+                             example = "admin")
+})
+
+
+@RFID_namespace.route("/")
+@RFID_namespace.doc(description ="List all RFID cards in the database")
+class AllCards(Resource):
+    @api.response(200, "Success", fields.List(fields.Nested(access_card_model)))
+    def get(self):
+        return [{"id": card.id, "user_name": card.user.id} for card in AccessCard.query.all()]
+
+
 @RFID_namespace.route("/<string:card_id>/")
-@RFID_namespace.doc(description ="Get RFID card data")
+@RFID_namespace.doc(description ="Influence a single RFID card")
 class RFID(Resource):
-    @api.response(200, "Success")
+    @api.response(200, "Success", access_card_model)
     @api.response(404, "Unknown Card")
     def get(self, card_id):
         access_card = AccessCard.query.filter_by(id = card_id).first()
         if not access_card:
             return UNKNOWN_CARD_RESPONSE
         else:
-            return {"user_name": access_card.user.id}
+            return {"id": access_card.id, "user_name": access_card.user.id}
 
     @api.response(201, "Card was added to the database")
     @api.response(409, "Card already exists, unable to add it again")
