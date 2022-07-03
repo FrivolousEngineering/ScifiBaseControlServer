@@ -8,7 +8,7 @@ from Server.models import User
 from flask import Response, request, current_app
 from Server.Server import Server
 
-User_namespace = Namespace("User", description = "Management for all users in this system")
+User_namespace = Namespace("user", description = "Management for all users in this system")
 
 
 # Workaround so that mypy understands that the app is of type "Server" and not "Flask"

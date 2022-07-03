@@ -7,19 +7,57 @@ th {
     padding-right: 20px;
 }
 
+.table-grid {
+  border-collapse: collapse;
+}
+
+.table-grid>tbody>tr>th {
+  padding: 0;
+}
+
+.table-grid>thead>tr>th,
+.table-grid>tbody>tr>th,
+.table-grid>tfoot>tr>th,
+.table-grid>thead>tr>td,
+.table-grid>tbody>tr>td,
+.table-grid>tfoot>tr>td {
+  border: 1px solid;
+}
+
+.table-grid td{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.table-grid .table-grid td,
+.table-grid .table-grid th {
+  border-top: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.table-grid .table-grid td:last-child,
+.table-grid .table-grid th:last-child {
+  border-right: 0;
+}
+
+
 </style>
 
 <h1>User management</h1>
 <h2>Current users</h2>
-<table id = "records_table">
+<table id = "records_table" class = "table-grid">
     <thead>
         <tr>
             <th>Name</th>
+            <th>Engineering level</th>
         </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
+
+<div id="message"></div>
 
 <h2>Add users</h2>
 
@@ -30,34 +68,78 @@ th {
   <input id="name" name="name"><br>
   <label for="email">Email:</label>
   <input id="email" name="email"><br>
-  
+
   <p>User capabilities:</p>
   <input type="checkbox" id="see_users" class="capability"  name="see_users">
   <label for="see_users">See users</label><br>
-  
+
   <input type="submit" value="Create user">
 </form>
 
 <script>
+    $(document).on("submit", "form", function(event)
+    {
+        event.preventDefault();
+
+        var url=$(this).attr("action");
+        $.ajax({
+            url: url,
+            type: $(this).attr("method"),
+            dataType: "JSON",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            beforeSend: function()
+            {
+                $("#message").html("sending...");
+            },
+            success: function(data)
+            {
+                $("#message").html("");
+                updateAll()
+            },
+            error: function (xhr, description, error)
+            {
+                $("#message").html(xhr.responseText);
+                $([document.documentElement, document.body]).animate({scrollTop: $("#message").offset().top}, 500);
+            }
+        });
+    });
 
     function updateAllUsers()
     {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        url = "/users/?accessCardID=".concat(urlParams.get("accessCardID"));
+        url = "/user/";
         $.get(url, function(data) {
             updateTable(data);
         });
     }
-
-
+    
     function updateTable(response) {
         // Clear the old data.
         $('#records_table tbody').empty();
         // Parse all the entries.
         $.each(response, function (i, item) {
+
+            var form = $("<form/>", {
+                action: "/user/" + item.id + "/",
+                method: "put"
+            });
+            form.append($("<input>", {
+                type: "text",
+                value: item.engineering_level,
+                id: "engineering_level",
+                name: "engineering_level"
+            }));
+            form.append($("<input>", {
+                type: "submit",
+                value: "update"
+            }));
+
             $('<tr>').append(
-                $('<td>').append(item),
+                $('<td>').text(item.id),
+                $('<td>').append(form)
             ).appendTo('#records_table');
         });
     }
@@ -87,10 +169,10 @@ th {
           capabilities += "ability=" + el.name;
         }
       });
-    
+
       XHR.open( "POST", "RFID/update/" + card + "/?name=" + name + "&email=" + email + capabilities);
       XHR.send( FD );
-    } 
+    }
 
     updateAllUsers();
 
