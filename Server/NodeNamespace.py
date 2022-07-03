@@ -7,7 +7,7 @@ from flask_restx import Resource, fields, Namespace
 from Nodes.Constants import SPECIFIC_HEAT
 from Nodes.NodesDBusService import NodesDBusService
 from Server.Server import Server
-from Server.Database import db_session
+from Server.Database import getDBSession
 from Server.Blueprint import api
 
 from Server.models import AccessCard, Modifier
@@ -428,12 +428,12 @@ class Modifiers(Resource):
         modifier = Modifier.query.filter_by(name = data["modifier_name"], node_id = node_id).first()
         if modifier:
             # Another user (or the same) already had this active. Remove it!
-            db_session.delete(modifier)
+            getDBSession().delete(modifier)
 
         # Add the modifier to the database!
         modifier = Modifier(data["modifier_name"], node_id)
         access_card.user.modifiers.append(modifier)
-        db_session.commit()
+        getDBSession().commit()
         return nodes.getActiveModifiers(node_id)
 
 
