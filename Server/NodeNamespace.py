@@ -230,7 +230,7 @@ class TargetPerformance(Resource):
 
 
 @node_namespace.route("/<string:node_id>/temperature/history/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'}, description = "Get the history of the node in deg Kelvin")
 class TemperatureHistory(Resource):
     @api.response(200, "success", fields.List(fields.Float))
     @api.response(404, "Unknown Node")
@@ -308,6 +308,7 @@ class AdditionalProperties(Resource):
 
 
 @node_namespace.route("/<string:node_id>/all_property_chart_data/")
+@node_namespace.doc(description = "Get historical data for all prpoerties that can have a history")
 class AllProperties(Resource):
     @api.response(200, "success")
     @api.response(404, "Unknown Node")
@@ -448,7 +449,7 @@ class Modifiers(Resource):
 
 
 @node_namespace.route("/<string:node_id>/static_properties/")
-@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+@node_namespace.doc(params={'node_id': 'Identifier of the node'}, description = "These are all the properties of the given node that can never change once a run has started.")
 class StaticProperties(Resource):
     @api.response(404, "Unknown Node")
     @api.response(200, "Success", static_properties)
