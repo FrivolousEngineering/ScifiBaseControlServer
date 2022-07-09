@@ -14,6 +14,7 @@ default_property_dict = {}
 
 known_ids = []
 
+
 def getNodeAttribute(*args, **kwargs):
     if args[0] == "default":
         return default_property_dict.get(kwargs["attribute_name"])
@@ -40,6 +41,7 @@ def app():
     mocked_dbus.getDescription = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="description"))
     mocked_dbus.getCustomDescription = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="custom_description"))
     mocked_dbus.getLabel = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name = "label"))
+    mocked_dbus.getNodeType = MagicMock(side_effect = lambda r: getNodeAttribute(r, attribute_name="node_type"))
     mocked_dbus.getTemperatureHistory = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="temperature_history"))
     mocked_dbus.getAdditionalProperties = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="additional_properties"))
     mocked_dbus.getMaxAdditionalPropertyValue = MagicMock(side_effect=lambda r, s: getNodeAttribute(r, attribute_name="additional_property_max")[s])
@@ -72,15 +74,17 @@ def app():
     db_session.commit()
     yield app
 
+
 def test_getStaticProperties(client):
     with patch.dict(default_property_dict, {"surface_area": 20,
                                             "description": 300,
                                             "custom_description": "omg",
                                             "has_settable_performance": False,
                                             "supported_modifiers": ["whoop"],
-                                            "label": "test"}):
+                                            "label": "test",
+                                            "node_type": "SomeNodeType"}):
         response = client.get("/node/default/static_properties/")
-    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "custom_description": "omg", "has_settable_performance": false, "supported_modifiers": ["whoop"], "label": "test"}'
+    assert response.data.strip() == b'{"surface_area": 20, "description": 300, "custom_description": "omg", "has_settable_performance": false, "supported_modifiers": ["whoop"], "label": "test", "node_type": "SomeNodeType"}'
 
 
 def test_getModifiers(client):

@@ -463,6 +463,7 @@ class StaticProperties(Resource):
         data["has_settable_performance"] = bool(nodes.hasSettablePerformance(node_id))
         data["supported_modifiers"] = nodes.getSupportedModifiers(node_id)
         data["label"] = nodes.getLabel(node_id)
+        data["node_type"] = nodes.getNodeType(node_id)
         return data
 
 
