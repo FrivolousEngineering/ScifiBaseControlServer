@@ -68,6 +68,7 @@ node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
                              example = "generator",
                              readonly = True),
+    "node_type": fields.String(description = "The type of the Node", example = "Generator", readonly = True),
     "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin",
                                 example = 273.3),
     "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance",
@@ -518,6 +519,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
         resources_produced.append({"resource_type": key, "value": value})
 
     data = {"node_id": node_id,
+            "node_type": nodes.getNodeType(node_id),
             "temperature": nodes.getTemperature(node_id),
             "enabled": nodes.isNodeEnabled(node_id),
             "active": nodes.isNodeActive(node_id),

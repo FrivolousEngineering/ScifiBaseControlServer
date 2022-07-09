@@ -243,6 +243,14 @@ class NodesDBusService(dbus.service.Object):
             return False
         return node.enabled
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="s", out_signature="s")
+    def getNodeType(self, node_id: str) -> str:
+        node = self._node_engine.getNodeById(node_id)
+        if not node:
+            return ""
+        return type(node).__name__
+
+
     @dbus.service.method("com.frivengi.nodes", in_signature="sb")
     def setNodeEnabled(self, node_id: str, enabled: bool):
         node = self._node_engine.getNodeById(node_id)

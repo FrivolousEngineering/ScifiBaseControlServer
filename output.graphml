@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
-  <!--Created by yEd 3.21.1-->
+  <!--Created by yEd 3.22-->
   <key for="port" id="d0" yfiles.type="portgraphics"/>
   <key for="port" id="d1" yfiles.type="portgeometry"/>
   <key for="port" id="d2" yfiles.type="portuserdata"/>
@@ -364,7 +364,7 @@
       <data key="d4"/>
       <data key="d5">
         <y:ShapeNode>
-          <y:Geometry height="180.0" width="140.0" x="573.2932982365592" y="358.33646107526886"/>
+          <y:Geometry height="180.0" width="140.0" x="2130.0" y="435.0"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="57.96875" horizontalTextPosition="center" iconData="9" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="84.0" x="28.0" xml:space="preserve" y="61.015625">solar_panel</y:NodeLabel>
@@ -1191,10 +1191,7 @@
       <data key="d8"/>
       <data key="d9">
         <y:PolyLineEdge>
-          <y:Path sx="-70.0" sy="0.0" tx="70.0" ty="0.0">
-            <y:Point x="547.9127569892468" y="448.33646107526886"/>
-            <y:Point x="547.9127569892468" y="525.0"/>
-          </y:Path>
+          <y:Path sx="-70.0" sy="0.0" tx="70.0" ty="0.0"/>
           <y:LineStyle color="#FFFF00" type="line" width="1.0"/>
           <y:Arrows source="none" target="none"/>
           <y:BendStyle smoothed="false"/>
