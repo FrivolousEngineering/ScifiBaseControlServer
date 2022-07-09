@@ -91,6 +91,7 @@ node = api.model("node", {
     "resources_required": fields.List(fields.Nested(resource_amount)),
     "resources_received": fields.List(fields.Nested(resource_amount)),
     "resources_produced": fields.List(fields.Nested(resource_amount)),
+    "resources_provided": fields.List(fields.Nested(resource_amount)),
     "optional_resources_required": fields.List(fields.Nested(resource_amount)),
     "additional_properties": fields.List(fields.Nested(addit_property)),
     "effectiveness_factor": fields.Float(description = "How well is this node performing? This factor can be influenced by it's health and the temperature of the node"),
@@ -520,6 +521,10 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
     for key, value in nodes.getResourcesProduced(node_id).items():
         resources_produced.append({"resource_type": key, "value": value})
 
+    resources_provided = []
+    for key, value in nodes.getResourcesProvided(node_id).items():
+        resources_provided.append({"resource_type": key, "value": value})
+
     data = {"node_id": node_id,
             "node_type": nodes.getNodeType(node_id),
             "temperature": nodes.getTemperature(node_id),
@@ -539,6 +544,7 @@ def getNodeData(node_id: str) -> Optional[Dict[str, Any]]:
             "optional_resources_required": optional_required_resources,
             "resources_received": received_resources,
             "resources_produced": resources_produced,
+            "resources_provided": resources_provided,
             "additional_properties": getAdditionalPropertiesForNode(node_id),
             "effectiveness_factor": nodes.getEffectivenessFactor(node_id),
             "label": nodes.getLabel(node_id)
