@@ -29,7 +29,8 @@ class HydroponicsBay(Node):
 
         self._description = "The hydroponics bay grows plants and creates oxygen. It needs animal waste to fertilize " \
                             "the plants and a small amount of water is consumed to grow the plants. Most of the water" \
-                            "it accepts is used to regulate the temperature. "
+                            "it accepts is used to regulate the temperature." \
+                            "Every kg of plant mass will produce 375 liter of Oxygen"
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._tags.append("plant")
@@ -52,13 +53,14 @@ class HydroponicsBay(Node):
         self._resources_left_over["water"] = water_available - oxygen_produced
         self._resources_left_over["energy"] = energy_available - oxygen_produced
         oxygen_produced *= self.effectiveness_factor
+        oxygen_produced *= 375
 
         self._resources_produced_this_tick["oxygen"] += oxygen_produced
 
         oxygen_left = self._provideResourceToOutgoingConnections("oxygen", oxygen_produced)
 
-        self._resources_left_over["water"] += oxygen_left * self.inverted_effectiveness_factor
-        self._resources_left_over["energy"] += oxygen_left * self.inverted_effectiveness_factor
+        self._resources_left_over["water"] += oxygen_left * self.inverted_effectiveness_factor / 375
+        self._resources_left_over["energy"] += oxygen_left * self.inverted_effectiveness_factor / 375
 
         oxygen_provided = enforcePositive(oxygen_produced - oxygen_left)
 
@@ -73,7 +75,7 @@ class HydroponicsBay(Node):
         # All the animal_waste we get is consumed (also makes it a bit more simple...)
         # Getting enough waste means that it produces twice as much. Boom.
         # TODO: Hacked this in for a bit.
-        plants_produced = oxygen_produced * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
+        plants_produced = (oxygen_produced / 375) * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 
         # Some water was destroyed:
         amount_of_water_used_this_tick = self._resources_received_this_sub_tick.get("water",
