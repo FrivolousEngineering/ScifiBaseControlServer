@@ -29,7 +29,8 @@ user_model = api.model("node", {
                              readonly = True),
     "access_cards": fields.List(fields.String(description = "unique key of the access card")),
     "active_modifiers": fields.List(fields.Nested(modifier)),
-    "engineering_level": fields.Integer(description = "The engineering level of this user. This is 0 by default")
+    "engineering_level": fields.Integer(description = "The engineering level of this user. This is 0 by default"),
+    "faction": fields.String(description = "The faction that the user belongs to", enum = ["Deimian", "Rhean", "Keplian"])
     })
 
 
@@ -42,7 +43,8 @@ def createUserModel(user):
                     "node_id": modifier.node_id
                 } for modifier in user.modifiers
             ],
-            "engineering_level": user.engineering_level
+            "engineering_level": user.engineering_level,
+            "faction": user.faction
             }
 
 
@@ -63,6 +65,11 @@ user_parser.add_argument('engineering_level',
                          help = 'The engineering level of the user. This is 0 by default',
                          location = 'form',
                          default = 0)
+user_parser.add_argument("faction",
+                         type = str,
+                         help = "What faction does the user belong to?",
+                         location = "form",
+                         choices = ("Deimian", "Rhean", "Keplian"))
 
 user_parser_put = user_parser.copy()
 user_parser_put.replace_argument('engineering_level',
@@ -70,6 +77,7 @@ user_parser_put.replace_argument('engineering_level',
                                 help = 'The engineering level of the user. This is 0 by default',
                                 location = 'form',
                                 required = True)
+user_parser_put.remove_argument("faction")
 
 
 @User_namespace.route("/<string:user_id>/")
@@ -99,7 +107,7 @@ class UserResource(Resource):
             engineering_level = 100
         if engineering_level < 0:
             engineering_level = 0
-        new_user = User(user_id, engineering_level)
+        new_user = User(user_id, args["faction"], engineering_level)
         db_session = getDBSession()
         db_session.add(new_user)
         db_session.commit()

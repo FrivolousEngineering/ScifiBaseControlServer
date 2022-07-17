@@ -59,11 +59,11 @@ def app():
     mocked_dbus.hasSettablePerformance = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="has_settable_performance"))
     mocked_dbus.getSupportedModifiers = MagicMock(side_effect=lambda r: getNodeAttribute(r, attribute_name="supported_modifiers"))
 
-    admin_user = User('admin')
+    admin_user = User('admin', "no_faction")
     card_one = AccessCard("123")
     admin_user.access_cards.append(card_one)
 
-    normal_user = User('normal')
+    normal_user = User('normal', "no_faction")
     card_two = AccessCard("234")
     admin_user.access_cards.append(card_two)
 

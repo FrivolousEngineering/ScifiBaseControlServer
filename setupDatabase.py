@@ -5,16 +5,16 @@ from Server.models import User, Ability, AccessCard
 
 createDBSession('sqlite:///ScifiControlServer.db')
 init_db()
-user_one = User('admin_a', engineering_level = 2)
+user_one = User('admin_a', faction = "Deimian", engineering_level = 2)
 card_one = AccessCard("a")
 user_one.access_cards.append(card_one)
 
-user_two = User("admin_b", engineering_level = 1)
+user_two = User("admin_b",  faction = "Rhean", engineering_level = 1)
 card_two = AccessCard("b")
 user_two.access_cards.append(card_two)
 
 
-user_three = User("user")
+user_three = User("user", faction = "Keplian")
 card_three = AccessCard("c")
 user_three.access_cards.append(card_three)
 

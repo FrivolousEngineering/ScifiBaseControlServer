@@ -29,9 +29,11 @@ class User(Base):  # type: ignore
     abilities = relationship("Ability", secondary = user_ability_table, backref = "user")
     access_cards = relationship("AccessCard", back_populates="user")
     modifiers = relationship("Modifier", back_populates="user")
+    faction = Column(String(100)) # What faction does the user belong to?
 
-    def __init__(self, name, engineering_level = 0):
+    def __init__(self, name, faction, engineering_level = 0):
         self.id = name
+        self.faction = faction
         self.engineering_level = engineering_level
 
     def __repr__(self):
