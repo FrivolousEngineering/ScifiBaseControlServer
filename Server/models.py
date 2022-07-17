@@ -67,3 +67,13 @@ class Ability(Base):  # type: ignore
         return self.name
 
 
+class PerformanceChange(Base):  # type: ignore
+    __tablename__ = "performance_change"
+
+    id = Column(Integer, primary_key=True)
+    node_id = Column(String(100))
+
+    def __init__(self, node_id, original_performance, target_performance):
+        self.node_id = node
+        self.original_performance = original_performance
+        self.target_performance = target_performance
