@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, Float
 from sqlalchemy.orm import relationship
 from Server.Database import Base
 
@@ -29,7 +29,7 @@ class User(Base):  # type: ignore
     abilities = relationship("Ability", secondary = user_ability_table, backref = "user")
     access_cards = relationship("AccessCard", back_populates="user")
     modifiers = relationship("Modifier", back_populates="user")
-    faction = Column(String(100)) # What faction does the user belong to?
+    faction = Column(String(100))  # What faction does the user belong to?
 
     def __init__(self, name, faction, engineering_level = 0):
         self.id = name
@@ -69,13 +69,20 @@ class Ability(Base):  # type: ignore
         return self.name
 
 
-class PerformanceChange(Base):  # type: ignore
+class PerformanceChangeLog(Base):  # type: ignore
     __tablename__ = "performance_change"
 
     id = Column(Integer, primary_key=True)
     node_id = Column(String(100))
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User")
+    original_target_performance = Column(Float)
+    new_target_performance = Column(Float)
+    tick_number = Column(Integer)
 
-    def __init__(self, node_id, original_performance, target_performance):
-        self.node_id = node
-        self.original_performance = original_performance
-        self.target_performance = target_performance
+    def __init__(self, user, node_id, original_target_performance, new_target_performance, tick_number):
+        self.user = user
+        self.node_id = node_id
+        self.original_target_performance = original_target_performance
+        self.new_target_performance = new_target_performance
+        self.tick_number = tick_number

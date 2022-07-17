@@ -10,7 +10,7 @@ from Server.Server import Server
 from Server.Database import getDBSession
 from Server.Blueprint import api
 
-from Server.models import AccessCard, Modifier
+from Server.models import AccessCard, Modifier, PerformanceChangeLog
 
 import json
 
@@ -194,12 +194,13 @@ class Performance(Resource):
     @api.response(400, "malformed request")
     @api.expect(performance_parser)
     def put(self, node_id):
-        card_id = request.args.get("accessCardID")
+
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
 
         performance_set = False
+        new_performance = 1
         if "performance" in request.form:
             new_performance = request.form["performance"]
             performance_set = True
@@ -213,7 +214,18 @@ class Performance(Resource):
             return Response("Performance must be set", status=400,
                             mimetype='application/json')
 
+        current_target_performance = nodes.getTargetPerformance(node_id)
+        card_id = request.args.get("accessCardID")
+
         nodes.setTargetPerformance(node_id, float(new_performance))
+
+        new_target_performance = nodes.getTargetPerformance(node_id)
+        if card_id:
+            access_card = AccessCard.query.filter_by(id=card_id).first()
+            if access_card:
+                performance_change = PerformanceChangeLog(access_card.user, node_id, current_target_performance, new_target_performance, nodes.getCurrentTick())
+                getDBSession().add(performance_change)
+                getDBSession().commit()
         return nodes.getPerformance(node_id)
 
 
@@ -236,6 +248,7 @@ class TargetPerformance(Resource):
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
+        new_performance = 1
         performance_set = False
         if "performance" in request.form:
             new_performance = request.form["performance"]
@@ -249,7 +262,20 @@ class TargetPerformance(Resource):
         if not performance_set:
             return Response("Performance must be set", status=400,
                             mimetype='application/json')
+
+        current_target_performance = nodes.getTargetPerformance(node_id)
+        card_id = request.args.get("accessCardID")
+
         nodes.setTargetPerformance(node_id, float(new_performance))
+
+        new_target_performance = nodes.getTargetPerformance(node_id)
+        if card_id:
+            access_card = AccessCard.query.filter_by(id=card_id).first()
+            if access_card:
+                performance_change = PerformanceChangeLog(access_card.user, node_id, current_target_performance,
+                                                          new_target_performance, nodes.getCurrentTick())
+                getDBSession().add(performance_change)
+                getDBSession().commit()
         return nodes.getPerformance(node_id)
 
 
