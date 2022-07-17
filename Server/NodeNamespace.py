@@ -102,7 +102,10 @@ node = api.model("node", {
 authorization_parser = api.parser()
 authorization_parser.add_argument("accessCardID", type = str, required = True)
 
-performance_parser = api.parser()
+optional_authorization_parser = api.parser()
+optional_authorization_parser.add_argument("accessCardID", type = str, required = False)
+
+performance_parser = optional_authorization_parser.copy()
 performance_parser.add_argument('performance', type=float, help='New performance', location='form')
 
 
@@ -172,6 +175,7 @@ class Performance(Resource):
     @api.response(400, "malformed request")
     @api.expect(performance_parser)
     def put(self, node_id):
+        card_id = request.args.get("accessCardID")
         nodes = app.getNodeDBusObject()
         if not checkIfNodeExists(nodes, node_id):
             return UNKNOWN_NODE_RESPONSE
