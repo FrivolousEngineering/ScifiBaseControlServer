@@ -69,7 +69,8 @@ user_parser.add_argument("faction",
                          type = str,
                          help = "What faction does the user belong to?",
                          location = "form",
-                         choices = ("Deimian", "Rhean", "Keplian"))
+                         choices = ("Deimian", "Rhean", "Keplian"),
+                         required = True)
 
 user_parser_put = user_parser.copy()
 user_parser_put.replace_argument('engineering_level',
@@ -94,6 +95,7 @@ class UserResource(Resource):
 
     @api.response(409, "User already exists")
     @api.response(201, "User was added to the database")
+    @api.response(400, "Invalid data")
     @api.expect(user_parser)
     def post(self, user_id):
         user = User.query.filter_by(id=user_id).first()
@@ -116,6 +118,7 @@ class UserResource(Resource):
 
     @api.response(404, "Unknown User")
     @api.response(200, "User Updated")
+    @api.response(400, "Invalid data")
     @api.expect(user_parser_put)
     def put(self, user_id):
         user = User.query.filter_by(id=user_id).first()
