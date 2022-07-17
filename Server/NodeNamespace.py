@@ -17,6 +17,27 @@ import json
 # Workaround so that mypy understands that the app is of type "Server" and not "Flask"
 app = cast(Server, current_app)
 
+
+UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested node\"}",
+                                 status=404,
+                                 mimetype='application/json')
+
+UNKNOWN_PROPERTY_RESPONSE = Response("{\"message\": \"Could not find the requested property\"}",
+                                     status=404,
+                                     mimetype='application/json')
+
+CREDENTIALS_REQUIRED_RESPONSE = Response("{\"message\": \"Please provide an accessCardID\"}",
+                                         status=401,
+                                         mimetype='application/json')
+
+UNKNOWN_ACCESS_CARD = Response("{\"message\": \"Access card ID is not recognised.\"}",
+                               status=401,
+                               mimetype='application/json')
+
+INSUFFICIENT_RIGHTS = Response("{\"message\": \"User is not allowed to perform this action.\"}",
+                               status=403,
+                               mimetype='application/json')
+
 node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
 resource_type_field = fields.String(description = "The type of resource for this connection", enum = list(SPECIFIC_HEAT.keys()))
@@ -54,15 +75,6 @@ static_properties = api.model("static_properties",
     "supported_modifiers": fields.List(fields.String)
 })
 
-UNKNOWN_NODE_RESPONSE = Response("{\"message\": \"Could not find the requested node\"}", status=404, mimetype='application/json')
-
-UNKNOWN_PROPERTY_RESPONSE = Response("{\"message\": \"Could not find the requested property\"}", status=404, mimetype='application/json')
-
-CREDENTIALS_REQUIRED_RESPONSE = Response("{\"message\": \"Please provide an accessCardID\"}", status=401, mimetype='application/json')
-
-UNKNOWN_ACCESS_CARD = Response("{\"message\": \"Access card ID is not recognised.\"}", status=401, mimetype='application/json')
-
-INSUFFICIENT_RIGHTS = Response("{\"message\": \"User is not allowed to perform this action.\"}", status=403, mimetype='application/json')
 
 node = api.model("node", {
     "node_id": fields.String(description = "Unique identifier of the node",
