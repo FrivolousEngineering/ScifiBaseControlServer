@@ -9,3 +9,4 @@ class MediumHeatPackModifier(HeatPerTurnModifier):
         self._abbreviation = "MHP"
 
         self._description = "Apply a medium chemical heating pack to add heat to a device."
+        self._required_engineering_level = 2

@@ -9,3 +9,4 @@ class LargeCoolingPackModifier(HeatPerTurnModifier):
         self._abbreviation = "LCP"
 
         self._description = "Apply a large chemical cooling pack to extract heat from a device."
+        self._required_engineering_level = 3
