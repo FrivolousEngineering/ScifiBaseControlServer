@@ -2,7 +2,9 @@ from Nodes.Modifiers.ModifierFactory import ModifierFactory
 from Server.Blueprint import api
 from flask_restx import Resource, Api, apidoc, fields, Namespace, Model
 from flask import current_app as app
-modifier_namespace = Namespace("modifier", description = "Nodes can have modifiers. This API allows checking what the modifiers actually do")
+
+modifier_namespace = Namespace("modifier",
+                               description = "Nodes can have modifiers. This API allows checking what the modifiers actually do")
 
 modifier = api.model("modifier",
 {
@@ -10,6 +12,7 @@ modifier = api.model("modifier",
     "type": fields.String(description = "The not human readable type of the modifier", enum = ModifierFactory._all_known_modifiers),
     "abbreviation": fields.String(description = "Three letter abbreviation of this modifier"),
     "description": fields.String(description = "Some extra information about this modifier"),
+    "required_engineering_level": fields.Integer(description = "The minimum level that an engineer needs to be fore it can place these")
 })
 
 

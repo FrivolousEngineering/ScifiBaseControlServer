@@ -39,6 +39,7 @@ class Modifier:
         self._optional_tags = []  # type: List[str]
 
         self._description = ""
+        self._required_engineering_level = 1
 
     @property
     def description(self) -> str:
@@ -51,6 +52,10 @@ class Modifier:
     @property
     def optional_tags(self) -> List[str]:
         return self._optional_tags
+
+    @property
+    def required_engineering_level(self) -> int:
+        return self._required_engineering_level
 
     def __eq__(self, other) -> bool:
         if type(self) != type(other):

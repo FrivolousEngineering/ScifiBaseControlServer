@@ -18,7 +18,7 @@ UNKNOWN_USER_RESPONSE = Response('{"message": "Unknown User"}', status = 404, mi
 USER_ADDED = Response('{"message": "User Added"}', status = 201, mimetype = 'application/json')
 USER_UPDATE_SUCCEEDED = Response('{"message": "User updated"}', status = 200, mimetype = 'application/json')
 
-modifier = api.model("modifier", {
+modifier = api.model("active_modifier", {
     "name": fields.String(description = "Name of the modifier that is placed"),
     "node_id": fields.String(description = "ID of the node that it's placed on")
 })

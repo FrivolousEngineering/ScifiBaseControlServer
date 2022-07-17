@@ -55,7 +55,10 @@ class ModifierFactory:
         modifier = cls._getModifierByType(modifier_type)
         if not modifier:
             return None
-        return {"name": modifier.name, "type": modifier_type, "description": modifier.description}
+        return {"name": modifier.name,
+                "type": modifier_type,
+                "description": modifier.description,
+                "required_engineering_level": modifier.required_engineering_level}
 
     @classmethod
     def isModifierSupported(cls, node: "Node", modifier: Modifier) -> bool:
