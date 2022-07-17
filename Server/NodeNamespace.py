@@ -34,9 +34,16 @@ UNKNOWN_ACCESS_CARD = Response("{\"message\": \"Access card ID is not recognised
                                status=401,
                                mimetype='application/json')
 
-INSUFFICIENT_RIGHTS = Response("{\"message\": \"User is not allowed to perform this action.\"}",
+NOT_ALLOWED_TO_PLACE_MODIFIER = Response("{\"message\": \"User is not allowed to place this modifier\"}",
+                                         status=403,
+                                         mimetype='application/json')
+
+CANT_PLACE_MORE_MODIFIERS = Response("{\"message\": \"Maximum number of modifiers is reached. Please wait until one or more modifiers have lapsed before trying again\"}",
                                status=403,
                                mimetype='application/json')
+
+UNKNOWN_MODIFIER = Response("Unknown modifier", status = 400, mimetype='application/json')
+
 
 node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
 
@@ -60,7 +67,7 @@ resource_amount = api.model("resource_amount", {
     "value": fields.Float
 })
 
-modifier = api.model("modifier",
+modifier = api.model("modifier_on_node",
 {
     "name": fields.String(description = "Human readable name of the modifier"),
     "duration": fields.Integer(description = "Number of ticks this modifier will remain active"),
@@ -445,11 +452,23 @@ class Modifiers(Resource):
                     is_replace = True
                     break
             if not is_replace:
-                return INSUFFICIENT_RIGHTS
+                return CANT_PLACE_MORE_MODIFIERS
+
+        modifiers = app.getModifierDBusObject()
+        if not modifiers:
+            return Response("{'message': 'Unable to access modifier info. DBUs seems to be broken'}", status = 500, mimetype='application/json')
+
+        modifier_info = modifiers.getModifierInformation( data["modifier_name"])
+        if not modifier_info:
+            return UNKNOWN_MODIFIER
+
+        # Check if user is allowed to place this node
+        if modifier_info.get("required_engineering_level", 0) > access_card.user.engineering_level:
+            return NOT_ALLOWED_TO_PLACE_MODIFIER
 
         successful = nodes.addModifierToNode(node_id, data["modifier_name"])
         if not successful:
-            return Response("Unknown modifier", status = 400, mimetype='application/json')
+            return UNKNOWN_MODIFIER
 
         # Check if it was a modifier that was "replaced". Basically users can place a modifier again to reset the
         # duration. In that case it shouldn't add another item to the DB.

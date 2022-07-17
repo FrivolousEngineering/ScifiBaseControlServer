@@ -23,11 +23,6 @@ class ModifiersDBusService(dbus.service.Object):
             object_path=self._object_path
         )
 
-    @dbus.service.method("com.frivengi.modifiers", in_signature="s", out_signature="b")
-    def test(self, somestring):
-        print(somestring)
-        return True
-
     @dbus.service.method("com.frivengi.modifiers")
     def checkAlive(self) -> None:
         """
