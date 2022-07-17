@@ -24,7 +24,7 @@ with open("configuration.json") as f:
 #engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 
-#engine.doTick()
+engine.doTick()
 
 
 #engine.start()

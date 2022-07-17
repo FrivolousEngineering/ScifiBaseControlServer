@@ -10,7 +10,7 @@ from Server.Server import Server
 from Server.Database import getDBSession
 from Server.Blueprint import api
 
-from Server.models import AccessCard, Modifier, PerformanceChangeLog
+from Server.models import AccessCard, Modifier, PerformanceChangeLog, ModifierChangeLog
 
 import json
 
@@ -42,7 +42,7 @@ CANT_PLACE_MORE_MODIFIERS = Response("{\"message\": \"Maximum number of modifier
                                status=403,
                                mimetype='application/json')
 
-UNKNOWN_MODIFIER = Response("Unknown modifier", status = 400, mimetype='application/json')
+UNKNOWN_MODIFIER = Response("{\"message\":  \"Unknown modifier\"}", status = 400, mimetype='application/json')
 
 
 node_namespace = Namespace("node", description = "Each node is a device in the system. These endpoints allow for individual control of each of them.")
@@ -88,7 +88,7 @@ node = api.model("node", {
                              example = "generator",
                              readonly = True),
     "node_type": fields.String(description = "The type of the Node", example = "Generator", readonly = True),
-    "temperature": fields.Float(description = "Temperature of this node in degrees Kevlin",
+    "temperature": fields.Float(description = "Temperature of this node in degrees Kelvin",
                                 example = 273.3),
     "performance": fields.Float(description = "At what capacity is this node running? The number is a factor and will always be between min_performance and max_performance",
                                 example = 1),
@@ -506,6 +506,7 @@ class Modifiers(Resource):
         # Add the modifier to the database!
         modifier = Modifier(data["modifier_name"], node_id)
         access_card.user.modifiers.append(modifier)
+        getDBSession().add(ModifierChangeLog(access_card.user, node_id, data["modifier_name"], nodes.getCurrentTick()))
         getDBSession().commit()
         return nodes.getActiveModifiers(node_id)
 

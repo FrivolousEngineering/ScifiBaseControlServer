@@ -86,3 +86,20 @@ class PerformanceChangeLog(Base):  # type: ignore
         self.original_target_performance = original_target_performance
         self.new_target_performance = new_target_performance
         self.tick_number = tick_number
+
+
+class ModifierChangeLog(Base):
+    __tablename__ = "modifier_log"
+
+    id = Column(Integer, primary_key=True)
+    node_id = Column(String(100))
+    user_id = Column(Integer, ForeignKey("user.id"))
+    user = relationship("User")
+    modifier_name = Column(String(50))
+    tick_number = Column(Integer)
+
+    def __init__(self, user, node_id, modifier_name, tick_number):
+        self.user = user
+        self.node_id = node_id
+        self.modifier_name = modifier_name
+        self.tick_number = tick_number
