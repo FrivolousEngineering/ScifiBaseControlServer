@@ -11,7 +11,8 @@ class Lights(ResourceDestroyer):
         :param amount: How much power do the lights need per tick?
         :param kwargs:
         """
-        del kwargs["resource_type"]
+        if "resource_type" in kwargs:
+            del kwargs["resource_type"]
         defaults = {}
         defaults.update(kwargs)
 

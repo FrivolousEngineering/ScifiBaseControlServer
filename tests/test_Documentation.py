@@ -17,6 +17,10 @@ from Nodes.PlantPress import PlantPress
 from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Valve import Valve
 from Nodes.WaterPurifier import WaterPurifier
+from Nodes.FluidPump import FluidPump
+from Nodes.Lights import Lights
+from Nodes.Scanner import Scanner
+from Nodes.Toilets import Toilets
 from Server.HardwareController import HardwareController
 from Server.HardwareControllerManager import HardwareControllerManager
 
@@ -44,7 +48,12 @@ objects_to_check_for_documentation = [Node("whatever"),
                                       WaterPurifier("water_purifier"),
                                       EnergyBalancer("energy_balancer"),
                                       HardwareController("something"),
-                                      HardwareControllerManager()]
+                                      HardwareControllerManager(),
+                                      FluidPump("bla", "water"),
+                                      Lights("omg", 19),
+                                      Scanner("fff", {}),
+                                      Toilets("omg")
+                                      ]
 
 
 # In order to get a single test per function, we generate the list here so we can use parametrize later to make sure
