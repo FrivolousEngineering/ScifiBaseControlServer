@@ -41,7 +41,7 @@ info = ServiceInfo(
   "_ScifiBase._tcp.local.",
   "Base-Control-Server._ScifiBase._tcp.local.",
   addresses = [socket.inet_aton(get_ip())],
-  port = 80,
+  port = 5000,
   properties = desc,
   server = "",
 )

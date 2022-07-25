@@ -1,0 +1,86 @@
+{
+    "nodes":
+    {
+        "lights_med":
+        {
+            "type": "Lights",
+            "resource_type": "energy",
+            "amount": 2,
+            "label": "MedBay Lights",
+            "custom_description": "This system includes all the lights near the MedBay."
+        },
+        "lights_science":
+        {
+            "type": "Lights",
+            "resource_type": "energy",
+            "amount": 3,
+            "label": "ScienceBay Lights",
+            "custom_description": "This system includes all the lights near the ScienceBay."
+        },
+
+        "science_scanner":
+        {
+            "type": "Scanner",
+            "resources_required": {"data": 5, "energy":  1},
+            "label": "Science Scanner",
+            "custom_description": "This state of the art scanner allows for various types of scans to be done on samples. It is powered by a rudimentary AI that is able to suggest courses of action based on the scanning results. "
+        },
+        "med_scanner":
+        {
+            "type": "Scanner",
+            "resources_required": {"data": 5, "energy":  1},
+            "label": "Med Scanner",
+            "custom_description": "The scanner located in the medical bay. It allows doctors to quickly figure out what is going on with a patient without resorting to invasive procedures."
+        },
+        "health_scanner":
+        {
+            "type": "Scanner",
+            "resources_required": {"animal_waste": 5, "energy":  2},
+            "label": "Health Scanner",
+            "custom_description": "A device that continuously monitors the sewage produced by the staff members on base. The health data generated this way is automatically shared with the medical scanner, significantly boosting it's effectiveness."
+        },
+        "computer":
+        {
+            "type": "ComputationNode",
+            "label": "Mainframe"
+        },
+        "database":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "data",
+            "amount": 8,
+            "label": "Database"
+        },
+        "battery":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "energy",
+            "amount": 10,
+            "label": "Battery"
+        },
+        "animal_waste_storage":
+        {
+            "type": "ResourceStorage",
+            "resource_type": "animal_waste",
+            "amount": 4,
+            "label": "shit storage"
+        }
+    },
+    "connections":
+    [
+        { "from": "battery", "to": "computer", "resource_type": "energy" },
+        { "from": "battery", "to": "med_scanner", "resource_type": "energy" },
+        { "from": "battery", "to": "science_scanner", "resource_type": "energy" },
+        { "from": "battery", "to": "health_scanner", "resource_type": "energy" },
+        { "from": "battery", "to": "lights_science", "resource_type": "energy" },
+        { "from": "battery", "to": "lights_med", "resource_type": "energy" },
+
+        { "from": "computer", "to": "database", "resource_type": "data" },
+
+        { "from": "database", "to": "med_scanner", "resource_type": "data" },
+        { "from": "database", "to": "science_scanner", "resource_type": "data" },
+
+        { "from": "animal_waste_storage", "to": "health_scanner", "resource_type": "animal_waste" }
+
+    ]
+}
