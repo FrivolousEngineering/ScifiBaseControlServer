@@ -63,4 +63,7 @@ class HardwareController:
 
         # Then notify everyone!
         for key in changed_sensors:
-            self.sensorValueChanged.emit(self._id, key)
+            try:
+                self.sensorValueChanged.emit(self._id, key)
+            except:
+                pass

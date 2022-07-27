@@ -70,8 +70,5 @@ class Controller(Resource):
     @api.expect(api.model('Controller', {'sensor_value': fields.Float}), code=201)
     def put(self, controller_id):
         manager = HardwareControllerManager.getInstance()
-        result = getControllerData(controller_id)
-        if result is None:
-            return UNKNOWN_CONTROLLER_RESPONSE
         manager.updateController(controller_id, json.loads(request.data))
         manager.getController(controller_id).version_string = request.user_agent.string
