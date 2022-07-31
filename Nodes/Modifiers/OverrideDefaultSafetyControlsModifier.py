@@ -7,6 +7,9 @@ class OverrideDefaultSafetyControlsModifier(Modifier):
         self._name = "Override Default Safety"
         self._abbreviation = "ODS"
 
+        self._disallowed_tags.append("scanner")
+        self._disallowed_tags.append("valve")
+
         self._description = "Safety guidelines are just that. Guidelines. In certain situations they just don't make" \
                             " sense. This will allow you to run a device beyond it's advised performance levels"
 

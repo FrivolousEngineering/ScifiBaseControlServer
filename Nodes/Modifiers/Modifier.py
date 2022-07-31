@@ -38,6 +38,8 @@ class Modifier:
 
         self._optional_tags = []  # type: List[str]
 
+        self._disallowed_tags = [] # type: List[str]
+
         self._description = ""
         self._required_engineering_level = 1
 
@@ -48,6 +50,10 @@ class Modifier:
     @property
     def required_tag(self) -> Optional[str]:
         return self._required_tag
+
+    @property
+    def disallowed_tags(self) -> List[str]:
+        return self._disallowed_tags
 
     @property
     def optional_tags(self) -> List[str]:

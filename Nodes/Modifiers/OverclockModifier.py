@@ -10,6 +10,9 @@ class OverclockModifier(Modifier):
         self._optional_tags.append("mechanical")
         self._optional_tags.append("electronic")
 
+        self._disallowed_tags.append("scanner")
+        self._disallowed_tags.append("valve")
+
         self._description = "Sometimes you just have to squeeze every last bit out of a device and damn the" \
                             " concequences. Just note that this also increases the min performance. After all; Once" \
                             " it's picking up steam, it's hard to stop."

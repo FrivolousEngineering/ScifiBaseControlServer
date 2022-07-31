@@ -37,6 +37,8 @@ class Valve(ResourceStorage):
         self._description = self._description.format(resource_type = resource_type)
         self._performance_change_factor = 1
 
+        self._tag.append("valve")
+
     def _updateResourceRequiredPerTick(self) -> None:
         """
         If there were resources left over, we should request less resources next time round.

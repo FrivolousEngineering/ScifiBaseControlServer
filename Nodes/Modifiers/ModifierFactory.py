@@ -65,6 +65,10 @@ class ModifierFactory:
         if modifier.required_tag is not None:
             if modifier.required_tag not in node.tags:
                 return False
+        if modifier.disallowed_tags:
+            for tag in node.tags:
+                if tag in modifier.disallowed_tags:
+                    return False
 
         if modifier.optional_tags:
             optional_tag_matched = False

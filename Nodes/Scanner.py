@@ -24,3 +24,5 @@ class Scanner(MultiResourceDestroyer):
                             "that don't get enough resources will still function but at a significantly diminished " \
                             "capacity. "
 
+        self._tags.append("scanner")
+
