@@ -343,7 +343,7 @@
             "label": "Med Scanner",
             "custom_description": "The scanner located in the medical bay. It allows doctors to quickly figure out what is going on with a patient without resorting to invasive procedures.",
             "min_perfomance": 0.8,
-            "max_performance": 1,
+            "max_performance": 1.2,
             "performance_change_factor": 1
         },
         "health_scanner":
