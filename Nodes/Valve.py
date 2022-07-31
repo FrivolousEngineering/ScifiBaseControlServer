@@ -37,7 +37,7 @@ class Valve(ResourceStorage):
         self._description = self._description.format(resource_type = resource_type)
         self._performance_change_factor = 1
 
-        self._tag.append("valve")
+        self._tags.append("valve")
 
     def _updateResourceRequiredPerTick(self) -> None:
         """
