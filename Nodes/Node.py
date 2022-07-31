@@ -377,6 +377,9 @@ class Node:
             elif self._target_performance > self.max_performance:
                 self._target_performance = self.max_performance
 
+            if self._performance_change_factor == 1:
+                self._performance = self._target_performance
+
     @modifiable_property
     def heat_emissivity(self) -> float:
         return self._heat_emissivity
