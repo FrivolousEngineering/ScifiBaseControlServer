@@ -334,6 +334,7 @@
             "custom_description": "This state of the art scanner allows for various types of scans to be done on samples. It is powered by a rudimentary AI that is able to suggest courses of action based on the scanning results.",
             "min_performance": 0.2,
             "max_performance": 1.5,
+            "performance": 0.2,
             "performance_change_factor": 1
         },
         "med_scanner":
@@ -344,6 +345,7 @@
             "custom_description": "The scanner located in the medical bay. It allows doctors to quickly figure out what is going on with a patient without resorting to invasive procedures.",
             "min_perfomance": 0.8,
             "max_performance": 1.2,
+            "performance": 0.8,
             "performance_change_factor": 1
         },
         "health_scanner":
