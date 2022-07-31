@@ -216,9 +216,7 @@ class Performance(Resource):
 
         current_target_performance = nodes.getTargetPerformance(node_id)
         card_id = request.args.get("accessCardID")
-
         nodes.setTargetPerformance(node_id, float(new_performance))
-
         new_target_performance = nodes.getTargetPerformance(node_id)
         if card_id:
             access_card = AccessCard.query.filter_by(id=card_id).first()
