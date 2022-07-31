@@ -11,7 +11,7 @@ class Scanner(MultiResourceDestroyer):
     def __init__(self, node_id: str, resources_required: Dict[str, float], **kwargs) -> None:
         """
         :param node_id: Unique identifier of the node
-        :param resources_required: What resources should it user per tick?
+        :param resources_required: What resources should it use per tick?
         :param kwargs:
         """
         defaults = {}
