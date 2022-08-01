@@ -236,8 +236,6 @@
             "label": "Battery B"
         },
 
-
-
         "plant_press_battery":
         {
             "type": "ResourceStorage",
@@ -313,6 +311,15 @@
             "min_performance": 0,
             "performance": 0,
             "target_performance": 0
+        },
+
+        "energy_balancer_to_support":
+        {
+            "type": "EnergyBalancer",
+            "label": "Load Balancer B",
+            "min_performance": 0,
+            "performance": 0.5,
+            "target_performance": 0.5
         },
         "support_battery":
         {
@@ -522,6 +529,8 @@
         { "from": "plant_press", "to": "generator_water_tank", "resource_type": "water" },
 
         { "from": "plant_press_battery", "to": "plant_press", "resource_type": "energy" },
+        { "from": "plant_press_battery", "to": "energy_balancer_to_support", "resource_type": "energy" },
+
 
         { "from": "generator_cooler", "to": "generator_water_tank", "resource_type": "water" },
 
@@ -569,6 +578,9 @@
 
         { "from": "energy_balancer_science_support", "to": "main_science_battery", "resource_type": "energy" },
         { "from": "energy_balancer_science_support", "to": "support_battery", "resource_type": "energy" },
+
+        { "from": "energy_balancer_to_support", "to": "main_science_battery", "resource_type": "energy" },
+        { "from": "energy_balancer_to_support", "to": "support_battery", "resource_type": "energy" },
 
         { "from": "computer", "to": "database", "resource_type": "data" },
 
