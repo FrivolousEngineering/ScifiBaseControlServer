@@ -137,12 +137,19 @@
         },
         "water_pump":
         {
-            "type": "FluidPump",
+            "type": "ResourcePump",
             "resource_type": "water",
             "label": "Ground Pump",
             "custom_description": "This device pumps up water from the ground. The water is not suited for human consumption, but it works fine to grow plants, cool down systems and flush toilets."
         },
-
+        "oxygen_pump":
+        {
+            "type": "ResourcePump",
+            "resource_type": "oxygen",
+            "label": "Air Compressor",
+            "amount": 150,
+            "custom_description": "This device gathers oxygen from the surrounding area, compresses it and pumps it towards the oxygen storage."
+        },
         "hydroponics_uncooled_water_valve":
         {
             "type": "Valve",
@@ -228,6 +235,8 @@
             "max_storage": 500,
             "label": "Battery B"
         },
+
+
 
         "plant_press_battery":
         {
@@ -500,6 +509,7 @@
         { "from": "hydroponics_uncooled_water_valve", "to": "hydroponics", "resource_type": "water" },
 
         { "from": "hydroponics_battery", "to": "hydroponics", "resource_type": "energy" },
+        { "from": "hydroponics_battery", "to": "oxygen_pump", "resource_type": "energy" },
 
         { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
         { "from": "hydroponics", "to": "oxygen_storage", "resource_type": "oxygen" },
@@ -584,11 +594,13 @@
         { "from": "toilet_waste_storage", "to": "hydroponics", "resource_type": "animal_waste" },
         { "from": "toilet_waste_storage", "to": "health_scanner", "resource_type": "animal_waste" },
 
-        { "from": "oxygen_storage", "to": "water_purifier", "resource_type": "oxygen"},
-        { "from": "oxygen_storage", "to": "oxygen_release_valve", "resource_type": "oxygen"},
+        { "from": "oxygen_storage", "to": "water_purifier", "resource_type": "oxygen" },
+        { "from": "oxygen_storage", "to": "oxygen_release_valve", "resource_type": "oxygen" },
 
-        {"from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
-        {"from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"},
+        { "from": "oxygen_pump", "to": "oxygen_storage", "resource_type": "oxygen"},
+
+        { "from": "medicine_creator", "to":  "medicine_storage",  "resource_type": "medicine"},
+        { "from": "medicine_creator", "to":  "extractor_water_storage",  "resource_type": "water"},
         { "from": "medicine_creator", "to": "water_cooler_d", "resource_type": "water" },
 
         { "from": "water_cooler_d", "to": "purified_water_tank", "resource_type": "water" },

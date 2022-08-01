@@ -17,7 +17,7 @@ from Nodes.PlantPress import PlantPress
 from Nodes.ResourceStorage import ResourceStorage
 from Nodes.Valve import Valve
 from Nodes.WaterPurifier import WaterPurifier
-from Nodes.FluidPump import FluidPump
+from Nodes.ResourcePump import ResourcePump
 from Nodes.Lights import Lights
 from Nodes.Scanner import Scanner
 from Nodes.Toilets import Toilets
@@ -49,7 +49,7 @@ objects_to_check_for_documentation = [Node("whatever"),
                                       EnergyBalancer("energy_balancer"),
                                       HardwareController("something"),
                                       HardwareControllerManager(),
-                                      FluidPump("bla", "water"),
+                                      ResourcePump("bla", "water"),
                                       Lights("omg", 19),
                                       Scanner("fff", {}),
                                       Toilets("omg")

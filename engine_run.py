@@ -24,8 +24,10 @@ with open("configuration.json") as f:
 #engine.getNodeById("generator_1").addModifier(modifier)
 #storage.restoreNodeState()
 
-engine.doTick()
-engine.start()
+
+for _ in range(0, 500):
+    engine.doTick()
+#engine.start()
 
 
 #engine.start()

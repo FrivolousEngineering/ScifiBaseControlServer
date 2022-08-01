@@ -2,11 +2,11 @@ from Nodes.Node import Node
 from Nodes.Util import enforcePositive
 
 
-class FluidPump(Node):
+class ResourcePump(Node):
     """
     A node that requires energy and produces a fluid as a result
     """
-    def __init__(self, node_id: str, resource_type: str, **kwargs) \
+    def __init__(self, node_id: str, resource_type: str, amount: float = 10,  **kwargs) \
             -> None:
         """
         A node that creates a resource by consuming energy
@@ -27,13 +27,14 @@ class FluidPump(Node):
         self._resources_required_per_tick["energy"] = 1
         self._resources_left_over[self._resource_type] = 0
         self._providable_resources.add(resource_type)
+        self._amount = amount
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
 
         energy_gained = self.getResourceAvailableThisTick("energy")
 
-        resource_produced = energy_gained * 10 * self.effectiveness_factor
+        resource_produced = energy_gained * self._amount * self.effectiveness_factor
         self._markResourceAsCreated(self._resource_type, resource_produced)
 
         self._resources_produced_this_tick[self._resource_type] += resource_produced
