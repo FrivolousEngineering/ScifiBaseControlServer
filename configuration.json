@@ -255,7 +255,7 @@
         {
             "type": "Generator",
             "fuel_type": "waste",
-            "energy_factor": 2,
+            "energy_factor": 2.5,
             "temperature_efficiency": 0.81,
             "optimal_temperature_range": 199,
             "min_performance": 0,
@@ -270,7 +270,7 @@
         {
             "type": "Generator",
             "fuel_type": "waste",
-            "energy_factor": 2,
+            "energy_factor": 2.5,
             "temperature_efficiency": 0.73,
             "optimal_temperature_range": 206,
             "min_performance": 0,
@@ -285,7 +285,8 @@
         {
             "type": "Generator",
             "fuel_type": "fuel",
-            "label": "Main Generator"
+            "label": "Main Generator",
+            "energy_factor": 12.5
         },
         "solar_panel":
         {
