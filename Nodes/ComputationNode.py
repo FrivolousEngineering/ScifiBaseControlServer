@@ -23,8 +23,8 @@ class ComputationNode(Node):
         self._resources_required_per_tick["energy"] = 10
 
         self._heat_convection_coefficient = 2  # It's made of plastic or something.
-        self._heat_per_data_computed = 100
-        self._heat_per_data_not_computed = 20
+        self._heat_per_data_computed = 4000
+        self._heat_per_data_not_computed = 800
 
         self._description = "This device requires energy to run, which it requires to generate data. It is <i>very" \
                             "</i> sensitive to heat and will break down very rapidly if reaches higher temperatures." \
