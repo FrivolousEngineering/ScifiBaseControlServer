@@ -10,7 +10,8 @@ class Toilets(Node):
         defaults = {"has_settable_performance": False,
                     "min_performance": 1,
                     "max_performance": 1,
-                    "surface_area": 50}
+                    "surface_area": 72,
+                    "heat_convection_coefficient": 21}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
 
@@ -43,6 +44,7 @@ class Toilets(Node):
             # Since dirty_water is heavier than normal water, we need to make sure we don't lose energy (assume that
             # the shit people do adds heat here...)
             self._stored_heat = original_heat
+
         self._resources_produced_this_tick["dirty_water"] += water_available
 
         dirty_water_provided = enforcePositive(water_available - dirty_water_left)
