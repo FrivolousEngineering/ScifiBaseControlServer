@@ -140,6 +140,7 @@
             "type": "ResourcePump",
             "resource_type": "water",
             "label": "Ground Pump",
+            "amount": 15,
             "custom_description": "This device pumps up water from the ground. The water is not suited for human consumption, but it works fine to grow plants, cool down systems and flush toilets."
         },
         "oxygen_pump":

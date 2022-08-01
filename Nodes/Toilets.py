@@ -26,7 +26,7 @@ class Toilets(Node):
 
         # Engineering can't really make the toilets go faster... (well, they could, but not through the engineering
         # console). I don't want to code in "burrito night" to increase the effect of the toilets.
-        self._resources_required_per_tick["water"] = 8
+        self._resources_required_per_tick["water"] = 10
 
         self._providable_resources.add("dirty_water")
 
