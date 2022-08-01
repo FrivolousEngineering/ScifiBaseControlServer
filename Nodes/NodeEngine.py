@@ -93,6 +93,10 @@ class NodeEngine:
         """
         self._tick_timer.cancel()
 
+    @property
+    def paused(self):
+        return not self._tick_timer.is_running
+
     def registerNode(self, node: Node) -> None:
         """
         Add a node to be tracked / updated by the node engine.

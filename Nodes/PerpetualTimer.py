@@ -27,6 +27,10 @@ class PerpetualTimer:
         self._is_running = False
         self._startTimer()
 
+    @property
+    def is_running(self):
+        return self._is_running
+
     def _startTimer(self) -> None:
         if self._should_continue:
             self._thread = Timer(self._interval, self._handleTarget)

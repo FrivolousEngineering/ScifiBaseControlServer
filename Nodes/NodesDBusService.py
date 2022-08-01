@@ -38,6 +38,18 @@ class NodesDBusService(dbus.service.Object):
             object_path=self._object_path
         )
 
+    @dbus.service.method("com.frivengi.nodes", out_signature="b")
+    def isPaused(self):
+        return self._node_engine.paused
+
+    @dbus.service.method("com.frivengi.nodes")
+    def startEngineTimer(self):
+        self._node_engine.start()
+
+    @dbus.service.method("com.frivengi.nodes")
+    def stopEngineTimer(self):
+        self._node_engine.stop()
+
     @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="b")
     def addModifierToNode(self, node_id: str, modifier_type: str) -> bool:
         node = self._node_engine.getNodeById(node_id)
