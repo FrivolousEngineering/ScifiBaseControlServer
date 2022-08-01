@@ -9,9 +9,10 @@ class HydroponicsBay(Node):
     def __init__(self, node_id: str, **kwargs) -> None:
         defaults = {"temperature_efficiency": 0.5,
                     "min_performance": 0.5,
+                    "max_performance": 2,
                     "weight": 2000,
                     "optimal_temperature":  308.15,
-                    "optimal_temperature_range": 15,
+                    "optimal_temperature_range": 20,
                     "heat_convection_coefficient": 1,
                     "usage_damage_factor": 0.11,
                     "performance_change_factor": 4.3
@@ -27,10 +28,11 @@ class HydroponicsBay(Node):
         # It doesn't need the extra water, it just uses it for temperature purposes
         self._optional_resources_required_per_tick["water"] = 95
 
-        self._description = "The hydroponics bay grows plants and creates oxygen. It needs animal waste to fertilize " \
-                            "the plants and a small amount of water is consumed to grow the plants. Most of the water" \
-                            "it accepts is used to regulate the temperature." \
-                            "Every kg of plant mass will produce 375 liter of Oxygen"
+        self._description = "The hydroponics bay grows plants and creates oxygen. When it's provided with animal " \
+                            "waste, it can produce plants much faster, but it's not a hard requirement. A part of " \
+                            "the water that it receives is used to grow the plants. Most of the water that it " \
+                            "accepts is used to regulate the temperature. Every kg of plant mass will produce 375 " \
+                            "liter of oxygen"
 
         self._use_temperature_dependant_effectiveness_factor = True
         self._tags.append("plant")
@@ -45,8 +47,8 @@ class HydroponicsBay(Node):
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")
         animal_waste_available = self.getResourceAvailableThisTick("animal_waste")
-        # We generate 1 oxygen per 1 water and energy we got.
-        # The water is likely to be *much* higher, since it accepts way more so it can function to keep it self
+        # We generate 375 oxygen per 1 water and energy we got.
+        # The water is likely to be *much* higher, since it accepts way more so it can function to keep itself
         # at the right temperature.
         oxygen_produced = min(water_available, energy_available)
 
@@ -70,7 +72,6 @@ class HydroponicsBay(Node):
         water_provided_this_tick = enforcePositive(self._resources_left_over["water"] - water_left)
         self._resources_provided_this_tick["water"] += water_provided_this_tick
         self._resources_left_over["water"] = water_left
-
 
         # All the animal_waste we get is consumed (also makes it a bit more simple...)
         # Getting enough waste means that it produces twice as much. Boom.
