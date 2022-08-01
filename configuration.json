@@ -332,8 +332,8 @@
             "type": "EnergyBalancer",
             "label": "Load Balancer B",
             "min_performance": 0,
-            "performance": 0.5,
-            "target_performance": 0.5
+            "performance": 0,
+            "target_performance": 0
         },
         "support_battery":
         {

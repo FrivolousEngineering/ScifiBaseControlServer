@@ -10,11 +10,11 @@ from tests.testHelpers import setupForIdealState, createEngineFromConfig
 @pytest.mark.parametrize("resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped",
                          [({"water": 10}, {"oxygen": 0}, {"water": 0, "energy": 0}, 1, 0),
                           ({"energy": 10}, {"oxygen": 0}, {"energy": 10, "water": 0}, 1, 0),
-                          ({"water": 10, "energy": 10}, {"oxygen": 3750}, {"water": 0, "energy": 0}, 1, 0),
-                          ({"water": 10, "energy": 5}, {"oxygen": 1875}, {"water": 0, "energy": 0}, 1, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 2812.5}, {"water": 0, "energy": 2.5}, 1, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 1406.25}, {"water": 0, "energy": 2.5}, 0.5, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 1405.25}, {"water": 1, "energy": 2.505333333333333}, 0.5, 1)])  # Since we couldn't dump 1 oxygen (and it doesn't store it), it keeps some water & energy in reserve.
+                          ({"water": 10, "energy": 10}, {"oxygen": 3750}, {"water": 0, "energy": 5}, 1, 0),
+                          ({"water": 10, "energy": 5}, {"oxygen": 3750}, {"water": 0, "energy": 0}, 1, 0),
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 2812.5}, {"water": 0, "energy": 6.25}, 1, 0),
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 1406.25}, {"water": 0, "energy": 6.25}, 0.5, 0),
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 1405.25}, {"water": 1, "energy": 6.252666666666666}, 0.5, 1)])  # Since we couldn't dump 1 oxygen (and it doesn't store it), it keeps some water & energy in reserve.
 def test_update(resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped):
     hydroponics = HydroponicsBay.HydroponicsBay("omg")
 
@@ -65,7 +65,7 @@ def test_temperatureRemainTheSameOptimalTemperature(config_file):
 @pytest.mark.parametrize("performance", [0.5, 1.2, 1])
 @pytest.mark.parametrize("sub_ticks", [1, 10, 30])
 @pytest.mark.parametrize('ticks', [1, 10, 20])
-@pytest.mark.parametrize("config_file, plants_created_per_tick", [("HydroponicsSetup.json", 5), ("HydroponicsSetupWithAnimalWaste.json", 10)])
+@pytest.mark.parametrize("config_file, plants_created_per_tick", [("HydroponicsSetup.json", 20), ("HydroponicsSetupWithAnimalWaste.json", 40)])
 def test_plantsProduced(config_file, plants_created_per_tick, sub_ticks, ticks, performance):
     engine = setupForIdealState(config_file, "hydroponics")
     engine._sub_ticks = sub_ticks

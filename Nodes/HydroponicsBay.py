@@ -21,7 +21,7 @@ class HydroponicsBay(Node):
         super().__init__(node_id, **defaults)
 
         # TODO: This still needs to be tweaked.
-        self._resources_required_per_tick["water"] = 5
+        self._resources_required_per_tick["water"] = 10
         self._resources_required_per_tick["energy"] = 5
 
         self._optional_resources_required_per_tick["animal_waste"] = 5
@@ -31,7 +31,7 @@ class HydroponicsBay(Node):
         self._description = "The hydroponics bay grows plants and creates oxygen. When it's provided with animal " \
                             "waste, it can produce plants much faster, but it's not a hard requirement. A part of " \
                             "the water that it receives is used to grow the plants. Most of the water that it " \
-                            "accepts is used to regulate the temperature. Every kg of plant mass will produce 375 " \
+                            "accepts is used to regulate the temperature. Every kg of plant mass will produce 180 " \
                             "liter of oxygen"
 
         self._use_temperature_dependant_effectiveness_factor = True
@@ -50,10 +50,9 @@ class HydroponicsBay(Node):
         # We generate 375 oxygen per 1 water and energy we got.
         # The water is likely to be *much* higher, since it accepts way more so it can function to keep itself
         # at the right temperature.
-        oxygen_produced = min(water_available, energy_available)
-
+        oxygen_produced = min(water_available, energy_available * 2)
         self._resources_left_over["water"] = water_available - oxygen_produced
-        self._resources_left_over["energy"] = energy_available - oxygen_produced
+        self._resources_left_over["energy"] = energy_available - oxygen_produced / 2
         oxygen_produced *= self.effectiveness_factor
         oxygen_produced *= 375
 
@@ -62,7 +61,7 @@ class HydroponicsBay(Node):
         oxygen_left = self._provideResourceToOutgoingConnections("oxygen", oxygen_produced)
 
         self._resources_left_over["water"] += oxygen_left * self.inverted_effectiveness_factor / 375
-        self._resources_left_over["energy"] += oxygen_left * self.inverted_effectiveness_factor / 375
+        self._resources_left_over["energy"] += oxygen_left / 2 * self.inverted_effectiveness_factor / 375
 
         oxygen_provided = enforcePositive(oxygen_produced - oxygen_left)
 
@@ -76,7 +75,7 @@ class HydroponicsBay(Node):
         # All the animal_waste we get is consumed (also makes it a bit more simple...)
         # Getting enough waste means that it produces twice as much. Boom.
         # TODO: Hacked this in for a bit.
-        plants_produced = (oxygen_produced / 375) * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
+        plants_produced = (oxygen_produced / 187.5) * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 
         # Some water was destroyed:
         amount_of_water_used_this_tick = self._resources_received_this_sub_tick.get("water",
