@@ -255,6 +255,13 @@ class Server(Flask):
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
+    @register_route("/startTick", ["POST"])
+    def startTick(self) -> Response:
+        self._setupNodeDBUS()
+        self._nodes.doTick()  # type: ignore
+
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+
 
 
 
