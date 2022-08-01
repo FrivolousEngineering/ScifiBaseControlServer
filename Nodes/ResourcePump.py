@@ -30,6 +30,13 @@ class ResourcePump(Node):
         self._providable_resources.add(resource_type)
         self._amount = amount
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        """
+        If there were resources left over, we should request less resources next time round.
+        """
+        self._resources_required_per_tick["energy"] = self._performance * enforcePositive(self._original_resources_required_per_tick["energy"] * self.health_effectiveness_factor - (self._resources_left_over[self._resource_type] / self._amount))
+
+
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
 
