@@ -11,7 +11,9 @@
         {
             "type": "ResourceStorage",
             "resource_type": "fuel",
+            "heat_emissivity": 0.51,
             "amount": 40000,
+            "surface_area": 18.3,
             "max_storage": 50000,
             "label": "Fuel Storage"
         },
@@ -20,6 +22,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "plant_oil",
+            "heat_emissivity": 0.49,
             "amount": 0,
             "max_storage": 1000,
             "label": "Plant Oil Tank"
@@ -40,7 +43,9 @@
             "amount": 2500,
             "label": "Water Tank A",
             "max_storage": 8000,
+            "heat_emissivity": 0.36,
             "weight": 900,
+            "surface_area": 14.2,
             "max_safe_temperature": 373.15,
             "max_resources_requestable_per_tick": 350
         },
@@ -50,8 +55,11 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 3000,
+            "heat_emissivity": 0.36,
             "label": "Water Tank B",
             "max_storage": 9000,
+            "surface_area": 12.3,
+            "weight": 4972,
             "max_safe_temperature": 373.15,
             "max_resources_requestable_per_tick": 350
         },
@@ -156,6 +164,7 @@
             "type": "ResourceStorage",
             "resource_type": "food",
             "amount": 7000,
+            "surface_area": 5.2,
             "label": "Food Storage",
             "weight": 570,
             "custom_description": "Although the colony will have advanced hydroponics system, these will not provide enough food to sufficiently feed all colonists. As such, dried food needs to be shipped with the colony ship."
@@ -167,7 +176,9 @@
             "resource_type": "plants",
             "amount": 0,
             "label": "Plant Storage",
-            "weight": 367
+            "weight": 367,
+            "heat_convection_coefficient": 1.21,
+            "surface_area": 9.3
         },
 
         "hydroponics_water_storage":
@@ -178,6 +189,8 @@
             "label": "Water Tank C",
             "max_storage": 7500,
             "weight": 4320,
+            "heat_convection_coefficient": 1.32,
+            "surface_area": 9.7,
             "max_safe_temperature": 373.15,
             "max_resources_requestable_per_tick": 350
         },
@@ -210,6 +223,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
+            "heat_convection_coefficient": 0.27,
             "amount": 0,
             "max_storage": 500,
             "label": "Battery B"
@@ -219,6 +233,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
+            "heat_convection_coefficient": 0.29,
             "amount": 0,
             "max_storage": 500,
             "label": "Battery A"
@@ -276,8 +291,10 @@
         {
             "type": "ResourceStorage",
             "resource_type": "energy",
+            "heat_convection_coefficient": 0.28,
             "amount": 1000,
             "max_storage": 1000,
+            "surface_area": 4.3,
             "label": "Battery C"
         },
         "energy_balancer_science_support":
@@ -294,6 +311,8 @@
             "resource_type": "energy",
             "amount": 1000,
             "max_storage": 1000,
+            "heat_convection_coefficient": 0.29,
+            "surface_area": 4.7,
             "label": "Battery D"
         },
         "computer":
@@ -306,6 +325,8 @@
             "type": "ResourceStorage",
             "resource_type": "data",
             "amount": 0,
+            "surface_area": 3.5,
+            "heat_convection_coefficient": 0.23,
             "label": "Database"
         },
 
@@ -368,7 +389,9 @@
             "type": "ResourceStorage",
             "resource_type": "medicine",
             "amount": 0,
+            "surface_area": 12.6,
             "max_storage": 10000,
+            "heat_convection_coefficient": 2.5,
             "label": "Medicine Storage",
             "custom_description": "The storage for medicine that is produced for the colony. As it's expected that not all medication can be created by the colonists immediately, it's required to ship sufficient medical supplies to bridge this period."
         },
@@ -390,6 +413,8 @@
             "resource_type": "water",
             "amount": 200,
             "max_storage": 2000,
+            "surface_area": 6.2,
+            "heat_convection_coefficient": 1.32,
             "label": "Water Tank D",
             "max_safe_temperature": 373.15,
             "max_resources_requestable_per_tick": 25
@@ -401,6 +426,10 @@
             "amount": 100,
             "max_storage": 400,
             "label": "Water Tank E",
+            "heat_convection_coefficient": 1.5,
+            "heat_emissivity": 0.34,
+            "weight": 431,
+            "surface_area": 4.2,
             "max_safe_temperature": 373.15,
             "max_resources_requestable_per_tick": 100
         },
@@ -409,7 +438,11 @@
             "type": "ResourceStorage",
             "resource_type": "dirty_water",
             "amount": 50,
+            "surface_area": 3.3,
             "max_storage": 1000,
+            "weight": 465,
+            "heat_emissivity": 0.28,
+            "heat_convection_coefficient": 1.7,
             "label": "Waste Water Tank"
         },
         "water_purifier":
@@ -422,7 +455,9 @@
             "type": "ResourceStorage",
             "resource_type": "animal_waste",
             "amount": 200,
+            "surface_area": 5.1,
             "max_storage": 1000,
+            "heat_convection_coefficient": 1.92,
             "label": "Sewage Tank"
         },
         "toilets":
