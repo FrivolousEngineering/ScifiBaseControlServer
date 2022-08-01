@@ -5,8 +5,13 @@ import math
 
 
 class FluctuatingResourceGenerator(ResourceGenerator):
-    def __init__(self, node_id: str, resource_type: str, amount: float, amplitudes: List[float], frequencies: List[float],
-                 offset: float = 0, **kwargs) -> None:
+    def __init__(self, node_id: str,
+                 resource_type: str,
+                 amount: float,
+                 amplitudes: List[float],
+                 frequencies: List[float],
+                 offset: float = 0,
+                 **kwargs) -> None:
         defaults = {"has_settable_performance": False}
         defaults.update(kwargs)
 

@@ -289,12 +289,14 @@
             "label": "Main Generator",
             "energy_factor": 12.5
         },
-        "solar_panel":
+        "wind_turbine_a":
         {
-            "type": "ResourceGenerator",
-            "resource_type": "energy",
+            "type": "WindTurbine",
             "amount": 10,
-            "label": "Solar Panel"
+            "frequencies": [0.011, 0.06, 0.1, 0.009],
+            "amplitudes": [3.2, 0.9, 0.2, 1.2],
+            "label": "Wind Turbine A",
+            "custom_description": ""
         },
         "waste_collector":
         {
@@ -579,7 +581,7 @@
 
         { "from": "h_to_g_valve", "to": "generator_water_tank", "resource_type": "water" },
 
-        { "from": "solar_panel", "to": "main_science_battery", "resource_type": "energy" },
+        { "from": "wind_turbine_a", "to":  "main_science_battery", "resource_type":  "energy"},
 
 
         { "from": "support_battery", "to": "lights_science", "resource_type": "energy" },
