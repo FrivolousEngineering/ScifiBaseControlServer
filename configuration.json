@@ -170,7 +170,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "food",
-            "amount": 7000,
+            "amount": 0,
             "surface_area": 5.2,
             "label": "Food Storage",
             "weight": 570,
