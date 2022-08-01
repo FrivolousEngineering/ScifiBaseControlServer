@@ -14,7 +14,7 @@ class Scanner(MultiResourceDestroyer):
         :param resources_required: What resources should it use per tick?
         :param kwargs:
         """
-        defaults = {}
+        defaults = {"performance_change_factor": 1}
         defaults.update(kwargs)
         super().__init__(node_id, resources_required, **defaults)
 

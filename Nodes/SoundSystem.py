@@ -13,7 +13,8 @@ class SoundSystem(ResourceDestroyer):
         """
         if "resource_type" in kwargs:
             del kwargs["resource_type"]
-        defaults = {}
+        defaults = {"performance_change_factor": 1,
+                    "min_performance": 0}
         defaults.update(kwargs)
 
         super().__init__(node_id, resource_type = "energy", amount = amount, **defaults)

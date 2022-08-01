@@ -25,7 +25,7 @@ with open("configuration.json") as f:
 #storage.restoreNodeState()
 
 
-for _ in range(0, 500):
+for _ in range(0, 100):
     engine.doTick()
 #engine.start()
 
