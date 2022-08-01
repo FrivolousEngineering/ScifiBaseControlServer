@@ -17,7 +17,8 @@ class ResourcePump(Node):
         defaults = {"surface_area": 4.8,
                     "heat_convection_coefficient": 240,
                     "heat_emissivity": 0.73,
-                    "min_performance": 0
+                    "min_performance": 0,
+                    "usage_damage_factor": 0.21
                     }
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)

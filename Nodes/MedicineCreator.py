@@ -10,7 +10,7 @@ class MedicineCreator(Node):
         defaults = {"heat_convection_coefficient": 1,
                     "optimal_temperature": 308.15,
                     "optimal_temperature_range": 10,
-                    "usage_damage_factor": 0.01,
+                    "usage_damage_factor": 0.15,
                     "performance_change_factor": 2.2}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)

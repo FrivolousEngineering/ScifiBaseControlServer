@@ -27,7 +27,7 @@ class EnergyBalancer(Node):
 
     """
     def __init__(self, node_id: str, **kwargs) -> None:
-        defaults = {}
+        defaults = {"usage_damage_factor": 0.2}
         defaults.update(kwargs)
 
         super().__init__(node_id, **defaults)

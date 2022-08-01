@@ -14,7 +14,7 @@ class OilExtractor(Node):
                     "temperature_efficiency": 0.5,
                     "min_performance": 0.75,
                     "max_performance": 1.5,
-                    "usage_damage_factor": 0.01}
+                    "usage_damage_factor": 0.09}
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
 
