@@ -10,8 +10,9 @@ class ResourcePump(Node):
             -> None:
         """
         A node that creates a resource by consuming energy
-        :param node_id: id of this node.
+        :param node_id: id of this node
         :param resource_type: The resource that this node creates
+        :param amount: amount of resources that this node creates per tick
         :param kwargs:
         """
         defaults = {"surface_area": 4.8,
