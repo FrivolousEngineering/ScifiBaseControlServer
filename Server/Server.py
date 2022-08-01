@@ -235,12 +235,27 @@ class Server(Flask):
         all_users = User.query.all()
         return Response(flask.json.dumps([user.id for user in all_users]), status=200, mimetype="application/json")
 
-    @register_route("/startTick", ["POST"])
-    def startTick(self) -> Response:
+    @register_route("/paused", ["get"])
+    def isPaused(self) -> Response:
         self._setupNodeDBUS()
-        self._nodes.doTick()  # type: ignore
+
+        return Response(str(bool(self._nodes.isPaused())), status=200)
+
+    @register_route("/pause", ["POST"])
+    def pauseTickTimer(self) -> Response:
+        self._setupNodeDBUS()
+        self._nodes.stopEngineTimer()  # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+
+    @register_route("/run", ["POST"])
+    def runTickTimer(self) -> Response:
+        self._setupNodeDBUS()
+        self._nodes.startEngineTimer()  # type: ignore
+
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
+
+
 
 
 if __name__ == "__main__":
