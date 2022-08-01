@@ -811,6 +811,7 @@ class Node:
         """
         Cleanup after all the updating is done. This mostly does a bunch of bookkeeping (damage, heat, etc)
         """
+        self._updateResourceRequiredPerTick()
         self._active = self._reEvaluateIsActive()
         self._emitHeat()
         self._convectiveHeatTransfer()
@@ -843,7 +844,6 @@ class Node:
         updates are done)
         :return:
         """
-        self._updateResourceRequiredPerTick()
         self._resources_received_this_sub_tick.clear()
         self._recalculateTemperature()
 
