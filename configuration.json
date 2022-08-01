@@ -264,7 +264,7 @@
             "weight" : 1207,
             "surface_area": 3.2,
             "label": "Waste Generator A",
-            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up"
+            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up. It will produce 2.5 energy when running at 100%"
         },
         "secondary_waste_generator":
         {
@@ -279,7 +279,7 @@
             "weight" : 1412,
             "surface_area": 3.4,
             "label": "Waste Generator B",
-            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up"
+            "custom_description": "A support generator that uses waste material as fuel. It's not nearly as effective as the main generator, but it will do some in a pinch. It's also the only way to get rid of waste once the waste storage is filling up. It will produce 2.5 energy when running at 100%"
         },
         "generator":
         {
