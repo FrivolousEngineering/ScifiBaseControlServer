@@ -34,7 +34,7 @@
             "amount": 2000,
             "label": "Waste Storage",
             "max_storage": 3000,
-            "max_resources_requestable_per_tick": 3
+            "max_resources_requestable_per_tick": 3.5
         },
         "extractor_water_storage":
         {
@@ -181,7 +181,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "plants",
-            "amount": 0,
+            "amount": 10000,
             "label": "Plant Storage",
             "weight": 367,
             "heat_convection_coefficient": 1.21,
@@ -294,6 +294,16 @@
             "resource_type": "energy",
             "amount": 10,
             "label": "Solar Panel"
+        },
+        "waste_collector":
+        {
+            "type": "FluctuatingResourceGenerator",
+            "resource_type": "waste",
+            "amount": 0.5,
+            "frequencies": [0.01, 0.06, 0.1, 0.05, 0.11],
+            "amplitudes": [0.1, 0.02, 0.03, 0.025, 0.015],
+            "label": "Droid Waste Collector",
+            "custom_description": "Access point for all the waste collected throughout the base. The various cleaning robots will automatically bring waste here."
         },
         "main_science_battery":
         {
@@ -495,6 +505,8 @@
         { "from": "extractor", "to": "fuel_storage", "resource_type": "fuel" },
         { "from": "extractor", "to": "plant_oil_storage", "resource_type": "plant_oil" },
         { "from": "extractor", "to": "waste_storage", "resource_type": "waste" },
+
+        { "from": "waste_collector", "to": "waste_storage", "resource_type": "waste" },
 
         { "from": "extractor_water_storage", "to": "extractor", "resource_type": "water" },
         { "from": "extractor_water_storage", "to": "e_to_h_valve", "resource_type": "water" },
