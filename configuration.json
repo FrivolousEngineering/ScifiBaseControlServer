@@ -476,6 +476,12 @@
             "heat_convection_coefficient": 1.92,
             "label": "Sewage Tank"
         },
+        "art_sound":
+        {
+            "type": "SoundSystem",
+            "amount": 0.5,
+            "label": "Art Jazz System"
+        },
         "toilets":
         {
             "type": "Toilets",
@@ -517,6 +523,7 @@
 
         { "from": "hydroponics_battery", "to": "hydroponics", "resource_type": "energy" },
         { "from": "hydroponics_battery", "to": "oxygen_pump", "resource_type": "energy" },
+        { "from": "hydroponics_battery", "to": "art_sound", "resource_type": "energy" },
 
         { "from": "hydroponics", "to": "plant_storage", "resource_type": "plants" },
         { "from": "hydroponics", "to": "oxygen_storage", "resource_type": "oxygen" },
