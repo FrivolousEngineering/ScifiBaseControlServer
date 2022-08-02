@@ -44,18 +44,16 @@ class HydroponicsBay(Node):
     def _updateResourceRequiredPerTick(self) -> None:
         # Find the limiting factor for resources that were left over!
         oxygen_factor = 1  # 1 means that all oxygen was provided this tick
-        if self._resources_produced_this_tick["oxygen"] > 0:
-            oxygen_factor = self._resources_provided_this_tick["oxygen"] / self._resources_produced_this_tick["oxygen"]
+        if self._resources_left_over["oxygen"] > 0:
+            oxygen_factor = self._resources_provided_this_tick["oxygen"] / self._resources_left_over["oxygen"]
 
         plant_factor = 1
+        if self._resources_left_over["plants"] > 0:
+            plant_factor = self._resources_provided_this_tick["plants"] / self._resources_left_over["plants"]
 
-        if self._resources_produced_this_tick["plants"] > 0:
-            plant_factor = self._resources_provided_this_tick["plants"] / self._resources_produced_this_tick["plants"]
+        self._logistics_factor = min(plant_factor, oxygen_factor)
 
-        final_factor = min(plant_factor, oxygen_factor)
-
-        for resource, value in self._original_resources_required_per_tick.items():
-            self._resources_required_per_tick[resource] = value * final_factor * self._performance
+        self._setPerformance(self._performance)
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)

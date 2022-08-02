@@ -207,9 +207,9 @@
         {
             "type": "ResourceStorage",
             "resource_type": "oxygen",
-            "amount": 3000,
+            "amount": 0,
             "label": "Oxygen Tank",
-            "max_storage": 3000,
+            "max_storage": 25000,
             "weight": 1600
         },
         "oxygen_release_valve":

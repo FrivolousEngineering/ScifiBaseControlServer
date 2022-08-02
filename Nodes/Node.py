@@ -182,6 +182,14 @@ class Node:
         self._acceptable_resources: Set[str] = set()
         self._providable_resources: Set[str] = set()
 
+        self._logistics_factor = 1.
+        """
+        If there are resources that it was unable to provide, it might be that the node needs to request less resources
+        next time round. This factor handles that.
+        """
+        self._optional_logistics_factor = 1.
+
+
     @property
     def combined_specific_heat(self) -> float:
         total_specific_heat = self._weight * self._specific_heat
@@ -348,7 +356,6 @@ class Node:
         is updated
         :param new_performance: New performance to be used
         """
-        print("SETTING PERFORMAAAANCE")
         with self._update_lock:
             self._performance = new_performance
             for resource in self._resources_required_per_tick:
@@ -356,14 +363,14 @@ class Node:
                     self._original_resources_required_per_tick[resource] = self._resources_required_per_tick[resource]
 
                 self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[
-                                                                  resource] * self._performance
+                                                                  resource] * self._performance * self._logistics_factor
 
             for resource in self._optional_resources_required_per_tick:
                 if resource not in self._original_optional_resources_required_per_tick:
                     self._original_optional_resources_required_per_tick[resource] = self._optional_resources_required_per_tick[resource]
 
                 self._optional_resources_required_per_tick[resource] = self._original_optional_resources_required_per_tick[
-                                                                  resource] * self._performance
+                                                                  resource] * self._performance * self._optional_logistics_factor
 
     @property
     def target_performance(self) -> float:
