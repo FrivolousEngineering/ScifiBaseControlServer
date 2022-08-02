@@ -21,7 +21,7 @@ class HydroponicsBay(Node):
         super().__init__(node_id, **defaults)
 
         # TODO: This still needs to be tweaked.
-        self._resources_required_per_tick["water"] = 10
+        self._resources_required_per_tick["water"] = 20
         self._resources_required_per_tick["energy"] = 5
 
         self._optional_resources_required_per_tick["animal_waste"] = 1
@@ -62,7 +62,7 @@ class HydroponicsBay(Node):
         energy_available = self.getResourceAvailableThisTick("energy")
         animal_waste_available = self.getResourceAvailableThisTick("animal_waste")
 
-        plants_produced_without_awaste = min(water_available, energy_available * 2) * self.effectiveness_factor
+        plants_produced_without_awaste = min(water_available, energy_available * 4) * self.effectiveness_factor
 
         total_plants_produced = plants_produced_without_awaste * (1 + animal_waste_available / (
                     self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))

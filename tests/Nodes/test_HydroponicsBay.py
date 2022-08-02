@@ -9,12 +9,14 @@ from tests.testHelpers import setupForIdealState, createEngineFromConfig
 
 @pytest.mark.parametrize("resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped",
                          [({"water": 10}, {"oxygen": 0}, {"water": 0, "energy": 0}, 1, 0),
-                          ({"energy": 10}, {"oxygen": 0}, {"energy": 10, "water": 0}, 1, 0),
-                          ({"water": 10, "energy": 10}, {"oxygen": 3750}, {"water": 0, "energy": 5}, 1, 0),
-                          ({"water": 10, "energy": 5}, {"oxygen": 3750}, {"water": 0, "energy": 0}, 1, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 2812.5}, {"water": 0, "energy": 6.25}, 1, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 1406.25}, {"water": 0, "energy": 6.25}, 0.5, 0),
-                          ({"water": 7.5, "energy": 10}, {"oxygen": 1405.25}, {"water": 1, "energy": 6.252666666666666}, 0.5, 1)])  # Since we couldn't dump 1 oxygen (and it doesn't store it), it keeps some water & energy in reserve.
+                          ({"energy": 10}, {"oxygen": 0}, {"energy": 0, "water": 0}, 1, 0),
+                          ({"water": 10, "energy": 10}, {"oxygen": 1875.0}, {"water": 0, "energy": 0}, 1, 0),
+                          ({"water": 10, "energy": 5}, {"oxygen": 1875.0}, {"water": 0, "energy": 0}, 1, 0),
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 1406.25, "plants": 7.5}, {"water": 0, "energy": 0, "plants": 0}, 1, 0),
+                          ({"water": 7.5, "energy": 10, "animal_waste": 1}, {"oxygen": 2812.5, "plants": 15}, {"water": 0, "energy": 0, "plants": 0}, 1, 0),  # Giving it 1 animal waste should double the output
+                          ({"water": 7.5, "energy": 10, "animal_waste": 0.5}, {"oxygen": 2109.375, "plants": 11.25}, {"water": 0, "energy": 0, "plants": 0}, 1, 0),  # Giving it 1 animal waste should double the output
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 703.125, "plants": 3.75}, {"water": 0, "energy": 0}, 0.5, 0),
+                          ({"water": 7.5, "energy": 10}, {"oxygen": 702.125, "plants": 2.75}, {"water": 1, "energy": 0}, 0.5, 1)])  # Since we couldn't dump 1 oxygen (and it doesn't store it), it keeps some water & energy in reserve.
 def test_update(resources_received, resources_provided, resources_left_over, effectiveness, oxygen_not_dumped):
     hydroponics = HydroponicsBay.HydroponicsBay("omg")
 
