@@ -529,7 +529,7 @@
         { "from": "hydroponics_water_storage", "to": "h_to_g_valve", "resource_type": "water" },
         { "from": "hydroponics_water_storage", "to": "h_to_e_valve", "resource_type": "water" },
         { "from": "hydroponics_water_storage", "to": "hydroponics_cooled_water_valve", "resource_type": "water" },
-        { "from": "hydroponics_water_storage", "to": "hydroponics_uncooled_water_valve", "resource_type": "water" },
+
         { "from": "hydroponics_water_storage", "to": "secondary_waste_generator", "resource_type": "water" },
 
 
@@ -563,6 +563,7 @@
         { "from": "generator_water_tank", "to": "generator", "resource_type": "water" },
         { "from": "generator_water_tank", "to": "waste_generator", "resource_type": "water" },
         { "from": "generator_water_tank", "to": "g_to_h_valve", "resource_type": "water" },
+        { "from": "generator_water_tank", "to": "hydroponics_uncooled_water_valve", "resource_type": "water" },
 
         { "from": "waste_generator", "to": "hydroponics_battery", "resource_type": "energy" },
         { "from": "waste_generator", "to": "plant_press_battery", "resource_type": "energy" },
