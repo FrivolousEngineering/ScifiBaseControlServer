@@ -31,7 +31,7 @@ class HydroponicsBay(Node):
         self._description = "The hydroponics bay grows plants and creates oxygen. When it's provided with animal " \
                             "waste, it can produce plants much faster, but it's not a hard requirement. A part of " \
                             "the water that it receives is used to grow the plants. Most of the water that it " \
-                            "accepts is used to regulate the temperature. Every kg of plant mass will produce 180 " \
+                            "accepts is used to regulate the temperature. Every kg of plant mass will produce 187.5 " \
                             "liter of oxygen"
 
         self._use_temperature_dependant_effectiveness_factor = True
@@ -66,7 +66,7 @@ class HydroponicsBay(Node):
         total_plants_produced = plants_produced_without_awaste * (1 + animal_waste_available / (
                     self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 
-        oxygen_produced = total_plants_produced * 375
+        oxygen_produced = total_plants_produced * 187.5
 
         self._resources_produced_this_tick["oxygen"] += oxygen_produced
         self._resources_produced_this_tick["plants"] += total_plants_produced
