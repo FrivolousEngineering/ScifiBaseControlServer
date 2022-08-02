@@ -41,49 +41,63 @@ class HydroponicsBay(Node):
         self._providable_resources.add("oxygen")
         self._providable_resources.add("plants")
 
+    def _updateResourceRequiredPerTick(self) -> None:
+        # Find the limiting factor for resources that were left over!
+        oxygen_factor = 1  # 1 means that all oxygen was provided this tick
+        if self._resources_produced_this_tick["oxygen"] > 0:
+            oxygen_factor = self._resources_provided_this_tick["oxygen"] / self._resources_produced_this_tick["oxygen"]
+
+        plant_factor = 1
+
+        if self._resources_produced_this_tick["plants"] > 0:
+            plant_factor = self._resources_provided_this_tick["plants"] / self._resources_produced_this_tick["plants"]
+
+        final_factor = min(plant_factor, oxygen_factor)
+
+        for resource, value in self._original_resources_required_per_tick.items():
+            self._resources_required_per_tick[resource] = value * final_factor * self._performance
+
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
         # Get the resources we asked for!
         water_available = self.getResourceAvailableThisTick("water")
         energy_available = self.getResourceAvailableThisTick("energy")
         animal_waste_available = self.getResourceAvailableThisTick("animal_waste")
-        # We generate 375 oxygen per 1 water and energy we got.
-        # The water is likely to be *much* higher, since it accepts way more so it can function to keep itself
-        # at the right temperature.
-        oxygen_produced = min(water_available, energy_available * 2)
-        self._resources_left_over["water"] = water_available - oxygen_produced
-        self._resources_left_over["energy"] = energy_available - oxygen_produced / 2
-        oxygen_produced *= self.effectiveness_factor
-        oxygen_produced *= 375
+
+        plants_produced_without_awaste = min(water_available, energy_available * 2) * self.effectiveness_factor
+        total_plants_produced = plants_produced_without_awaste * (1 + animal_waste_available / (
+                    self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
+
+        oxygen_produced = total_plants_produced * 375
 
         self._resources_produced_this_tick["oxygen"] += oxygen_produced
+        self._resources_produced_this_tick["plants"] += total_plants_produced
 
-        oxygen_left = self._provideResourceToOutgoingConnections("oxygen", oxygen_produced)
+        oxygen_left = self._provideResourceToOutgoingConnections("oxygen",
+                                                                 oxygen_produced + self._resources_left_over["oxygen"])
 
-        self._resources_left_over["water"] += oxygen_left * self.inverted_effectiveness_factor / 375
-        self._resources_left_over["energy"] += oxygen_left / 2 * self.inverted_effectiveness_factor / 375
+        plants_left = self._provideResourceToOutgoingConnections("plants",
+                                                                 total_plants_produced + self._resources_left_over["plants"])
 
-        oxygen_provided = enforcePositive(oxygen_produced - oxygen_left)
+        oxygen_provided = enforcePositive(oxygen_produced + self._resources_left_over["oxygen"] - oxygen_left)
+        plants_provided = enforcePositive(total_plants_produced + self._resources_left_over["plants"] - plants_left)
+
+        self._resources_left_over["oxygen"] = oxygen_left
+        self._resources_left_over["plants"] = plants_left
 
         self._resources_provided_this_tick["oxygen"] += oxygen_provided
+        self._resources_provided_this_tick["plants"] += plants_provided
 
-        water_left = self._provideResourceToOutgoingConnections("water", self._resources_left_over["water"])
-        water_provided_this_tick = enforcePositive(self._resources_left_over["water"] - water_left)
-        self._resources_provided_this_tick["water"] += water_provided_this_tick
-        self._resources_left_over["water"] = water_left
+        # Per 1 plant we created, we have destroyed 1 water
+        water_used = total_plants_produced
 
-        # All the animal_waste we get is consumed (also makes it a bit more simple...)
-        # Getting enough waste means that it produces twice as much. Boom.
-        # TODO: Hacked this in for a bit.
-        plants_produced = (oxygen_produced / 187.5) * (1 + animal_waste_available / (self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
+        water_left = water_available - water_used
 
-        # Some water was destroyed:
-        amount_of_water_used_this_tick = self._resources_received_this_sub_tick.get("water",
-                                                                                    0) - water_provided_this_tick
-        self._markResourceAsDestroyed("water", amount_of_water_used_this_tick)
         self._markResourceAsDestroyed("animal_waste", animal_waste_available)
+        self._markResourceAsDestroyed("water", water_used)
         self._markResourceAsCreated("oxygen", oxygen_produced)
-        self._markResourceAsCreated("plants", plants_produced)
+        self._markResourceAsCreated("plants", total_plants_produced)
 
-        self._resources_produced_this_tick["plants"] += plants_produced
-        self._resources_provided_this_tick["plants"] += plants_produced - self._provideResourceToOutgoingConnections("plants", plants_produced)
+        self._resources_left_over["water"] = self._provideResourceToOutgoingConnections("water", water_left)
+        self._resources_provided_this_tick["water"] += water_left - self._resources_left_over["water"]
+

@@ -348,6 +348,7 @@ class Node:
         is updated
         :param new_performance: New performance to be used
         """
+        print("SETTING PERFORMAAAANCE")
         with self._update_lock:
             self._performance = new_performance
             for resource in self._resources_required_per_tick:
