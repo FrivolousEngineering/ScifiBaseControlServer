@@ -239,7 +239,7 @@ class Server(Flask):
     def isPaused(self) -> Response:
         self._setupNodeDBUS()
 
-        return Response(str(bool(self._nodes.isPaused())), status=200)
+        return Response(str(bool(self._nodes.isPaused())), status=200) # type:ignore
 
     @register_route("/pause", ["POST"])
     def pauseTickTimer(self) -> Response:
