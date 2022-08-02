@@ -75,8 +75,8 @@
             "type": "Valve",
             "resource_type": "water",
             "fluid_per_tick": 100,
-            "target_performance": 0,
-            "performance": 0,
+            "target_performance": 0.5,
+            "performance": 0.5,
             "label": "Valve B-C"
         },
         "h_to_e_valve":
@@ -289,7 +289,8 @@
             "type": "Generator",
             "fuel_type": "fuel",
             "label": "Main Generator",
-            "energy_factor": 12.5
+            "energy_factor": 12.5,
+            "custom_description": "The main generator of the base. It produces 12.5 units of power when running at standard performance levels. The heat that this produces is used to heat up the hydroponics bay"
         },
         "wind_turbine_a":
         {
