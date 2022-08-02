@@ -24,7 +24,7 @@ class HydroponicsBay(Node):
         self._resources_required_per_tick["water"] = 10
         self._resources_required_per_tick["energy"] = 5
 
-        self._optional_resources_required_per_tick["animal_waste"] = 5
+        self._optional_resources_required_per_tick["animal_waste"] = 1
         # It doesn't need the extra water, it just uses it for temperature purposes
         self._optional_resources_required_per_tick["water"] = 95
 
@@ -63,6 +63,7 @@ class HydroponicsBay(Node):
         animal_waste_available = self.getResourceAvailableThisTick("animal_waste")
 
         plants_produced_without_awaste = min(water_available, energy_available * 2) * self.effectiveness_factor
+
         total_plants_produced = plants_produced_without_awaste * (1 + animal_waste_available / (
                     self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 

@@ -149,6 +149,8 @@
             "resource_type": "oxygen",
             "label": "Air Compressor",
             "amount": 150,
+            "performance": 0,
+            "target_performance": 0,
             "custom_description": "This device gathers oxygen from the surrounding area, compresses it and pumps it towards the oxygen storage."
         },
         "hydroponics_uncooled_water_valve":
@@ -209,7 +211,7 @@
             "resource_type": "oxygen",
             "amount": 0,
             "label": "Oxygen Tank",
-            "max_storage": 25000,
+            "max_storage": 250000,
             "weight": 1600
         },
         "oxygen_release_valve":

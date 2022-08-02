@@ -31,4 +31,4 @@ class PreScriptedTemperatureHandler(TemperatureHandler):
             next_hour_value = self._temperatures_per_hour[hour + 1]
 
         temp_difference_per_minute = (next_hour_value - hour_value) / 60
-        return hour_value + temp_difference_per_minute *  minute
+        return hour_value + temp_difference_per_minute * minute
