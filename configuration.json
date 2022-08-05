@@ -367,7 +367,7 @@
         {
             "type": "Lights",
             "resource_type": "energy",
-            "amount": 2,
+            "amount": 1.6,
             "label": "MedBay Lights",
             "custom_description": "This system includes all the lights near the MedBay."
         },
@@ -375,9 +375,17 @@
         {
             "type": "Lights",
             "resource_type": "energy",
-            "amount": 3,
+            "amount": 1.3,
             "label": "ScienceBay Lights",
             "custom_description": "This system includes all the lights near the ScienceBay."
+        },
+        "lights_engineering":
+        {
+            "type": "Lights",
+            "resource_type": "energy",
+            "amount": 1,
+            "label": "Engineering Lights",
+            "custom_description": "This system includes all the lights near the EngineeringBay."
         },
 
         "science_scanner":
@@ -589,6 +597,7 @@
 
 
         { "from": "support_battery", "to": "lights_science", "resource_type": "energy" },
+        { "from": "support_battery", "to": "lights_engineering", "resource_type": "energy" },
         { "from": "support_battery", "to": "lights_med", "resource_type": "energy" },
         { "from": "support_battery", "to": "health_scanner", "resource_type": "energy" },
         { "from": "support_battery", "to": "medicine_creator", "resource_type": "energy" },
