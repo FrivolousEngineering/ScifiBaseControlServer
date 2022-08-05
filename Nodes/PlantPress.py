@@ -14,7 +14,7 @@ class PlantPress(Node):
         super().__init__(node_id, **defaults)
 
         self._resources_required_per_tick["plants"] = 30
-        self._resources_required_per_tick["energy"] = 10
+        self._resources_required_per_tick["energy"] = 5
 
         self._water_resevoir = 20
 
@@ -32,7 +32,7 @@ class PlantPress(Node):
         max_food = min(10 - self._resources_left_over["food"], (self._water_resevoir - self._resources_left_over["water"]) * 2.87)
         max_food = enforcePositive(max_food)
         self._resources_required_per_tick["plants"] = max_food * 3 * self.effectiveness_factor
-        self._resources_required_per_tick["energy"] = max_food * self.effectiveness_factor
+        self._resources_required_per_tick["energy"] = max_food / 2 * self.effectiveness_factor
 
     def update(self, sub_tick_modifier: float = 1) -> None:
         super().update(sub_tick_modifier)
@@ -45,10 +45,10 @@ class PlantPress(Node):
 
         # Three plants are needed to create one food. Every 10 foods create 3.5 water, so we need to be able to store
         # 1 water per 2.87 food we produce
-        food_produced = min(energy_available, plants_available / 3)
+        food_produced = min(energy_available * 2, plants_available / 3)
 
         self._resources_left_over["plants"] = plants_available - food_produced * 3
-        self._resources_left_over["energy"] = energy_available - food_produced
+        self._resources_left_over["energy"] = energy_available - food_produced / 2
 
         self._markResourceAsCreated("plants", self._resources_left_over["plants"])
 
