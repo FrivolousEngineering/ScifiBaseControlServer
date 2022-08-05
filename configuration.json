@@ -159,6 +159,7 @@
             "resource_type": "water",
             "fluid_per_tick": 100,
             "label": "Hydro Valve B",
+            "target_performance": 0.25,
             "weight": 320,
             "custom_description": "Open this valve to increase the amount of uncooled water that is provided to the Hydroponics Bay. This is one of the main valves to regulate the temperature of the Hydroponics"
         },
@@ -212,13 +213,14 @@
             "amount": 0,
             "label": "Oxygen Tank",
             "max_storage": 250000,
-            "weight": 1600
+            "weight": 1600,
+            "max_resources_requestable_per_tick": 10000
         },
         "oxygen_release_valve":
         {
             "type": "ResourceDestroyer",
             "resource_type": "oxygen",
-            "amount": 25,
+            "amount": 7500,
             "has_settable_performance": true,
             "min_performance": 0,
             "target_performance": 0,

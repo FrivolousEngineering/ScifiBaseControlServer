@@ -52,7 +52,6 @@ class HydroponicsBay(Node):
             plant_factor = self._resources_provided_this_tick["plants"] / self._resources_left_over["plants"]
 
         self._logistics_factor = min(plant_factor, oxygen_factor)
-
         self._setPerformance(self._performance)
 
     def update(self, sub_tick_modifier: float = 1) -> None:
@@ -63,7 +62,6 @@ class HydroponicsBay(Node):
         animal_waste_available = self.getResourceAvailableThisTick("animal_waste")
 
         plants_produced_without_awaste = min(water_available, energy_available * 4) * self.effectiveness_factor
-
         total_plants_produced = plants_produced_without_awaste * (1 + animal_waste_available / (
                     self._optional_resources_required_per_tick["animal_waste"] * sub_tick_modifier))
 
