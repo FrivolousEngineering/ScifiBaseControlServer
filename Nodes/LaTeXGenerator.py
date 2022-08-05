@@ -42,6 +42,10 @@ class LaTeXGenerator:
                 doc.append("The maximum temperature (in Kelvin) that this device should be operated at. The further it goes above this number, the faster it will start to receive damage. It is strongly advised to keep all devices well below this temperature to ensure a continued operation.")
             with doc.create(Subsection("Performance Change Factor")):
                 doc.append("How quickly is this device able to react to requested changes from engineers? If the factor is one, the device is able to change is current performance to the target performance directly. The higher this number, the slower it is to react to changes.")
+            with doc.create(Subsection("Resource Flow")):
+                doc.append("How many units of a given resource can this device provide per tick.")
+
+
 
         for node_type, nodes in self._nodes.items():
             with doc.create(Section(self._convertPropertyToHumanReadable(node_type.__name__))):
