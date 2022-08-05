@@ -45,8 +45,6 @@ class LaTeXGenerator:
             with doc.create(Subsection("Resource Flow")):
                 doc.append("How many units of a given resource can this device provide per tick.")
 
-
-
         for node_type, nodes in self._nodes.items():
             with doc.create(Section(self._convertPropertyToHumanReadable(node_type.__name__))):
                 doc.append(nodes[0].description)
