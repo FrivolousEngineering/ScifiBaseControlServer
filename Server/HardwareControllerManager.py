@@ -61,7 +61,7 @@ class HardwareControllerManager:
         """
         Get what sensor of a given controller is mapped to what node.
         :param controller_id: Hardware controller ID
-        :param sensor_id: the sensor on the hardarecontroller to check
+        :param sensor_id: the sensor on the hardware controller to check
         :return: ID of the node that it's mapped to, None if it wasn't found
         """
         # Find if there is a mapping!
