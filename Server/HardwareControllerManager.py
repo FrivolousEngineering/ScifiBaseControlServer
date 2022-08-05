@@ -25,6 +25,15 @@ class HardwareControllerManager:
                          "Base-Control-942AF2": {"sensor_value": "hydroponics_uncooled_water_valve"},
                          "Base-Control-C62B7E": {"sensor_value": "hydroponics_cooled_water_valve"}}
 
+        self._min_max_values = {
+            "Base-Control-C64AF4": {"min": 0, "max": 1024},
+            "Base-Control-5F7023": {"min": 0, "max": 1024},
+            "Base-Control-941965": {"min": 0, "max": 1024},
+            "Base-Control-5F70D9": {"min": 0, "max": 1024},
+            "Base-Control-942AF2": {"min": 0, "max": 1024},
+            "Base-Control-C62B7E": {"min": 0, "max": 1024}
+        }
+
         self._bus: Optional[dbus.SessionBus] = None
         self._dbus = None
 
@@ -84,7 +93,11 @@ class HardwareControllerManager:
             print("No sensor value was found, even though a signal was emitted")
             new_value = 0
 
-        new_value /= 1024.
+        sensor_range = self._min_max_values["controller_id"]["max"] - self._min_max_values["controller_id"]["min"]
+
+        new_value -= self._min_max_values["controller_id"]["min"]
+
+        new_value /= sensor_range
 
         node_id = self.getMappedIdFromSensor(controller_id, sensor_id)
         if node_id is None:
