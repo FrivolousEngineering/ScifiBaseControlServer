@@ -31,7 +31,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "waste",
-            "amount": 2000,
+            "amount": 250,
             "label": "Waste Storage",
             "max_storage": 3000,
             "max_resources_requestable_per_tick": 3.5
@@ -212,9 +212,9 @@
             "resource_type": "oxygen",
             "amount": 0,
             "label": "Oxygen Tank",
-            "max_storage": 250000,
+            "max_storage": 750000,
             "weight": 1600,
-            "max_resources_requestable_per_tick": 10000
+            "max_resources_requestable_per_tick": 12500
         },
         "oxygen_release_valve":
         {
@@ -236,8 +236,8 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "heat_convection_coefficient": 0.27,
-            "amount": 0,
-            "max_storage": 500,
+            "amount": 125,
+            "max_storage": 750,
             "label": "Battery B"
         },
 
@@ -247,7 +247,7 @@
             "resource_type": "energy",
             "heat_convection_coefficient": 0.29,
             "amount": 0,
-            "max_storage": 500,
+            "max_storage": 750,
             "label": "Battery A"
         },
 
@@ -319,7 +319,7 @@
             "resource_type": "energy",
             "heat_convection_coefficient": 0.28,
             "amount": 1000,
-            "max_storage": 1000,
+            "max_storage": 1600,
             "surface_area": 4.3,
             "label": "Battery C"
         },
@@ -345,7 +345,7 @@
             "type": "ResourceStorage",
             "resource_type": "energy",
             "amount": 1000,
-            "max_storage": 1000,
+            "max_storage": 1700,
             "heat_convection_coefficient": 0.29,
             "surface_area": 4.7,
             "label": "Battery D"
@@ -359,7 +359,8 @@
         {
             "type": "ResourceStorage",
             "resource_type": "data",
-            "amount": 0,
+            "amount": 250,
+            "max_amount": 1400,
             "surface_area": 3.5,
             "heat_convection_coefficient": 0.23,
             "label": "Database"
@@ -433,7 +434,6 @@
             "resource_type": "medicine",
             "amount": 0,
             "surface_area": 12.6,
-            "max_storage": 10000,
             "heat_convection_coefficient": 2.5,
             "label": "Medicine Storage",
             "custom_description": "The storage for medicine that is produced for the colony. As it's expected that not all medication can be created by the colonists immediately, it's required to ship sufficient medical supplies to bridge this period."
@@ -467,7 +467,7 @@
             "type": "ResourceStorage",
             "resource_type": "water",
             "amount": 100,
-            "max_storage": 400,
+            "max_storage": 800,
             "label": "Water Tank E",
             "heat_convection_coefficient": 1.5,
             "heat_emissivity": 0.34,
