@@ -26,12 +26,12 @@ class HardwareControllerManager:
                          "Base-Control-C62B7E": {"sensor_value": "hydroponics_cooled_water_valve"}}
 
         self._min_max_values = {
-            "Base-Control-C64AF4": {"min": 0, "max": 1024},
-            "Base-Control-5F7023": {"min": 0, "max": 1024},
-            "Base-Control-941965": {"min": 0, "max": 1024},
-            "Base-Control-5F70D9": {"min": 0, "max": 1024},
-            "Base-Control-942AF2": {"min": 0, "max": 1024},
-            "Base-Control-C62B7E": {"min": 0, "max": 1024}
+            "Base-Control-C64AF4": {"min": 64, "max": 1024},
+            "Base-Control-5F7023": {"min": 297, "max": 1024},
+            "Base-Control-941965": {"min": 2, "max": 800},
+            "Base-Control-5F70D9": {"min": 276, "max": 1024},
+            "Base-Control-942AF2": {"min": 133, "max": 1024},
+            "Base-Control-C62B7E": {"min": 291, "max": 1024}
         }
 
         self._bus: Optional[dbus.SessionBus] = None
@@ -94,9 +94,9 @@ class HardwareControllerManager:
             new_value = 0
 
         sensor_range = self._min_max_values["controller_id"]["max"] - self._min_max_values["controller_id"]["min"]
-
         new_value -= self._min_max_values["controller_id"]["min"]
-
+        new_value = max(0, new_value)
+        new_value = min(1024, new_value)
         new_value /= sensor_range
 
         node_id = self.getMappedIdFromSensor(controller_id, sensor_id)
