@@ -72,13 +72,12 @@ user_parser.add_argument("faction",
                          choices = ("Deimian", "Rhean", "Keplian"),
                          required = True)
 
-user_parser_put = user_parser.copy()
-user_parser_put.replace_argument('engineering_level',
+user_parser_put = api.parser()
+user_parser_put.add_argument('engineering_level',
                                 type = int,
-                                help = 'The engineering level of the user. This is 0 by default',
+                                help = 'The engineering level of the user.',
                                 location = 'form',
                                 required = True)
-user_parser_put.remove_argument("faction")
 
 
 @User_namespace.route("/<string:user_id>/")
@@ -119,7 +118,7 @@ class UserResource(Resource):
     @api.response(404, "Unknown User")
     @api.response(200, "User Updated")
     @api.response(400, "Invalid data")
-    @api.expect(user_parser_put)
+    @api.expect(user_parser)
     def put(self, user_id):
         user = User.query.filter_by(id=user_id).first()
         if not user:

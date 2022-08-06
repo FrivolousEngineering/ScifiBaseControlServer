@@ -185,7 +185,7 @@
         {
             "type": "ResourceStorage",
             "resource_type": "plants",
-            "amount": 10000,
+            "amount": 0,
             "label": "Plant Storage",
             "weight": 367,
             "heat_convection_coefficient": 1.21,
