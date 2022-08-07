@@ -213,7 +213,6 @@ class Performance(Resource):
         if not performance_set:
             return Response("Performance must be set", status=400,
                             mimetype='application/json')
-
         current_target_performance = nodes.getTargetPerformance(node_id)
         card_id = request.args.get("accessCardID")
         nodes.setTargetPerformance(node_id, float(new_performance))

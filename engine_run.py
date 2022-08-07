@@ -28,7 +28,7 @@ storage = NodeStorage(engine)
 #for _ in range(0, 150):
 #    engine.doTick()
 #engine.start()
-engine.doTick()
+#engine.doTick()
 
 #engine.start()
 

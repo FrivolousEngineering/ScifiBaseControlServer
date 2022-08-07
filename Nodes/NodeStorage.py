@@ -75,7 +75,7 @@ class NodeStorage:
 
         data_to_write = {"nodes": node_data}  # type: Dict[str, Any]
         data_to_write["histories"] = self.serializeAllNodeHistories()
-
+        data_to_write["current_tick"] = self._engine._tick_count
         data_to_store = json.dumps(data_to_write, separators=(", ", ": "), indent=4)
         with atomic_write(name) as file:
             file.write(data_to_store)
@@ -115,6 +115,7 @@ class NodeStorage:
             data = file.read()
 
         parsed_json = json.loads(data)
+        self._engine._tick_count = 50 #because thats the history that we store
         for entry in parsed_json["nodes"]:
             # TODO: This has no fault handling what so ever, which should be added at some point.
             node = self._engine.getNodeById(entry["node_id"])

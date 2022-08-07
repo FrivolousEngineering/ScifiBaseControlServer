@@ -361,7 +361,6 @@ class Node:
             for resource in self._resources_required_per_tick:
                 if resource not in self._original_resources_required_per_tick:
                     self._original_resources_required_per_tick[resource] = self._resources_required_per_tick[resource]
-
                 self._resources_required_per_tick[resource] = self._original_resources_required_per_tick[
                                                                   resource] * self._performance * self._logistics_factor
 
@@ -386,7 +385,7 @@ class Node:
                 self._target_performance = self.max_performance
 
             if self._performance_change_factor == 1:
-                self._performance = self._target_performance
+                self._setPerformance(self._target_performance)
 
     @modifiable_property
     def heat_emissivity(self) -> float:
@@ -493,8 +492,8 @@ class Node:
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
         result["resources_provided_this_tick"] = self._resources_provided_this_tick
         result["resources_left_over"] = self._resources_left_over
+        result["health"] = self._health
         result["temperature"] = self.temperature
-        result["custom_description"] = self._custom_description
         result["performance"] = self._performance
         result["target_performance"] = self._target_performance
         result["modifiers"] = []
@@ -514,7 +513,7 @@ class Node:
         self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
-        self._custom_description = data.get("custom_description", "")
+        self._health = data.get("health", 100)
         self._setPerformance(data.get("performance", 1.))
         self._target_performance = data.get("target_performance", 1.)
 
