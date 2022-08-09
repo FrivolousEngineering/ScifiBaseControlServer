@@ -242,7 +242,7 @@ class Server(Flask):
         self._setupNodeDBUS()
 
         data = json.loads(request.data)
-        self._nodes.setTickInterval(data["value"])
+        self._nodes.setTickInterval(data["value"]) # type: ignore
 
         return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
