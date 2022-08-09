@@ -346,7 +346,7 @@ class Node:
     def max_performance(self):
         return self._max_performance
 
-    @property
+    @modifiable_property
     def performance(self) -> float:
         return self._performance
 
