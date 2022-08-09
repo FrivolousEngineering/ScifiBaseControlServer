@@ -10,6 +10,8 @@ class ScheduledMaintenanceModifier(Modifier):
 
         self._description = "Make significant headway with repairing a device by disabling it while it's in operation"
 
+        self._required_engineering_level = 2
+
     def update(self) -> None:
         super().update()
 
