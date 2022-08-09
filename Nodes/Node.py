@@ -493,6 +493,7 @@ class Node:
         result["resources_provided_this_tick"] = self._resources_provided_this_tick
         result["resources_left_over"] = self._resources_left_over
         result["health"] = self._health
+        result["stored_heat"] = self._stored_heat
         result["temperature"] = self.temperature
         result["performance"] = self._performance
         result["target_performance"] = self._target_performance
@@ -513,6 +514,7 @@ class Node:
         self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
+        self._stored_heat = data["stored_heat"]
         self._health = data.get("health", 100)
         self._setPerformance(data.get("performance", 1.))
         self._target_performance = data.get("target_performance", 1.)
