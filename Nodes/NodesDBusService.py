@@ -60,6 +60,18 @@ class NodesDBusService(dbus.service.Object):
             return True
         return False
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="sd")
+    def repair(self, node_id: str, amount: float) -> None:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            node.repair(amount)
+
+    @dbus.service.method("com.frivengi.nodes", in_signature="sd")
+    def damage(self, node_id: str, amount: float) -> None:
+        node = self._node_engine.getNodeById(node_id)
+        if node:
+            node.damage(amount)
+
     @dbus.service.method("com.frivengi.nodes", out_signature="aa{sv}", in_signature="s")
     def getActiveModifiers(self, node_id: str) -> List[Dict[str, Union[str, int]]]:
         """

@@ -131,6 +131,9 @@ performance_parser.add_argument('performance', type=float, help='New performance
 modifier_parser = authorization_parser.copy()
 modifier_parser.add_argument("modifier_name", location = "json", required = True)
 
+amount_parser = api.parser()
+amount_parser.add_argument("amount", location = "json", required = True, type = float)
+
 show_last_parser = api.parser()
 show_last_parser.add_argument("showLast", type = str, location='args')
 
@@ -155,6 +158,52 @@ class Node(Resource):
         data["surface_area"] = nodes.getSurfaceArea(node_id)  # type: ignore
         data["description"] = nodes.getDescription(node_id)  # type: ignore
         return data
+
+
+@node_namespace.route("/<string:node_id>/damage/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class Damage(Resource):
+    @api.response(404, "Unknown Node")
+    @api.response(400, "Bad Request")
+    @api.response(200, "Success")
+    @api.expect(amount_parser)
+    def post(self, node_id):
+        nodes = app.getNodeDBusObject()
+        if not checkIfNodeExists(nodes, node_id):
+            return UNKNOWN_NODE_RESPONSE
+        try:
+            data = json.loads(request.data)
+        except:
+            return Response("Unable to format the provided data!", status = 400, mimetype='application/json')
+
+        try:
+            amount_to_damage = data["amount"]
+        except KeyError:
+            return Response("No amount to damage was given", status = 400, mimetype='application/json')
+        nodes.damage(node_id, amount_to_damage)
+
+
+@node_namespace.route("/<string:node_id>/repair/")
+@node_namespace.doc(params={'node_id': 'Identifier of the node'})
+class Damage(Resource):
+    @api.response(404, "Unknown Node")
+    @api.response(400, "Bad Request")
+    @api.response(200, "Success")
+    @api.expect(amount_parser)
+    def post(self, node_id):
+        nodes = app.getNodeDBusObject()
+        if not checkIfNodeExists(nodes, node_id):
+            return UNKNOWN_NODE_RESPONSE
+        try:
+            data = json.loads(request.data)
+        except:
+            return Response("Unable to format the provided data!", status = 400, mimetype='application/json')
+
+        try:
+            amount_to_repair = data["amount"]
+        except KeyError:
+            return Response("No amount to repair was given", status = 400, mimetype='application/json')
+        nodes.repair(node_id, amount_to_repair)
 
 
 @node_namespace.route('/<string:node_id>/enabled/')
