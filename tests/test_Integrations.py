@@ -75,6 +75,9 @@ def test_restoreFromFile(config_file, ticks_to_run):
     os.remove(f"{storage.storage_name}.json")
     _compareStatesBetweenEngines(restored_engine, engine_with_storage)
 
+    restored_engine.doTick()
+    engine_with_storage.doTick()
+
     storage.purgeAllRevisions()
 
 

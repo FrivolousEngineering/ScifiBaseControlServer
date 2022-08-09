@@ -845,6 +845,7 @@ class Node:
         self._active = self._reEvaluateIsActive()
         self._emitHeat()
         self._convectiveHeatTransfer()
+        self._recalculateTemperature()
         self._dealDamageFromHeat()
         self._dealDamageFromUsage()
         self._resources_required_last_tick = self._resources_required_per_tick.copy()
@@ -860,7 +861,6 @@ class Node:
         self._resources_received_this_sub_tick.clear()
         self._resources_produced_this_tick.clear()
         self._resources_provided_this_tick.clear()
-        self._recalculateTemperature()
 
     def updateModifiers(self) -> None:
         """
