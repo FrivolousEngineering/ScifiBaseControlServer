@@ -93,6 +93,9 @@ class NodeEngine:
         """
         self._tick_timer.cancel()
 
+    def setTickInterval(self, tick_interval: float) -> None:
+        self._tick_timer.setInterval(tick_interval)
+
     @property
     def paused(self):
         return not self._tick_timer.is_running

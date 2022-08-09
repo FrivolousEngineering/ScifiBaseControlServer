@@ -50,6 +50,10 @@ class NodesDBusService(dbus.service.Object):
     def stopEngineTimer(self):
         self._node_engine.stop()
 
+    @dbus.service.method("com.frivengi.nodes", in_signature="d")
+    def setTickInterval(self, tick_interval: float) -> None:
+        self._node_engine.setTickInterval(tick_interval)
+
     @dbus.service.method("com.frivengi.nodes", in_signature="ss", out_signature="b")
     def addModifierToNode(self, node_id: str, modifier_type: str) -> bool:
         node = self._node_engine.getNodeById(node_id)
