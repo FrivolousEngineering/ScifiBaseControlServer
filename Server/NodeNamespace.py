@@ -185,7 +185,7 @@ class Damage(Resource):
 
 @node_namespace.route("/<string:node_id>/repair/")
 @node_namespace.doc(params={'node_id': 'Identifier of the node'})
-class Damage(Resource):
+class Repair(Resource):
     @api.response(404, "Unknown Node")
     @api.response(400, "Bad Request")
     @api.response(200, "Success")
