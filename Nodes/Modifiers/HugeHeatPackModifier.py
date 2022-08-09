@@ -8,5 +8,13 @@ class HugeHeatPackModifier(HeatPerTurnModifier):
         self._name = "Huge Heat Pack"
         self._abbreviation = "HHP"
 
-        self._description = "Apply a huge chemical heating pack to add heat to a device."
+        self._description = "Apply a huge chemical heating pack to add heat to a device. Using this will cause some " \
+                            "damage on the system."
         self._required_engineering_level = 5
+
+    def update(self) -> None:
+        super().update()
+
+        node = self._node
+        if node is not None:
+            node.damage(0.5)

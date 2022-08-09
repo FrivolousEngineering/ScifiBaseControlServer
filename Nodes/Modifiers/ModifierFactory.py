@@ -28,7 +28,7 @@ class ModifierFactory:
                             "SmallHeatPackModifier", "MediumHeatPackModifier", "LargeHeatPackModifier",
                             "SmallCoolingPackModifier", "MediumCoolingPackModifier", "LargeCoolingPackModifier",
                             "PyrolythicResistantEnzymeInjectorModifier", "HeatResistantLubricationInjectionModifier",
-                            "OverclockModifier", "PressureReleaseValveModifier"]
+                            "OverclockModifier", "PressureReleaseValveModifier", "HugeCoolingPackModifier", "HugeHeatPackModifier", "ScheduledMaintenanceModifier"]
 
     _modifier_cache = {}  # type: Dict[str, Modifier]
 
