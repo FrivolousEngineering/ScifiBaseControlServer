@@ -27,6 +27,9 @@ class PerpetualTimer:
         self._is_running = False
         self._startTimer()
 
+    def setInterval(self, interval: float) -> None:
+        self._interval = interval
+
     @property
     def is_running(self):
         if self._thread:
