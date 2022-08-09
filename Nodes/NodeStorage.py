@@ -115,7 +115,7 @@ class NodeStorage:
             data = file.read()
 
         parsed_json = json.loads(data)
-        self._engine._tick_count = 50 #because thats the history that we store
+        self._engine._tick_count = parsed_json["current_tick"]
         for entry in parsed_json["nodes"]:
             # TODO: This has no fault handling what so ever, which should be added at some point.
             node = self._engine.getNodeById(entry["node_id"])

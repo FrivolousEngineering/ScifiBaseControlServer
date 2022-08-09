@@ -485,18 +485,27 @@ class Node:
         """
         result = dict()  # type: Dict[str, Any]
         result["node_id"] = self._node_id
-        if self._label:
-            result["label"] = self._label
+        result["label"] = self._label
         result["resources_received_this_tick"] = self._resources_received_this_tick
         result["resources_produced_this_tick"] = self._resources_produced_this_tick
         result["resources_provided_this_tick"] = self._resources_provided_this_tick
+        result["resources_provided_last_tick"] = self._resources_provided_last_tick
+        result["optional_resources_required_per_tick"] = self._optional_resources_required_per_tick
+        result["optional_resources_required_last_tick"] = self._optional_resources_required_last_tick
+        result["original_optional_resources_required_per_tick"] = self._original_optional_resources_required_per_tick
+
+        result["resources_produced_last_tick"] = self._resources_produced_last_tick
+        result["resources_received_last_tick"] = self._resources_received_last_tick
+
         result["resources_left_over"] = self._resources_left_over
         result["health"] = self._health
         result["stored_heat"] = self._stored_heat
         result["temperature"] = self.temperature
         result["performance"] = self._performance
         result["target_performance"] = self._target_performance
+        result["active"] = self._active
         result["modifiers"] = []
+
         for modifier in self._modifiers:
             result["modifiers"].append(modifier.serialize())
         return result
@@ -507,16 +516,26 @@ class Node:
         :param data:
         """
         self._node_id = data["node_id"]
-        self._label = data.get("label", self._node_id)
+        self._label = data["label"]
         self._resources_received_this_tick.update(data["resources_received_this_tick"])
         self._resources_produced_this_tick.update(data["resources_produced_this_tick"])
         self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
+        self._resources_provided_last_tick.update(data["resources_provided_last_tick"])
+        self._resources_produced_last_tick.update(data["resources_produced_last_tick"])
+        self._optional_resources_required_last_tick.update(data["optional_resources_required_last_tick"])
+
+        self._optional_resources_required_per_tick.update(data["optional_resources_required_per_tick"])
+        self._resources_received_last_tick.update(data["resources_received_last_tick"])
+
+        self._original_optional_resources_required_per_tick.update(data["original_optional_resources_required_per_tick"])
+
         self._resources_left_over = data["resources_left_over"]
         self._temperature = data["temperature"]
         self._stored_heat = data["stored_heat"]
         self._health = data.get("health", 100)
-        self._setPerformance(data.get("performance", 1.))
+        self._performance = data["performance"]
         self._target_performance = data.get("target_performance", 1.)
+        self._active = data["active"]
 
         for modifier in data.get("modifiers", []):
             mod = ModifierFactory.createModifier(modifier["type"])

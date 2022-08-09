@@ -11,7 +11,7 @@ from Nodes.TemperatureHandlers.PreScriptedTemperatureHandler import PreScriptedT
 
 engine = NodeEngine()
 
-with open("configuration.json") as f:
+with open("tests/configurations/GeneratorWaterCoolerConfiguration.json") as f:
     loaded_data = json.loads(f.read())
     engine.deserialize(loaded_data)
 
@@ -22,10 +22,10 @@ with open("configuration.json") as f:
 storage = NodeStorage(engine)
 #modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
 #engine.getNodeById("generator_1").addModifier(modifier)
-#storage.restoreNodeState()
+storage.restoreNodeState()
 
 
-#for _ in range(0, 150):
+#for _ in range(0, 50):
 #    engine.doTick()
 #engine.start()
 #engine.doTick()

@@ -147,3 +147,7 @@ class Connection:
 
     def __repr__(self) -> str:
         return f"{self.resource_type} connection between {self.origin} and {self.target}"
+
+    def __eq__(self, other):
+        # Used for tests
+        return str(self) == str(other)
