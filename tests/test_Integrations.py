@@ -39,10 +39,7 @@ def test_MultiWaterCooler(sub_ticks):
         assert math.isclose(total_water, starting_water)
 
 
-#@pytest.mark.parametrize("config_file", ["MultiWaterTankConfig.json", "WaterTanksWithPumps.json", "GeneratorWaterCoolerConfiguration.json"])
-
-#
-@pytest.mark.parametrize("ticks_to_run", [5, 20, 30])
+@pytest.mark.parametrize("ticks_to_run", [5, 10, 60])
 @pytest.mark.parametrize("config_file", ["MultiWaterTankConfig.json", "WaterTanksWithPumps.json", "GeneratorWaterCoolerConfiguration.json"])
 def test_restoreFromFile(config_file, ticks_to_run):
     engine_with_storage = NodeEngine()
@@ -66,45 +63,57 @@ def test_restoreFromFile(config_file, ticks_to_run):
     for _ in range(0, ticks_to_run):
         engine_with_storage.doTick()
 
+
     # We've now created a storage file by letting the given configuration run
     # Time to restore it!
     new_storage = NodeStorage(restored_engine)
     new_storage.storage_name = "test_storage.json"
     new_storage.restoreNodeState()
 
+
     # We need to remove the file after ourselves
     os.remove(f"{storage.storage_name}.json")
-    _compareStatesBetweenEngines(restored_engine, engine_with_storage)
-
-    # Since we don't just want to check a few values, we can employ an extra trick here. If we let *both* the new and
-    # the old engine do another tick, they should result in the same values. If that fails, it means some property that
-    # does affect the result was not correctly restored!
-    engine_with_storage.doTick()
-    restored_engine.doTick()
     _compareStatesBetweenEngines(restored_engine, engine_with_storage)
 
     storage.purgeAllRevisions()
 
 
-def _compareStatesBetweenEngines(engine_1, engine_2):
+def _compareStatesBetweenEngines(engine_1, engine_2, rel_tol = 0.0001):
     for node_id, restored_node in engine_1.getAllNodes().items():
-        if node_id != "generator":
-            continue
         original_node = engine_2.getNodeById(node_id)
         for prop in original_node.additional_properties:
             assert getattr(restored_node, prop) == getattr(original_node, prop), "NOT THE SAME"
 
+        assert math.isclose(original_node._stored_heat, restored_node._stored_heat)
+        not_matching_values = []
         for prop, original_value in vars(original_node).items():
+
             restored_value = getattr(restored_node, prop)
             if isinstance(original_value, dict):
                 for key, value in original_value.items():
-                    result = math.isclose(value, restored_value[key], rel_tol = 0.01)
+                    result = math.isclose(value, restored_value[key], rel_tol = rel_tol)
                     if not result:
                         print(key, value, restored_value[key])
                     assert result, f"Property {key} for {prop} didn't match"
+                continue
+            elif type(original_value) == Signal:
+                continue
+            elif prop == "_update_lock":
+                continue
+            elif prop == "_temperature":
+                continue # We need to look at temperature instad (not the private one!)
+            elif type(original_value) == float:
+                is_match = math.isclose(original_value, restored_value, rel_tol = rel_tol)
+                if not is_match:
+                    not_matching_values.append((prop, original_value, restored_value))
+            else:
+                assert original_value == restored_value, f"{prop} doesn't match for {restored_node.getId()}"
+        if not math.isclose(original_node.temperature, restored_node.temperature, rel_tol = rel_tol):
+            not_matching_values.append(("temperature", original_node.temperature, restored_node.temperature))
 
-        assert math.isclose(original_node.temperature, restored_node.temperature, rel_tol = 0.01)
 
+        #assert math.isclose(original_node.temperature, restored_node.temperature, rel_tol = rel_tol)
+        assert not not_matching_values, f"One or more values for {node_id} didn't match"
         assert original_node.weight == restored_node.weight
         assert restored_node.getModifiers() == original_node.getModifiers()
 

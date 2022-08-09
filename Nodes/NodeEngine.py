@@ -241,7 +241,7 @@ class NodeEngine:
                 if node.enabled:
                     node.update(sub_tick_modifier)
                 node.cleanupAfterUpdate()
-            print("SUBTICK END")
+            #print("SUBTICK END")
         for node in self._nodes.values():
             node.updateModifiers()
 

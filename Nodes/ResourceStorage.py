@@ -58,8 +58,8 @@ class ResourceStorage(Node):
         return data
 
     def deserialize(self, data: Dict[str, Any]) -> None:
-        super().deserialize(data)
         self._amount = data["amount_stored"]
+        super().deserialize(data)
 
     @property
     def amount_stored(self) -> float:
