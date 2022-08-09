@@ -108,6 +108,7 @@
         "hydroponics_water_cooler":
         {
             "type": "FluidCooler",
+            "surface_area": 15,
             "resource_type": "water",
             "fluid_per_tick": 100,
             "label": "Water Cooler C"
@@ -263,6 +264,7 @@
             "energy_factor": 2.5,
             "temperature_efficiency": 0.81,
             "optimal_temperature_range": 199,
+            "usage_damage_factor": 0.23,
             "min_performance": 0,
             "performance": 0,
             "target_performance": 0,
@@ -276,6 +278,7 @@
             "type": "Generator",
             "fuel_type": "waste",
             "energy_factor": 2.5,
+            "usage_damage_factor": 0.25,
             "temperature_efficiency": 0.73,
             "optimal_temperature_range": 206,
             "min_performance": 0,
@@ -301,12 +304,14 @@
             "frequencies": [0.011, 0.06, 0.1, 0.009],
             "amplitudes": [3.2, 0.9, 0.2, 1.2],
             "label": "Wind Turbine A",
+            "usage_damage_factor": 0.2,
             "custom_description": ""
         },
         "waste_collector":
         {
             "type": "FluctuatingResourceGenerator",
             "resource_type": "waste",
+            "usage_damage_factor": 0.08
             "amount": 0.5,
             "frequencies": [0.01, 0.06, 0.1, 0.05, 0.11],
             "amplitudes": [0.1, 0.02, 0.03, 0.025, 0.015],
@@ -360,6 +365,7 @@
             "type": "ResourceStorage",
             "resource_type": "data",
             "amount": 250,
+            "max_storage": 350,
             "max_amount": 1400,
             "surface_area": 3.5,
             "heat_convection_coefficient": 0.23,
@@ -400,7 +406,8 @@
             "min_performance": 0.2,
             "max_performance": 1.5,
             "performance": 0.2,
-            "performance_change_factor": 1
+            "performance_change_factor": 1,
+            "usage_damage_factor": 0.05
         },
         "med_scanner":
         {
@@ -411,7 +418,8 @@
             "min_perfomance": 0.8,
             "max_performance": 1.2,
             "performance": 0.8,
-            "performance_change_factor": 1
+            "performance_change_factor": 1,
+            "usage_damage_factor": 0.15
         },
         "health_scanner":
         {
@@ -421,6 +429,7 @@
             "min_performance": 0,
             "performance": 0,
             "target_performance": 0,
+            "usage_damage_factor": 0.01
             "custom_description": "A device that continuously monitors the sewage produced by the staff members on base. The health data generated this way is automatically shared with the medical scanner, significantly boosting it's effectiveness."
         },
         "medicine_creator":

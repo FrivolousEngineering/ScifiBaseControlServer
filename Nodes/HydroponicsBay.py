@@ -13,7 +13,7 @@ class HydroponicsBay(Node):
                     "weight": 2000,
                     "optimal_temperature":  308.15,
                     "optimal_temperature_range": 20,
-                    "heat_convection_coefficient": 1,
+                    "heat_convection_coefficient": 2.3,
                     "usage_damage_factor": 0.11,
                     "performance_change_factor": 4.3
                     }
