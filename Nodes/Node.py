@@ -268,6 +268,7 @@ class Node:
 
     @property
     def label(self) -> str:
+        print("label", self._label)
         if self._label:
             return self._label
         return self._node_id

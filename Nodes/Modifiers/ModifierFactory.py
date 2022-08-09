@@ -15,6 +15,11 @@ from Nodes.Modifiers.PyrolythicRestistantEnzymeInjectorModifier import Pyrolythi
 from Nodes.Modifiers.RepairOverTimeModifier import RepairOverTimeModifier
 from Nodes.Modifiers.SmallCoolingPackModifier import SmallCoolingPackModifier
 from Nodes.Modifiers.SmallHeatPackModifier import SmallHeatPackModifier
+from Nodes.Modifiers.HugeHeatPackModifier import HugeHeatPackModifier
+from Nodes.Modifiers.HugeCoolingPackModifier import HugeCoolingPackModifier
+from Nodes.Modifiers.EmergencyShutdownModifier import EmergencyShutdownModifier
+from Nodes.Modifiers.ScheduledMaintenanceModifier import ScheduledMaintenanceModifier
+
 
 DEFAULT_DURATION = 10
 
