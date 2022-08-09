@@ -78,7 +78,7 @@ def test_restoreFromFile(config_file, ticks_to_run):
 
     for node_id, restored_node in engine.getAllNodes().items():
         original_node = engine_with_storage.getNodeById(node_id)
-        assert restored_node.temperature, original_node.temperature
+        assert restored_node.temperature == original_node.temperature
         assert restored_node.additional_properties == original_node.additional_properties
 
         assert restored_node.getModifiers() == original_node.getModifiers()
