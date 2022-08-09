@@ -70,10 +70,20 @@ def test__update_resources_required_per_tick(waste_left, water_left, oxygen_requ
 def test_purifier_resources_left_previous_update(water_purifier):
     water_purifier.deserialize({
                                     "node_id": "omg",
-                                    "temperature": 200,
                                     "resources_received_this_tick": defaultdict(float),
                                     "resources_produced_this_tick": defaultdict(float),
                                     "resources_provided_this_tick": defaultdict(float),
+                                    "resources_required_last_tick": defaultdict(float),
+                                    "resources_provided_last_tick": defaultdict(float),
+                                    "resources_produced_last_tick": defaultdict(float),
+                                    "optional_resources_required_last_tick": defaultdict(float),
+                                    "optional_resources_required_per_tick": defaultdict(float),
+                                    "resources_required_per_tick": defaultdict(float),
+                                    "resources_received_last_tick": defaultdict(float),
+                                    "original_optional_resources_required_per_tick": defaultdict(float),
+                                    "stored_heat": 500,
+                                    "performance": 1,
+                                    "active": 1,
                                     "resources_left_over":
                                     {
                                         "animal_waste": 5,
