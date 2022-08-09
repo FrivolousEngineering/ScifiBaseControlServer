@@ -89,6 +89,13 @@ def test_deserialize():
                          "resources_produced_last_tick": {},
                          "optional_resources_required_last_tick": {},
                          "optional_resources_required_per_tick": {},
+                         "resources_required_per_tick": {},
+                         "resources_received_last_tick": {},
+                         "original_optional_resources_required_per_tick": {},
+                         "resources_required_last_tick": {},
+                         "stored_heat": 100,
+                         "performance": 1,
+                         "active": 1,
                          "temperature": 293.15,
                          "amount_stored": 120,
                          "max_storage": 0})

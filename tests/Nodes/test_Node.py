@@ -310,10 +310,26 @@ def test_serialize():
 def test_deserialize():
     node = Node.Node("BLOOORPP")
 
-    node.deserialize({"node_id": "omgzomg", "temperature": 200, "resources_received_this_tick": {}, "resources_produced_this_tick": {}, "resources_left_over": {}, "resources_provided_this_tick": {}})
+    node.deserialize({"node_id": "omgzomg",
+                      "resources_received_this_tick": {},
+                      "resources_produced_this_tick": {},
+                      "resources_left_over": {},
+                      "resources_provided_this_tick": {},
+                      "optional_resources_required_last_tick": {},
+                      "optional_resources_required_per_tick": {},
+                      "resources_required_per_tick": {},
+                      "resources_received_last_tick": {},
+                      "original_optional_resources_required_per_tick": {},
+                      "resources_required_last_tick": {},
+                      "resources_provided_last_tick": {},
+                      "resources_produced_last_tick": {},
+                      "stored_heat": 100,
+                      "performance": 1,
+                      "active": 1
+                      })
 
     assert node.getId() == "omgzomg"
-    assert node.temperature == 200
+    assert node._stored_heat == 100
 
 
 def test_releaseLock():
