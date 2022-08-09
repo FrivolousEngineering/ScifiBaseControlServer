@@ -94,6 +94,10 @@ class NodeEngine:
         self._tick_timer.cancel()
 
     def setTickInterval(self, tick_interval: float) -> None:
+        """
+        How frequently should a tick be updated?
+        :param tick_interval: How often should it be updated in seconds
+        """
         self._tick_timer.setInterval(tick_interval)
 
     @property

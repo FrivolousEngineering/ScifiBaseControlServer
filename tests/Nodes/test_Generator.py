@@ -42,8 +42,24 @@ def test_update(generator):
 
 
 def test_generator_resources_left_previous_update(generator):
-    generator.deserialize({"node_id": "omg", "temperature": 200, "resources_received_this_tick": defaultdict(float),
-                      "resources_produced_this_tick": defaultdict(float), "resources_left_over": {"energy": 5}, "resources_provided_this_tick": defaultdict(float)})
+    generator.deserialize({ "node_id": "omg",
+                            "temperature": 200,
+                            "resources_received_this_tick": defaultdict(float),
+                            "resources_produced_this_tick": defaultdict(float),
+                            "resources_left_over": {"energy": 5},
+                            "resources_provided_this_tick": defaultdict(float),
+                            "resources_required_last_tick": defaultdict(float),
+                            "resources_provided_last_tick": defaultdict(float),
+                            "resources_produced_last_tick": defaultdict(float),
+                            "optional_resources_required_last_tick": defaultdict(float),
+                            "optional_resources_required_per_tick": defaultdict(float),
+                            "resources_required_per_tick": defaultdict(float),
+                            "resources_received_last_tick": defaultdict(float),
+                            "original_optional_resources_required_per_tick": defaultdict(float),
+                            "stored_heat": 500,
+                            "performance": 1,
+                            "active": 1,
+                            })
 
     original_resources_available = generator.getResourceAvailableThisTick
     generator.getResourceAvailableThisTick = MagicMock(return_value = 0)

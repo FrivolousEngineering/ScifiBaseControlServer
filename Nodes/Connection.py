@@ -149,5 +149,8 @@ class Connection:
         return f"{self.resource_type} connection between {self.origin} and {self.target}"
 
     def __eq__(self, other):
+        """
+        :param other: 
+        """
         # Used for tests
         return str(self) == str(other)
