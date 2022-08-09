@@ -55,12 +55,13 @@ class ResourceStorage(Node):
     def serialize(self) -> Dict[str, Any]:
         data = super().serialize()
         data["amount_stored"] = self._amount
-        data["max_storage"] = self._max_storage
+        if self._max_storage is not None:
+            data["max_storage"] = self._max_storage
         return data
 
     def deserialize(self, data: Dict[str, Any]) -> None:
         self._amount = data["amount_stored"]
-        self._max_storage = data["max_storage"]
+        self._max_storage = data.get("max_storage")
         super().deserialize(data)
 
     @property

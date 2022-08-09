@@ -90,7 +90,8 @@ def test_deserialize():
                          "optional_resources_required_last_tick": {},
                          "optional_resources_required_per_tick": {},
                          "temperature": 293.15,
-                         "amount_stored": 120})
+                         "amount_stored": 120,
+                         "max_storage": 0})
     assert storage.amount_stored == 120
 
 
