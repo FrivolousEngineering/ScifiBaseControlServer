@@ -518,7 +518,7 @@ class Node:
         :param data:
         """
         self._node_id = data["node_id"]
-        self._label = data["label"]
+        self._label = data.get("label")
         self._resources_received_this_tick.update(data["resources_received_this_tick"])
         self._resources_produced_this_tick.update(data["resources_produced_this_tick"])
         self._resources_provided_this_tick.update(data["resources_provided_this_tick"])
