@@ -239,7 +239,6 @@ class Node:
         self._setPerformance(self.performance)
 
         self._stored_heat = self.weight * self._specific_heat * self._temperature
-
         self._acceptable_resources.update(self._resources_required_per_tick.keys())
         self._acceptable_resources.update(self._optional_resources_required_per_tick.keys())
 
@@ -524,8 +523,6 @@ class Node:
             if mod:
                 mod.deserialize(modifier)
                 self.addModifier(mod)
-        # TODO: Not sure if this should stay in.
-        self.ensureSaneValues()
 
     @property
     def weight(self):
