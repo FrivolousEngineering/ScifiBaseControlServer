@@ -1,3 +1,5 @@
+import json
+
 import dbus
 import dbus.exceptions
 import flask
@@ -234,6 +236,15 @@ class Server(Flask):
     def listAllUsers(self):
         all_users = User.query.all()
         return Response(flask.json.dumps([user.id for user in all_users]), status=200, mimetype="application/json")
+
+    @register_route("/tick_interval", ["put"])
+    def setTickInterval(self) -> Response:
+        self._setupNodeDBUS()
+
+        data = json.loads(request.data)
+        self._nodes.setTickInterval(data["value"])
+
+        return Response(flask.json.dumps({"message": ""}), status=200, mimetype="application/json")
 
     @register_route("/paused", ["get"])
     def isPaused(self) -> Response:
