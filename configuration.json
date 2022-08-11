@@ -67,14 +67,14 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 135,
             "label": "Valve A-C"
         },
         "h_to_g_valve":
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 150,
             "target_performance": 0.5,
             "performance": 0.5,
             "label": "Valve B-C"
@@ -83,7 +83,7 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 135,
             "label": "Valve C-A"
         },
 
@@ -91,7 +91,7 @@
         {
             "type": "Valve",
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 150,
             "target_performance": 0,
             "performance": 0,
             "label": "Valve C-B"
@@ -101,7 +101,7 @@
         {
             "type": "FluidCooler",
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 110,
             "label": "Water Cooler A"
         },
 
