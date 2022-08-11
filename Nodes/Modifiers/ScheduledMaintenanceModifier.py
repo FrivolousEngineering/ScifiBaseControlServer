@@ -3,7 +3,7 @@ from Nodes.Modifiers.Modifier import Modifier
 
 class ScheduledMaintenanceModifier(Modifier):
     def __init__(self, duration: int) -> None:
-        super().__init__(factors = {"min_performance": 0, "max_performance": 0, "target_performance": 0}, duration = duration)
+        super().__init__(factors = {"min_performance": 0}, duration = duration)
         self._amount_to_repair_per_turn = 4
         self._name = "Scheduled Maintenance"
         self._abbreviation = "SMA"
@@ -21,6 +21,7 @@ class ScheduledMaintenanceModifier(Modifier):
 
         node = self._node
         if node is not None:
+            node.target_performance = 0
             final_amount_to_repair = max(1 - node.performance, 0) * self._amount_to_repair_per_turn
             node.repair(final_amount_to_repair)
 
