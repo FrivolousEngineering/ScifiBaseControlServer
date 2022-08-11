@@ -252,7 +252,6 @@
             "max_storage": 750,
             "label": "Battery A"
         },
-
         "hydroponics":
         {
             "type": "HydroponicsBay",

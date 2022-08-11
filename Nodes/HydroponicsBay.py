@@ -10,7 +10,7 @@ class HydroponicsBay(Node):
         defaults = {"temperature_efficiency": 0.5,
                     "min_performance": 0.5,
                     "max_performance": 2,
-                    "weight": 2000,
+                    "weight": 3000,
                     "optimal_temperature":  308.15,
                     "optimal_temperature_range": 20,
                     "heat_convection_coefficient": 2.3,
