@@ -17,6 +17,8 @@ class OverclockModifier(Modifier):
                             " concequences. Just note that this also increases the min performance. After all; Once" \
                             " it's picking up steam, it's hard to stop."
 
+        self._required_engineering_level = 3
+
     def _onModifierAdded(self) -> None:
         # Set performance ensures that the limits are respected.
         # Once this modifier gets added, we need to ensure that the performance is in range

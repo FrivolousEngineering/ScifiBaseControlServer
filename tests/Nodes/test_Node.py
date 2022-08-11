@@ -304,7 +304,7 @@ def test_serialize():
     serialized = node.serialize()
 
     assert serialized["node_id"] == node.getId()
-    #assert serialized["temperature"] == node.temperature
+    #   assert serialized["temperature"] == node.temperature
 
 
 def test_deserialize():

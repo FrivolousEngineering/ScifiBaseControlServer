@@ -13,6 +13,8 @@ class OverrideDefaultSafetyControlsModifier(Modifier):
         self._description = "Safety guidelines are just that. Guidelines. In certain situations they just don't make" \
                             " sense. This will allow you to run a device beyond it's advised performance levels"
 
+        self._required_engineering_level = 2
+
     def _onModifierRemoved(self) -> None:
         # Set performance ensures that the limits are respected.
         # Once this modifier gets removed, we need to ensure that the performance is in range again!

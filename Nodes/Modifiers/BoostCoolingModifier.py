@@ -9,3 +9,5 @@ class BoostCoolingModifier(Modifier):
         self._description = "Significantly increase the amount of heat that is emitted and greatly increase the " \
                             "amount of heat that is lost due to convection. This works best on devices that have a " \
                             "large surface area and / or high heat convection "
+
+        self._required_engineering_level = 2

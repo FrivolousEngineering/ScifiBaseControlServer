@@ -109,8 +109,9 @@
         {
             "type": "FluidCooler",
             "surface_area": 15,
+            "weight": 5500,
             "resource_type": "water",
-            "fluid_per_tick": 100,
+            "fluid_per_tick": 150,
             "label": "Water Cooler C"
         },
         "generator_cooler":

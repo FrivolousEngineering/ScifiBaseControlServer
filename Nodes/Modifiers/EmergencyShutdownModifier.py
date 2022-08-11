@@ -15,7 +15,6 @@ class EmergencyShutdownModifier(Modifier):
         node = self._node
         if node is not None:
             self._initial_performance = node.target_performance
-            node.set
 
     def _onModifierRemoved(self) -> None:
         node = self._node
