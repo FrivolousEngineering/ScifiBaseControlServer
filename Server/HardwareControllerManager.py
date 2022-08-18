@@ -92,12 +92,12 @@ class HardwareControllerManager:
             # This really shouldn't be possible...
             print("No sensor value was found, even though a signal was emitted")
             new_value = 0
-
-        sensor_range = self._min_max_values[controller_id]["max"] - self._min_max_values[controller_id]["min"]
-        new_value -= self._min_max_values[controller_id]["min"]
-        new_value = max(0, new_value)
-        new_value = min(1024, new_value)
-        new_value /= sensor_range
+        if controller_id in self._min_max_values:
+            sensor_range = self._min_max_values[controller_id]["max"] - self._min_max_values[controller_id]["min"]
+            new_value -= self._min_max_values[controller_id]["min"]
+            new_value = max(0, new_value)
+            new_value = min(1024, new_value)
+            new_value /= sensor_range
 
         node_id = self.getMappedIdFromSensor(controller_id, sensor_id)
         if node_id is None:
