@@ -61,7 +61,7 @@
             "surface_area": 12.3,
             "weight": 4972,
             "max_safe_temperature": 373.15,
-            "max_resources_requestable_per_tick": 350
+            "max_resources_requestable_per_tick": 450
         },
         "e_to_h_valve":
         {

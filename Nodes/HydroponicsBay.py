@@ -15,7 +15,8 @@ class HydroponicsBay(Node):
                     "optimal_temperature_range": 20,
                     "heat_convection_coefficient": 2.3,
                     "usage_damage_factor": 0.11,
-                    "performance_change_factor": 4.3
+                    "performance_change_factor": 4.3,
+                    "surface_area": 20
                     }
         defaults.update(kwargs)
         super().__init__(node_id, **defaults)
