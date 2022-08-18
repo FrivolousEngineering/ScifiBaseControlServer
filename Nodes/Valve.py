@@ -33,7 +33,6 @@ class Valve(ResourceStorage):
 
         # Also try to pump up resources!
         self._optional_resources_required_per_tick[self._resource_type] = fluid_per_tick
-        self._min_performance = 0
         self._description = "This device pumps from all incoming connections and provides them to all of it's " \
                             "outgoing connections. It does take a bit of time for the resource to be transported " \
                             "from one device to another, so there might be a small delay in the process"

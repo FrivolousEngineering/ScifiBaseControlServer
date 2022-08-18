@@ -538,7 +538,9 @@ class Node:
         self._stored_heat = data["stored_heat"]
         self._health = data.get("health", 100)
         self._performance = data["performance"]
-        self._target_performance = data.get("target_performance", 1.)
+        # In case something went wrong, at least ensure that the min & max are now respected
+
+        self.target_performance = data.get("target_performance", 1.)
         self._active = data["active"]
 
         for modifier in data.get("modifiers", []):
