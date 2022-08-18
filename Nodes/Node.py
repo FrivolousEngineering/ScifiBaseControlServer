@@ -189,7 +189,6 @@ class Node:
         """
         self._optional_logistics_factor = 1.
 
-
     @property
     def combined_specific_heat(self) -> float:
         total_specific_heat = self._weight * self._specific_heat
@@ -538,9 +537,8 @@ class Node:
         self._stored_heat = data["stored_heat"]
         self._health = data.get("health", 100)
         self._performance = data["performance"]
-        # In case something went wrong, at least ensure that the min & max are now respected
 
-        self.target_performance = data.get("target_performance", 1.)
+        self._target_performance = data.get("target_performance", 1.)
         self._active = data["active"]
 
         for modifier in data.get("modifiers", []):
