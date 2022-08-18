@@ -543,7 +543,7 @@ class Node:
             self._target_performance = self.min_performance
         elif self._target_performance > self.max_performance:
             self._target_performance = self.max_performance
-            
+
         self._active = data["active"]
 
         for modifier in data.get("modifiers", []):

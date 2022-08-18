@@ -22,7 +22,8 @@ class Valve(ResourceStorage):
         defaults = {"heat_convection_coefficient": 200,
                     "surface_area": 0.7,
                     "has_settable_performance": True,
-                    "usage_damage_factor": 0.1}
+                    "usage_damage_factor": 0.1,
+                    "min_performance": 0}
         defaults.update(kwargs)
 
         super().__init__(node_id, resource_type, 0, 2.5 * fluid_per_tick, **defaults)
