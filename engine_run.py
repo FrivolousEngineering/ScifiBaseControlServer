@@ -22,13 +22,13 @@ with open("configuration.json") as f:
 storage = NodeStorage(engine)
 #modifier = ModifierFactory.createModifier("OverrideDefaultSafetyControlsModifier")
 #engine.getNodeById("generator_1").addModifier(modifier)
-#storage.restoreNodeState()
+storage.restoreNodeState()
 
 
 #for _ in range(0, 50):
-#    engine.doTick()
+#    engine.databasedoTick()
 #engine.start()
-#engine.doTick()
+engine.doTick()
 
 #engine.start()
 

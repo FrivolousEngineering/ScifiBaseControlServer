@@ -219,7 +219,11 @@ class NodeEngine:
         The _replanReservation will attempt to relax the original reservation a bit. By asking 1 power more of batter_1
         and battery_3, the requests can be resolved.
         """
-        while True:
+        counter = 0
+        while counter < 50:
+            counter += 1
+            if counter > 40:
+                print("Counter is extremely high", [node.getId() for node in self._nodes.values() if node.requiresReplanning()])
             run_again = False
             for node in self._nodes.values():
                 if not node.enabled:
@@ -271,6 +275,7 @@ class NodeEngine:
         with self._update_lock:
             self._updateOutsideTemperature()
             self._preUpdate()
+
             self._updateReservations()
             self._replanReservations()
             self._update()
