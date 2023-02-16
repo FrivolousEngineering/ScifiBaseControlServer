@@ -1,6 +1,6 @@
 mypy>=0.720
 flask>=1.0.2
-Werkzeug==2.1.2
+Werkzeug==2.2.3
 atomicwrites
 types-atomicwrites
 dbus-python
